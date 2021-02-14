@@ -8,12 +8,15 @@ module Recediff
 
     # @param [Integer] shinku 診療識別・診療区分
     def initialize(shinku)
+      # @type [Array<Cost>]
       @costs   = []
       @shinku  = shinku
       @point   = nil
+      # @type [Array<Integer>]
       @done_at = []
     end
 
+    # @return self
     def reinitialize
       return self if @costs.empty?
 
@@ -22,23 +25,23 @@ module Recediff
       self
     end
 
-    def find_by_code(code)
-      @records.find { | r | r.code == code }
-    end
-
+    # @param [Cost] cost
     def add_cost(cost)
       @costs << cost
     end
 
+    # @return self
     def sort!
       @costs.sort_by!(&:code)
       self
     end
 
+    # @return [String]
     def uniq_id
       "%02d%02d%0d%05d%02d" % [shinku, done_at.first, @costs.first.code, point, length]
     end
 
+    # @param [Integer] day
     # @return [String]
     def show(day)
       text = []

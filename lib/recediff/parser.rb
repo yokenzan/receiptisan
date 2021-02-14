@@ -3,10 +3,13 @@ require 'csv'
 
 module Recediff
   class Parser
+    # @param [Hash<Symbol, String>] master
     def initialize(master)
       @master = master
     end
 
+    # @param [String] uke_file_path
+    # @return [Array<Receipt>]
     def parse(uke_file_path)
       context = Context.new
 
@@ -55,11 +58,13 @@ module Recediff
       attr_reader :receipts, :receipt, :unit
 
       def initialize
+        # @type [Array<Receipt>]
         @receipts = []
         @receipt  = nil
         @unit     = nil
       end
 
+      # @param [Receipt] receipt
       def new_receipt(receipt)
         close_current_receipt
         @receipt = receipt
@@ -72,6 +77,7 @@ module Recediff
         @receipt = nil
       end
 
+      # @param [CalcUnit] unit
       def new_unit(unit)
         close_current_unit
         @unit = unit
