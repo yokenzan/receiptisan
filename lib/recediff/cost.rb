@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 module Recediff
+  # A class which represents cost records in UKE such as SI, IY, TO.
   class Cost
+    # @param [String, Integer] code Rece-den code for the cost.
+    # @param [String] name Japanese name for the cost.
+    # @param [String] category Record cost types such as SI for shinryo-koi.
+    # @param [Array<nil, String>] row Record content as an Array.
     def initialize(code, name, category, row)
       @code     = code.to_i
       @name     = name

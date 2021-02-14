@@ -23,7 +23,7 @@ module Recediff
       case category = row.at(COST::CATEGORY)
       when /RE/
         context.new_receipt(
-          Receipt.new(row.at(RE::RECEIPT_ID), row.at(RE::PATIENT_ID), row.at(RE::PATIENT_NAME))
+          Receipt.new(row.at(RE::RECEIPT_ID).to_i, row.at(RE::PATIENT_ID).to_i, row.at(RE::PATIENT_NAME))
         )
       when /HO/, /KO/
         context.receipt.add_hoken(row)

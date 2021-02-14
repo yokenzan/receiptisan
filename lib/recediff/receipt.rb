@@ -1,5 +1,9 @@
 module Recediff
+  # レセプト
   class Receipt
+    # @param [Integer] id
+    # @param [Integer] patient_id
+    # @param [String] patient_name
     def initialize(id, patient_id, patient_name)
       @id           = id.to_i
       @patient_id   = patient_id.to_i
@@ -49,7 +53,7 @@ module Recediff
 
         text << "\n### %2d日 %d点-----\n" % [d, units.sum(&:point)]
         text << units.
-          map.with_index { | u, index | u.show(index, d) }.
+          map.with_index { | u, index | u.show(d) }.
           join("\n")
       end
       text
