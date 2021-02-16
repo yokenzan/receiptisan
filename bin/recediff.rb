@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler/setup"
-require "recediff"
+require 'bundler/setup'
+require 'recediff'
+
+exit 1 if ARGV.empty?
 
 parser = Recediff::Parser.new(Recediff::Master.load('./csv'))
 
