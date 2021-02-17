@@ -19,8 +19,8 @@ module Recediff
       @count_at = @row[-31..-1].map(&:to_i)
     end
 
-    def show(index)
-      "--> %s - %2d - %4d点 - %s %s" % [category, index, point.to_i, code, @name]
+    def show(index, day)
+      "--> %s - %2d - %4d点 - %s %s" % [category, index, point_at(day), code, @name]
     end
 
     def point_at(day)
