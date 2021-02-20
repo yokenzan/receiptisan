@@ -19,6 +19,7 @@ module Recediff
   module COST
     CATEGORY = 0
     SHINKU   = 1
+    CODE     = 3
     POINT    = 5
   end
 

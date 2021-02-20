@@ -44,7 +44,7 @@ module Recediff
       return if comment?(category)
 
       context.unit.add_cost(
-        Cost.new(code = row.at(3).to_i, @master.find_name_by_code(code), category, row)
+        Cost.new(code = row.at(COST::CODE).to_i, @master.find_name_by_code(code), category, row)
       )
     end
 
