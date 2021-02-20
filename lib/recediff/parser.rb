@@ -3,7 +3,7 @@ require 'csv'
 
 module Recediff
   class Parser
-    # @param [Hash<Symbol, String>] master
+    # @param [Master] master
     def initialize(master)
       @master = master
     end

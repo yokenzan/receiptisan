@@ -17,9 +17,12 @@ module Recediff
     end
 
     def initialize
+      # @type [Hash<Symbol, String>]
       @hash = {}
     end
 
+    # @param [String, Integer] code
+    # @return [String, nil]
     def find_name_by_code(code)
       @hash[code]
     end
