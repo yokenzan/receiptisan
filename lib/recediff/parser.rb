@@ -3,9 +3,13 @@ require 'csv'
 
 module Recediff
   class Parser
-    # @param [Master] master
-    def initialize(master)
-      @master = master
+    # @param [Master]           master
+    # @param [DiseaseMaster]    disease_master
+    # @param [ShushokugoMaster] shushokugo_master
+    def initialize(master, disease_master, shushokugo_master)
+      @master            = master
+      @disease_master    = disease_master
+      @shushokugo_master = shushokugo_master
     end
 
     # @param [String] uke_file_path
@@ -30,7 +34,24 @@ module Recediff
         )
       when /HO/, /KO/
         context.receipt.add_hoken(row)
-      when /SJ/, /SY/, /GO/, /IR/
+      when /SY/
+        code = row.at(SYOBYO::CODE)
+        disease = Syobyo::Disease.new(
+          code,
+          @disease_master.find_name_by_code(code) || row.at(SYOBYO::WORPRO_NAME)
+        )
+        syobyo = Syobyo.new(
+          disease,
+          row.at(SYOBYO::START_DATE),
+          row.at(SYOBYO::TENKI),
+          row.at(SYOBYO::IS_MAIN).to_i == 1
+        )
+        row.at(SYOBYO::SHUSHOKUGO)&.scan(/\d{4}/) do | code |
+          syobyo.add_shushokugo(@shushokugo_master.find_by_code(code))
+        end
+
+        context.receipt.add_syobyo(syobyo)
+      when /SJ/, /GO/, /IR/
         ignore
       else
         add_cost(context, category, row)

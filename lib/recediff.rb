@@ -6,6 +6,7 @@ require_relative 'recediff/master'
 require_relative 'recediff/receipt'
 require_relative 'recediff/calc_unit'
 require_relative 'recediff/cost'
+require_relative 'recediff/syobyo'
 
 module Recediff
   class Error < StandardError; end
@@ -26,5 +27,14 @@ module Recediff
   module HOKEN
     HOKENJA_NUMBER = 1
     TOTAL_POINT    = 5
+  end
+
+  module SYOBYO
+    CODE        = 1
+    START_DATE  = 2
+    TENKI       = 3
+    SHUSHOKUGO  = 4
+    WORPRO_NAME = 5
+    IS_MAIN     = 6
   end
 end

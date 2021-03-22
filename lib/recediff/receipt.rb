@@ -10,6 +10,7 @@ module Recediff
       @patient_name = patient_name
       @units        = []
       @hokens       = []
+      @syobyos      = []
     end
 
     # @return [Boolean]
@@ -24,6 +25,10 @@ module Recediff
 
     def add_hoken(hoken)
       @hokens << hoken
+    end
+
+    def add_syobyo(row)
+      @syobyos << row
     end
 
     # @return [Array<String>, nil]
@@ -49,21 +54,38 @@ module Recediff
 
     def show
       text = ''
+      # text << "\n#### %5d - %s ########\n" % [@patient_id, @patient_name]
       text << "\n#### %5d - %s - %d点 ########\n" % [@patient_id, @patient_name, point]
+
+      text << show_meisai
+      text << "\n--------------------------------\n"
+      text << show_syobyo
+      text
+    end
+
+    def show_meisai
+      text = ''
       text << "\n\n"
+
       if total_point
         text << "## 保険者番号 %8s 請求点数 %d点 請求点数と算出合計点数一致？ %s\n" % [hoken.at(HOKEN::HOKENJA_NUMBER), total_point, point == total_point]
       end
+
       days.each do | d |
         # @type [Array<CalcUnit>] units
         # @type [CalcUnit] u
         units = @units.select { | u | u.done_at?(d) }
 
-        text << "\n### %2d日 %d点-----\n" % [d, units.sum(&:point)]
+        text << "\n### %2d日 %d点-----\n" % [d, units.sum { | u | u.point_at(d) }]
         # @type [CalcUnit] u
         text << units.map { | u | u.show(d) }.join("\n")
       end
+
       text
+    end
+
+    def show_syobyo
+      @syobyos.sort_by(&:code).map { | s | s.to_list(patient_id) }.join("\n")
     end
 
     # @return [Integer]

@@ -6,7 +6,11 @@ require 'recediff'
 
 exit 1 if ARGV.empty?
 
-parser = Recediff::Parser.new(Recediff::Master.load('./csv'))
+parser = Recediff::Parser.new(
+  Recediff::Master.load('./csv'),
+  Recediff::DiseaseMaster.load('./csv'),
+  Recediff::ShushokugoMaster.load('./csv'),
+)
 
 receipts_in_uke = parser.parse(ARGV.first)
 
