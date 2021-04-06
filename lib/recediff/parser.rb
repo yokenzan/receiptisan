@@ -28,9 +28,13 @@ module Recediff
 
     def parse_row(row, context)
       case category = row.at(COST::CATEGORY)
+      when /IR/
+        context.hospital = Hospital.new(row)
       when /RE/
         context.new_receipt(
-          Receipt.new(row.at(RE::RECEIPT_ID).to_i, row.at(RE::PATIENT_ID).to_i, row.at(RE::PATIENT_NAME))
+          Receipt.new(
+            row.at(RE::RECEIPT_ID).to_i, row.at(RE::PATIENT_ID).to_i, row.at(RE::PATIENT_NAME), row.at(2), context.hospital
+          )
         )
       when /HO/, /KO/
         context.receipt.add_hoken(row)
@@ -77,12 +81,14 @@ module Recediff
 
     class Context
       attr_reader :receipts, :receipt, :unit
+      attr_accessor :hospital
 
       def initialize
         # @type [Array<Receipt>]
         @receipts = []
         @receipt  = nil
         @unit     = nil
+        @hospital = nil
       end
 
       # @param [Receipt] receipt

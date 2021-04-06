@@ -4,13 +4,15 @@ module Recediff
     # @param [Integer] id
     # @param [Integer] patient_id
     # @param [String] patient_name
-    def initialize(id, patient_id, patient_name)
+    def initialize(id, patient_id, patient_name, code_of_types, hospital)
       @id           = id.to_i
       @patient_id   = patient_id.to_i
       @patient_name = patient_name
       @units        = []
       @hokens       = []
       @syobyos      = []
+      @type         = ReceiptType.new(code_of_types)
+      @hospital     = hospital
     end
 
     # @return [Boolean]
@@ -93,6 +95,84 @@ module Recediff
       days.sum { | d | @units.select { | u | u.done_at?(d) }.sum { | u | u.point_at(d) } }
     end
 
+    def to_csv(sep = ',')
+      hospital_columns = [
+        @hospital.prefecture_code,
+        @hospital.code,
+        @hospital.seikyu_ym,
+      ]
+      receipt_level_columns = [
+        @id,
+        @type.hoken_kohi_type,
+        @type.hoken_multiple_type,
+        @type.age_type,
+        patient_id,
+        nil,
+        nil,
+        nil,
+        nil,
+        nil,
+        nil,
+      ]
+      units.map.with_index do | cu, cu_order |
+        # hospital_code, year_month, kikin_or_kokuho,
+        # receipt_id, hoken_kohi_type, hoken_multiple_type, age_type, patient_id, hobetsu_list, iho, kohi_1, kohi_2, kohi_3, kohi_4,
+        # calc_unit_order, cost_order, receden_code, name, count, point
+        cu_point = cu.point
+        cu_count = cu.count
+        cu.map.with_index do | cost, cost_order |
+          (hospital_columns + receipt_level_columns + [
+            cu_order,
+            cu.shinku,
+            cu_point,
+            cu_count,
+            cost_order,
+            cost.category,
+            cost.code,
+            cost.name,
+            cost.count,
+          ]).join(sep)
+        end.join("\n")
+      end.join("\n")
+    end
+
     attr_reader :units, :patient_id
+
+    class ReceiptType
+      @@hoken_multiple_types = {
+        :'1' => '単独',
+        :'2' => '２併',
+        :'3' => '３併',
+        :'4' => '４併',
+        :'5' => '５併',
+      }
+      @@age_types = {
+        :'1' => '本入',
+        :'2' => '本外',
+        :'3' => '六入',
+        :'4' => '六外',
+        :'5' => '家入',
+        :'6' => '家外',
+        :'7' => '高入一',
+        :'8' => '高外一',
+        :'9' => '高入７',
+        :'0' => '高外７',
+      }
+      def initialize(code_of_types)
+        @code_of_types = code_of_types.to_s
+      end
+
+      def hoken_kohi_type
+        @code_of_types[1]
+      end
+
+      def hoken_multiple_type
+        @@hoken_multiple_types[@code_of_types[2].intern]
+      end
+
+      def age_type
+        @@age_types[@code_of_types[3].intern]
+      end
+    end
   end
 end

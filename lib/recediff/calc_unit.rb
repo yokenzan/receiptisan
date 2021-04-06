@@ -65,6 +65,10 @@ module Recediff
       @costs.sum { | c | c.point_at(day) }
     end
 
+    def count
+      @costs.first.count
+    end
+
     attr_reader :shinku, :point, :done_at
   end
 end

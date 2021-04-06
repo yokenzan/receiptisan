@@ -17,6 +17,7 @@ module Recediff
         map.with_index { | day, index | !day.nil? ? index + 1 : nil }.
         compact
       @count_at = @row[-31..-1].map(&:to_i)
+      @count    = @count_at.inject(0, &:+)
     end
 
     def show(index, day)
@@ -27,6 +28,6 @@ module Recediff
       @point.to_i * @count_at.at(day - 1)
     end
 
-    attr_reader :code, :category, :point, :done_at
+    attr_reader :code, :name, :category, :point, :done_at, :count
   end
 end
