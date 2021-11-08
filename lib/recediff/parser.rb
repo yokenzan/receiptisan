@@ -6,38 +6,45 @@ module Recediff
     # @param [Master]           master
     # @param [DiseaseMaster]    disease_master
     # @param [ShushokugoMaster] shushokugo_master
-    def initialize(master, disease_master, shushokugo_master)
+    def initialize(master, disease_master, shushokugo_master, comment_master)
       @master            = master
       @disease_master    = disease_master
       @shushokugo_master = shushokugo_master
+      @comment_master    = comment_master
     end
 
     # @param [String] uke_file_path
     # @return [Array<Receipt>]
     def parse(uke_file_path)
-      context = Context.new
+      buffer = Buffer.new
 
-      CSV.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8') { | row | parse_row(row, context) }
+      CSV.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8') { | row | parse_row(row, buffer) }
 
-      context.close_current_receipt
+      buffer.close_current_receipt
 
-      context.receipts.each(&:sort!).sort_by(&:patient_id)
+      # buffer.receipts.each(&:sort!).sort_by(&:patient_id)
+      buffer.receipts
     end
 
     private
 
-    def parse_row(row, context)
+    def parse_row(row, buffer)
       case category = row.at(COST::CATEGORY)
       when /IR/
-        context.hospital = Hospital.new(row)
+        buffer.hospital = Hospital.new(row)
       when /RE/
-        context.new_receipt(
+        buffer.new_receipt(
           Receipt.new(
-            row.at(RE::RECEIPT_ID).to_i, row.at(RE::PATIENT_ID).to_i, row.at(RE::PATIENT_NAME), row.at(2), context.hospital
+            row.at(RE::RECEIPT_ID).to_i,
+            row.at(RE::PATIENT_ID).to_i,
+            row.at(RE::PATIENT_NAME),
+            row.at(RE::TYPES),
+            row.at(RE::TOKKI_JIKO),
+            buffer.hospital
           )
         )
       when /HO/, /KO/
-        context.receipt.add_hoken(row)
+        buffer.receipt.add_hoken(row)
       when /SY/
         code = row.at(SYOBYO::CODE)
         disease = Syobyo::Disease.new(
@@ -54,23 +61,47 @@ module Recediff
           syobyo.add_shushokugo(@shushokugo_master.find_by_code(code))
         end
 
-        context.receipt.add_syobyo(syobyo)
-      when /SJ/, /GO/, /IR/
+        buffer.receipt.add_syobyo(syobyo)
+      when /SJ/, /GO/, /IR/, /SN/
         ignore
       else
-        add_cost(context, category, row)
+        add_cost(buffer, category, row)
       end
     end
 
-    def add_cost(context, category, row)
+    def add_cost(buffer, category, row)
       if shinku = row.at(COST::SHINKU)
-        context.new_unit(CalcUnit.new(shinku.to_i))
+        buffer.new_unit(CalcUnit.new(shinku.to_i))
       end
-      return if comment?(category)
 
-      context.unit.add_cost(
-        Cost.new(code = row.at(COST::CODE).to_i, @master.find_name_by_code(code), category, row)
-      )
+      unless comment?(category)
+        cost = Cost.new(code = row.at(COST::CODE).to_i, @master.find_by_code(code), category, row)
+        row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3].
+          each_slice(2).
+          reject { | code, additional_text | code.nil? }.
+          each { | code, additional_text |
+            cost.add_comment(
+              Comment.new(
+                CommentCore.new(
+                  code.to_i,
+                  @comment_master.find_by_code(code.to_i),
+                  additional_text
+                ),
+                category,
+                []
+              )
+            )
+          }
+        buffer.unit.add_cost(cost)
+      else
+        buffer.unit.add_cost(
+          Comment.new(
+            CommentCore.new(code = row.at(COST::CODE).to_i, @comment_master.find_by_code(code), row.at(5)),
+            category,
+            row
+          )
+        )
+      end
     end
 
     def comment?(category)
@@ -79,7 +110,7 @@ module Recediff
 
     def ignore; end
 
-    class Context
+    class Buffer
       attr_reader :receipts, :receipt, :unit
       attr_accessor :hospital
 
@@ -100,7 +131,12 @@ module Recediff
       def close_current_receipt
         close_current_unit
 
-        receipts << @receipt if @receipt
+        if @receipt
+          @receipt.remove_comment_only_units
+          @receipt.reinitialize
+          receipts << @receipt if @receipt
+        end
+
         @receipt = nil
       end
 
@@ -113,11 +149,12 @@ module Recediff
       private
 
       def close_current_unit
-        receipt.add_unit(unit.reinitialize.sort!) if has_unterminated_context?
+        receipt.add_unit(unit) if unterminated_buffer?
+        # receipt.add_unit(unit.sort!) if unterminated_buffer?
         @unit = nil
       end
 
-      def has_unterminated_context?
+      def unterminated_buffer?
         receipt && unit && !unit.empty?
       end
     end

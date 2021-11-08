@@ -4,14 +4,17 @@ module Recediff
     # @param [Integer] id
     # @param [Integer] patient_id
     # @param [String] patient_name
-    def initialize(id, patient_id, patient_name, code_of_types, hospital)
+    def initialize(id, patient_id, patient_name, code_of_types, tokki_jiko, hospital)
       @id           = id.to_i
       @patient_id   = patient_id.to_i
-      @patient_name = patient_name
+      @patient_name = $MASK ?
+        sprintf('患者　%s', @patient_id.to_s.tr('0-9', '０-９')) :
+        patient_name
       @units        = []
       @hokens       = []
       @syobyos      = []
       @type         = ReceiptType.new(code_of_types)
+      @tokki_jiko   = tokki_jiko
       @hospital     = hospital
     end
 
@@ -39,12 +42,19 @@ module Recediff
     end
 
     # @return self
+    def reinitialize
+      remove_comment_only_units
+      @units.each(&:reinitialize)
+      self
+    end
+
+    # @return self
     def sort!
       @units.sort_by!(&:uniq_id)
       self
     end
 
-    # @return [Array<CalcUnit>]
+    # @return [Array<Integer>]
     def days
       @units.map(&:done_at).flatten.uniq.sort
     end
@@ -99,6 +109,7 @@ module Recediff
       hospital_columns = [
         @hospital.prefecture_code,
         @hospital.code,
+        @hospital.shaho_or_kokuho,
         @hospital.seikyu_ym,
       ]
       receipt_level_columns = [
@@ -107,12 +118,13 @@ module Recediff
         @type.hoken_multiple_type,
         @type.age_type,
         patient_id,
-        nil,
-        nil,
-        nil,
-        nil,
-        nil,
-        nil,
+        patient_name,
+        # nil,
+        # nil,
+        # nil,
+        # nil,
+        # nil,
+        # nil,
       ]
       units.map.with_index do | cu, cu_order |
         # hospital_code, year_month, kikin_or_kokuho,
@@ -121,7 +133,8 @@ module Recediff
         cu_point = cu.point
         cu_count = cu.count
         cu.map.with_index do | cost, cost_order |
-          (hospital_columns + receipt_level_columns + [
+          header = hospital_columns + receipt_level_columns
+          [(header + [
             cu_order,
             cu.shinku,
             cu_point,
@@ -131,12 +144,40 @@ module Recediff
             cost.code,
             cost.name,
             cost.count,
-          ]).join(sep)
+            cost.code_table_upper_category,
+            cost.code_table_lower_category,
+            cost.code_table_number,
+          ]).join(sep)].concat(
+            cost.comments.map do | comment |
+              (header + [
+                cu_order,
+                cu.shinku,
+                cu_point,
+                cu_count,
+                cost_order,
+                cost.category,
+                comment.code,
+                comment.name,
+                comment.count,
+                comment.code_table_upper_category,
+                comment.code_table_lower_category,
+                comment.code_table_number,
+              ]).join(sep)
+            end
+          ).flatten(1)
         end.join("\n")
       end.join("\n")
     end
 
-    attr_reader :units, :patient_id
+    def seikyu_ym
+      @hospital.seikyu_ym
+    end
+
+    def remove_comment_only_units
+      @units.reject!(&:comment_only?)
+    end
+
+    attr_reader :units, :patient_id, :patient_name, :tokki_jiko
 
     class ReceiptType
       @@hoken_multiple_types = {

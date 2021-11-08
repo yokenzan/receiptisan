@@ -6,14 +6,27 @@ require 'recediff'
 
 exit 1 if ARGV.empty?
 
+$ERR = 0
 parser = Recediff::Parser.new(
   Recediff::Master.load('./csv'),
   Recediff::DiseaseMaster.load('./csv'),
   Recediff::ShushokugoMaster.load('./csv'),
+  Recediff::CommentMaster.load('./csv'),
 )
+
+$MASK = true
 
 receipts_in_uke = parser.parse(ARGV.first)
 
-puts receipts_in_uke.map(&:show)
-puts receipts_in_uke.sum(&:point)
-puts receipts_in_uke.length
+# puts receipts_in_uke.map(&:show)
+# puts receipts_in_uke.sum(&:point)
+# puts receipts_in_uke.length
+
+# EF風コスト明細
+puts receipts_in_uke.map(&:to_csv)
+# receipts_in_uke.each { | r | puts r.to_csv }
+
+# 特記事項
+# puts receipts_in_uke.map { | re | "%s\t%d\t%s" % [re.seikyu_ym, re.patient_id, re.tokki_jiko] }
+
+# puts $ERR

@@ -4,7 +4,7 @@ module Recediff
   # 算定単位
   class CalcUnit
     extend Forwardable
-    def_delegators :@costs, :map, :length, :empty?
+    def_delegators :@costs, :map, :length, :empty?, :first
 
     # @param [Integer] shinku 診療識別・診療区分
     def initialize(shinku)
@@ -21,8 +21,12 @@ module Recediff
       return self if @costs.empty?
 
       @point   = @costs.sum { | c | c.point.to_i }
-      @done_at = @costs.first.done_at
+      @done_at = @costs.reject { | c | c.is_a?(Comment) }.first.done_at
       self
+    end
+
+    def comment_only?
+      @costs.all? { | c | c.is_a?(Comment) }
     end
 
     # @param [Cost] cost
@@ -38,7 +42,7 @@ module Recediff
 
     # @return [String]
     def uniq_id
-      "%02d%02d%0d%05d%02d" % [shinku, done_at.first, @costs.first.code, point, length]
+      "%02d%02d%0d%05d%02d" % [shinku, done_at.first, first.code, point, length]
     end
 
     # @param [Integer] day
@@ -66,7 +70,7 @@ module Recediff
     end
 
     def count
-      @costs.first.count
+      first.count
     end
 
     attr_reader :shinku, :point, :done_at
