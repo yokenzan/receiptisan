@@ -96,7 +96,7 @@ module Recediff
       else
         buffer.unit.add_cost(
           Comment.new(
-            CommentCore.new(code = row.at(COST::CODE).to_i, @comment_master.find_by_code(code), row.at(5)),
+            CommentCore.new(code = row.at(COST::CODE).to_i, @comment_master.find_by_code(code), row.at(4)),
             category,
             row
           )

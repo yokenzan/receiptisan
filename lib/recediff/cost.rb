@@ -80,10 +80,6 @@ module Recediff
       0
     end
 
-    def name
-      text.to_s + additional_text.to_s
-    end
-
     def code_table_number; end
 
     def code_table_upper_category; end
@@ -95,7 +91,7 @@ module Recediff
     end
 
     attr_reader :category, :point, :done_at, :count
-    def_delegators :@core, :code, :text, :additional_text
+    def_delegators :@core, :code, :text, :additional_text, :name
   end
 
   class CommentCore
@@ -106,7 +102,9 @@ module Recediff
     end
 
     def name
-      text.to_s + additional_text.to_s
+      additional_text.to_s.length > 0 ?
+        [text, additional_text].join('') :
+        text.to_s
     end
 
     attr_reader :code, :text, :additional_text
