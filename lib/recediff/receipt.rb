@@ -155,7 +155,7 @@ module Recediff
                 cu_point,
                 cu_count,
                 cost_order,
-                cost.category,
+                cost.category + '(CO)',
                 comment.code,
                 comment.name,
                 comment.count,
