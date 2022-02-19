@@ -26,7 +26,22 @@ module Recediff
       buffer.receipts
     end
 
+    def parse_area(text)
+      buffer = Buffer.new
+
+      buffer.new_empty_receipt unless is_receipt_row(text.split("\n").first)
+
+      CSV.parse(text) { | row | parse_row(row, buffer) }
+
+      buffer.close_current_receipt
+      buffer.receipts
+    end
+
     private
+
+    def is_receipt_row(row)
+      row =~ /\bRE\b/
+    end
 
     def parse_row(row, buffer)
       case category = row.at(COST::CATEGORY)
@@ -111,7 +126,7 @@ module Recediff
     def ignore; end
 
     class Buffer
-      attr_reader :receipts, :receipt, :unit
+      attr_reader :receipts, :unit, :receipt
       attr_accessor :hospital
 
       def initialize
@@ -134,10 +149,22 @@ module Recediff
         if @receipt
           @receipt.remove_comment_only_units
           @receipt.reinitialize
-          receipts << @receipt if @receipt
+          receipts << @receipt
         end
 
         @receipt = nil
+      end
+
+
+      def new_empty_receipt
+        new_receipt(Receipt.new(
+          'NOT FOUND',
+          'NOT FOUND',
+          'NOT FOUND',
+          '',
+          '',
+          'NOT FOUND',
+        ))
       end
 
       # @param [CalcUnit] unit
@@ -149,13 +176,13 @@ module Recediff
       private
 
       def close_current_unit
-        receipt.add_unit(unit) if unterminated_buffer?
+        @receipt.add_unit(unit) if unterminated_buffer?
         # receipt.add_unit(unit.sort!) if unterminated_buffer?
         @unit = nil
       end
 
       def unterminated_buffer?
-        receipt && unit && !unit.empty?
+        @receipt && unit && !unit.empty?
       end
     end
   end

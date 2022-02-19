@@ -105,6 +105,10 @@ module Recediff
       days.sum { | d | @units.select { | u | u.done_at?(d) }.sum { | u | u.point_at(d) } }
     end
 
+    def to_preview
+      units.map(&:to_preview)
+    end
+
     def to_csv(sep = ',')
       hospital_columns = [
         @hospital.prefecture_code,
