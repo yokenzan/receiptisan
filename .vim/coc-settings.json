@@ -1,0 +1,9 @@
+{
+    "solargraph": {
+        "useBundler": false,
+        "autoformat": true,
+        "diagnostics": true,
+        "completion": true,
+        "hover": true
+    }
+}
