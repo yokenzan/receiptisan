@@ -40,6 +40,7 @@ module Recediff
       buffer.receipts
     rescue ArgumentError => e
       raise e unless e.message.include?('invalid byte sequence in UTF-8')
+
       text.force_encoding(Encoding::Shift_JIS).encode!(Encoding::UTF_8, Encoding::Shift_JIS)
       retry
     end
