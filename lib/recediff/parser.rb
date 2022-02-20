@@ -22,7 +22,6 @@ module Recediff
 
       buffer.close_current_receipt
 
-      # buffer.receipts.each(&:sort!).sort_by(&:patient_id)
       buffer.receipts
     end
 
