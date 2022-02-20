@@ -106,7 +106,14 @@ module Recediff
     end
 
     def to_preview
-      units.map(&:to_preview)
+      lines = []
+
+      unless @syobyos.empty?
+        lines << @syobyos.map(&:to_preview)
+        lines << '-' * 40
+      end
+
+      lines.concat(units.map(&:to_preview)).flatten.join("\n")
     end
 
     def to_csv(sep = ',')

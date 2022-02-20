@@ -26,20 +26,38 @@ module Recediff
       buffer.receipts
     end
 
+    # @param [String] text
     def parse_area(text)
-      buffer = Buffer.new
+      text.encode!(Encoding::UTF_8) unless text.encoding == Encoding::UTF_8
 
-      buffer.new_empty_receipt unless is_receipt_row(text.split("\n").first)
+      buffer    = Buffer.new
+      first_row = text.split("\n").first
+
+      buffer.new_empty_receipt if !receipt_row?(first_row) && !hospital_row?(first_row)
 
       CSV.parse(text) { | row | parse_row(row, buffer) }
 
       buffer.close_current_receipt
       buffer.receipts
+    rescue ArgumentError => e
+      raise e unless e.message.include?('invalid byte sequence in UTF-8')
+      text.force_encoding(Encoding::Shift_JIS).encode!(Encoding::UTF_8, Encoding::Shift_JIS)
+      retry
+    end
+
+    # @param [String] uke_file_path
+    # @return [Array]
+    def parse_as_summaries(uke_file_path)
+      []
     end
 
     private
 
-    def is_receipt_row(row)
+    def hospital_row?(row)
+      row =~ /\bIR\b/
+    end
+
+    def receipt_row?(row)
       row =~ /\bRE\b/
     end
 
@@ -163,7 +181,7 @@ module Recediff
           'NOT FOUND',
           '',
           '',
-          'NOT FOUND',
+          @hospital || 'NOT FOUND',
         ))
       end
 
