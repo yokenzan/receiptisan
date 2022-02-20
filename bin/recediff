@@ -3,63 +3,8 @@
 
 require 'bundler/setup'
 require 'recediff'
-require 'optparse'
 
 $ERR = 0
-
-module Recediff
-  class CLIApplication
-    def initialize
-      @parser = Recediff::Parser.new(
-        Recediff::Master.load('./csv'),
-        Recediff::DiseaseMaster.load('./csv'),
-        Recediff::ShushokugoMaster.load('./csv'),
-        Recediff::CommentMaster.load('./csv'),
-      )
-      initialize_options
-    end
-
-    def run
-      @optparse.parse!(ARGV)
-    end
-
-    def initialize_options
-      # @type [OptionParser] optparse
-      @optparse = OptionParser.new do | optparse |
-        # EF風コスト明細
-        optparse.on('--table-like-ef') do
-          receipts_in_uke = @parser.parse(ARGV.first)
-
-          puts receipts_in_uke.map(&:to_csv)
-        end
-
-        # レセプトプレビュー
-        optparse.on('--preview') do
-          puts @parser
-            .parse_area(ARGV.first || $stdin.readlines.join || DATA.readlines.join)
-            # .parse_area(ARGV.first || DATA.readlines.join)
-            .map(&:to_preview)
-            .join("\n\n=======================================\n\n")
-        end
-
-        # 診療日別コスト一覧
-        optparse.on('--show') do
-          receipts_in_uke = @parser.parse(ARGV.first)
-
-          puts receipts_in_uke.map(&:show)
-          puts receipts_in_uke.sum(&:point)
-          puts receipts_in_uke.length
-        end
-      end
-
-      @optparse.version = Recediff::VERSION
-    end
-  end
-end
-
 exit 1 if ARGV.empty?
 
-app = Recediff::CLIApplication.new
-app.run
-
-# puts $ERR
+Recediff::Cli::Application.new.run

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'recediff/version'
+require_relative 'recediff/cli'
 require_relative 'recediff/parser'
 require_relative 'recediff/master'
 require_relative 'recediff/hospital'
