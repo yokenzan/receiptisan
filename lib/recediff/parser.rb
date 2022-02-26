@@ -72,13 +72,10 @@ module Recediff
     end
 
     def parse_row(row, buffer)
-      ir = /#{Recediff::Model::Uke::Enum::IR::RECORD}/
-      re = /#{Recediff::Model::Uke::Enum::RE::RECORD}/
-
       case category = row.at(COST::CATEGORY)
-      when ir
+      when /IR/
         buffer.hospital = Hospital.new(row)
-      when re
+      when /RE/
         buffer.new_receipt(
           Receipt.new(
             row.at(RE::RECEIPT_ID).to_i,
