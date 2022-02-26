@@ -3,6 +3,16 @@ require 'csv'
 
 module Recediff
   class Parser
+    class << self
+      def create
+        new(
+          Recediff::Master.load('./csv'),
+          Recediff::DiseaseMaster.load('./csv'),
+          Recediff::ShushokugoMaster.load('./csv'),
+          Recediff::CommentMaster.load('./csv')
+        )
+      end
+    end
     # @param [Master]           master
     # @param [DiseaseMaster]    disease_master
     # @param [ShushokugoMaster] shushokugo_master
@@ -62,10 +72,13 @@ module Recediff
     end
 
     def parse_row(row, buffer)
+      ir = /#{Recediff::Model::Uke::Enum::IR::RECORD}/
+      re = /#{Recediff::Model::Uke::Enum::RE::RECORD}/
+
       case category = row.at(COST::CATEGORY)
-      when /IR/
+      when ir
         buffer.hospital = Hospital.new(row)
-      when /RE/
+      when re
         buffer.new_receipt(
           Receipt.new(
             row.at(RE::RECEIPT_ID).to_i,

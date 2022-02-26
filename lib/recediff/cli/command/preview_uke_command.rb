@@ -7,22 +7,23 @@ module Recediff
     module Command
       # Command to preview UKE file
       class PreviewUkeCommand < Dry::CLI::Command
-        argument :uke_text, required: false
+        argument :uke, required: false
 
         def initialize
           super
-          @parser = Recediff::Parser.new(
-            Recediff::Master.load('./csv'),
-            Recediff::DiseaseMaster.load('./csv'),
-            Recediff::ShushokugoMaster.load('./csv'),
-            Recediff::CommentMaster.load('./csv')
-          )
+          @parser = Recediff::Parser.create
         end
 
         # @param [String?] uke_text
-        def call(uke_text: nil)
-          puts @parser
-            .parse_area(uke_text || $stdin.readlines.join)
+        def call(uke: nil, **_options)
+          previewed_receipts =
+            if uke
+              @parser.parse(uke)
+            else
+              @parser.parse_area($stdin.readlines.join)
+            end
+
+          puts previewed_receipts
             .map(&:to_preview)
             .join("\n\n=======================================\n\n")
         end

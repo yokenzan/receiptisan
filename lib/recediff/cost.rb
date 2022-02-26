@@ -34,7 +34,7 @@ module Recediff
 
     def to_preview
       formatted_name   = name.gsub('−', '－')
-      text             = formatted_name + ('　' * (40 - formatted_name.length))
+      text             = formatted_name + ('　' * (60 - formatted_name.length))
       point_and_count  = point.nil? ? '' : '%8s x %2s' % [point.to_s.gsub(/(?<=\d)(\d{3})/, ',\\1'), count]
       comment_previews = @comments.empty? ? [] : @comments.map(&:to_preview)
 
@@ -111,7 +111,7 @@ module Recediff
     def to_preview
       combined_text  = text + (additional_text || '')
       formatted_text = combined_text.gsub('−', '－')
-      formatted_text + ('　' * (40 - formatted_text.length))
+      formatted_text + ('　' * (60 - formatted_text.length))
     end
 
     attr_reader :category, :point, :done_at, :count
@@ -121,7 +121,7 @@ module Recediff
   class CommentCore
     def initialize(code, text, additional_text)
       @code            = code.to_i
-      @text            = text
+      @text            = text || '⚠️⚠️⚠️⚠️⚠️'
       @additional_text = additional_text
     end
 

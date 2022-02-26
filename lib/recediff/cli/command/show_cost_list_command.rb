@@ -13,15 +13,11 @@ module Recediff
 
         def initialize
           super
-          @parser = Recediff::Parser.new(
-            Recediff::Master.load('./csv'),
-            Recediff::DiseaseMaster.load('./csv'),
-            Recediff::ShushokugoMaster.load('./csv'),
-            Recediff::CommentMaster.load('./csv')
-          )
+          @parser = Recediff::Parser.create
         end
 
         # @param [String] name
+        # @param [Hash] options
         def call(uke:, **options)
           receipts_in_uke = @parser.parse(uke)
 

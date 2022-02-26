@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   # 算定単位
   class CalcUnit
