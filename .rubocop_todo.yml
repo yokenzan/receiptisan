@@ -21,71 +21,12 @@ Gemspec/RequiredRubyVersion:
   Exclude:
     - 'recediff.gemspec'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: leading, trailing
-Layout/DotPosition:
-  Exclude:
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/parser.rb'
-    - 'lib/recediff/syobyo.rb'
-
-# Offense count: 28
-# Cop supports --auto-correct.
-# Configuration parameters: AllowBorderComment, AllowMarginComment.
-Layout/EmptyComment:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
 Layout/EmptyLineBetweenDefs:
   Exclude:
-    - 'lib/recediff/parser.rb'
     - 'lib/recediff/syobyo.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAliasSyntax, AllowedMethods.
-# AllowedMethods: alias_method, public, protected, private
-Layout/EmptyLinesAroundAttributeAccessor:
-  Exclude:
-    - 'lib/recediff/cost.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/recediff/syobyo.rb'
-
-# Offense count: 35
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: consistent, consistent_relative_to_receiver, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
-Layout/FirstArgumentIndentation:
-  Exclude:
-    - 'lib/recediff/parser.rb'
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -95,19 +36,6 @@ Layout/MultilineMethodCallIndentation:
   Exclude:
     - 'lib/recediff/cost.rb'
     - 'lib/recediff/syobyo.rb'
-
-# Offense count: 70
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleInsidePipes.
-# SupportedStylesInsidePipes: space, no_space
-Layout/SpaceAroundBlockParameters:
-  Exclude:
-    - 'bin/split_re'
-    - 'lib/recediff/calc_unit.rb'
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/master.rb'
-    - 'lib/recediff/parser.rb'
-    - 'lib/recediff/receipt.rb'
 
 # Offense count: 51
 # Cop supports --auto-correct.
@@ -206,11 +134,6 @@ Naming/ConstantName:
   Exclude:
     - 'lib/recediff/uke/enum.rb'
 
-# Offense count: 5
-# Configuration parameters: AllowedIdentifiers.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  EnforcedStyle: snake_case
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -268,15 +191,6 @@ Style/FormatString:
 # SupportedStyles: annotated, template, unannotated
 Style/FormatStringToken:
   EnforcedStyle: unannotated
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'lib/recediff/hospital.rb'
-    - 'lib/recediff/receipt.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedVariables.
@@ -372,15 +286,6 @@ Style/TrailingCommaInArrayLiteral:
   Exclude:
     - 'lib/recediff/receipt.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/recediff/receipt.rb'
-    - 'lib/recediff/syobyo.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/UnlessElse:
@@ -392,10 +297,3 @@ Style/UnlessElse:
 Style/ZeroLengthPredicate:
   Exclude:
     - 'lib/recediff/cost.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Layout/LineLength:
-  Max: 132
