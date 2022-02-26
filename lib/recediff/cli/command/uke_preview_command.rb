@@ -6,7 +6,7 @@ module Recediff
   module Cli
     module Command
       # Command to preview UKE file
-      class PreviewUkeCommand < Dry::CLI::Command
+      class UkePreviewCommand < Dry::CLI::Command
         argument :uke, required: false
 
         def initialize
@@ -14,7 +14,7 @@ module Recediff
           @parser = Recediff::Parser.create
         end
 
-        # @param [String?] uke_text
+        # @param [String?] uke
         def call(uke: nil, **_options)
           previewed_receipts =
             if uke

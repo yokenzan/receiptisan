@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'command/preview_uke_command'
-require_relative 'command/show_version_command'
-require_relative 'command/show_cost_list_command'
-require_relative 'command/show_ef_like_list_command'
+require_relative 'command/uke_preview_command'
+require_relative 'command/version_command'
+require_relative 'command/daily_cost_list_command'
+require_relative 'command/ef_like_csv_command'

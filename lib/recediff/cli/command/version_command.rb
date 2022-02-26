@@ -4,7 +4,7 @@ module Recediff
   module Cli
     module Command
       # Command to show version and exit
-      class ShowVersionCommand < Dry::CLI::Command
+      class VersionCommand < Dry::CLI::Command
         def call
           puts Recediff::VERSION
         end

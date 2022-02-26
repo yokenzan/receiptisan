@@ -8,10 +8,10 @@ module Recediff
     class Application
       def initialize
         @commandset = Commandset
-        @commandset.register('--show-cost-list',    Command::ShowCostListCommand,   aliases: ['-l'])
-        @commandset.register('--show-ef-like-list', Command::ShowEfLikeListCommand, aliases: ['-e'])
-        @commandset.register('--preview-uke',       Command::PreviewUkeCommand,     aliases: ['-p'])
-        @commandset.register('--version',           Command::ShowVersionCommand,    aliases: ['-v'])
+        @commandset.register('--daily-cost-list', Command::DailyCostListCommand, aliases: ['-l'])
+        @commandset.register('--ef-like-csv',     Command::EfLikeCsvCommand,     aliases: ['-e'])
+        @commandset.register('--uke-preview',     Command::UkePreviewCommand,    aliases: ['-p'])
+        @commandset.register('--version',         Command::VersionCommand,       aliases: ['-v'])
       end
 
       def run

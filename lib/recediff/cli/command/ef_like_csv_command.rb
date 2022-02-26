@@ -4,7 +4,7 @@ module Recediff
   module Cli
     module Command
       # Command to show EF file like cost list
-      class ShowEfLikeListCommand < Dry::CLI::Command
+      class EfLikeCsvCommand < Dry::CLI::Command
         argument :uke, required: false
 
         def initialize

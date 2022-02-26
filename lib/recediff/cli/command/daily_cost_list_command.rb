@@ -6,7 +6,7 @@ module Recediff
   module Cli
     module Command
       # Command to preview UKE file
-      class ShowCostListCommand < Dry::CLI::Command
+      class DailyCostListCommand < Dry::CLI::Command
         argument :uke, required: true
         option :sum,   type: :boolean, default: false
         option :count, type: :boolean, default: false
