@@ -1,5 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
+AllCops:
+  NewCops: enable
+
 # Offense count: 5
 # Configuration parameters: AllowedIdentifiers.
 # SupportedStyles: snake_case, camelCase
@@ -20,7 +23,9 @@ Naming/ConstantName:
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: always, always_true, never
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
+  EnforcedStyle: always_true
+  Exclude:
+    - 'spec/spec_helper.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
@@ -57,3 +62,22 @@ Layout/FirstArgumentIndentation:
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
+
+# Offense count: 41
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
+# SupportedStyles: single_quotes, double_quotes
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+# temporarily disabled cops
+
+Style/RedundantArgument:
+  Enabled: false
+
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false

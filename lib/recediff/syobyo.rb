@@ -24,11 +24,11 @@ module Recediff
 
     def to_list(patient_id)
       is_main = @is_main ? '（主）' : ''
-      disease = @shushokugos.select(&:prefix?).
-        push(@disease).
-        concat(@shushokugos.reject(&:prefix?)).
-        map(&:to_s).
-        join('')
+      disease = @shushokugos.select(&:prefix?)
+        .push(@disease)
+        .concat(@shushokugos.reject(&:prefix?))
+        .map(&:to_s)
+        .join('')
       start_date = @start_date
       tenki      = @tenki
 
@@ -41,11 +41,11 @@ module Recediff
 
     def to_preview
       is_main = @is_main ? '（主）' : ''
-      disease = @shushokugos.select(&:prefix?).
-        push(@disease).
-        concat(@shushokugos.reject(&:prefix?)).
-        map(&:to_s).
-        join('')
+      disease = @shushokugos.select(&:prefix?)
+        .push(@disease)
+        .concat(@shushokugos.reject(&:prefix?))
+        .map(&:to_s)
+        .join('')
       start_date = @start_date
       tenki      = @tenki
 
@@ -76,8 +76,8 @@ module Recediff
         @code      = code
         @name      = name
         @is_prefix = is_prefix
-
       end
+
       def to_s
         @name
       end

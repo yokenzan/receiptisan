@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recediff
   # レセプト
   class Receipt
@@ -80,7 +82,9 @@ module Recediff
       text << "\n\n"
 
       if total_point
-        text << "## 保険者番号 %8s 請求点数 %d点 請求点数と算出合計点数一致？ %s\n" % [hoken.at(HOKEN::HOKENJA_NUMBER), total_point, point == total_point]
+        parameters = [hoken.at(HOKEN::HOKENJA_NUMBER), total_point, point == total_point]
+        format     = "## 保険者番号 %8s 請求点数 %d点 請求点数と算出合計点数一致？ %s\n"
+        text << format % parameters
       end
 
       days.each do | d |

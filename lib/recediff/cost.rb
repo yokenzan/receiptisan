@@ -13,10 +13,10 @@ module Recediff
       @category      = category
       @row           = row
       @point         = @row.at(COST::POINT) ? @row.at(COST::POINT).to_i : nil
-      @done_at       = @row[-31..-1].
-        map.with_index { | day, index | !day.nil? ? index + 1 : nil }.
-        compact
-      @count_at      = @row[-31..-1].map(&:to_i)
+      @done_at       = @row[-31..]
+        .map.with_index { | day, index | day.nil? ? nil : index + 1 }
+        .compact
+      @count_at      = @row[-31..].map(&:to_i)
       @count         = @count_at.inject(0, &:+)
       @master_record = master_record
       @comments      = []
@@ -29,7 +29,7 @@ module Recediff
     end
 
     def show(index, day)
-      "--> %s - %2d - %4d点 - %s %s" % [category, index, point_at(day), code, @name]
+      '--> %s - %2d - %4d点 - %s %s' % [category, index, point_at(day), code, @name]
     end
 
     def to_preview
@@ -91,7 +91,7 @@ module Recediff
     end
 
     def show(index, day)
-      "--> %s - %2d - %4d点 - %s %s" % [category, index, 0, code, name]
+      '--> %s - %2d - %4d点 - %s %s' % [category, index, 0, code, name]
     end
 
     def point_at(day)
@@ -115,6 +115,7 @@ module Recediff
     end
 
     attr_reader :category, :point, :done_at, :count
+
     def_delegators :@core, :code, :text, :additional_text, :name
   end
 

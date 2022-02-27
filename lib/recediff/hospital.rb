@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recediff
   class Hospital
     def initialize(row)
@@ -21,7 +23,7 @@ module Recediff
     end
 
     def shaho_or_kokuho
-      @row[1].to_i == 1 ? "社保" : "国保"
+      @row[1].to_i == 1 ? '社保' : '国保'
     end
   end
 end
