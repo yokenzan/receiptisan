@@ -3,10 +3,10 @@
 module Recediff
   class Syobyo
     @@tenkis = {
-      :'1' => '継続',
-      :'2' => '治癒',
-      :'3' => '死亡',
-      :'4' => '中止',
+      '1': '継続',
+      '2': '治癒',
+      '3': '死亡',
+      '4': '中止',
     }
 
     # @param [Integer] tenki_code

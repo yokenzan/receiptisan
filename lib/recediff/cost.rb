@@ -59,8 +59,8 @@ module Recediff
       return nil unless @master_record
 
       number = '%s%03d' % [@master_record.at(5), @master_record.at(6).to_i]
-      number += '-%d' % @master_record.at(7).to_i unless @master_record.at(7).to_i == 0
-      number += ' %d' % @master_record.at(8).to_i unless @master_record.at(8).to_i == 0
+      number += '-%d' % @master_record.at(7).to_i unless @master_record.at(7).to_i.zero?
+      number += ' %d' % @master_record.at(8).to_i unless @master_record.at(8).to_i.zero?
 
       number
     end

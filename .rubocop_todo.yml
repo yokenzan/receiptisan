@@ -6,13 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# Configuration parameters: Include.
-# Include: **/*.gemspec
-# Gemspec/RequiredRubyVersion:
-#   Exclude:
-#     - 'recediff.gemspec'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
@@ -21,21 +14,6 @@ Layout/MultilineMethodCallIndentation:
   Exclude:
     - 'lib/recediff/cost.rb'
     - 'lib/recediff/syobyo.rb'
-
-# Offense count: 51
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-# Layout/SpaceAroundOperators:
-#   Exclude:
-#     - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 28
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-# Layout/TrailingWhitespace:
-#   Exclude:
-#     - 'lib/recediff/uke/enum.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowSafeAssignment.
@@ -137,28 +115,6 @@ Style/ClassVars:
     - 'lib/recediff/receipt.rb'
     - 'lib/recediff/syobyo.rb'
 
-# Offense count: 20
-# Configuration parameters: AllowedConstants.
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/hospital.rb'
-    - 'lib/recediff/master.rb'
-    - 'lib/recediff/parser.rb'
-    - 'lib/recediff/receipt.rb'
-    - 'lib/recediff/syobyo.rb'
-    - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: allowed_in_returns, forbidden
-Style/DoubleNegation:
-  Exclude:
-    - 'lib/recediff/syobyo.rb'
-
 # Offense count: 16
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -171,57 +127,12 @@ Style/FormatString:
     - 'lib/recediff/receipt.rb'
     - 'lib/recediff/syobyo.rb'
 
-# Offense count: 43
-# Configuration parameters: MaxUnannotatedPlaceholdersAllowed, IgnoredMethods.
-# SupportedStyles: annotated, template, unannotated
-Style/FormatStringToken:
-  EnforcedStyle: unannotated
-
 # Offense count: 2
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
   Exclude:
     - 'lib/recediff/cost.rb'
     - 'lib/recediff/receipt.rb'
-
-# Offense count: 19
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-# SupportedShorthandSyntax: always, never
-Style/HashSyntax:
-  Exclude:
-    - 'lib/recediff/receipt.rb'
-    - 'lib/recediff/syobyo.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/MultilineTernaryOperator:
-  Exclude:
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/receipt.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IgnoredMethods.
-# SupportedStyles: predicate, comparison
-Style/NumericPredicate:
-  Exclude:
-    - 'spec/**/*'
-    - 'lib/recediff/calc_unit.rb'
-    - 'lib/recediff/cost.rb'
-
-# Offense count: 189
-# Cop supports --auto-correct.
-Style/RedundantFreeze:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/recediff/master.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -230,10 +141,3 @@ Style/RedundantSelf:
 Style/RescueStandardError:
   Exclude:
     - 'lib/recediff/cost.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Mode.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/recediff/receipt.rb'

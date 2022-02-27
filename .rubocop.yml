@@ -13,7 +13,7 @@ Naming/ConstantName:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: always_true
+  EnforcedStyle: always
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
@@ -50,6 +50,18 @@ Style/Documentation:
   Enabled: false
 
 Style/BlockComments:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/MultilineTernaryOperator:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/FormatStringToken:
   Enabled: false
 
 # temporarily disabled cops
