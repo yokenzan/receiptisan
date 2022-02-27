@@ -3,59 +3,44 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: enable
 
-Naming/VariableName:
-  EnforcedStyle: snake_case
-
 Naming/AsciiIdentifiers:
   Enabled: false
 
 Naming/ConstantName:
   Enabled: false
 
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
+Naming/VariableName:
+  EnforcedStyle: snake_case
 
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
 
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: consistent_comma
+Layout/BlockAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: start_of_block
 
-# allow to describe comments with Japanese
-Style/AsciiComments:
-  Enabled: false
+Layout/FirstArgumentIndentation:
+  EnforcedStyle: consistent
 
 Layout/LineLength:
   Max: 120
   AllowHeredoc: enabled
   AllowURI: enabled
 
-Layout/BlockAlignment:
-  Enabled: true
-  EnforcedStyleAlignWith: start_of_block
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
 
 Layout/SpaceAroundBlockParameters:
   EnforcedStyleInsidePipes: space
 
-Layout/FirstArgumentIndentation:
-  EnforcedStyle: consistent
-
-Layout/ArgumentAlignment:
-  EnforcedStyle: with_fixed_indentation
-
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-
-Style/Documentation:
+# allow to describe comments with Japanese
+Style/AsciiComments:
   Enabled: false
 
 Style/BlockComments:
   Enabled: false
 
-Style/StringConcatenation:
-  Enabled: false
-
-Style/MultilineTernaryOperator:
+Style/Documentation:
   Enabled: false
 
 Style/DoubleNegation:
@@ -64,7 +49,27 @@ Style/DoubleNegation:
 Style/FormatStringToken:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+Style/MultilineTernaryOperator:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+#
 # temporarily disabled cops
+#
 
 Style/RedundantArgument:
   Enabled: false

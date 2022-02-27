@@ -56,12 +56,6 @@ module Recediff
       retry
     end
 
-    # @param [String] uke_file_path
-    # @return [Array]
-    def parse_as_summaries(uke_file_path)
-      []
-    end
-
     private
 
     def hospital_row?(row)
@@ -106,7 +100,7 @@ module Recediff
         end
 
         buffer.receipt.add_syobyo(syobyo)
-      when /SJ/, /GO/, /IR/, /SN/
+      when /SJ/, /GO/, /SN/
         ignore
       else
         add_cost(buffer, category, row)
@@ -114,7 +108,7 @@ module Recediff
     end
 
     def add_cost(buffer, category, row)
-      if shinku = row.at(COST::SHINKU)
+      if (shinku = row.at(COST::SHINKU))
         buffer.new_unit(CalcUnit.new(shinku.to_i))
       end
 
@@ -122,7 +116,7 @@ module Recediff
         cost = Cost.new(code = row.at(COST::CODE).to_i, @master.find_by_code(code), category, row)
         row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3]
           .each_slice(2)
-          .reject { | code, additional_text | code.nil? }
+          .reject { | code, _ | code.nil? }
           .each { | code, additional_text |
             cost.add_comment(
               Comment.new(

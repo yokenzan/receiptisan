@@ -90,11 +90,11 @@ module Recediff
       @additional_text = @row.at(4)
     end
 
-    def show(index, day)
+    def show(index, _day)
       '--> %s - %2d - %4d点 - %s %s' % [category, index, 0, code, name]
     end
 
-    def point_at(day)
+    def point_at(_day)
       0
     end
 

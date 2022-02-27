@@ -8,7 +8,7 @@ uke             = nil
 current_id      = nil
 
 File.open(ARGV.first, 'r:Windows-31J:UTF-8') do | f |
-  while line = f.gets
+  while (line = f.gets)
     if line =~ /^RE/
       ukes[current_id.intern] = uke if current_id
 
@@ -22,6 +22,7 @@ File.open(ARGV.first, 'r:Windows-31J:UTF-8') do | f |
 end
 ukes[current_id.intern] = uke
 
-ukes.each do | key, uke |
-  File.open('./result/%s_%05d.UKE' % [ARGV.last, key.to_s.to_i], 'w') { | f | uke.each { | line | f.puts line } }
+ukes.each do | key, uke_ |
+  filename = './result/%s_%05d.UKE' % [ARGV.last, key.to_s.to_i]
+  File.open(filename, 'w') { | f | uke_.each { | line | f.puts line } }
 end

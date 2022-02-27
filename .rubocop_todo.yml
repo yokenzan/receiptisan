@@ -6,46 +6,9 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented, indented_relative_to_receiver
-Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/syobyo.rb'
-
-# Offense count: 2
-# Configuration parameters: AllowSafeAssignment.
-Lint/AssignmentInCondition:
-  Exclude:
-    - 'bin/split_re'
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 1
-Lint/DuplicateCaseCondition:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
 # Offense count: 4
 Lint/ShadowingOuterLocalVariable:
   Exclude:
-    - 'bin/split_re'
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/recediff/cost.rb'
     - 'lib/recediff/parser.rb'
 
 # Offense count: 7
