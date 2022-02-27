@@ -5,7 +5,7 @@ module Recediff
     module Command
       # Command to show EF file like cost list
       class EfLikeCsvCommand < Dry::CLI::Command
-        argument :uke, required: false
+        argument :uke, required: true
 
         def initialize
           super
@@ -13,7 +13,7 @@ module Recediff
         end
 
         # @param [String?] uke
-        def call(uke: nil, **_options)
+        def call(uke:, **_options)
           receipts_in_uke = @parser.parse(uke)
 
           puts receipts_in_uke.map(&:to_csv)
