@@ -20,7 +20,7 @@ module Recediff
       @count         = @count_at.inject(0, &:+)
       @master_record = master_record
       @comments      = []
-    rescue => e
+    rescue
       $ERR += 1
     end
 
@@ -59,8 +59,8 @@ module Recediff
       return nil unless @master_record
 
       number = '%s%03d' % [@master_record.at(5), @master_record.at(6).to_i]
-      number += '-%d' % @master_record.at(7).to_i unless @master_record.at(7).to_i == 0
-      number += ' %d' % @master_record.at(8).to_i unless @master_record.at(8).to_i == 0
+      number += '-%d' % @master_record.at(7).to_i unless @master_record.at(7).to_i.zero?
+      number += ' %d' % @master_record.at(8).to_i unless @master_record.at(8).to_i.zero?
 
       number
     end
@@ -90,11 +90,11 @@ module Recediff
       @additional_text = @row.at(4)
     end
 
-    def show(index, day)
+    def show(index, _day)
       '--> %s - %2d - %4d点 - %s %s' % [category, index, 0, code, name]
     end
 
-    def point_at(day)
+    def point_at(_day)
       0
     end
 
@@ -127,9 +127,7 @@ module Recediff
     end
 
     def name
-      additional_text.to_s.length > 0 ?
-        [text, additional_text].join('') :
-        text.to_s
+      additional_text.to_s.empty? ? text.to_s : [text, additional_text].join('')
     end
 
     attr_reader :code, :text, :additional_text

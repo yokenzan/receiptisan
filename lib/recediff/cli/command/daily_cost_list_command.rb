@@ -23,8 +23,8 @@ module Recediff
 
           puts receipts_in_uke.map(&:show)
 
-          puts receipts_in_uke.sum(&:point) if options.fetch(:sum)
-          puts receipts_in_uke.length       if options.fetch(:count)
+          puts receipts_in_uke.sum(&:point) if options.key?(:sum)
+          puts receipts_in_uke.length       if options.key?(:count)
         end
       end
     end

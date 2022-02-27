@@ -51,7 +51,7 @@ module Recediff
   end
 end
 
-tokki_jikos = {
+_tokki_jikos = {
   '01': '公',
   '02': '長',
   '03': '長処',

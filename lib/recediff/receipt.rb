@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 module Recediff
   # レセプト
@@ -143,7 +143,8 @@ module Recediff
       ]
       units.map.with_index do | cu, cu_order |
         # hospital_code, year_month, kikin_or_kokuho,
-        # receipt_id, hoken_kohi_type, hoken_multiple_type, age_type, patient_id, hobetsu_list, iho, kohi_1, kohi_2, kohi_3, kohi_4,
+        # receipt_id, hoken_kohi_type, hoken_multiple_type, age_type,
+        # patient_id, hobetsu_list, iho, kohi_1, kohi_2, kohi_3, kohi_4,
         # calc_unit_order, cost_order, receden_code, name, count, point
         cu_point = cu.point
         cu_count = cu.count
@@ -195,24 +196,28 @@ module Recediff
     attr_reader :units, :patient_id, :patient_name, :tokki_jiko
 
     class ReceiptType
-      @@hoken_multiple_types = {
-        :'1' => '単独',
-        :'2' => '２併',
-        :'3' => '３併',
-        :'4' => '４併',
-        :'5' => '５併',
+      class << self
+        attr_reader :hoken_multiple_types, :age_types
+      end
+
+      @hoken_multiple_types = {
+        '1': '単独',
+        '2': '２併',
+        '3': '３併',
+        '4': '４併',
+        '5': '５併',
       }
-      @@age_types = {
-        :'1' => '本入',
-        :'2' => '本外',
-        :'3' => '六入',
-        :'4' => '六外',
-        :'5' => '家入',
-        :'6' => '家外',
-        :'7' => '高入一',
-        :'8' => '高外一',
-        :'9' => '高入７',
-        :'0' => '高外７',
+      @age_types = {
+        '1': '本入',
+        '2': '本外',
+        '3': '六入',
+        '4': '六外',
+        '5': '家入',
+        '6': '家外',
+        '7': '高入一',
+        '8': '高外一',
+        '9': '高入７',
+        '0': '高外７',
       }
       def initialize(code_of_types)
         @code_of_types = code_of_types.to_s
@@ -223,11 +228,11 @@ module Recediff
       end
 
       def hoken_multiple_type
-        @@hoken_multiple_types[@code_of_types[2].intern]
+        self.class.hoken_multiple_types[@code_of_types[2].intern]
       end
 
       def age_type
-        @@age_types[@code_of_types[3].intern]
+        self.class.age_types[@code_of_types[3].intern]
       end
     end
   end

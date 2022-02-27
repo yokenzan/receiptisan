@@ -3,81 +3,82 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: enable
 
-# Offense count: 5
-# Configuration parameters: AllowedIdentifiers.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  EnforcedStyle: snake_case
-
-# Offense count: 189
-# Configuration parameters: AsciiConstants.
 Naming/AsciiIdentifiers:
   Enabled: false
 
-# Offense count: 184
 Naming/ConstantName:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: always_true
-  Exclude:
-    - 'spec/spec_helper.rb'
+Naming/VariableName:
+  EnforcedStyle: snake_case
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Layout/LineLength:
-  Max: 120
-  AllowHeredoc: enabled
-  AllowURI: enabled
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 Layout/BlockAlignment:
   Enabled: true
   EnforcedStyleAlignWith: start_of_block
 
-Style/AsciiComments:
-  Enabled: true
-
-# Offense count: 70
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleInsidePipes.
-# SupportedStylesInsidePipes: space, no_space
-Layout/SpaceAroundBlockParameters:
-  EnforcedStyleInsidePipes: space
-
 Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent
 
-Layout/ArgumentAlignment:
-  EnforcedStyle: with_fixed_indentation
+Layout/LineLength:
+  Max: 120
+  AllowHeredoc: enabled
+  AllowURI: enabled
 
-# Offense count: 41
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceAroundBlockParameters:
+  EnforcedStyleInsidePipes: space
+
+# allow to describe comments with Japanese
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockComments:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
+Style/MultilineTernaryOperator:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
-Style/BlockComments:
-  Exclude:
-    - 'spec/spec_helper.rb'
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
 
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+#
 # temporarily disabled cops
+#
 
 Style/RedundantArgument:
   Enabled: false
 
+Style/UnlessElse:
+  Enabled: false
+
 Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/FormatString:
   Enabled: false

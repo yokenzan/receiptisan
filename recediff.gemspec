@@ -8,10 +8,10 @@ Gem::Specification.new do | spec |
   spec.authors       = ['yokenzan']
   spec.email         = ['31175068+yokenzan@users.noreply.github.com']
 
-  spec.summary       = 'A library which parses and makes diff between 2 UKE files.'
+  spec.summary       = 'Library to parse receipt UKE contents'
   spec.description   = spec.summary
   spec.homepage      = 'https://github.com/yokenzan/recediff'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.6.0')
 
   spec.metadata['homepage_uri']    = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
