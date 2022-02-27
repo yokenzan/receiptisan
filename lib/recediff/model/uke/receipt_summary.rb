@@ -33,7 +33,7 @@ module Recediff
             @receipt_type,
             @year_month,
             @patient_id,
-            @patient_name,
+            @patient_name
           ].join("\t")
         end
       end
