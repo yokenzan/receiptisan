@@ -3,6 +3,9 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: enable
 
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
 Naming/AsciiIdentifiers:
   Enabled: false
 
