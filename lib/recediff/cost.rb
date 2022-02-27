@@ -20,7 +20,7 @@ module Recediff
       @count         = @count_at.inject(0, &:+)
       @master_record = master_record
       @comments      = []
-    rescue => e
+    rescue
       $ERR += 1
     end
 

@@ -46,9 +46,6 @@ Style/Documentation:
 Style/DoubleNegation:
   Enabled: false
 
-Style/FormatStringToken:
-  Enabled: false
-
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always
 
@@ -78,4 +75,10 @@ Style/UnlessElse:
   Enabled: false
 
 Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/FormatString:
   Enabled: false

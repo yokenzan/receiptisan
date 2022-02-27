@@ -12,11 +12,11 @@ Lint/ShadowingOuterLocalVariable:
     - 'lib/recediff/parser.rb'
 
 # Offense count: 7
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/recediff.rb'
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/uke/enum.rb'
+# Lint/UselessAssignment:
+#   Exclude:
+#     - 'lib/recediff.rb'
+#     - 'lib/recediff/cost.rb'
+#     - 'lib/recediff/uke/enum.rb'
 
 # Offense count: 8
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
@@ -73,24 +73,6 @@ Naming/ConstantName:
 Style/BlockDelimiters:
   Exclude:
     - 'lib/recediff/parser.rb'
-
-# Offense count: 3
-Style/ClassVars:
-  Exclude:
-    - 'lib/recediff/receipt.rb'
-    - 'lib/recediff/syobyo.rb'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: format, sprintf, percent
-Style/FormatString:
-  Exclude:
-    - 'bin/split_re'
-    - 'lib/recediff/calc_unit.rb'
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/receipt.rb'
-    - 'lib/recediff/syobyo.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedVariables.

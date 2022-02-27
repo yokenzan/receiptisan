@@ -196,14 +196,14 @@ module Recediff
     attr_reader :units, :patient_id, :patient_name, :tokki_jiko
 
     class ReceiptType
-      @@hoken_multiple_types = {
+      @hoken_multiple_types = {
         '1': '単独',
         '2': '２併',
         '3': '３併',
         '4': '４併',
         '5': '５併',
       }
-      @@age_types = {
+      @age_types = {
         '1': '本入',
         '2': '本外',
         '3': '六入',
@@ -224,11 +224,11 @@ module Recediff
       end
 
       def hoken_multiple_type
-        @@hoken_multiple_types[@code_of_types[2].intern]
+        @hoken_multiple_types[@code_of_types[2].intern]
       end
 
       def age_type
-        @@age_types[@code_of_types[3].intern]
+        @age_types[@code_of_types[3].intern]
       end
     end
   end
