@@ -7,26 +7,11 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: TreatCommentsAsGroupSeparators, ConsiderPunctuation, Include.
-# Include: **/*.gemfile, **/Gemfile, **/gems.rb
-Bundler/OrderedGems:
-  Exclude:
-    - 'Gemfile'
-
-# Offense count: 1
 # Configuration parameters: Include.
 # Include: **/*.gemspec
 Gemspec/RequiredRubyVersion:
   Exclude:
     - 'recediff.gemspec'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/recediff/syobyo.rb'
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -252,23 +237,6 @@ Style/RescueStandardError:
 Style/StringConcatenation:
   Exclude:
     - 'lib/recediff/receipt.rb'
-
-# Offense count: 41
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    # - 'Gemfile'
-    - 'Rakefile'
-    # - 'bin/console'
-    # - 'lib/recediff/calc_unit.rb'
-    # - 'lib/recediff/cost.rb'
-    # - 'lib/recediff/hospital.rb'
-    # - 'lib/recediff/version.rb'
-    - 'recediff.gemspec'
-    - 'test/recediff_test.rb'
-    - 'test/test_helper.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

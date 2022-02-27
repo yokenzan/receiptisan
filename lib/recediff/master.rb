@@ -65,7 +65,9 @@ module Recediff
       def load(master_dir)
         master = self.new
         Dir.glob("#{master_dir}/SH.csv") do | csv_path |
-          CSV.foreach(csv_path) { | code, name, is_prefix | master[code] = Syobyo::Shushokugo.new(code, name, is_prefix.to_i != 8) }
+          CSV.foreach(csv_path) do | code, name, is_prefix |
+            master[code] = Syobyo::Shushokugo.new(code, name, is_prefix.to_i != 8)
+          end
         end
         master
       end

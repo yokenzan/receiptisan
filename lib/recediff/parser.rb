@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'csv'
 
 module Recediff
@@ -119,10 +120,10 @@ module Recediff
 
       unless comment?(category)
         cost = Cost.new(code = row.at(COST::CODE).to_i, @master.find_by_code(code), category, row)
-        row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3].
-          each_slice(2).
-          reject { | code, additional_text | code.nil? }.
-          each { | code, additional_text |
+        row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3]
+          .each_slice(2)
+          .reject { | code, additional_text | code.nil? }
+          .each { | code, additional_text |
             cost.add_comment(
               Comment.new(
                 CommentCore.new(
@@ -182,7 +183,6 @@ module Recediff
 
         @receipt = nil
       end
-
 
       def new_empty_receipt
         new_receipt(Receipt.new(
