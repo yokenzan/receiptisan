@@ -95,8 +95,8 @@ module Recediff
           row.at(SYOBYO::TENKI),
           row.at(SYOBYO::IS_MAIN).to_i == 1
         )
-        row.at(SYOBYO::SHUSHOKUGO)&.scan(/\d{4}/) do | code |
-          syobyo.add_shushokugo(@shushokugo_master.find_by_code(code))
+        row.at(SYOBYO::SHUSHOKUGO)&.scan(/\d{4}/) do | c |
+          syobyo.add_shushokugo(@shushokugo_master.find_by_code(c))
         end
 
         buffer.receipt.add_syobyo(syobyo)
@@ -116,29 +116,18 @@ module Recediff
         cost = Cost.new(code = row.at(COST::CODE).to_i, @master.find_by_code(code), category, row)
         row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3]
           .each_slice(2)
-          .reject { | code, _ | code.nil? }
-          .each { | code, additional_text |
-            cost.add_comment(
-              Comment.new(
-                CommentCore.new(
-                  code.to_i,
-                  @comment_master.find_by_code(code.to_i),
-                  additional_text
-                ),
-                category,
-                []
-              )
-            )
-          }
+          .reject { | c, _ | c.nil? }
+          .each do | c, additional_text |
+            comment_text = @comment_master.find_by_code(c.to_i)
+            comment_core = CommentCore.new(c.to_i, comment_text, additional_text)
+            cost.add_comment(Comment.new(comment_core, category, []))
+          end
         buffer.unit.add_cost(cost)
       else
-        buffer.unit.add_cost(
-          Comment.new(
-            CommentCore.new(code = row.at(COST::CODE).to_i, @comment_master.find_by_code(code), row.at(4)),
-            category,
-            row
-          )
-        )
+        code         = row.at(COST::CODE).to_i
+        comment_text = @comment_master.find_by_code(code.to_i)
+        comment_core = CommentCore.new(code.to_i, comment_text, row.at(4))
+        buffer.unit.add_cost(Comment.new(comment_core, category, row))
       end
     end
 

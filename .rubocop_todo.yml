@@ -6,18 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 4
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 7
-# Lint/UselessAssignment:
-#   Exclude:
-#     - 'lib/recediff.rb'
-#     - 'lib/recediff/cost.rb'
-#     - 'lib/recediff/uke/enum.rb'
-
 # Offense count: 8
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
@@ -50,29 +38,6 @@ Metrics/MethodLength:
 # Configuration parameters: CountKeywordArgs, MaxOptionalParameters.
 Metrics/ParameterLists:
   Max: 6
-
-# Offense count: 189
-# Configuration parameters: AsciiConstants.
-Naming/AsciiIdentifiers:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
-
-# Offense count: 184
-Naming/ConstantName:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
-
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, IgnoredMethods, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# IgnoredMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Exclude:
-    - 'lib/recediff/parser.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedVariables.

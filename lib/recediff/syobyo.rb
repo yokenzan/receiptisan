@@ -2,6 +2,10 @@
 
 module Recediff
   class Syobyo
+    class << self
+      attr_reader :tenkis
+    end
+
     @tenkis = {
       '1': '継続',
       '2': '治癒',
@@ -13,7 +17,7 @@ module Recediff
     def initialize(disease, start_date, tenki_code, is_main)
       @disease     = disease
       @start_date  = start_date
-      @tenki       = @tenkis[tenki_code.to_s.intern]
+      @tenki       = self.class.tenkis[tenki_code.to_s.intern]
       @is_main     = !!is_main
       @shushokugos = []
     end
