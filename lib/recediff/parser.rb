@@ -191,7 +191,7 @@ module Recediff
           'NOT FOUND',
           '',
           '',
-          @hospital || 'NOT FOUND',
+          @hospital || 'NOT FOUND'
         ))
       end
 

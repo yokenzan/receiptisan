@@ -127,9 +127,7 @@ module Recediff
     end
 
     def name
-      additional_text.to_s.length > 0 ?
-        [text, additional_text].join('') :
-        text.to_s
+      additional_text.to_s.empty? ? text.to_s : [text, additional_text].join('')
     end
 
     attr_reader :code, :text, :additional_text

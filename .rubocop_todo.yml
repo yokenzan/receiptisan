@@ -9,9 +9,9 @@
 # Offense count: 1
 # Configuration parameters: Include.
 # Include: **/*.gemspec
-Gemspec/RequiredRubyVersion:
-  Exclude:
-    - 'recediff.gemspec'
+# Gemspec/RequiredRubyVersion:
+#   Exclude:
+#     - 'recediff.gemspec'
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -26,16 +26,16 @@ Layout/MultilineMethodCallIndentation:
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
 # SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
+# Layout/SpaceAroundOperators:
+#   Exclude:
+#     - 'lib/recediff/uke/enum.rb'
 
 # Offense count: 28
 # Cop supports --auto-correct.
 # Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/recediff/uke/enum.rb'
+# Layout/TrailingWhitespace:
+#   Exclude:
+#     - 'lib/recediff/uke/enum.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowSafeAssignment.
@@ -237,31 +237,3 @@ Style/RescueStandardError:
 Style/StringConcatenation:
   Exclude:
     - 'lib/recediff/receipt.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArrayLiteral:
-  Exclude:
-    - 'lib/recediff/receipt.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/UnlessElse:
-  Exclude:
-    - 'lib/recediff/parser.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/recediff/cost.rb'

@@ -3,57 +3,37 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: enable
 
-# Offense count: 5
-# Configuration parameters: AllowedIdentifiers.
-# SupportedStyles: snake_case, camelCase
 Naming/VariableName:
   EnforcedStyle: snake_case
 
-# Offense count: 189
-# Configuration parameters: AsciiConstants.
 Naming/AsciiIdentifiers:
   Enabled: false
 
-# Offense count: 184
 Naming/ConstantName:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always_true
-  Exclude:
-    - 'spec/spec_helper.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# allow to describe comments with Japanese
+Style/AsciiComments:
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
   AllowHeredoc: enabled
   AllowURI: enabled
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma
-
 Layout/BlockAlignment:
   Enabled: true
   EnforcedStyleAlignWith: start_of_block
 
-Style/AsciiComments:
-  Enabled: true
-
-# Offense count: 70
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleInsidePipes.
-# SupportedStylesInsidePipes: space, no_space
 Layout/SpaceAroundBlockParameters:
   EnforcedStyleInsidePipes: space
 
@@ -63,20 +43,21 @@ Layout/FirstArgumentIndentation:
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 
-# Offense count: 41
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
+Style/Documentation:
+  Enabled: false
+
 Style/BlockComments:
-  Exclude:
-    - 'spec/spec_helper.rb'
+  Enabled: false
 
 # temporarily disabled cops
 
 Style/RedundantArgument:
+  Enabled: false
+
+Style/UnlessElse:
   Enabled: false
 
 Lint/AmbiguousOperatorPrecedence:

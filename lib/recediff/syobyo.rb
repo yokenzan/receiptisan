@@ -35,7 +35,7 @@ module Recediff
       "%05d\t〇%s\n%05d\t\t%s\n%05d\t\t%s" % [
         patient_id, is_main + disease,
         patient_id, start_date,
-        patient_id, tenki
+        patient_id, tenki,
       ]
     end
 

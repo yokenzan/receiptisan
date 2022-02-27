@@ -143,7 +143,8 @@ module Recediff
       ]
       units.map.with_index do | cu, cu_order |
         # hospital_code, year_month, kikin_or_kokuho,
-        # receipt_id, hoken_kohi_type, hoken_multiple_type, age_type, patient_id, hobetsu_list, iho, kohi_1, kohi_2, kohi_3, kohi_4,
+        # receipt_id, hoken_kohi_type, hoken_multiple_type, age_type,
+        # patient_id, hobetsu_list, iho, kohi_1, kohi_2, kohi_3, kohi_4,
         # calc_unit_order, cost_order, receden_code, name, count, point
         cu_point = cu.point
         cu_count = cu.count
