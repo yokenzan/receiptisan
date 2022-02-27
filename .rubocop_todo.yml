@@ -33,6 +33,8 @@ Metrics/BlockLength:
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
   Max: 140
+  Exclude:
+    - 'lib/recediff/receipt.rb'
 
 # Offense count: 2
 # Configuration parameters: IgnoredMethods.
