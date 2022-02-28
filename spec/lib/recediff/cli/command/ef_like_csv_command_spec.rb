@@ -16,7 +16,7 @@ RSpec.describe Recediff::Cli::Command::EfLikeCsvCommand do
     it 'throws Errno::ENOENT if given :uke does not exist' do
       uke     = 'file/which/does/not/exist'
       message = /No such file or directory/
-      expect { command.call(uke:) }.to raise_error(Errno::ENOENT, message)
+      expect { command.call(uke: uke) }.to raise_error(Errno::ENOENT, message)
     end
 
     it 'parses UKE file and outputs daily cost list' do
@@ -24,7 +24,7 @@ RSpec.describe Recediff::Cli::Command::EfLikeCsvCommand do
       content   = File.read('spec/resource/output/gairai_ef_like_csv.csv')
 
       toward_stringio do | stdout |
-        command.call(uke:)
+        command.call(uke: uke)
         expect(stdout.string).to eq content
       end
     end
