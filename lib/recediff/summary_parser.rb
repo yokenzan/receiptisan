@@ -8,19 +8,27 @@ module Recediff
     # @return [UkeSummary]
     def parse_as_uke_receipts(uke_file_path)
       # @type [Array<ReceiptSourceSummary>] receipts
-      receipts = []
-      # @type [ReceiptSourceSummary?] receipt
-      receipt  = nil
+      receipts   = []
       # @type [HospitalSummary?] hospital
-      hospital = nil
+      hospital   = nil
+      # @type [ReceiptSourceSummary?] receipt
+      receipt    = nil
+      # @type [Integer?] start_line
+      start_line = nil
 
-      File.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8') do | row |
+      File.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8').with_index do | row, idx |
         case row[0, 2].intern
         when Recediff::Model::Uke::Enum::IR::RECORD
           hospital = parse_hospital_summary(row)
         when Recediff::Model::Uke::Enum::RE::RECORD
-          receipts << receipt if receipt
-          receipt = parse_into_receipt_summary(row, hospital)
+          # close current receipt
+          if receipt
+            receipt.source_line_range = start_line..idx - 1
+            receipts << receipt
+          end
+          # open new receipt
+          receipt    = parse_receipt_summary(row, hospital)
+          start_line = idx
           receipt.add(row)
         else
           receipt.add(row)
@@ -43,7 +51,7 @@ module Recediff
       )
     end
 
-    def parse_into_receipt_summary(row, hospital)
+    def parse_receipt_summary(row, hospital)
       columns = row.split(',')
 
       ReceiptSourceSummary.new(

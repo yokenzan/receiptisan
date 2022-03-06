@@ -16,14 +16,14 @@ module Recediff
 
         # @param [String?] uke
         def call(uke: nil, **_options)
-          previewed_receipts =
+          receipts =
             if uke
               @parser.parse(uke)
             else
               @parser.parse_area($stdin.readlines.join)
             end
 
-          puts previewed_receipts
+          puts receipts
             .map(&:to_preview)
             .join("\n\n=======================================\n\n")
         end

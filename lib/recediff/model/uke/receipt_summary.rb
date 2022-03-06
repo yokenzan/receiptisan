@@ -5,6 +5,7 @@ module Recediff
     module Uke
       class ReceiptSourceSummary
         attr_reader :sequence, :receipt_type, :year_month, :patient_name, :patient_id, :hospital
+        attr_accessor :source_line_range
 
         def initialize(
           sequence,
@@ -23,8 +24,8 @@ module Recediff
           @source       = []
         end
 
-        def add(sourceRow)
-          @source << sourceRow
+        def add(source_row)
+          @source << source_row
         end
 
         def to_s
@@ -33,7 +34,8 @@ module Recediff
             @receipt_type,
             @year_month,
             @patient_id,
-            @patient_name
+            @patient_name,
+            @source_line_range,
           ].join("\t")
         end
       end
