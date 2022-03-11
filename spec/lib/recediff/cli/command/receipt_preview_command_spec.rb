@@ -48,5 +48,17 @@ RSpec.describe Recediff::Cli::Command::ReceiptPreviewCommand do
         expect(stdout.string).to eq content
       end
     end
+
+    it 'get receipt preview by giving uke-path and receipt seq' do
+      # seq: 9
+      options = { seqs: '9' }
+      ukefile = 'spec/resource/input/RECEIPTC_GAIRAI_SAMPLE.UKE'
+      content = File.read('spec/resource/output/gairai_receipt_preview.txt')
+
+      toward_stringio do | stdout |
+        command.call(uke: ukefile, **options)
+        expect(stdout.string).to eq content
+      end
+    end
   end
 end

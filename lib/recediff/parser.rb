@@ -25,9 +25,10 @@ module Recediff
     end
 
     # @param [String] uke_file_path
+    # @param [Array<Integer>] seqs
     # @return [Array<Receipt>]
-    def parse(uke_file_path)
-      buffer = Buffer.new
+    def parse(uke_file_path, seqs = [])
+      buffer = Buffer.new(seqs, seqs.empty?)
 
       CSV.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8') { | row | parse_row(row, buffer) }
 
@@ -40,7 +41,7 @@ module Recediff
     def parse_area(text)
       text.encode!(Encoding::UTF_8) unless text.encoding == Encoding::UTF_8
 
-      buffer    = Buffer.new
+      buffer = Buffer.new
       first_row = text.split("\n").first
 
       buffer.new_empty_receipt if !receipt_row?(first_row) && !hospital_row?(first_row)
@@ -71,35 +72,12 @@ module Recediff
       when /IR/
         buffer.hospital = Hospital.new(row)
       when /RE/
-        buffer.new_receipt(
-          Receipt.new(
-            row.at(RE::RECEIPT_ID).to_i,
-            row.at(RE::PATIENT_ID).to_i,
-            row.at(RE::PATIENT_NAME),
-            row.at(RE::TYPES),
-            row.at(RE::TOKKI_JIKO),
-            buffer.hospital
-          )
-        )
+        update_seq_condition(row, buffer)
+        new_receipt(row, buffer)
       when /HO/, /KO/
-        buffer.receipt.add_hoken(row)
+        buffer.in_seq? && buffer.receipt.add_hoken(row)
       when /SY/
-        code = row.at(SYOBYO::CODE)
-        disease = Syobyo::Disease.new(
-          code,
-          @disease_master.find_name_by_code(code) || row.at(SYOBYO::WORPRO_NAME)
-        )
-        syobyo = Syobyo.new(
-          disease,
-          row.at(SYOBYO::START_DATE),
-          row.at(SYOBYO::TENKI),
-          row.at(SYOBYO::IS_MAIN).to_i == 1
-        )
-        row.at(SYOBYO::SHUSHOKUGO)&.scan(/\d{4}/) do | c |
-          syobyo.add_shushokugo(@shushokugo_master.find_by_code(c))
-        end
-
-        buffer.receipt.add_syobyo(syobyo)
+        add_syobyo(row, buffer)
       when /SJ/, /GO/, /SN/
         ignore
       else
@@ -107,7 +85,46 @@ module Recediff
       end
     end
 
+    def update_seq_condition(row, buffer)
+      buffer.update_seq_condition(row.at(RE::RECEIPT_ID).to_i)
+    end
+
+    def new_receipt(row, buffer)
+      return unless buffer.in_seq?
+
+      receipt = Receipt.new(
+        row.at(RE::RECEIPT_ID).to_i,
+        row.at(RE::PATIENT_ID).to_i,
+        row.at(RE::PATIENT_NAME),
+        row.at(RE::TYPES),
+        row.at(RE::TOKKI_JIKO),
+        buffer.hospital
+      )
+      buffer.new_receipt(receipt)
+    end
+
+    def add_syobyo(row, buffer)
+      return unless buffer.in_seq?
+
+      code    = row.at(SYOBYO::CODE)
+      name    = @disease_master.find_name_by_code(code) || row.at(SYOBYO::WORPRO_NAME)
+      disease = Syobyo::Disease.new(code, name)
+      syobyo  = Syobyo.new(
+        disease,
+        row.at(SYOBYO::START_DATE),
+        row.at(SYOBYO::TENKI),
+        row.at(SYOBYO::IS_MAIN).to_i == 1
+      )
+      row.at(SYOBYO::SHUSHOKUGO)&.scan(/\d{4}/) do | c |
+        syobyo.add_shushokugo(@shushokugo_master.find_by_code(c))
+      end
+
+      buffer.receipt.add_syobyo(syobyo)
+    end
+
     def add_cost(buffer, category, row)
+      return unless buffer.in_seq?
+
       if (shinku = row.at(COST::SHINKU))
         buffer.new_unit(CalcUnit.new(shinku.to_i))
       end
@@ -138,15 +155,22 @@ module Recediff
     def ignore; end
 
     class Buffer
-      attr_reader :receipts, :unit, :receipt
+      attr_reader :receipts, :unit, :receipt, :seqs
       attr_accessor :hospital
 
-      def initialize
+      def initialize(seqs = [], in_seq = nil)
         # @type [Array<Receipt>]
-        @receipts = []
-        @receipt  = nil
-        @unit     = nil
-        @hospital = nil
+        @seqs          = seqs
+        @seq_condition = in_seq || seqs.empty?
+        @seq_condition = !!@seq_condition
+        @receipts      = []
+        @receipt       = nil
+        @unit          = nil
+        @hospital      = nil
+      end
+
+      def in_seq?
+        !!@seq_condition
       end
 
       # @param [Receipt] receipt
@@ -182,6 +206,11 @@ module Recediff
       def new_unit(unit)
         close_current_unit
         @unit = unit
+      end
+
+      # @param [Integer] receipt_seq
+      def update_seq_condition(receipt_seq)
+        @seq_condition = @seqs.empty? || @seqs.bsearch { | s | s == receipt_seq }
       end
 
       private
