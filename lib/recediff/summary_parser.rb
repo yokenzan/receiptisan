@@ -6,7 +6,7 @@ module Recediff
 
     # @param [String] uke_file_path
     # @return [UkeSummary]
-    def parse_as_uke_receipts(uke_file_path)
+    def parse_as_receipt_summaries(uke_file_path)
       # @type [Array<ReceiptSourceSummary>] receipts
       receipts   = []
       # @type [HospitalSummary?] hospital

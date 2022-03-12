@@ -28,12 +28,12 @@ module Recediff
     # @param [Array<Integer>] seqs
     # @return [Array<Receipt>]
     def parse(uke_file_path, seqs = [])
-      buffer = Buffer.new(seqs, seqs.empty?)
+      options = { encoding: 'Windows-31J:UTF-8' }
+      buffer  = Buffer.new(seqs, seqs.empty?)
 
-      CSV.foreach(uke_file_path, encoding: 'Windows-31J:UTF-8') { | row | parse_row(row, buffer) }
+      CSV.foreach(uke_file_path, **options) { | row | buffer.complete? ? break : parse_row(row, buffer) }
 
       buffer.close_current_receipt
-
       buffer.receipts
     end
 
@@ -41,12 +41,12 @@ module Recediff
     def parse_area(text)
       text.encode!(Encoding::UTF_8) unless text.encoding == Encoding::UTF_8
 
-      buffer = Buffer.new
+      buffer    = Buffer.new
       first_row = text.split("\n").first
 
       buffer.new_empty_receipt if !receipt_row?(first_row) && !hospital_row?(first_row)
 
-      CSV.parse(text) { | row | parse_row(row, buffer) }
+      CSV.parse(text) { | row | buffer.complete? ? break : parse_row(row, buffer) }
 
       buffer.close_current_receipt
       buffer.receipts
@@ -72,7 +72,9 @@ module Recediff
       when /IR/
         buffer.hospital = Hospital.new(row)
       when /RE/
-        update_seq_condition(row, buffer)
+        buffer.update_seq_condition(row.at(RE::RECEIPT_ID).to_i)
+        return if buffer.complete?
+
         new_receipt(row, buffer)
       when /HO/, /KO/
         buffer.in_seq? && buffer.receipt.add_hoken(row)
@@ -83,10 +85,6 @@ module Recediff
       else
         add_cost(buffer, category, row)
       end
-    end
-
-    def update_seq_condition(row, buffer)
-      buffer.update_seq_condition(row.at(RE::RECEIPT_ID).to_i)
     end
 
     def new_receipt(row, buffer)
@@ -163,10 +161,16 @@ module Recediff
         @seqs          = seqs
         @seq_condition = in_seq || seqs.empty?
         @seq_condition = !!@seq_condition
+        @walked_seqs   = []
         @receipts      = []
         @receipt       = nil
         @unit          = nil
         @hospital      = nil
+        @complete      = false
+      end
+
+      def complete?
+        @complete
       end
 
       def in_seq?
@@ -210,7 +214,25 @@ module Recediff
 
       # @param [Integer] receipt_seq
       def update_seq_condition(receipt_seq)
-        @seq_condition = @seqs.empty? || @seqs.bsearch { | s | s == receipt_seq }
+        if @seqs.empty? && @walked_seqs.length.nonzero?
+          @seq_condition = false
+          @complete      = true
+          return
+        end
+
+        if @seqs.empty?
+          @seq_condition = true
+          return
+        end
+
+        if (idx = @seqs.find_index { | s | s == receipt_seq })
+          @walked_seqs.push(@seqs.at(idx))
+          @seqs.delete_at(idx)
+          @seq_condition = true
+          return
+        end
+
+        @seq_condition = false
       end
 
       private
