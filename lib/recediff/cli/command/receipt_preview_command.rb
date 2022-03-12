@@ -31,11 +31,8 @@ module Recediff
           receipts =
             case determine_parameter_pattern({ uke: uke }.merge(options))
             when :uke_and_seq
-              seqs = []
-              options.fetch(:seqs).scan(/(\d+)(-\d+)?,?/) do | a, b |
-                seqs << (b.nil? ? a.to_i : ((a.to_i)..(b.to_i.abs)).to_a)
-              end
-              @parser.parse(uke, seqs.flatten.sort.uniq)
+              seqs = parse_seqs(options.fetch(:seqs))
+              @parser.parse(uke, seqs.sort.uniq)
             when :uke_and_range
               from = options.fetch(:from)
               to   = options.fetch(:to)
@@ -57,6 +54,16 @@ module Recediff
           return :stdin unless args.fetch(:uke)
 
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
+        end
+
+        # @param [String] text_seqs
+        # @return [Array<Integer>]
+        def parse_seqs(text_seqs)
+          [].tap do | seqs |
+            text_seqs.scan(/(\d+)(-\d+)?,?/) do | f, t |
+              seqs.concat(t.nil? ? [f.to_i] : ((f.to_i)..(t.to_i.abs)).to_a)
+            end
+          end
         end
       end
     end
