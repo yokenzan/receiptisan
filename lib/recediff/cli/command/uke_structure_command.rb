@@ -9,14 +9,9 @@ module Recediff
       class UkeStructureCommand < Dry::CLI::Command
         argument :uke, required: false
 
-        def initialize
-          super
-          @parser = Recediff::SummaryParser.new
-        end
-
         # @param [String?] uke
         def call(uke: nil, **_options)
-          puts @parser.parse_as_uke_receipts(uke)
+          puts Recediff::SummaryParser.new.parse_as_receipt_summaries(uke)
         end
       end
     end

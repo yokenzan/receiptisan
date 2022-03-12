@@ -7,16 +7,9 @@ module Recediff
       class EfLikeCsvCommand < Dry::CLI::Command
         argument :uke, required: true
 
-        def initialize
-          super
-          @parser = Recediff::Parser.create
-        end
-
         # @param [String?] uke
         def call(uke:, **_options)
-          receipts_in_uke = @parser.parse(uke)
-
-          puts receipts_in_uke.map(&:to_csv)
+          puts Recediff::Parser.create.parse(uke).map(&:to_csv)
         end
       end
     end

@@ -11,15 +11,10 @@ module Recediff
         option :sum,   type: :boolean, default: false
         option :count, type: :boolean, default: false
 
-        def initialize
-          super
-          @parser = Recediff::Parser.create
-        end
-
         # @param [String] name
         # @param [Hash] options
         def call(uke:, **options)
-          receipts_in_uke = @parser.parse(uke)
+          receipts_in_uke = Recediff::Parser.create.parse(uke)
 
           puts receipts_in_uke.map(&:show)
 
