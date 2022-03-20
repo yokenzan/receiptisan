@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'dry-cli'
+gem 'month'
 gem 'rake', '~> 13.0'
 
 group :development, :test do

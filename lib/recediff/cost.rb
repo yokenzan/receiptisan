@@ -18,6 +18,7 @@ module Recediff
         .compact
       @count_at      = @row[-31..].map(&:to_i)
       @count         = @count_at.inject(0, &:+)
+      @amount        = @row.at(Model::Uke::Enum::SI::C_数量データ)
       @master_record = master_record
       @comments      = []
     rescue
@@ -73,7 +74,11 @@ module Recediff
       category == 'SI' ? @master_record&.at(4).to_i : nil
     end
 
-    attr_reader :code, :name, :category, :point, :done_at, :count, :comments
+    def amount?
+      amount.nil?.!
+    end
+
+    attr_reader :code, :name, :category, :point, :done_at, :count, :comments, :amount
   end
 
   class Comment

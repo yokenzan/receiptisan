@@ -18,16 +18,37 @@ module Recediff
       @disease     = disease
       @start_date  = start_date
       @tenki       = self.class.tenkis[tenki_code.to_s.intern]
+      @tenki_code  = tenki_code.to_i
       @is_main     = !!is_main
       @shushokugos = []
+    end
+
+    def main?
+      @is_main
+    end
+
+    def worpro?
+      code == 999
     end
 
     def add_shushokugo(shushokugo)
       @shushokugos << shushokugo
     end
 
+    def main_state_text
+      @is_main ? '（主）' : ''
+    end
+
+    def name
+      @shushokugos.select(&:prefix?)
+        .push(@disease)
+        .concat(@shushokugos.reject(&:prefix?))
+        .map(&:to_s)
+        .join('')
+    end
+
     def to_list(patient_id)
-      is_main = @is_main ? '（主）' : ''
+      is_main = main_state_text
       disease = @shushokugos.select(&:prefix?)
         .push(@disease)
         .concat(@shushokugos.reject(&:prefix?))
@@ -44,7 +65,7 @@ module Recediff
     end
 
     def to_preview
-      is_main = @is_main ? '（主）' : ''
+      is_main = main_state_text
       disease = @shushokugos.select(&:prefix?)
         .push(@disease)
         .concat(@shushokugos.reject(&:prefix?))
@@ -62,6 +83,8 @@ module Recediff
       @disease.code.to_i
     end
 
+    attr_reader :tenki, :start_date, :tenki_code
+
     class Disease
       def initialize(code, name)
         @code = code
@@ -76,6 +99,8 @@ module Recediff
     end
 
     class Shushokugo
+      attr_reader :name, :code
+
       def initialize(code, name, is_prefix)
         @code      = code
         @name      = name
@@ -87,7 +112,11 @@ module Recediff
       end
 
       def prefix?
-        !!@is_prefix
+        !suffix?
+      end
+
+      def suffix?
+        !@is_prefix
       end
     end
   end

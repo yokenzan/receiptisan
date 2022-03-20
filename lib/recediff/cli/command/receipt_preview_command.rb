@@ -15,35 +15,20 @@ module Recediff
       class ReceiptPreviewCommand < Dry::CLI::Command
         argument :uke, required: false
         # 1. by giving UKE file path and receipt's sequence
-        option :seqs, type: :string,  requried: false
+        option :seqs,  type: :string,  requried: false
+        option :all,   type: :boolean, requried: false
         # 2. by giving UKE file path and receipt's start row index and end row index
-        option :from, type: :integer, requried: false
-        option :to,   type: :integer, requried: false
-
-        def initialize
-          super
-          @parser = Recediff::Parser.create
-        end
+        option :from,  type: :integer, requried: false
+        option :to,    type: :integer, requried: false
+        # color highlighting
+        option :color, type: :boolean, requried: false, default: false
 
         # @param [String] uke
         # @param [Hash] options
-        def call(uke:, **options)
-          receipts =
-            case determine_parameter_pattern({ uke: uke }.merge(options))
-            when :uke_and_seq
-              seqs = parse_seqs(options.fetch(:seqs))
-              @parser.parse(uke, seqs.sort.uniq)
-            when :uke_and_range
-              from = options.fetch(:from)
-              to   = options.fetch(:to)
-              @parser.parse_area(File.readlines(uke).slice(from.to_i..to.to_i).join)
-            when :stdin
-              @parser.parse_area($stdin.readlines.join)
-            end
-
-          puts receipts
-            .map(&:to_preview)
-            .join("\n\n=======================================\n\n")
+        def call(uke: nil, **options)
+          parameter_pattern = determine_parameter_pattern({ uke: uke }.merge(options))
+          receipts          = parse_uke(parameter_pattern, uke, options)
+          preview_receipts(receipts, options)
         end
 
         private
@@ -52,6 +37,7 @@ module Recediff
         # @return [Symbol]
         def determine_parameter_pattern(args)
           return :stdin unless args.fetch(:uke)
+          return :uke_all if args[:all]
 
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
         end
@@ -64,6 +50,30 @@ module Recediff
               seqs.concat(t.nil? ? [f.to_i] : ((f.to_i)..(t.to_i.abs)).to_a)
             end
           end
+        end
+
+        def parse_uke(parameter_pattern, uke, options)
+          parser = Recediff::Parser.create
+
+          case parameter_pattern
+          when :uke_all
+            parser.parse(uke)
+          when :uke_and_seq
+            seqs = parse_seqs(options.fetch(:seqs))
+            parser.parse(uke, seqs.sort.uniq)
+          when :uke_and_range
+            from = options.fetch(:from)
+            to   = options.fetch(:to)
+            parser.parse_area(File.readlines(uke).slice(from.to_i..to.to_i).join)
+          when :stdin
+            parser.parse_area($stdin.readlines.join)
+          end
+        end
+
+        def preview_receipts(receipts, options)
+          previewer       = Recediff::Previewer.new
+          previewer.color = options[:color] if options.key?(:color)
+          previewer.preview(receipts)
         end
       end
     end

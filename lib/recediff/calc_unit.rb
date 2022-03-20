@@ -6,7 +6,8 @@ module Recediff
   # 算定単位
   class CalcUnit
     extend Forwardable
-    def_delegators :@costs, :map, :length, :empty?, :first
+    include Enumerable
+    def_delegators :@costs, :each, :map, :length, :empty?, :first
 
     # @param [Integer] shinku 診療識別・診療区分
     def initialize(shinku)
