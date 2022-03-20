@@ -88,3 +88,9 @@ Style/FormatString:
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: never
+
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+
+Style/ClassVars:
+  Enabled: false
