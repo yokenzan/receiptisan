@@ -4,6 +4,8 @@ require 'csv'
 
 module Recediff
   class Parser
+    RE = Recediff::Model::Uke::Enum::RE
+
     class << self
       def create
         new(
@@ -67,17 +69,20 @@ module Recediff
       row =~ /\bRE\b/
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def parse_row(row, buffer)
       case category = row.at(COST::CATEGORY)
       when /IR/
         buffer.hospital = Hospital.new(row)
       when /RE/
-        buffer.update_seq_condition(row.at(RE::RECEIPT_ID).to_i)
+        buffer.update_seq_condition(row.at(RE::C_レセプト番号).to_i)
         return if buffer.complete?
 
         new_receipt(row, buffer)
-      when /HO/, /KO/
-        buffer.in_seq? && buffer.receipt.add_hoken(row)
+      when /HO/
+        buffer.in_seq? && buffer.receipt.add_hoken(Iho.new(row))
+      when /KO/
+        buffer.in_seq? && buffer.receipt.add_hoken(Kohi.new(row))
       when /SY/
         add_syobyo(row, buffer)
       when /SJ/, /GO/, /SN/
@@ -86,17 +91,25 @@ module Recediff
         add_cost(buffer, category, row)
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def new_receipt(row, buffer)
       return unless buffer.in_seq?
 
+      patient = Patient.new(
+        row.at(RE::C_カルテ番号等).to_i,
+        row.at(RE::C_氏名),
+        row.at(RE::C_男女区分).to_i,
+        row.at(RE::C_生年月日),
+        row.at(RE::C_カタカナ氏名)
+      )
       receipt = Receipt.new(
-        row.at(RE::RECEIPT_ID).to_i,
-        row.at(RE::PATIENT_ID).to_i,
-        row.at(RE::PATIENT_NAME),
-        row.at(RE::TYPES),
-        row.at(RE::TOKKI_JIKO),
-        buffer.hospital
+        row.at(RE::C_レセプト番号).to_i,
+        patient,
+        row.at(RE::C_レセプト種別),
+        row.at(RE::C_レセプト特記事項),
+        buffer.hospital,
+        row
       )
       buffer.new_receipt(receipt)
     end
@@ -105,7 +118,7 @@ module Recediff
       return unless buffer.in_seq?
 
       code    = row.at(SYOBYO::CODE)
-      name    = @disease_master.find_name_by_code(code) || row.at(SYOBYO::WORPRO_NAME)
+      name    = code.to_i == 999 ? row.at(SYOBYO::WORPRO_NAME) : @disease_master.find_name_by_code(code)
       disease = Syobyo::Disease.new(code, name)
       syobyo  = Syobyo.new(
         disease,
@@ -151,101 +164,5 @@ module Recediff
     end
 
     def ignore; end
-
-    class Buffer
-      attr_reader :receipts, :unit, :receipt, :seqs
-      attr_accessor :hospital
-
-      def initialize(seqs = [], in_seq = nil)
-        # @type [Array<Receipt>]
-        @seqs          = seqs
-        @seq_condition = in_seq || seqs.empty?
-        @seq_condition = !!@seq_condition
-        @walked_seqs   = []
-        @receipts      = []
-        @receipt       = nil
-        @unit          = nil
-        @hospital      = nil
-        @complete      = false
-      end
-
-      def complete?
-        @complete
-      end
-
-      def in_seq?
-        !!@seq_condition
-      end
-
-      # @param [Receipt] receipt
-      def new_receipt(receipt)
-        close_current_receipt
-        @receipt = receipt
-      end
-
-      def close_current_receipt
-        close_current_unit
-
-        if @receipt
-          @receipt.remove_comment_only_units
-          @receipt.reinitialize
-          receipts << @receipt
-        end
-
-        @receipt = nil
-      end
-
-      def new_empty_receipt
-        new_receipt(Receipt.new(
-          'NOT FOUND',
-          'NOT FOUND',
-          'NOT FOUND',
-          '',
-          '',
-          @hospital || 'NOT FOUND'
-        ))
-      end
-
-      # @param [CalcUnit] unit
-      def new_unit(unit)
-        close_current_unit
-        @unit = unit
-      end
-
-      # @param [Integer] receipt_seq
-      def update_seq_condition(receipt_seq)
-        if @seqs.empty? && @walked_seqs.length.nonzero?
-          @seq_condition = false
-          @complete      = true
-          return
-        end
-
-        if @seqs.empty?
-          @seq_condition = true
-          return
-        end
-
-        if (idx = @seqs.find_index { | s | s == receipt_seq })
-          @walked_seqs.push(@seqs.at(idx))
-          @seqs.delete_at(idx)
-          @seq_condition = true
-          return
-        end
-
-        @seq_condition = false
-      end
-
-      private
-
-      def close_current_unit
-        @receipt.add_unit(unit) if unterminated_buffer?
-        # receipt.add_unit(unit.sort!) if unterminated_buffer?
-        @unit = nil
-      end
-
-      def unterminated_buffer?
-        @receipt && unit && !unit.empty?
-      end
-    end
   end
 end
