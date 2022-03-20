@@ -8,13 +8,13 @@ module Recediff
     MIN_WIDTH = 50
 
     # @param [String?] global_interior
-    def initialize(global_interior = nil)
+    def initialize(options = {}, global_interior = nil)
       @width           = MIN_WIDTH
       @templates       = {}
       @current_shinku  = nil
       @current_receipt = nil
-      @color           = false
       @printer         = nil
+      @options         = options
       @global_interior = global_interior
       @preview_methods = {
         Array:       proc { | object, _, _ | object.each_with_index { | c, idx | preview(c, idx) } },
@@ -31,7 +31,7 @@ module Recediff
     end
 
     def preview(object, index = nil, shinku = nil)
-      @printer ||= @color ? DecoratablePrinter.new(@global_interior) : Printer.new
+      @printer ||= @options[:color] ? DecoratablePrinter.new(@global_interior) : Printer.new
       @preview_methods
         .fetch(object.class.to_s.gsub(/.*:/, '').intern)
         .call(object, index, shinku)
@@ -41,33 +41,37 @@ module Recediff
 
     # param [Receipt] receipt
     # @param [Integer?] _index
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity
     def preview_receipt(receipt, _index)
       @current_receipt = receipt
       @current_shinku  = nil
 
       puts '---*---*---*---*---*' * 6
 
-      preview_receipt_header(receipt)
+      @options[:header] && preview_receipt_header(receipt)
 
       unless receipt.patient.empty?
         preview(receipt.patient)
         puts '--------------------' * 6
       end
 
-      unless receipt.hokens.empty?
+      if @options[:hoken] && !receipt.hokens.empty?
         preview(receipt.hokens)
         puts '--------------------' * 6
       end
 
-      unless receipt.diseases.empty?
+      if @options[:disease] && !receipt.diseases.empty?
         preview(receipt.diseases)
         puts '--------------------' * 6
       end
 
-      preview(receipt.units) unless receipt.units.empty?
+      @options[:calcunit] && !receipt.units.empty? && preview(receipt.units)
 
       puts "\n"
     end
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def preview_receipt_header(receipt)
       return if receipt.empty_header?
@@ -86,11 +90,11 @@ module Recediff
     # @param [Patient] patient
     # @param [Integer?] _index
     def preview_patient(patient, _index)
-      birthday_and_age = patient.aged? ?
+      birthday_and_age = patient.aged? && @current_receipt.shinryo_ym ?
         '%s生 (%d歳%2dか月)' % [
           patient.birthday.strftime('%Y.%m.%d'),
-          patient.age_of(@current_receipt.seikyu_ym),
-          patient.age_month_of(@current_receipt.seikyu_ym),
+          patient.age_of(@current_receipt.shinryo_ym),
+          patient.age_month_of(@current_receipt.shinryo_ym),
         ] :
         ''
       puts '%s %s %s %s %s' % [

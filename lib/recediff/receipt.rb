@@ -243,7 +243,7 @@ module Recediff
     end
 
     def seikyu_ym
-      @hospital.seikyu_ym ?
+      @hospital&.seikyu_ym ?
         Month.new(@hospital.seikyu_ym[0, 4].to_i, @hospital.seikyu_ym[-1, 2].to_i) :
         nil
     end

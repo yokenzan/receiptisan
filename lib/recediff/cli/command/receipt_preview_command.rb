@@ -20,8 +20,13 @@ module Recediff
         # 2. by giving UKE file path and receipt's start row index and end row index
         option :from,  type: :integer, requried: false
         option :to,    type: :integer, requried: false
-        # color highlighting
-        option :color, type: :boolean, requried: false, default: false
+        # config for color highlighting
+        option :color,    type: :boolean, requried: false, default: false
+        # cofnig for previewing
+        option :calcunit, type: :boolean, required: false, default: true
+        option :header,   type: :boolean, required: false, default: true
+        option :hoken,    type: :boolean, required: false, default: true
+        option :disease,  type: :boolean, required: false, default: true
 
         # @param [String] uke
         # @param [Hash] options
@@ -71,9 +76,7 @@ module Recediff
         end
 
         def preview_receipts(receipts, options)
-          previewer       = Recediff::Previewer.new
-          previewer.color = options[:color] if options.key?(:color)
-          previewer.preview(receipts)
+          Recediff::Previewer.new(options).preview(receipts)
         end
       end
     end
