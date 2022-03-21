@@ -125,9 +125,7 @@ module Recediff
         patient.name_kana ?
           '(%s)' % @printer.decorate(patient.name_kana, 38, 5, 59) :
           '',
-        patient.sex == 1 ?
-          @printer.decorate('男', 36) :
-          @printer.decorate('女', 35),
+        @printer.decorate(*{ '1': ['男', 36], '2': ['女', 35] }[patient.sex.to_s.intern]),
         birthday_and_age,
       ]
     end
@@ -135,8 +133,9 @@ module Recediff
     # @param [Iho] iho
     # @param [Integer?] _index
     def preview_iho(iho, _index)
-      puts ' 医保     | %8s %8s点 %8s%s' % [
+      puts ' 医保     | %8s  %2d日 %8s点 %8s%s' % [
         iho.hokenja_bango,
+        iho.day_count,
         @util.int2money(iho.point),
         futankin = @util.int2money(iho.futankin),
         futankin.empty? ? '' : '円',
@@ -149,9 +148,10 @@ module Recediff
       parened_futankin_text = parened_futankin.nil? ?
         '' :
         '(%8s%s)' % [@util.int2money(parened_futankin), '円']
-      puts ' 公費%d    | %8s %8s点 %8s%s %s' % [
+      puts ' 公費%d    | %8s  %2d日 %8s点 %8s%s %s' % [
         index,
         kohi.futansha_bango,
+        kohi.day_count,
         @util.int2money(kohi.point),
         futankin = @util.int2money(kohi.futankin),
         futankin.empty? ? '' : '円',
@@ -231,7 +231,7 @@ module Recediff
         text << "%7s   | %#{width}s" % [' ', ' ']
       end
 
-      text << disease.start_date
+      text << disease.start_date.strftime('%Y.%m.%d')
       text << ' '
       text << @printer.decorate(disease.tenki, disease.tenki_code + 30)
       text << ' ' * 2

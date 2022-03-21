@@ -40,5 +40,10 @@ module Recediff
     def futankin
       @row.at(C_負担金額医療保険)&.to_i
     end
+
+    # @return [Integer]
+    def day_count
+      @row.at(C_診療実日数).to_i
+    end
   end
 end

@@ -41,5 +41,10 @@ module Recediff
     def nyuin_futankin
       @row.at(C_公費給付対象入院一部負担金)&.to_i
     end
+
+    # @return [Integer]
+    def day_count
+      @row.at(C_診療実日数).to_i
+    end
   end
 end

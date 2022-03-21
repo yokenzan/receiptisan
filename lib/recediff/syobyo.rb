@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'date'
+
 module Recediff
   class Syobyo
     class << self
@@ -16,7 +18,7 @@ module Recediff
     # @param [Integer] tenki_code
     def initialize(disease, start_date, tenki_code, is_main)
       @disease     = disease
-      @start_date  = start_date
+      @start_date  = Date.parse(start_date)
       @tenki       = self.class.tenkis[tenki_code.to_s.intern]
       @tenki_code  = tenki_code.to_i
       @is_main     = !!is_main
