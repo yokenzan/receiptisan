@@ -288,7 +288,7 @@ module Recediff
     # @param [Integer?] int
     # @return [String]
     def int2money(int)
-      int.nil? ? '' : int.to_s.gsub(/(?<=\d)(\d{3})/, ',\\1')
+      int.nil? ? '' : int.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\1,')
     end
 
     # @param [String] str
