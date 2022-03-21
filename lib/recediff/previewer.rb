@@ -121,9 +121,9 @@ module Recediff
         ''
       puts '%s %s %s %s %s' % [
         patient.id,
-        patient.name,
+        mask_name(patient.name),
         patient.name_kana ?
-          '(%s)' % @printer.decorate(patient.name_kana, 38, 5, 59) :
+          '(%s)' % @printer.decorate(mask_name(patient.name_kana), 38, 5, 59) :
           '',
         @printer.decorate(*{ '1': ['男', 36], '2': ['女', 35] }[patient.sex.to_s.intern]),
         birthday_and_age,
@@ -134,7 +134,7 @@ module Recediff
     # @param [Integer?] _index
     def preview_iho(iho, _index)
       puts ' 医保     | %8s  %2d日 %8s点 %8s%s' % [
-        iho.hokenja_bango,
+        mask_bango(iho.hokenja_bango),
         iho.day_count,
         @util.int2money(iho.point),
         futankin = @util.int2money(iho.futankin),
@@ -150,7 +150,7 @@ module Recediff
         '(%8s%s)' % [@util.int2money(parened_futankin), '円']
       puts ' 公費%d    | %8s  %2d日 %8s点 %8s%s %s' % [
         index,
-        kohi.futansha_bango,
+        mask_bango(kohi.futansha_bango),
         kohi.day_count,
         @util.int2money(kohi.point),
         futankin = @util.int2money(kohi.futankin),
@@ -217,16 +217,16 @@ module Recediff
 
       width          = MIN_WIDTH
       main_state     = disease.main? ? '（主）' : ''
-      formatted_name = @util.format_text(main_state + disease.name)
+      disease_text   = main_state + disease.name
+      disease_length = @util.displayed_width(disease_text)
+      formatted_name = @util.format_text(disease_text)
       formatted_name = @printer.decorate_over(formatted_name, '4:3', 3, '58:5:46') if disease.worpro?
       formatted_name = @printer.decorate_over(formatted_name, 1, 31)               if disease.main?
-      padder         = @util.displayed_width(main_state + disease.name) < width ?
-        ' ' * (width - @util.displayed_width(main_state + disease.name)) :
-        ''
+      padder         = disease_length < width ? ' ' * (width - disease_length) : ''
       code_text      = @printer.decorate('%07d' % disease.code, 38, 5, 59)
       text           = '%s   | %s%s' % [code_text, formatted_name, padder]
 
-      if @util.displayed_width(main_state + disease.name) > width
+      if disease_length > width
         text << "\n"
         text << "%7s   | %#{width}s" % [' ', ' ']
       end
@@ -275,6 +275,23 @@ module Recediff
     def generate_point_and_count(cost)
       cost.point.nil? ? '' : '%8s x %2s' % [@util.int2money(cost.point), cost.count]
     end
+
+    # @return [Boolean]
+    def mask?
+      @options[:mask]
+    end
+
+    # @param [String] name
+    # @return [String]
+    def mask_name(name)
+      mask? ? @util.mask_name(name) : name
+    end
+
+    # @param [String] bango
+    # @return [String]
+    def mask_bango(bango)
+      mask? ? @util.mask_bango(bango) : bango
+    end
   end
   # rubocop:enable Metrics/ClassLength
 
@@ -295,6 +312,18 @@ module Recediff
     # @return [Integer]
     def displayed_width(str)
       str.each_char.map { | c | c.bytesize == 1 ? 1 : 2 }.inject(0, &:+)
+    end
+
+    # @param [String] name
+    # @return [String]
+    def mask_name(name)
+      name.sub(/^(.*)(.)/, '＊＊＊＊\2')
+    end
+
+    # @param [String] bango
+    # @return [String]
+    def mask_bango(bango)
+      bango.gsub(/\d{4}$/, '****')
     end
   end
 

@@ -22,11 +22,12 @@ module Recediff
         option :to,    type: :integer, requried: false
         # config for color highlighting
         option :color,    type: :boolean, requried: false, default: false
-        # cofnig for previewing
+        # config for previewing
         option :calcunit, type: :boolean, required: false, default: true
         option :header,   type: :boolean, required: false, default: true
         option :hoken,    type: :boolean, required: false, default: true
         option :disease,  type: :boolean, required: false, default: true
+        option :mask,     type: :boolean, required: false, default: false
 
         # @param [String] uke
         # @param [Hash] options
