@@ -32,7 +32,7 @@ module Recediff
     end
 
     def preview(object, index = nil, shinku = nil)
-      @printer ||= @options[:color] ? DecoratablePrinter.new(@global_interior) : Printer.new
+      @printer ||= @options[:color] ? DecoratablePrinter.new : Printer.new
       @preview_methods
         .fetch(object.class.to_s.gsub(/.*:/, '').intern)
         .call(object, index, shinku)
@@ -84,6 +84,9 @@ module Recediff
       return if @current_receipt.diseases.empty?
 
       preview(@current_receipt.diseases)
+
+      @printer.global_interior = nil
+
       puts '--------------------' * 6
     end
 
@@ -208,7 +211,10 @@ module Recediff
     # rubocop:enable Metrics/AbcSize
 
     # @param [Syobyo] disease
-    def preview_disease(disease, _index)
+    # @param [Integer] index
+    def preview_disease(disease, index)
+      @printer.global_interior = index.even? ? "\e[48;5;235m" : ''
+
       width          = MIN_WIDTH
       main_state     = disease.main? ? '（主）' : ''
       formatted_name = @util.format_text(main_state + disease.name)
@@ -226,8 +232,10 @@ module Recediff
       end
 
       text << disease.start_date
-      text << ' ' << @printer.decorate(disease.tenki, disease.tenki_code + 30)
-
+      text << ' '
+      text << @printer.decorate(disease.tenki, disease.tenki_code + 30)
+      text << ' ' * 2
+      text << @printer.clear
       puts text
     end
 
@@ -291,7 +299,9 @@ module Recediff
   end
 
   class DecoratablePrinter
-    def initialize(global_interior)
+    attr_writer :global_interior
+
+    def initialize(global_interior = nil)
       @global_interior = global_interior
     end
 
@@ -312,6 +322,10 @@ module Recediff
       ]
     end
 
+    def clear
+      e(0)
+    end
+
     private
 
     def clear_interior
@@ -326,6 +340,16 @@ module Recediff
   end
 
   class Printer
+    attr_writer :global_interior
+
+    def initialize(global_interior = nil)
+      @global_interior = global_interior
+    end
+
+    def clear
+      ''
+    end
+
     def decorate(text, *_sequences)
       text
     end
