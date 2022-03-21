@@ -14,6 +14,7 @@ module Recediff
       @current_shinku  = nil
       @current_receipt = nil
       @printer         = nil
+      @util            = StringUtil.new
       @options         = options
       @global_interior = global_interior
       @preview_methods = {
@@ -41,50 +42,68 @@ module Recediff
 
     # param [Receipt] receipt
     # @param [Integer?] _index
-    # rubocop:disable Metrics/PerceivedComplexity
-    # rubocop:disable Metrics/CyclomaticComplexity
     def preview_receipt(receipt, _index)
       @current_receipt = receipt
       @current_shinku  = nil
 
       puts '---*---*---*---*---*' * 6
 
-      @options[:header] && preview_receipt_header(receipt)
-
-      unless receipt.patient.empty?
-        preview(receipt.patient)
-        puts '--------------------' * 6
-      end
-
-      if @options[:hoken] && !receipt.hokens.empty?
-        preview(receipt.hokens)
-        puts '--------------------' * 6
-      end
-
-      if @options[:disease] && !receipt.diseases.empty?
-        preview(receipt.diseases)
-        puts '--------------------' * 6
-      end
-
-      @options[:calcunit] && !receipt.units.empty? && preview(receipt.units)
+      preview_header_section
+      preview_patient_section
+      preview_hoken_section
+      preview_disease_section
+      preview_content_section
 
       puts "\n"
     end
-    # rubocop:enable Metrics/PerceivedComplexity
-    # rubocop:enable Metrics/CyclomaticComplexity
 
-    def preview_receipt_header(receipt)
-      return if receipt.empty_header?
+    def preview_header_section
+      return unless @options[:header]
+      return if @current_receipt.empty_header?
 
+      preview_receipt_header
+    end
+
+    def preview_patient_section
+      return if @current_receipt.patient.empty?
+
+      preview(@current_receipt.patient)
+      puts '--------------------' * 6
+    end
+
+    def preview_hoken_section
+      return unless @options[:hoken]
+      return if @current_receipt.hokens.empty?
+
+      preview(@current_receipt.hokens)
+      puts '--------------------' * 6
+    end
+
+    def preview_disease_section
+      return unless @options[:disease]
+      return if @current_receipt.diseases.empty?
+
+      preview(@current_receipt.diseases)
+      puts '--------------------' * 6
+    end
+
+    def preview_content_section
+      return unless @options[:calcunit]
+      return if @current_receipt.units.empty?
+
+      preview(@current_receipt.units)
+    end
+
+    def preview_receipt_header
       puts '[No.%s] | %s%s / %s%s' % [
-        @printer.decorate(receipt.id.zero? ? '不明' : '%4d' % receipt.id, 1),
-        receipt.shinryo_ym.to_s.sub('-', '.'),
-        receipt.shinryo_ym ? '診療' : '',
-        receipt.seikyu_ym.to_s.sub('-', '.'),
-        receipt.seikyu_ym ? '請求' : '',
+        @printer.decorate(@current_receipt.id.zero? ? '不明' : '%4d' % @current_receipt.id, 1),
+        @current_receipt.shinryo_ym.to_s.sub('-', '.'),
+        @current_receipt.shinryo_ym ? '診療' : '',
+        @current_receipt.seikyu_ym.to_s.sub('-', '.'),
+        @current_receipt.seikyu_ym ? '請求' : '',
       ]
-      puts '種     別 | %s' % [receipt.type.to_detail]
-      puts '特     記 | %s' % [receipt.tokki_jikos.map { | t | "[#{t}]" }.join(' ')]
+      puts '種     別 | %s' % [@current_receipt.type.to_detail]
+      puts '特     記 | %s' % [@current_receipt.tokki_jikos.map { | t | "[#{t}]" }.join(' ')]
     end
 
     # @param [Patient] patient
@@ -115,8 +134,8 @@ module Recediff
     def preview_iho(iho, _index)
       puts ' 医保     | %8s %8s点 %8s%s' % [
         iho.hokenja_bango,
-        int2money(iho.point),
-        futankin = int2money(iho.futankin),
+        @util.int2money(iho.point),
+        futankin = @util.int2money(iho.futankin),
         futankin.empty? ? '' : '円',
       ]
     end
@@ -126,12 +145,12 @@ module Recediff
       parened_futankin      = kohi.gairai_futankin
       parened_futankin_text = parened_futankin.nil? ?
         '' :
-        '(%8s%s)' % [int2money(parened_futankin), '円']
+        '(%8s%s)' % [@util.int2money(parened_futankin), '円']
       puts ' 公費%d    | %8s %8s点 %8s%s %s' % [
         index,
         kohi.futansha_bango,
-        int2money(kohi.point),
-        futankin = int2money(kohi.futankin),
+        @util.int2money(kohi.point),
+        futankin = @util.int2money(kohi.futankin),
         futankin.empty? ? '' : '円',
         parened_futankin_text,
       ]
@@ -151,14 +170,14 @@ module Recediff
       return unless cost.name
 
       width           = MIN_WIDTH
-      formatted_name  = format_text(cost.name)
+      formatted_name  = @util.format_text(cost.name)
       amount_text     = cost.amount? ? cost.amount : ''
-      text_width      = displayed_width(formatted_name)
-      total_width     = text_width + (cost.amount? ? displayed_width(amount_text) + 1 : 0)
+      text_width      = @util.displayed_width(formatted_name)
+      total_width     = text_width + (cost.amount? ? @util.displayed_width(amount_text) + 1 : 0)
       padder          = total_width >= width ? '' : ' ' * (width - total_width)
       point_and_count = cost.point.nil? ?
         '' :
-        '%8s x %2s' % [int2money(cost.point), cost.count]
+        '%8s x %2s' % [@util.int2money(cost.point), cost.count]
       color_sequence  = { IY: 14, SI: 15, TO: 13 }[cost.category.intern]
       text            = '%s | %s | %s%s%s%s' % [
         @printer.decorate(cost.code, 38, 5, 59),
@@ -195,16 +214,16 @@ module Recediff
     def preview_disease(disease, _index)
       width          = MIN_WIDTH
       main_state     = disease.main? ? '（主）' : ''
-      formatted_name = format_text(main_state + disease.name)
+      formatted_name = @util.format_text(main_state + disease.name)
       formatted_name = @printer.decorate_over(formatted_name, '4:3', 3, '58:5:46') if disease.worpro?
       formatted_name = @printer.decorate_over(formatted_name, 1, 31)               if disease.main?
-      padder         = displayed_width(main_state + disease.name) < width ?
-        ' ' * (width - displayed_width(main_state + disease.name)) :
+      padder         = @util.displayed_width(main_state + disease.name) < width ?
+        ' ' * (width - @util.displayed_width(main_state + disease.name)) :
         ''
       code_text      = @printer.decorate('%07d' % disease.code, 38, 5, 59)
       text           = '%s   | %s%s' % [code_text, formatted_name, padder]
 
-      if displayed_width(main_state + disease.name) > width
+      if @util.displayed_width(main_state + disease.name) > width
         text << "\n"
         text << "%7s   | %#{width}s" % [' ', ' ']
       end
@@ -221,9 +240,9 @@ module Recediff
     # rubocop:disable Metrics/PerceivedComplexity
     # rubocop:disable Metrics/CyclomaticComplexity
     def preview_comment(comment, index = nil, shinku = nil)
-      formatted_text            = format_text(comment.text)
+      formatted_text            = @util.format_text(comment.text)
       formatted_additional_text = comment.additional_text ?
-        format_text(comment.additional_text) :
+        @util.format_text(comment.additional_text) :
         ''
       puts '%s | %s | %s%s%s' % [
         @printer.decorate(comment.code, 38, 5, 59),
@@ -239,7 +258,10 @@ module Recediff
     end
     # rubocop:enable Metrics/PerceivedComplexity
     # rubocop:enable Metrics/CyclomaticComplexity
+  end
+  # rubocop:enable Metrics/ClassLength
 
+  class StringUtil
     # @param [String] text
     # @return [String]
     def format_text(text)
@@ -258,7 +280,6 @@ module Recediff
       str.each_char.map { | c | c.bytesize == 1 ? 1 : 2 }.inject(0, &:+)
     end
   end
-  # rubocop:enable Metrics/ClassLength
 
   class DecoratablePrinter
     def initialize(global_interior)
