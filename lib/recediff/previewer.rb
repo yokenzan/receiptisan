@@ -171,13 +171,10 @@ module Recediff
 
       width           = MIN_WIDTH
       formatted_name  = @util.format_text(cost.name)
-      amount_text     = cost.amount? ? cost.amount : ''
+      amount_text     = generate_amount(cost)
       text_width      = @util.displayed_width(formatted_name)
       total_width     = text_width + (cost.amount? ? @util.displayed_width(amount_text) + 1 : 0)
       padder          = total_width >= width ? '' : ' ' * (width - total_width)
-      point_and_count = cost.point.nil? ?
-        '' :
-        '%8s x %2s' % [@util.int2money(cost.point), cost.count]
       color_sequence  = { IY: 14, SI: 15, TO: 13 }[cost.category.intern]
       text            = '%s | %s | %s%s%s%s' % [
         @printer.decorate(cost.code, 38, 5, 59),
@@ -199,7 +196,7 @@ module Recediff
         ]
       end
 
-      text << point_and_count
+      text << generate_point_and_count(cost)
       text << @printer.decorate(' (%s)' % cost.done_at.join(', '), 38, 5, 24) unless cost.point.nil?
 
       puts text
@@ -258,6 +255,18 @@ module Recediff
     end
     # rubocop:enable Metrics/PerceivedComplexity
     # rubocop:enable Metrics/CyclomaticComplexity
+
+    # @param [Cost] cost
+    def generate_amount(cost)
+      return '' unless cost.amount?
+
+      cost.amount_is_int? ? @util.int2money(cost.amount) : cost.amount.to_f.to_s
+    end
+
+    # @param [Cost] cost
+    def generate_point_and_count(cost)
+      cost.point.nil? ? '' : '%8s x %2s' % [@util.int2money(cost.point), cost.count]
+    end
   end
   # rubocop:enable Metrics/ClassLength
 

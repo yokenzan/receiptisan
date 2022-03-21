@@ -78,6 +78,10 @@ module Recediff
       amount.nil?.!
     end
 
+    def amount_is_int?
+      amount? && (amount.to_f - amount.to_i) < Float::EPSILON
+    end
+
     attr_reader :code, :name, :category, :point, :done_at, :count, :comments, :amount
   end
 
