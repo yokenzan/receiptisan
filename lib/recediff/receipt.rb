@@ -123,6 +123,10 @@ module Recediff
       hoken.at(HOKEN::TOTAL_POINT)&.to_i
     end
 
+    def lower_kubun
+      @row.at(RE::C_一部負担金・食事療養費・生活療養費標準負担額区分)
+    end
+
     def show
       text = ''
       # text << "\n#### %5d - %s ########\n" % [@patient_id, @patient_name]

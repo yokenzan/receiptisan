@@ -105,8 +105,11 @@ module Recediff
         @current_receipt.seikyu_ym.to_s.sub('-', '.'),
         @current_receipt.seikyu_ym ? '請求' : '',
       ]
-      puts '種     別 | %s' % [@current_receipt.type.to_detail]
-      puts '特     記 | %s' % [@current_receipt.tokki_jikos.map { | t | "[#{t}]" }.join(' ')]
+      puts '種     別 | %s  %s' % [
+        @current_receipt.type.to_detail,
+        { '1': 'Ⅱ', '2': 'Ⅱ超', '3': 'Ⅰ', '4': 'Ⅰ老' }[@current_receipt.lower_kubun.to_s.intern],
+      ]
+      puts '特     記 | %s' % @current_receipt.tokki_jikos.map { | t | "[#{t}]" }.join(' ')
     end
 
     # @param [Patient] patient
