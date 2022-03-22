@@ -68,9 +68,13 @@ module Recediff
             seqs = parse_seqs(options.fetch(:seqs))
             parser.parse(uke, seqs.sort.uniq)
           when :uke_and_range
-            from = options.fetch(:from)
-            to   = options.fetch(:to)
-            parser.parse_area(File.readlines(uke).slice(from.to_i..to.to_i).join)
+            from = options[:from]
+            to   = options[:to]
+            parser.parse_area(
+              File.readlines(uke)
+                .slice(from && to ? from.to_i..to.to_i : from.to_i..)
+                .join
+            )
           when :stdin
             parser.parse_area($stdin.readlines.join)
           end
