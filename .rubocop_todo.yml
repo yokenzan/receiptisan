@@ -55,3 +55,11 @@ Style/GlobalVars:
 Style/RescueStandardError:
   Exclude:
     - 'lib/recediff/cost.rb'
+
+Layout/SpaceAroundOperators:
+  Exclude:
+    - 'lib/recediff/model/uke/enum.rb'
+
+Layout/ExtraSpacing:
+  Exclude:
+    - 'lib/recediff/model/uke/enum.rb'
