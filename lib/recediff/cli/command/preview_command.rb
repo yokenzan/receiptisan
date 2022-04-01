@@ -12,7 +12,7 @@ module Recediff
       # 1. by giving UKE file path and receipt's sequence
       # 2. by giving UKE file path and receipt's start row index and end row index
       # 3. by giving stdin
-      class ReceiptPreviewCommand < Dry::CLI::Command
+      class PreviewCommand < Dry::CLI::Command
         argument :uke, required: false
         # 1. by giving UKE file path and receipt's sequence
         option :seqs,  type: :string,  requried: false

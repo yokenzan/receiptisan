@@ -66,21 +66,6 @@ module Recediff
       ]
     end
 
-    def to_preview
-      is_main = main_state_text
-      disease = @shushokugos.select(&:prefix?)
-        .push(@disease)
-        .concat(@shushokugos.reject(&:prefix?))
-        .map(&:to_s)
-        .join('')
-      start_date = @start_date
-      tenki      = @tenki
-
-      formatted_disease = (is_main + disease).gsub('−', '－')
-      text              = formatted_disease + ('　' * (20 - formatted_disease.length))
-      '%s  %s  %s' % [text, start_date, tenki]
-    end
-
     def code
       @disease.code.to_i
     end

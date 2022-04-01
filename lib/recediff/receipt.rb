@@ -170,17 +170,6 @@ module Recediff
       days.sum { | d | @units.select { | u | u.done_at?(d) }.sum { | u | u.point_at(d) } }
     end
 
-    def to_preview
-      lines = []
-
-      unless @syobyos.empty?
-        lines << @syobyos.map(&:to_preview)
-        lines << '-' * 40
-      end
-
-      lines.concat(units.map(&:to_preview)).flatten.join("\n")
-    end
-
     def to_csv(sep = ',')
       hospital_columns = [
         @hospital.prefecture_code,

@@ -33,24 +33,6 @@ module Recediff
       '--> %s - %2d - %4d点 - %s %s' % [category, index, point_at(day), code, @name]
     end
 
-    def to_preview
-      formatted_name   = name.gsub('−', '－')
-      text             = formatted_name + ('　' * (60 - formatted_name.length))
-      point_and_count  = point.nil? ? '' : '%8s x %2s' % [point.to_s.gsub(/(?<=\d)(\d{3})/, ',\\1'), count]
-      comment_previews = @comments.empty? ? [] : @comments.map(&:to_preview)
-
-      if @comments.empty?
-        text += point_and_count
-      else
-        last_comment  = comment_previews.last
-        last_comment += point_and_count
-        comment_previews.pop
-        comment_previews.push(last_comment)
-      end
-
-      [text, *comment_previews]
-    end
-
     def point_at(day)
       @point.to_i * @count_at.at(day - 1)
     end
@@ -115,12 +97,6 @@ module Recediff
 
     def comments
       []
-    end
-
-    def to_preview
-      combined_text  = text + (additional_text || '')
-      formatted_text = combined_text.gsub('−', '－')
-      formatted_text + ('　' * (60 - formatted_text.length))
     end
 
     attr_reader :category, :point, :done_at, :count

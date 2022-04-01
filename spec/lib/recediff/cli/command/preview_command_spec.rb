@@ -3,9 +3,9 @@
 require 'stringio'
 require 'recediff'
 
-RSpec.describe Recediff::Cli::Command::ReceiptPreviewCommand do
-  # @type [Recediff::Cli::Command::ReceiptPreviewCommand] command
-  let(:klass)   { Recediff::Cli::Command::ReceiptPreviewCommand }
+RSpec.describe Recediff::Cli::Command::PreviewCommand do
+  # @type [Recediff::Cli::Command::PreviewCommand] command
+  let(:klass)   { Recediff::Cli::Command::PreviewCommand }
   let(:command) { klass.new }
   let(:uke)     { 'file/which/does/not/exist' }
 

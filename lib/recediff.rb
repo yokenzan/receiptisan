@@ -20,14 +20,6 @@ require_relative 'recediff/cli'
 module Recediff
   class Error < StandardError; end
 
-  module RE
-    RECEIPT_ID   = 1
-    TYPES        = 2
-    TOKKI_JIKO   = 11
-    PATIENT_ID   = 13
-    PATIENT_NAME = 36
-  end
-
   module COST
     CATEGORY                  = 0
     SHINKU                    = 1
@@ -55,36 +47,3 @@ module Recediff
     IS_MAIN     = 6
   end
 end
-
-_tokki_jikos = {
-  '01': '公',
-  '02': '長',
-  '03': '長処',
-  '04': '後保',
-  '07': '老併',
-  '08': '老健',
-  '09': '施',
-  '10': '第三',
-  '11': '薬治',
-  '12': '器治',
-  '13': '先進',
-  '14': '制超',
-  '16': '長２',
-  '20': '二割',
-  '21': '高半',
-  '25': '出産',
-  '26': '区ア',
-  '27': '区イ',
-  '28': '区ウ',
-  '29': '区エ',
-  '30': '区オ',
-  '31': '多ア',
-  '32': '多イ',
-  '33': '多ウ',
-  '34': '多エ',
-  '35': '多オ',
-  '36': '加治',
-  '37': '申出',
-  '38': '医併',
-  '39': '医療',
-}

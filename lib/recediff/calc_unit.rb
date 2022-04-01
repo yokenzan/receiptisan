@@ -58,13 +58,6 @@ module Recediff
       text.join("\n")
     end
 
-    def to_preview
-      @costs
-        .map(&:to_preview)
-        .flatten
-        .map.with_index { | c, i | '%s%s' % [i.zero? ? '＊' : '　', c] }
-    end
-
     # 第 +day+ 日目に実施されたか？
     # @param [Integer] day
     # @return [Boolean]

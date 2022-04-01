@@ -14,26 +14,26 @@ $ bundle exec bin/recediff --version
 
 ## Commands
 
-### `--receipt-preview`
+### `--preview`
 
 ```bash
 # UKE file as input, output whole receipts
-$ bundle exec bin/recediff --receipt-preview path/to/RECEIPTC.UKE --all
+$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --all
 
 # UKE file as input, output some receipts by passing receipt sequences
-$ bundle exec bin/recediff --receipt-preview path/to/RECEIPTC.UKE --seqs=1,10-15,100
+$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --seqs=1,10-15,100
 
 # UKE file as input, output some area by passing range of line number in UKE file
-$ bundle exec bin/recediff --receipt-preview path/to/RECEIPTC.UKE --from=0 --to=100
+$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --from=0 --to=100
 
 # UKE file whose content is imcomplete as input
-$ bundle exec bin/recediff --receipt-preview path/to/peace_of_RECEIPTC.UKE --all
+$ bundle exec bin/recediff --preview path/to/peace_of_RECEIPTC.UKE --all
 
 # UKE content given via STDIN as input
-$ cat path/to/RECIPTC.UKE | bundle exec bin/recediff --receipt-preview --all
+$ cat path/to/RECIPTC.UKE | bundle exec bin/recediff --preview --all
 
 # incomplete UKE content given via STDIN as input
-$ cat calc_units.csv | bundle exec bin/recediff --receipt-preview --from=0 --to=100
+$ cat calc_units.csv | bundle exec bin/recediff --preview --from=0 --to=100
 ```
 
 other options:
@@ -58,7 +58,7 @@ other options:
 
 ```vim
 function! UkeGetPreviewedText(uke_text) abort
-    return system('cd path/to/recediff/root/dir && bundle exec bin/recediff --receipt-preview', a:uke_text)
+    return system('cd path/to/recediff/root/dir && bundle exec bin/recediff --preview', a:uke_text)
 endfunction
 
 function! UkePopupPreview(start, end) abort
@@ -87,7 +87,7 @@ au BufNewFile,BufRead *.UKE setf uke
 let g:quickrun_config.uke = {
             \       'command':                     'bin/recediff',
             \       'exec':                        'bundle exec %c %o %s',
-            \       'cmdopt':                      '--receipt-preview --from=0',
+            \       'cmdopt':                      '--preview --from=0',
             \       'outputter':                   'quickfix',
             \       'hook/cd/directory':           'path/to/recediff/root/dir',
             \       'hook/output_encode/encoding': 'cp932:cp932'
