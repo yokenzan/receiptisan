@@ -71,18 +71,18 @@ module Recediff
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def parse_row(row, buffer)
-      case category = row.at(COST::CATEGORY)
+      case category = row.first
       when /IR/
-        buffer.hospital = Hospital.new(row)
+        buffer.hospital = Hospital.from_uke(row)
       when /RE/
         buffer.update_seq_condition(row.at(RE::C_レセプト番号).to_i)
         return if buffer.complete?
 
         new_receipt(row, buffer)
       when /HO/
-        buffer.in_seq? && buffer.receipt.add_hoken(Iho.new(row))
+        buffer.in_seq? && buffer.receipt.add_hoken(Iho.from_uke(row))
       when /KO/
-        buffer.in_seq? && buffer.receipt.add_hoken(Kohi.new(row))
+        buffer.in_seq? && buffer.receipt.add_hoken(Kohi.from_uke(row))
       when /SY/
         add_syobyo(row, buffer)
       when /SJ/, /GO/, /SN/
@@ -96,13 +96,7 @@ module Recediff
     def new_receipt(row, buffer)
       return unless buffer.in_seq?
 
-      patient = Patient.new(
-        row.at(RE::C_カルテ番号等).to_i,
-        row.at(RE::C_氏名),
-        row.at(RE::C_男女区分).to_i,
-        row.at(RE::C_生年月日),
-        row.at(RE::C_カタカナ氏名)
-      )
+      patient = Patient.from_uke(row)
       receipt = Receipt.new(
         row.at(RE::C_レセプト番号).to_i,
         patient,

@@ -2,50 +2,52 @@
 
 module Recediff
   class Iho
-    # rubocop:disable Layout/ExtraSpacing, Layout/SpaceAroundOperators
-    C_レコード識別情報 = 0
-    C_保険者番号       = 1
-    C_記号             = 2
-    C_番号             = 3
-    C_診療実日数       = 4
-    C_合計点数         = 5
-    C_食事療養回数     = 7
-    C_食事療養合計金額 = 8
-    C_負担金額医療保険 = 11
-    # rubocop:enable Layout/ExtraSpacing, Layout/SpaceAroundOperators
+    class << self
+      HO = Model::Uke::Enum::HO
 
-    def initialize(row)
-      @row = row
+      def from_uke(row)
+        new(
+          hokenja_bango: row.at(HO::C_保険者番号)&.strip,
+          kigo:          row.at(HO::C_被保険者証等の記号)&.strip,
+          bango:         row.at(HO::C_被保険者証等の番号)&.strip,
+          point:         row.at(HO::C_合計点数)&.to_i,
+          futankin:      row.at(HO::C_負担金額_医療保険)&.to_i,
+          day_count:     row.at(HO::C_診療実日数).to_i
+        )
+      end
     end
 
-    # @return [String]
-    def hokenja_bango
-      @row.at(C_保険者番号).strip
+    def initialize(hokenja_bango:, kigo:, bango:, point:, futankin:, day_count:)
+      @hokenja_bango = hokenja_bango
+      @kigo          = kigo
+      @bango         = bango
+      @point         = point
+      @futankin      = futankin
+      @day_count     = day_count
     end
 
+    # @!attribute [r]
     # @return [String?]
-    def kigo
-      @row.at(C_記号)
-    end
+    attr_reader :hokenja_bango
 
+    # @!attribute [r]
     # @return [String?]
-    def bango
-      @row.at(C_番号)
-    end
+    attr_reader :kigo
 
+    # @!attribute [r]
+    # @return [String?]
+    attr_reader :bango
+
+    # @!attribute [r]
     # @return [Integer?]
-    def point
-      @row.at(C_合計点数)&.to_i
-    end
+    attr_reader :point
 
+    # @!attribute [r]
     # @return [Integer?]
-    def futankin
-      @row.at(C_負担金額医療保険)&.to_i
-    end
+    attr_reader :futankin
 
+    # @!attribute [r]
     # @return [Integer]
-    def day_count
-      @row.at(C_診療実日数).to_i
-    end
+    attr_reader :day_count
   end
 end

@@ -1,39 +1,70 @@
 # frozen_string_literal: true
 
+require 'month'
+
 module Recediff
   class Hospital
-    IR = Model::Uke::Enum::IR
+    class << self
+      IR = Model::Uke::Enum::IR
 
-    def initialize(row)
-      @row = row
+      # @param [Array<String, nil>] row
+      # @return [Hospital]
+      # @raise StandardError
+      def from_uke(row)
+        raise StandardError unless row.at(IR::C_レコード識別情報) == IR::RECORD.to_s
+
+        new(
+          code:            row[IR::C_医療機関コード],
+          prefecture_code: row[IR::C_都道府県],
+          name:            row[IR::C_医療機関名称],
+          seikyu_ym:       row[IR::C_請求年月],
+          shaho_or_kokuho: row[IR::C_審査支払機関].to_i == 1 ? '社保' : '国保'
+        )
+      end
+
+      # @return [Hospital]
+      def create_empty
+        new(
+          code:            nil,
+          prefecture_code: nil,
+          name:            '',
+          seikyu_ym:       nil,
+          shaho_or_kokuho: nil
+        )
+      end
     end
 
-    # @return [String]
-    def code
-      @row[IR::C_医療機関コード]
-    end
-
-    # @return [String]
-    def prefecture_code
-      @row[IR::C_都道府県]
-    end
-
-    # @return [String]
-    def name
-      @row[IR::C_医療機関名称]
-    end
-
-    def seikyu_ym
-      @row[IR::C_請求年月]
-    end
-
-    # @return [String]
-    def shaho_or_kokuho
-      @row[IR::C_審査支払機関].to_i == 1 ? '社保' : '国保'
+    # @param [String?] code
+    # @param [String?] prefecture_code
+    # @param [String] name
+    # @param [Month?] seikyu_ym
+    # @param [String?] shaho_or_kokuho
+    def initialize(code:, prefecture_code:, name:, seikyu_ym:, shaho_or_kokuho:)
+      @code            = code
+      @prefecture_code = prefecture_code
+      @name            = name
+      @seikyu_ym       = seikyu_ym
+      @shaho_or_kokuho = shaho_or_kokuho
     end
 
     def empty?
       [seikyu_ym, name, prefecture_code, code].compact.all?(&:empty?)
     end
+
+    # @!attribute [r]
+    # @return [String?]
+    attr_reader :code
+    # @!attribute [r]
+    # @return [String?]
+    attr_reader :prefecture_code
+    # @!attribute [r]
+    # @return [String]
+    attr_reader :name
+    # @!attribute [r]
+    # @return [Month?]
+    attr_reader :seikyu_ym
+    # @!attribute [r]
+    # @return [String?]
+    attr_reader :shaho_or_kokuho
   end
 end

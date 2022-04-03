@@ -47,19 +47,12 @@ module Recediff
     end
 
     def new_empty_receipt
-      patient = Patient.new(
-        '不明',
-        '不明',
-        '不明',
-        '不明',
-        '不明'
-      )
       new_receipt(Receipt.new(
         '不明',
-        patient,
+        Patient.create_empty,
         '____',
         '',
-        @hospital || Hospital.new([] * 10)
+        @hospital || Hospital.create_empty
       ))
     end
 
