@@ -8,11 +8,12 @@ module Recediff
 
     class << self
       def create
+        dir = __dir__
         new(
-          Recediff::Master.load('./csv'),
-          Recediff::DiseaseMaster.load('./csv'),
-          Recediff::ShushokugoMaster.load('./csv'),
-          Recediff::CommentMaster.load('./csv')
+          Recediff::Master.load(dir + '/../../csv'),
+          Recediff::DiseaseMaster.load(dir + '/../../csv'),
+          Recediff::ShushokugoMaster.load(dir + '/../../csv'),
+          Recediff::CommentMaster.load(dir + '/../../csv')
         )
       end
     end
