@@ -5,8 +5,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in recediff.gemspec
 gemspec
 
-gem 'dry-cli'
-gem 'month'
 gem 'rake', '~> 13.0'
 
 group :development, :test do

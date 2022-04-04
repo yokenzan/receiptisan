@@ -9,7 +9,7 @@
 ```bash
 $ git clone git@github.com:yokenzan/recediff.git
 $ bundle install
-$ bundle exec bin/recediff --version
+$ bundle exec exe/recediff --version
 ```
 
 ## Commands
@@ -18,22 +18,22 @@ $ bundle exec bin/recediff --version
 
 ```bash
 # UKE file as input, output whole receipts
-$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --all
+$ bundle exec exe/recediff --preview path/to/RECEIPTC.UKE --all
 
 # UKE file as input, output some receipts by passing receipt sequences
-$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --seqs=1,10-15,100
+$ bundle exec exe/recediff --preview path/to/RECEIPTC.UKE --seqs=1,10-15,100
 
 # UKE file as input, output some area by passing range of line number in UKE file
-$ bundle exec bin/recediff --preview path/to/RECEIPTC.UKE --from=0 --to=100
+$ bundle exec exe/recediff --preview path/to/RECEIPTC.UKE --from=0 --to=100
 
 # UKE file whose content is imcomplete as input
-$ bundle exec bin/recediff --preview path/to/peace_of_RECEIPTC.UKE --all
+$ bundle exec exe/recediff --preview path/to/peace_of_RECEIPTC.UKE --all
 
 # UKE content given via STDIN as input
-$ cat path/to/RECIPTC.UKE | bundle exec bin/recediff --preview --all
+$ cat path/to/RECIPTC.UKE | bundle exec exe/recediff --preview --all
 
 # incomplete UKE content given via STDIN as input
-$ cat calc_units.csv | bundle exec bin/recediff --preview --from=0 --to=100
+$ cat calc_units.csv | bundle exec exe/recediff --preview --from=0 --to=100
 ```
 
 other options:
@@ -85,7 +85,7 @@ You will get a preview of recceipts nearby the cursor position by selecting area
 au BufNewFile,BufRead *.UKE setf uke
 
 let g:quickrun_config.uke = {
-            \       'command':                     'bin/recediff',
+            \       'command':                     'exe/recediff',
             \       'exec':                        'bundle exec %c %o %s',
             \       'cmdopt':                      '--preview --from=0',
             \       'outputter':                   'quickfix',
