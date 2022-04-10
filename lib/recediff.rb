@@ -16,6 +16,7 @@ require_relative 'recediff/parser'
 require_relative 'recediff/summary_parser'
 require_relative 'recediff/previewer'
 require_relative 'recediff/cli'
+require_relative 'recediff/escape_sequence_interior_builder'
 
 module Recediff
   class Error < StandardError; end

@@ -94,3 +94,9 @@ Layout/HashAlignment:
 
 Style/ClassVars:
   Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - fg
+    - bg
+    - id
