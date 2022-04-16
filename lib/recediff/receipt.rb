@@ -74,7 +74,7 @@ module Recediff
         nil :
         Month.new(
           raw_value[0,  4].to_i,
-          raw_value[-1, 2].to_i
+          raw_value[-2, 2].to_i
         )
     end
 
