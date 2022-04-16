@@ -230,8 +230,7 @@ module Recediff
       disease_length = @util.displayed_width(disease_text)
       formatted_name = @util.format_text(disease_text)
       disease.worpro? && formatted_name = @printer
-        .underline(style: :curly)
-        .underline_color(index: 46)
+        .underline(style: :curly, color: { index: 46 })
         .italic
         .decorate_over(formatted_name)
       disease.main? && formatted_name = @printer
@@ -277,7 +276,8 @@ module Recediff
         comment.additional_text ?
           @printer
             .fg_color(name: :yellow)
-            .dim.italic
+            .dim
+            .italic
             .underline(style: :double)
             .decorate(formatted_additional_text) :
           '',
@@ -349,11 +349,58 @@ module Recediff
     end
   end
 
-  class DecoratablePrinter
+  class Printer
     attr_writer :global_interior
 
+    @@interior_builder_methods = %i[
+      inverse
+      strike_through
+      fg_color
+      bg_color
+      colors_by_name
+      underline_color
+      colors_by_index
+      underline
+      overline
+      on_interior
+      bold
+      dim
+      italic
+      build
+      blink
+      invisible
+    ]
+
     def initialize(global_interior = nil)
-      @global_interior  = global_interior
+      @global_interior = global_interior
+    end
+
+    def clear
+      ''
+    end
+
+    def decorate(text)
+      text
+    end
+
+    alias decorate_over decorate
+
+    private
+
+    def method_missing(method, **opts)
+      super unless @@interior_builder_methods.include?(method)
+
+      self
+    end
+
+    def respond_to_missing?(method, args)
+      super unless @@interior_builder_methods.include?(method)
+    end
+  end
+
+  class DecoratablePrinter < Printer
+    def initialize(global_interior = nil)
+      super(global_interior)
       @interior_builder = EscapeSequenceInteriorBuilder.new
     end
 
@@ -378,80 +425,14 @@ module Recediff
       @interior_builder.clear_interior
     end
 
-    @@interior_builder_methods = %i[
-      inverse
-      strike_through
-      fg_color
-      bg_color
-      colors_by_name
-      underline_color
-      colors_by_index
-      underline
-      overline
-      on_interior
-      bold
-      dim
-      italic
-      build
-      blink
-      invisible
-    ]
-
     private
 
-    def method_missing(method, **opts)
+    def method_missing(method, **opts) # rubocop:disable Style/MissingRespondToMissing
       super unless @@interior_builder_methods.include?(method)
 
       @interior_builder.__send__(method, **opts)
 
       self
-    end
-
-    def respond_to_missing?(method, args)
-      super unless @@interior_builder_methods.include?(method)
-    end
-  end
-
-  class Printer
-    attr_writer :global_interior
-
-    def initialize(global_interior = nil)
-      @global_interior = global_interior
-    end
-
-    def clear
-      ''
-    end
-
-    @@interior_builder_methods = %i[
-      inverse
-      strike_through
-      fg_color
-      bg_color
-      colors_by_name
-      underline_color
-      colors_by_index
-      underline
-      overline
-      on_interior
-      bold
-      dim
-      italic
-      build
-      blink
-      invisible
-    ]
-
-    private
-
-    def method_missing(method, **opts)
-      super unless @@interior_builder_methods.include?(method)
-
-      self
-    end
-
-    def respond_to_missing?(method, args)
-      super unless @@interior_builder_methods.include?(method)
     end
   end
 end

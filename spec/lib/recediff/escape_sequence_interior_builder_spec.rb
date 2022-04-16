@@ -44,7 +44,13 @@ RSpec.describe Recediff::EscapeSequenceInteriorBuilder do
 
   describe 'state preservation' do
     it 'should be cleared after build interior sequence' do
+      expect(builder.bold.italic.build).to eq "\e[1;3m"
       expect(builder.build).to eq ''
+    end
+
+    it 'should be preserved after build interior sequence' do
+      expect(builder.bold.italic.build(preserve_state: true)).to eq "\e[1;3m"
+      expect(builder.build).to eq "\e[1;3m"
     end
   end
 end

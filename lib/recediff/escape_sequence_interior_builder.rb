@@ -114,7 +114,7 @@ module Recediff
     end
 
     def empty?
-      @options.each_value.all?(:empty?)
+      @options.each_value.all? { | option | option.empty? } # rubocop:disable Style/SymbolProc
     end
 
     def on_interior(*interiors, **color_interiors)
@@ -159,13 +159,15 @@ module Recediff
     end
 
     # @return self
-    def underline(enabled: true, style: :single)
+    def underline(enabled: true, style: :single, color: {})
       command =  CommandStruct.new(INTERIOR_UNDERLINE)
       command << (enabled ?
         @@underline_styles[style] :
         @@underline_styles[:disabled])
 
       @options[:underline] << command
+
+      underline_color(**color) unless color.empty?
 
       self
     end
