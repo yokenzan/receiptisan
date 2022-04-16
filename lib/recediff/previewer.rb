@@ -99,7 +99,7 @@ module Recediff
 
     def preview_receipt_header
       puts '[No.%s] | %s%s / %s%s' % [
-        @printer.decorate(@current_receipt.id.zero? ? '不明' : '%4d' % @current_receipt.id, 1),
+        @printer.bold.decorate(@current_receipt.id.zero? ? '不明' : '%4d' % @current_receipt.id),
         @current_receipt.shinryo_ym.to_s.sub('-', '.'),
         @current_receipt.shinryo_ym ? '診療' : '',
         @current_receipt.seikyu_ym.to_s.sub('-', '.'),
@@ -122,13 +122,14 @@ module Recediff
           patient.age_month_of(@current_receipt.shinryo_ym),
         ] :
         ''
+      sex = patient.sex.to_s.intern
       puts '%s %s %s %s %s' % [
         patient.id,
         mask_name(patient.name),
         patient.name_kana ?
-          '(%s)' % @printer.decorate(mask_name(patient.name_kana), 38, 5, 59) :
+          '(%s)' % @printer.fg_color(index: 59).decorate(mask_name(patient.name_kana)) :
           '',
-        @printer.decorate(*{ '1': ['男', 36], '2': ['女', 35] }[patient.sex.to_s.intern]),
+        @printer.fg_color(name: { '1': :cyan, '2': :magenta }[sex]).decorate({ '1': '男', '2': '女' }[sex]),
         birthday_and_age,
       ]
     end
@@ -183,13 +184,18 @@ module Recediff
       padder          = total_width >= width ? '' : ' ' * (width - total_width)
       color_sequence  = { IY: 14, SI: 15, TO: 13 }[cost.category.intern]
       text            = '%s | %s | %s%s%s%s' % [
-        @printer.decorate(cost.code, 38, 5, 59),
+        @printer.fg_color(index: 59).decorate(cost.code),
         @current_shinku != shinku && index.zero? ?
-          @printer.decorate('%02d' % shinku, '4:4') :
+          @printer.underline(style: :dotted).decorate('%02d' % shinku) :
           '  ',
-        @printer.decorate(index.zero? ? '＊' : '　', 1, 35),
-        @printer.decorate(formatted_name, 38, 5, color_sequence),
-        cost.amount? ? ' ' + @printer.decorate(amount_text, '4:4', '33') : '',
+        @printer.bold.fg_color(name: :magenta).decorate(index.zero? ? '＊' : '　'),
+        @printer.fg_color(index: color_sequence).decorate(formatted_name),
+        cost.amount? ?
+          ' ' + @printer
+            .underline(style: :dotted)
+            .fg_color(name: :yellow)
+            .decorate(amount_text) :
+          '',
         padder,
       ]
 
@@ -203,7 +209,7 @@ module Recediff
       end
 
       text << generate_point_and_count(cost)
-      text << @printer.decorate(' (%s)' % cost.done_at.join(', '), 38, 5, 24) unless cost.point.nil?
+      text << @printer.fg_color(index: 24).decorate(' (%s)' % cost.done_at.join(', ')) unless cost.point.nil?
 
       puts text
 
@@ -223,10 +229,15 @@ module Recediff
       disease_text   = main_state + disease.name
       disease_length = @util.displayed_width(disease_text)
       formatted_name = @util.format_text(disease_text)
-      formatted_name = @printer.decorate_over(formatted_name, '4:3', 3, '58:5:46') if disease.worpro?
-      formatted_name = @printer.decorate_over(formatted_name, 1, 31)               if disease.main?
+      disease.worpro? && formatted_name = @printer
+        .underline(style: :curly, color: { index: 46 })
+        .italic
+        .decorate_over(formatted_name)
+      disease.main? && formatted_name = @printer
+        .bold.fg_color(name: :red)
+        .decorate_over(formatted_name)
       padder         = disease_length < width ? ' ' * (width - disease_length) : ''
-      code_text      = @printer.decorate('%07d' % disease.code, 38, 5, 59)
+      code_text      = @printer.fg_color(index: 59).decorate('%07d' % disease.code)
       text           = '%s   | %s%s' % [code_text, formatted_name, padder]
 
       if disease_length > width
@@ -236,7 +247,7 @@ module Recediff
 
       text << disease.start_date.strftime('%Y.%m.%d')
       text << ' '
-      text << @printer.decorate(disease.tenki, disease.tenki_code + 30)
+      text << @printer.fg_color(index: disease.tenki_code).decorate(disease.tenki)
       text << ' ' * 2
       text << @printer.clear
       puts text
@@ -253,14 +264,22 @@ module Recediff
         @util.format_text(comment.additional_text) :
         ''
       puts '%s | %s | %s%s%s' % [
-        @printer.decorate(comment.code, 38, 5, 59),
+        @printer.fg_color(index: 59).decorate(comment.code),
         shinku && @current_shinku != shinku && index && index.zero? ?
-          @printer.decorate('%02d' % shinku, '4:4') :
+          @printer.underline(style: :dotted).decorate('%02d' % shinku) :
           '  ',
-        @printer.decorate(index && index.zero? ? '＊' : '　', 1, 35),
-        @printer.decorate(formatted_text, 33, 2),
+        @printer
+          .bold
+          .fg_color(name: :magenta)
+          .decorate(index && index.zero? ? '＊' : '　'),
+        @printer.dim.fg_color(name: :yellow).decorate(formatted_text),
         comment.additional_text ?
-          @printer.decorate(formatted_additional_text, 33, 2, 3, '4:2') :
+          @printer
+            .fg_color(name: :yellow)
+            .dim
+            .italic
+            .underline(style: :double)
+            .decorate(formatted_additional_text) :
           '',
       ]
     end
@@ -326,53 +345,31 @@ module Recediff
     # @param [String] bango
     # @return [String]
     def mask_bango(bango)
-      bango.gsub(/\d{4}$/, '****')
-    end
-  end
-
-  class DecoratablePrinter
-    attr_writer :global_interior
-
-    def initialize(global_interior = nil)
-      @global_interior = global_interior
-    end
-
-    def decorate(text, *sequences)
-      '%s%s%s%s' % [
-        clear_interior,
-        e(*sequences),
-        text,
-        clear_interior,
-      ]
-    end
-
-    def decorate_over(text, *sequences)
-      '%s%s%s' % [
-        e(*sequences),
-        text,
-        clear_interior,
-      ]
-    end
-
-    def clear
-      e(0)
-    end
-
-    private
-
-    def clear_interior
-      clear_command = e(0)
-      clear_command << @global_interior if @global_interior
-      clear_command
-    end
-
-    def e(*sequences)
-      "\e[#{sequences.map(&:to_s).join(';')}m"
+      bango.gsub(/\d{4}\z/, '****')
     end
   end
 
   class Printer
     attr_writer :global_interior
+
+    @@interior_builder_methods = %i[
+      inverse
+      strike_through
+      fg_color
+      bg_color
+      colors_by_name
+      underline_color
+      colors_by_index
+      underline
+      overline
+      on_interior
+      bold
+      dim
+      italic
+      build
+      blink
+      invisible
+    ]
 
     def initialize(global_interior = nil)
       @global_interior = global_interior
@@ -382,10 +379,60 @@ module Recediff
       ''
     end
 
-    def decorate(text, *_sequences)
+    def decorate(text)
       text
     end
 
     alias decorate_over decorate
+
+    private
+
+    def method_missing(method, **opts)
+      super unless @@interior_builder_methods.include?(method)
+
+      self
+    end
+
+    def respond_to_missing?(method, args)
+      super unless @@interior_builder_methods.include?(method)
+    end
+  end
+
+  class DecoratablePrinter < Printer
+    def initialize(global_interior = nil)
+      super(global_interior)
+      @interior_builder = EscapeSequenceInteriorBuilder.new
+    end
+
+    def decorate(text)
+      '%s%s%s%s' % [
+        clear,
+        @interior_builder.build,
+        text,
+        clear,
+      ]
+    end
+
+    def decorate_over(text)
+      '%s%s%s' % [
+        @interior_builder.build,
+        text,
+        clear,
+      ]
+    end
+
+    def clear
+      @interior_builder.clear_interior
+    end
+
+    private
+
+    def method_missing(method, **opts) # rubocop:disable Style/MissingRespondToMissing
+      super unless @@interior_builder_methods.include?(method)
+
+      @interior_builder.__send__(method, **opts)
+
+      self
+    end
   end
 end
