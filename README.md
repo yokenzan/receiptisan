@@ -3,6 +3,7 @@
 ## Known bugs
 
 - Can't parse `TO` records correctly.
+- Can't parse and output comemnt only calc units.
 
 ## Installation
 
@@ -10,6 +11,12 @@
 $ git clone git@github.com:yokenzan/recediff.git
 $ bundle install
 $ bundle exec exe/recediff --version
+```
+
+or you also can install by using [specific_install](https://github.com/rdp/specific_install).
+
+```bash
+$ gem specific_install -l https://github.com/yokenzan/recediff
 ```
 
 ## Commands
@@ -58,7 +65,7 @@ other options:
 
 ```vim
 function! UkeGetPreviewedText(uke_text) abort
-    return system('cd path/to/recediff/root/dir && bundle exec bin/recediff --preview', a:uke_text)
+    return system('cd path/to/recediff/root/dir && bundle exec exe/recediff --preview', a:uke_text)
 endfunction
 
 function! UkePopupPreview(start, end) abort
@@ -80,6 +87,8 @@ command! -range UkePreview call UkePopupPreview(<line1>, <line2>)
 You will get a preview of recceipts nearby the cursor position by selecting area and call `:'<,'>UkePreiew`.
 
 ### config to show previews with quickrun
+
+example of config with [vim-quickrun](https://github.com/thinca/vim-quickrun)
 
 ```vim
 au BufNewFile,BufRead *.UKE setf uke
