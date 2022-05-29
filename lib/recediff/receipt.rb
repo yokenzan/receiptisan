@@ -9,13 +9,13 @@ module Recediff
     RE = Model::Uke::Enum::RE
 
     @@tokki_jikos = {
-      '01': '公',
-      '02': '長',
+      '01': '公　',
+      '02': '長　',
       '03': '長処',
       '04': '後保',
       '07': '老併',
       '08': '老健',
-      '09': '施',
+      '09': '施　',
       '10': '第三',
       '11': '薬治',
       '12': '器治',
@@ -39,6 +39,8 @@ module Recediff
       '37': '申出',
       '38': '医併',
       '39': '医療',
+      '96': '災１',
+      '97': '災２',
     }
 
     # @param [Integer] id
@@ -249,6 +251,10 @@ module Recediff
       tokki_jiko.to_s.scan(/.{2}/).map { | code | '%s%s' % [code, @@tokki_jikos[code.intern]] }
     end
 
+    def nyuin?
+      @type.age_type_code.to_i.odd?
+    end
+
     attr_reader :units, :patient_id, :patient_name, :tokki_jiko, :patient, :type, :id, :hokens, :hospital
 
     class ReceiptType
@@ -347,6 +353,19 @@ module Recediff
           age_type_code,
           age_type,
         ].each_slice(2).map { | c, s | '[%s %s]' % [c, s] }.join(' ')
+      end
+
+      def to_details
+        [
+          ika_type_code,
+          ika_type,
+          shuhoken_type_code,
+          shuhoken_type,
+          hoken_multiple_type_code,
+          hoken_multiple_type,
+          age_type_code,
+          age_type,
+        ].each_slice(2).map { | c, s | [c, s] }
       end
     end
   end

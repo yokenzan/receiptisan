@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>UKE preview</title>
+    </head>
+    <body>
+        <ul>
+            <li><a href="?sample=1">サンプルのRECEIPTC.UKEを入力する</a></li>
+            <li><a href=".">内容を消去する</a></li>
+        </ul>
+        <form class="js-form">
+            <textarea id="uke-text-input" placeholder="RECEIPTC.UKEまたは一部を入力してください.." class="text-field" cols="100" rows="20"><%= @uke %></textarea>
+            <hr/>
+            <input type="checkbox" id="hoken"  checked>
+            <label for="hoken">ヘッダ</label>
+            <input type="checkbox" id="byomei" checked>
+            <label for="byomei">傷病名</label>
+            <input type="checkbox" id="tekiyo" checked>
+            <label for="tekiyo">摘要欄</label>
+            <input type="submit" value="show preview">
+        </form>
+        <hr/>
+        <div class="summary-area"></div>
+        <div class="preview-area"></div>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#hoken').on('change', function (e) {
+                e.preventDefault();
+                var checked = $('#hoken').is(':checked');
+                if (checked) {
+                    $('.receipt-header-table').show();
+                    $('.patient-info-table').show();
+                    $('.hoken-info-table').show();
+                } else {
+                    $('.receipt-header-table').hide();
+                    $('.patient-info-table').hide();
+                    $('.hoken-info-table').hide();
+                }
+            });
+
+            $('#byomei').on('change', function (e) {
+                e.preventDefault();
+                var checked = $('#byomei').is(':checked');
+                if (checked) {
+                    $('.disease-table').show();
+                } else {
+                    $('.disease-table').hide();
+                }
+            });
+
+            $('#tekiyo').on('change', function (e) {
+                e.preventDefault();
+                var checked = $('#tekiyo').is(':checked');
+                if (checked) {
+                    $('.content-table').show();
+                } else {
+                    $('.content-table').hide();
+                }
+            });
+
+            $('.js-form').on('submit', function (e) {
+                e.preventDefault();
+                var textField  = $('.js-form .text-field');
+                var ukeContent = textField.val();
+
+                $.ajax({
+                    type: 'POST',
+                    url:  '/preview',
+                    data: {
+                        uke: ukeContent,
+                    },
+                    dataType: 'html'
+                })
+                    .done(function (data) {
+                        $('.preview-area').html(data);
+                    })
+                    .fail(function() {
+                        alert('error');
+                    });
+
+                $.ajax({
+                    type: 'POST',
+                    url:  '/summary',
+                    data: {
+                        uke: ukeContent
+                    },
+                    dataType: 'html'
+                })
+                    .done(function (data) {
+                        $('.summary-area').html(data);
+                    })
+                    .fail(function() {
+                        alert('error');
+                    });
+            });
+        });
+    </script>
+    <style>
+        body {
+          font-family:      "Segoe UI Emoji", Meiryo, Helvetica, arial, sans-serif;
+          font-size:        14px;
+          /* line-height:      1.6; */
+          line-height:      1.0;
+          padding-top:      10px;
+          padding-bottom:   10px;
+          /* background-color: #ffeeff; */
+          padding:          30px;
+        }
+        body > *:first-child {
+            margin-top: 0 !important;
+        }
+        body > *:last-child {
+            margin-bottom: 0 !important;
+        }
+        a {
+            color: #4183C4;
+        }
+        a.absent {
+            color: #cc0000;
+        }
+        a.anchor {
+            display:      block;
+            padding-left: 30px;
+            margin-left:  -30px;
+            cursor:       pointer;
+            position:     absolute;
+            top:          0;
+            left:         0;
+            bottom:       0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin:                 20px 0 10px;
+            padding:                0;
+            font-weight:            bold;
+            -webkit-font-smoothing: antialiased;
+            cursor:                 text;
+            position:               relative;
+        }
+
+        h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+            text-decoration: none;
+        }
+
+        h1 tt, h1 code {
+            font-size: inherit;
+        }
+
+        h2 tt, h2 code {
+            font-size: inherit;
+        }
+
+        h3 tt, h3 code {
+            font-size: inherit;
+        }
+
+        h4 tt, h4 code {
+            font-size: inherit;
+        }
+
+        h5 tt, h5 code {
+            font-size: inherit;
+        }
+
+        h6 tt, h6 code {
+            font-size: inherit;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: black;
+        }
+
+        h2 {
+            font-size: 24px;
+            border-bottom: 1px solid #cccccc;
+            color: black;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+
+        h4 {
+            font-size: 16px;
+        }
+
+        h5 {
+            font-size: 14px;
+        }
+
+        h6 {
+            color: #777777;
+            font-size: 14px;
+        }
+
+        p, blockquote, ul, ol, dl, li, table, pre {
+            margin: 15px 0;
+        }
+
+        body > h2:first-child {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        body > h1:first-child {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        body > h1:first-child + h2 {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+            margin-top: 0;
+        }
+
+        li p.first {
+            display: inline-block;
+        }
+        ul, ol {
+            padding-left: 30px;
+        }
+        ul :first-child, ol :first-child {
+            margin-top: 0;
+        }
+        ul :last-child, ol :last-child {
+            margin-bottom: 0;
+        }
+
+        table tr:nth-child(2n) {
+            background-color: #e8e8e8;
+        }
+        table tr th {
+            font-weight: bold;
+            border-top:  1px solid #aaaaaa;
+            text-align:  left;
+            margin:      2px 3px;
+            padding:     2px 9px;
+        }
+        table {
+            border-bottom: 1px solid #aaaaaa;
+        }
+        table tr td {
+            border-top: 1px solid #aaaaaa;
+            text-align: left;
+            margin:     2px 3px;
+            padding:    2px 9px;
+        }
+
+        /* table tr th:first-child, table tr td:first-child { */
+        /*     margin-top: 0; */
+        /* } */
+
+        /* table tr th:last-child, table tr td:last-child { */
+        /*     border-bottom: 1px solid #aaaaaa; */
+        /* } */
+
+        textarea {
+            font-family:   "VL ゴシック", "UD デジタル 教科書体 N-R", "PT Mono", monospace;
+        }
+
+        th.day-cell {
+            text-align:    center;
+            padding-left:  0px;
+            padding-right: 0px;
+        }
+
+        .day-sunday {
+            color:            #ff0000;
+            background-color: #ffdddd;
+        }
+
+        .day-saturday {
+            color:            #0000ff;
+            background-color: #ddddff;
+        }
+
+        .worpro {
+            color:       #777777;
+            text-shadow: 2px 2px 3px gold;
+        }
+
+        .cost-shinryo-koi {
+            /* color: #; */
+        }
+
+        .cost-iyakuhin {
+            color: #3030c0;
+        }
+
+        .cost-tokutei-kizai {
+            color: #green;
+        }
+
+        .cost-comment {
+            color: #808000
+        }
+
+        .disease-fail-display {
+            font-weight: bold;
+            font-size:   90%;
+            color:       #606060;
+        }
+
+        .disease-main {
+            font-weight: bold;
+            color:       #b02020;
+        }
+
+        .disease-main-badge {
+            background-color: #b02020;
+            text-align:       center;
+        }
+
+        .number-style {
+            text-align: end;
+        }
+
+        .receipt-type-badge, .receipt-tokki-jiko-badge {
+            font-family:   "VL ゴシック", "UD デジタル 教科書体 N-R", "PT Mono", monospace;
+            padding:       2px 4px;
+            margin-right:  5px;
+            margin-left:   1px;
+            font-size:     90%;
+            color:         white;
+            border-radius: 6px;
+            box-shadow:    0 0 3px #ddd;
+            white-space:   nowrap;
+        }
+
+        .receipt-type-badge {
+            background-color: #ff80ff;
+        }
+
+        .receipt-tokki-jiko-badge {
+            background-color: #58acfa;
+        }
+
+        .disease-tenki-badge, .disease-main-badge {
+            font-family:   "VL ゴシック", "UD デジタル 教科書体 N-R", "PT Mono", monospace;
+            padding:       2px 4px;
+            margin-right:  5px;
+            margin-left:   1px;
+            font-size:     90%;
+            color:         white;
+            border-radius: 6px;
+            box-shadow:    0 0 3px #ddd;
+            white-space:   nowrap;
+            font-weight:   normal;
+        }
+
+        .disease-tenki-badge-1 {
+            background-color: #ff0000;
+        }
+
+        .disease-tenki-badge-2 {
+            background-color: #00ee00;
+        }
+
+        .disease-tenki-badge-3 {
+            background-color: #00ffff;
+        }
+
+        .disease-tenki-badge-4 {
+            background-color: #0000ff;
+        }
+
+        .receipt-header-table {
+            float: left;
+        }
+        .patient-info-table {
+            float: left;
+        }
+        .hoken-info-table {
+            float: left;
+        }
+        .disease-table {
+            clear: left;
+        }
+        .content-table {
+            clear: left;
+        }
+        .receipt-separator {
+            clear: left;
+        }
+
+        .content-table td {
+            line-height:    1.0;
+            padding-top:    0px;
+            padding-bottom: 0px;
+            border-top:     0px;
+        }
+
+        .content-table .row-next-shinku td {
+            border-top: solid 2px #c0c0c0;
+            padding-top: 3px;
+        }
+        .content-table .row-upper-shinku td {
+            border-top: double 1px #a0a0c0;
+            padding-top: 3px;
+        }
+        .content-table .row-new-unit td {
+            border-top: solid 1px #e0e0e0;
+            padding-top: 3px;
+        }
+        td.column-cost-name {
+            padding-left: 0px;
+            border-left:  none;
+        }
+        td.column-asterisk {
+            text-align:   center;
+            border-right: none;
+        }
+    </style>
+</html>
