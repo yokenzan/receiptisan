@@ -96,11 +96,11 @@
                         <td class="number-style"><%= @util.int2money(kohi.point) %>点</td>
                         <td class="number-style">
                             <%= futankin = @util.int2money(kohi.futankin) %>
-                            <% unless futankin.empty? %>円<% end %>
+                            <% unless futankin.nil? %>円<% end %>
 
                             <% parened_futankin = receipt.nyuin? ? kohi.nyuin_futankin : kohi.gairai_futankin %>
                             <% unless parened_futankin.nil? %>
-                                &nbsp; (<% @util.int2money(parened_futankin) %>円)
+                                &nbsp; (<%= @util.int2money(parened_futankin) %>円)
                             <% end %>
                         </td>
                     <% end %>
@@ -153,7 +153,7 @@
     <!-- CONTENT SECTION -->
 
     <% calc_units = receipt.units %>
-    <% shinryo_ym = receipt.shinryo_ym %>
+    <% shinryo_ym = receipt.shinryo_ym || Month(Date.today) %>
     <% unless calc_units.empty? %>
         <% current_shinku = nil %>
         <div class="content-table">
@@ -186,7 +186,18 @@
                                 row-new-unit
                             <% end %>">
                             <td class="number-style"><% if next_shinku %><%= unit.shinku %><% end %></td>
-                            <td class="column-asterisk"><% if cost_idx.zero? %><img style="height: 1em; width: 1em;" src="https://cdn.icon-icons.com/icons2/2248/PNG/512/asterisk_icon_135921.png"/><% end %></td>
+                            <td class="column-asterisk">
+                                <% if cost_idx.zero? %>
+                                    <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="width: 18px; height: 18px; opacity: 1;" xml:space="preserve">
+                                        <style type="text/css"> .st0{fill:#4B4B4B;} </style>
+                                        <g>
+                                            <polygon class="st0" points="501.539,169.221 453.886,86.7 303.669,173.449 303.669,0 208.365,0 208.365,173.479 58.114,86.73 
+                                            10.461,169.261 160.674,255.99 10.501,342.71 58.154,425.231 208.365,338.482 208.365,512 303.669,512 303.669,338.542 
+                                            453.846,425.271 501.499,342.74 351.267,255.99 	" style="fill: rgb(30, 30, 30);"></polygon>
+                                        </g>
+                                    </svg>
+                                <% end %>
+                            </td>
                             <% category      = cost.category.intern %>
                             <% category_name = { SI: 'shinryo-koi', IY: 'iyakuhin', TO: 'tokutei-kizai', CO: 'comment' }[category] %>
                             <td class="column-cost-name <% if category == :CO && cost.code.to_i == 810000001 %>worpro<% end %> cost-<%= category_name %>">

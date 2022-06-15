@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
     <head>
         <meta charset="UTF-8">
         <title>UKE preview</title>
     </head>
     <body>
         <ul>
+            <h1>UKE preview</h1>
             <li><a href="?sample=1">サンプルのRECEIPTC.UKEを入力する</a></li>
             <li><a href=".">内容を消去する</a></li>
         </ul>
         <form class="js-form">
-            <textarea id="uke-text-input" placeholder="RECEIPTC.UKEまたは一部を入力してください.." class="text-field" cols="100" rows="20"><%= @uke %></textarea>
+            <textarea id="uke-text-input" placeholder="RECEIPTC.UKEまたは一部を入力してください.." class="text-field" cols="100" rows="15"><%= @uke %></textarea>
             <hr/>
             <input type="checkbox" id="hoken"  checked>
             <label for="hoken">ヘッダ</label>
@@ -77,8 +78,8 @@
                     .done(function (data) {
                         $('.preview-area').html(data);
                     })
-                    .fail(function() {
-                        alert('error');
+                    .fail(function(data) {
+                        $('.preview-area').html('error');
                     });
 
                 $.ajax({
@@ -92,8 +93,8 @@
                     .done(function (data) {
                         $('.summary-area').html(data);
                     })
-                    .fail(function() {
-                        alert('error');
+                    .fail(function(data) {
+                        $('.summary-area').html('error');
                     });
             });
         });
