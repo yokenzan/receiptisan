@@ -174,10 +174,11 @@ module Recediff
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/AbcSize
     def preview_cost(cost, index, shinku = nil)
-      return unless cost.name
+      # return unless cost.name
 
+      cost_name       = cost.name || '  (＊＊＊表示不可＊＊＊)  '
       width           = MIN_WIDTH
-      formatted_name  = @util.format_text(cost.name)
+      formatted_name  = @util.format_text(cost_name)
       amount_text     = generate_amount(cost)
       text_width      = @util.displayed_width(formatted_name)
       total_width     = text_width + (cost.amount? ? @util.displayed_width(amount_text) + 1 : 0)
@@ -189,7 +190,9 @@ module Recediff
           @printer.underline(style: :dotted).decorate('%02d' % shinku) :
           '  ',
         @printer.bold.fg_color(name: :magenta).decorate(index.zero? ? '＊' : '　'),
-        @printer.fg_color(index: color_sequence).decorate(formatted_name),
+        @printer.fg_color(index: color_sequence).decorate(
+          { IY: '💊', SI: '💪', TO: '⚙️' }[cost.category.intern] + formatted_name
+        ),
         cost.amount? ?
           ' ' + @printer
             .underline(style: :dotted)
@@ -272,7 +275,7 @@ module Recediff
           .bold
           .fg_color(name: :magenta)
           .decorate(index && index.zero? ? '＊' : '　'),
-        @printer.dim.fg_color(name: :yellow).decorate(formatted_text),
+        @printer.dim.fg_color(name: :yellow).decorate('📑' + formatted_text),
         comment.additional_text ?
           @printer
             .fg_color(name: :yellow)
