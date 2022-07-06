@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 require 'date'
+require 'forwardable'
 
 module Recediff
   class Syobyo
+    include Enumerable
+    extend Forwardable
+    def_delegators :@shushokugos, :each, :length
+
     class << self
       attr_reader :tenkis
     end

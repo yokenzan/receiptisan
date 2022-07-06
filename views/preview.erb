@@ -80,7 +80,7 @@
                     <% if hoken.is_a?(Recediff::Iho) %>
                         <% iho = hoken %>
                         <td>医療保険</td>
-                        <td class="number-style"><%= @util.mask_bango(iho.hokenja_bango) %></td>
+                        <td class="number-style"><code><%= @util.mask_bango(iho.hokenja_bango) %></code></td>
                         <td class="number-style"><%= iho.day_count %>日</td>
                         <td class="number-style"><%= @util.int2money(iho.point) %>点</td>
                         <td class="number-style">
@@ -91,7 +91,7 @@
                         <% kohi = hoken %>
                         <% kohi_count += 1 %>
                         <td>公費<%= kohi_count %></td>
-                        <td class="number-style"><%= @util.mask_bango(kohi.futansha_bango) %></td>
+                        <td class="number-style"><code><%= @util.mask_bango(kohi.futansha_bango) %></code></td>
                         <td class="number-style"><%= kohi.day_count %>日</td>
                         <td class="number-style"><%= @util.int2money(kohi.point) %>点</td>
                         <td class="number-style">
@@ -117,6 +117,7 @@
         <div class="disease-table">
             <table>
                 <thead>
+                    <th>コード</th>
                     <th>#</th>
                     <th>主病</th>
                     <th>傷病名</th>
@@ -128,6 +129,10 @@
                         <% is_main      = disease.main? %>
                         <% disease_name = disease.name %>
                         <tr class="<% if is_main %>disease-main<% end %> <% if disease.worpro? %>worpro<% end %>">
+                            <td>
+                                <code><%= '%07d' % disease.code.to_i %></code>
+                                <% unless disease.length == 0 %><sub><% disease.map.with_index { | modifier, idx | %><code><%= '%04d' % modifier.code.to_s %></code><% unless idx === disease.length - 1 %>&nbsp;<% end %><% } %></sub><% end %>
+                            </td>
                             <td><%= idx + 1 %></td>
                             <td><% if is_main %><span class="disease-main-badge">&nbsp;主&nbsp;</span><% else %>&emsp;<% end %></td>
                             <% if disease_name.length > 30 %>
@@ -160,6 +165,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>コード</th>
                         <th>診区</th>
                         <th>＊</th>
                         <th>明細</th>
@@ -185,10 +191,11 @@
                             <% elsif new_unit %>
                                 row-new-unit
                             <% end %>">
-                            <td class="number-style"><% if next_shinku %><%= unit.shinku %><% end %></td>
+                            <td><code><%= cost.code %></code></td>
+                            <td class="number-style"><code><% if next_shinku %><%= unit.shinku %><% end %></code></td>
                             <td class="column-asterisk">
                                 <% if cost_idx.zero? %>
-                                    <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="width: 18px; height: 18px; opacity: 1;" xml:space="preserve">
+                                    <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="width: 16px; height: 16px; opacity: 1;" xml:space="preserve">
                                         <style type="text/css"> .st0{fill:#4B4B4B;} </style>
                                         <g>
                                             <polygon class="st0" points="501.539,169.221 453.886,86.7 303.669,173.449 303.669,0 208.365,0 208.365,173.479 58.114,86.73 
@@ -215,10 +222,10 @@
                                     <% end %>
                                 <% end %>
                             </td>
-                            <% if unit.length == cost_idx + 1 %>
-                                <td class="number-style"><%= @util.int2money(unit.point) %></td>
-                                <td class="number-style">×<%= unit.count %></td>
-                                <% shinryo_ym.dates.each do | date | %><td class="day-cell number-style <%if date.wday == 0 %>day-sunday<% elsif date.wday == 6 %>day-saturday<% end %>"><%= unit.count_at(date.day).to_s.sub(/^0$/, '') %></td><% end %>
+                            <% unless cost.point.nil? %>
+                                <td class="number-style"><%= @util.int2money(cost.point) %></td>
+                                <td class="number-style">×<%= cost.count %></td>
+                                <% shinryo_ym.dates.each do | date | %><td class="day-cell number-style <%if date.wday == 0 %>day-sunday<% elsif date.wday == 6 %>day-saturday<% end %>"><%= cost.count_at(date.day).to_s.sub(/^0$/, '') %></td><% end %>
                             <% else %>
                                 <td class="number-style"></td>
                                 <td class="number-style"></td>
