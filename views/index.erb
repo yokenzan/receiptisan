@@ -10,9 +10,10 @@
             <li><a href="?sample=1">サンプルのRECEIPTC.UKEを入力する</a></li>
             <li><a href=".">内容を消去する</a></li>
         </ul>
-        <form class="js-form">
+            <form class="js-form clearfix">
                 <textarea id="uke-text-input" placeholder="RECEIPTC.UKEまたは一部を入力してください.." class="text-field" cols="100" rows="15"><%= @uke %></textarea>
                 <hr/>
+                <div class="nav">
                     <input type="checkbox" id="hoken"  checked>
                     <label for="hoken">ヘッダ</label>
                     <input type="checkbox" id="byomei" checked>
@@ -20,6 +21,7 @@
                     <input type="checkbox" id="tekiyo" checked>
                     <label for="tekiyo">摘要欄</label>
                     <input type="submit" value="show preview">
+                </div>
             </form>
         <hr/>
         <div class="summary-area"></div>
@@ -96,6 +98,22 @@
                     .fail(function(data) {
                         $('.summary-area').html('error');
                     });
+            });
+
+            // https://www.webopixel.net/javascript/535.html
+
+            var nav = $('.nav');
+            //navの位置
+            var navTop = nav.offset().top;
+            //スクロールするたびに実行
+            $(window).scroll(function () {
+                var winTop = $(this).scrollTop();
+                //スクロール位置がnavの位置より下だったらクラスfixedを追加
+                if (winTop >= navTop) {
+                    nav.addClass('fixed')
+                } else if (winTop <= navTop) {
+                    nav.removeClass('fixed')
+                }
             });
         });
     </script>
@@ -424,6 +442,19 @@
         td.column-asterisk {
             text-align:   center;
             border-right: none;
+        }
+
+        .nav {
+            padding: 0 20px;
+            margin:  0 auto 60px;
+        }
+        .fixed {
+            position:   fixed;
+            top:        0;
+            left:       0;
+            padding:    16px;
+            mergin:     16px;
+            background: #cccccc;
         }
     </style>
 </html>
