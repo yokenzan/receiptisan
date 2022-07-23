@@ -28,24 +28,3 @@ post '/preview' do
   @util     = Recediff::StringUtil.new
   erb :preview
 end
-
-post '/__preview' do
-  stringio = StringIO.new
-  $stdout  = stringio
-  options  = {
-    color:    false,
-    calcunit: params[:tekiyo] || true,
-    header:   true,
-    hoken:    params[:hoken]  || true,
-    disease:  params[:byomei] || true,
-    mask:     true,
-  }
-  Recediff::Previewer.new(options).preview(Recediff::Parser.create.parse_area(params['uke']))
-  $stdout = STDOUT
-  data    = {
-    preview: stringio.string,
-  }
-
-  content_type :json
-  @data = data.to_json
-end
