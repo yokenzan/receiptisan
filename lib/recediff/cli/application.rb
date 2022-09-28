@@ -11,7 +11,8 @@ module Recediff
         @commandset.register('--daily-cost-list', Command::DailyCostListCommand, aliases: ['-l'])
         @commandset.register('--ef-like-csv',     Command::EfLikeCsvCommand,     aliases: ['-e'])
         @commandset.register('--preview',         Command::PreviewCommand,       aliases: ['-p'])
-        @commandset.register('--uke-structure ',  Command::UkeStructureCommand,  aliases: ['-s'])
+        @commandset.register('--sokatsu',         Command::SokatsuCommand,       aliases: ['-s'])
+        @commandset.register('--uke-structure',   Command::UkeStructureCommand,  aliases: ['-S'])
         @commandset.register('--version',         Command::VersionCommand,       aliases: ['-v'])
       end
 
