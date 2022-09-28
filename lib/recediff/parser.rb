@@ -131,13 +131,15 @@ module Recediff
     def add_cost(buffer, category, row)
       return unless buffer.in_seq?
 
-      if (shinku = row.at(COST::SHINKU))
+      column_headers = Recediff::Model::Uke::Enum.const_get(category)
+
+      if (shinku = row.at(column_headers::C_診療識別))
         buffer.new_unit(CalcUnit.new(shinku.to_i))
       end
 
       unless comment?(category)
-        cost = Cost.new(code = row.at(COST::CODE).to_i, @master.find_by_code(code), category, row)
-        row[COST::COMMENT_CODE_1..COST::COMMENT_ADDITIONAL_TEXT_3]
+        cost = Cost.new(code = row.at(column_headers::C_レセ電コード).to_i, @master.find_by_code(code), category, row)
+        row[column_headers::C_コメント_1_コメントコード..column_headers::C_コメント_3_文字データ]
           .each_slice(2)
           .reject { | c, _ | c.nil? }
           .each do | c, additional_text |
@@ -147,9 +149,9 @@ module Recediff
           end
         buffer.unit.add_cost(cost)
       else
-        code         = row.at(COST::CODE).to_i
+        code         = row.at(column_headers::C_レセ電コード).to_i
         comment_text = @comment_master.find_by_code(code.to_i)
-        comment_core = CommentCore.new(code.to_i, comment_text, row.at(4))
+        comment_core = CommentCore.new(code.to_i, comment_text, row.at(column_headers::C_文字データ))
         buffer.unit.add_cost(Comment.new(comment_core, category, row))
       end
     end
