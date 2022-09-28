@@ -11,18 +11,17 @@ module Recediff
       @code          = code.to_i
       @name          = master_record&.at(1)
       @category      = category
+      @enums         = Model::Uke::Enum.const_get(@category)
       @row           = row
-      @point         = @row.at(COST::POINT) ? @row.at(COST::POINT).to_i : nil
-      @done_at       = @row[-31..]
+      @point         = @row.at(@enums::C_点数) ? @row.at(@enums::C_点数).to_i : nil
+      @done_at       = @row[@enums::C_算定日_1日..@enums::C_算定日_31日]
         .map.with_index { | day, index | day.nil? ? nil : index + 1 }
         .compact
-      @count_at      = @row[-31..].map(&:to_i)
+      @count_at      = @row[@enums::C_算定日_1日..@enums::C_算定日_31日].map(&:to_i)
       @count         = @count_at.inject(0, &:+)
-      @amount        = @row.at(Model::Uke::Enum::SI::C_数量データ)
+      @amount        = @row.at(@enums::C_使用量)
       @master_record = master_record
       @comments      = []
-    rescue
-      $ERR += 1
     end
 
     def add_comment(comment)

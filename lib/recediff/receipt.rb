@@ -2,10 +2,14 @@
 
 require 'month'
 require 'erb'
+require 'forwardable'
 
 module Recediff
   # レセプト
   class Receipt
+    extend Forwardable
+    def_delegators :hospital, :shaho_or_kokuho
+
     RE = Model::Uke::Enum::RE
 
     @@tokki_jikos = {
@@ -50,7 +54,6 @@ module Recediff
     # @param [Hospital] hospital
     def initialize(id, patient, code_of_types, tokki_jiko, hospital, row = [])
       @id           = id.to_i
-      @patient_id   = patient_id.to_i
       @patient      = patient
       @units        = []
       @hokens       = []
@@ -97,7 +100,7 @@ module Recediff
       @syobyos << row
     end
 
-    # @return [Array<String>, nil]
+    # @return [Iho, Kohi, nil]
     def hoken
       @hokens.first
     end
@@ -120,19 +123,13 @@ module Recediff
       @units.map(&:done_at).flatten.uniq.sort
     end
 
-    # @return [Integer]
-    def total_point
-      hoken.at(HOKEN::TOTAL_POINT)&.to_i
-    end
-
     def lower_kubun
       @row.at(RE::C_一部負担金・食事療養費・生活療養費標準負担額区分)
     end
 
     def show
       text = ''
-      # text << "\n#### %5d - %s ########\n" % [@patient_id, @patient_name]
-      text << "\n#### %5d - %s - %d点 ########\n" % [@patient_id, @patient_name, point]
+      text << "\n#### %5s - %s - %d点 ########\n" % [@patient.id, @patient_name, point]
 
       text << show_meisai
       text << "\n--------------------------------\n"
@@ -144,11 +141,9 @@ module Recediff
       text = ''
       text << "\n\n"
 
-      if total_point
-        parameters = [hoken.at(HOKEN::HOKENJA_NUMBER), total_point, point == total_point]
-        format     = "## 保険者番号 %8s 請求点数 %d点 請求点数と算出合計点数一致？ %s\n"
-        text << format % parameters
-      end
+      parameters = [hoken.is_a?(Iho) ? hoken.hokenja_bango : hoken.is_a?(Kohi) ? hoken.futansha_bango : nil, hoken&.point]
+      format     = "## 保険者番号 %8s 請求点数 %d点\n"
+      text << format % parameters
 
       days.each do | d |
         # @type [Array<CalcUnit>] units
@@ -164,7 +159,7 @@ module Recediff
     end
 
     def show_syobyo
-      @syobyos.sort_by(&:code).map { | s | s.to_list(patient_id) }.join("\n")
+      @syobyos.sort_by(&:code).map { | s | s.to_list(patient.id) }.join("\n")
     end
 
     # @return [Integer]
@@ -181,7 +176,7 @@ module Recediff
       ]
       receipt_level_columns = [
         @id,
-        @type.hoken_kohi_type,
+        @type.shuhoken_type,
         @type.hoken_multiple_type,
         @type.age_type,
         patient_id,
