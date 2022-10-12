@@ -32,6 +32,10 @@ module Recediff
       @point.to_i * @count_at.at(day - 1)
     end
 
+    def count_at(day)
+      @count_at.at(day - 1)
+    end
+
     def code_table_number
       return nil unless category == 'SI'
       return nil unless @master_record

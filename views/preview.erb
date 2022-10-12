@@ -1,0 +1,243 @@
+<% @receipts.each do | receipt | %>
+
+    <!-- HEADER SECTION -->
+    <div id="receipt-section-<%= receipt.id %>">
+        <table class="receipt-header-table">
+            <tbody>
+                <tr>
+                    <th><% if receipt.id.zero? %>不明<% else %>No.<%= receipt.id %><% end %></th>
+                    <td>
+                        <%= receipt.shinryo_ym.to_s.sub('-', '.') %><% if receipt.shinryo_ym %>診療<% end %>
+                        &emsp;
+                        <%= receipt.seikyu_ym.to_s.sub('-', '.')  %><% if receipt.seikyu_ym  %>請求<% end %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>種別</td>
+                    <td>
+                        <% receipt.type.to_details.each do | (type_code, type_name) | %>
+                            <span class="receipt-type-badge"><%= type_code %> <%= type_name %></span>
+                        <% end %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>特記事項</td>
+                    <td>
+                        <% receipt.tokki_jikos.each do | tokki_jiko | %>
+                            <span class="receipt-tokki-jiko-badge"><%= tokki_jiko %></span>
+                        <% end %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PATIENT SECTION -->
+    <% patient = receipt.patient %>
+    <div class="patient-info-table">
+        <table>
+            <tbody>
+                <tr>
+                    <th>患者番号</th>
+                    <td><%= patient.id %></td>
+                </tr>
+                <tr>
+                    <th>患者氏名</th>
+                    <td>
+                        <%= @util.mask_name(patient.name) %>
+                        <% if patient.name_kana %>&nbsp; (<%= @util.mask_name(patient.name_kana) %>)<% end %>
+                    </td>
+                <tr>
+                    <th>生年月日</th>
+                    <% if patient.aged? && receipt.shinryo_ym %>
+                        <td>
+                            <%= patient.birthday.strftime('%Y.%m.%d') %>生
+                             &nbsp; (<%= patient.age_of(receipt.shinryo_ym) %>歳<%= patient.age_month_of(receipt.shinryo_ym) %>か月)
+                             <%= { '1': '男♂️', '2': '女♀️' }[patient.sex.to_s.intern] %>
+                        </td>
+                    <% end %>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- HOKEN SECTION -->
+    <div class="hoken-info-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>保険</th>
+                    <th>事業者番号</th>
+                    <th>実日数</th>
+                    <th>請求点数</th>
+                    <th>負担金</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% kohi_count = 0 %>
+                <% receipt.hokens.each_with_index do | hoken, idx | %>
+                    <tr>
+                    <% if hoken.is_a?(Recediff::Iho) %>
+                        <% iho = hoken %>
+                        <td>医療保険</td>
+                        <td class="number-style"><code><%= @util.mask_bango(iho.hokenja_bango) %></code></td>
+                        <td class="number-style"><%= iho.day_count %>日</td>
+                        <td class="number-style"><%= @util.int2money(iho.point) %>点</td>
+                        <td class="number-style">
+                            <%= futankin = @util.int2money(iho.futankin) %>
+                            <% unless futankin.empty? %>円<% else %>-<% end %>
+                        </td>
+                    <% elsif hoken.is_a?(Recediff::Kohi) %>
+                        <% kohi = hoken %>
+                        <% kohi_count += 1 %>
+                        <td>公費<%= kohi_count %></td>
+                        <td class="number-style"><code><%= @util.mask_bango(kohi.futansha_bango) %></code></td>
+                        <td class="number-style"><%= kohi.day_count %>日</td>
+                        <td class="number-style"><%= @util.int2money(kohi.point) %>点</td>
+                        <td class="number-style">
+                            <%= futankin = @util.int2money(kohi.futankin) %>
+                            <% unless futankin.nil? %>円<% end %>
+
+                            <% parened_futankin = receipt.nyuin? ? kohi.nyuin_futankin : kohi.gairai_futankin %>
+                            <% unless parened_futankin.nil? %>
+                                &nbsp; (<%= @util.int2money(parened_futankin) %>円)
+                            <% end %>
+                        </td>
+                    <% end %>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- DISEASE SECTION -->
+
+    <% diseases = receipt.diseases %>
+    <% unless diseases.empty? %>
+        <div class="disease-table">
+            <table>
+                <thead>
+                    <th>コード</th>
+                    <th>#</th>
+                    <th>主病</th>
+                    <th>傷病名</th>
+                    <th>開始日</th>
+                    <th>転帰</th>
+                </thead>
+                <tbody>
+                    <% diseases.each_with_index do | disease, idx | %>
+                        <% is_main      = disease.main? %>
+                        <% disease_name = disease.name %>
+                        <tr class="<% if is_main %>disease-main<% end %> <% if disease.worpro? %>worpro<% end %>">
+                            <td>
+                                <code><%= '%07d' % disease.code.to_i %></code>
+                                <% unless disease.length == 0 %><sub><% disease.map.with_index { | modifier, idx | %><code><%= '%04d' % modifier.code.to_s %></code><% unless idx === disease.length - 1 %>&nbsp;<% end %><% } %></sub><% end %>
+                            </td>
+                            <td><%= idx + 1 %></td>
+                            <td><% if is_main %><span class="disease-main-badge">&nbsp;主&nbsp;</span><% else %>&emsp;<% end %></td>
+                            <% if disease_name.length > 30 %>
+                                <td title="<%= disease_name %>"><%= disease_name.sub(/^(\S{30}).*/, '\\1...') %></td>
+                            <% elsif disease_name.empty? %>
+                                <td title="傷病名コード : <%= disease.code %>" class="disease-fail-display">(🚫表示できません)</td>
+                            <% else %>
+                                <td><%= disease_name %></td>
+                            <% end %>
+                            <td><%= disease.start_date.strftime('%Y.%m.%d') %></td>
+                            <td>
+                                <span class="disease-tenki-badge disease-tenki-badge-<%= disease.tenki_code %>">
+                                    <%= disease.tenki %>
+                                </span>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    <% end %>
+
+    <!-- CONTENT SECTION -->
+
+    <% calc_units = receipt.units %>
+    <% shinryo_ym = receipt.shinryo_ym || Month(Date.today) %>
+    <% unless calc_units.empty? %>
+        <% current_shinku = nil %>
+        <div class="content-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>コード</th>
+                        <th>診区</th>
+                        <th>＊</th>
+                        <th>明細</th>
+                        <th>点数</th>
+                        <th>回数</th>
+                        <% shinryo_ym.dates.each do | date | %>
+                            <th class="day-cell <%if date.wday == 0 %>day-sunday<% elsif date.wday == 6 %>day-saturday<% end %>"><%= %w(日 月 火 水 木 金 土)[date.wday] %><br/><%= date.day %></th>
+                        <% end %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% calc_units.each_with_index do | unit, unit_idx | %>
+                        <% unit.each_with_index do | cost, cost_idx | %>
+                        <% next_shinku    = unit.shinku != current_shinku %>
+                        <% upper_shinku   = unit.shinku.to_s[0] != current_shinku.to_s[0] %>
+                        <% new_unit       = cost_idx.zero? %>
+                        <% current_shinku = unit.shinku %>
+                        <tr class="
+                            <% if upper_shinku %>
+                                <% unless unit_idx.zero? %>row-upper-shinku<% end %>
+                            <% elsif next_shinku %>
+                                row-next-shinku
+                            <% elsif new_unit %>
+                                row-new-unit
+                            <% end %>">
+                            <td><code><%= cost.code %></code></td>
+                            <td class="number-style"><code><% if next_shinku %><%= unit.shinku %><% end %></code></td>
+                            <td class="column-asterisk">
+                                <% if cost_idx.zero? %>
+                                    <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="width: 16px; height: 16px; opacity: 1;" xml:space="preserve">
+                                        <style type="text/css"> .st0{fill:#4B4B4B;} </style>
+                                        <g>
+                                            <polygon class="st0" points="501.539,169.221 453.886,86.7 303.669,173.449 303.669,0 208.365,0 208.365,173.479 58.114,86.73 
+                                            10.461,169.261 160.674,255.99 10.501,342.71 58.154,425.231 208.365,338.482 208.365,512 303.669,512 303.669,338.542 
+                                            453.846,425.271 501.499,342.74 351.267,255.99 	" style="fill: rgb(30, 30, 30);"></polygon>
+                                        </g>
+                                    </svg>
+                                <% end %>
+                            </td>
+                            <% category      = cost.category.intern %>
+                            <% category_name = { SI: 'shinryo-koi', IY: 'iyakuhin', TO: 'tokutei-kizai', CO: 'comment' }[category] %>
+                            <td class="column-cost-name <% if category == :CO && cost.code.to_i == 810000001 %>worpro<% end %> cost-<%= category_name %>">
+                                <%= { SI: '💪', IY: '💊', TO: '🔩', CO: '📑' }[category] %>
+                                <% if category == :CO %>
+                                    <% comment = cost %>
+                                    <%= comment.text %>
+                                    <% if additional_text = comment.additional_text %>
+                                        <span class="worpro"><%= additional_text %></span>
+                                    <% end %>
+                                <% else %>
+                                    <%= cost.name %>
+                                    <% if cost.amount? %>
+                                        <%= cost.amount_is_int? ? @util.int2money(cost.amount) : cost.amount.to_f.to_s %>
+                                    <% end %>
+                                <% end %>
+                            </td>
+                            <% unless cost.point.nil? %>
+                                <td class="number-style"><%= @util.int2money(cost.point) %></td>
+                                <td class="number-style">×<%= cost.count %></td>
+                                <% shinryo_ym.dates.each do | date | %><td class="day-cell number-style <%if date.wday == 0 %>day-sunday<% elsif date.wday == 6 %>day-saturday<% end %>"><%= cost.count_at(date.day).to_s.sub(/^0$/, '') %></td><% end %>
+                            <% else %>
+                                <td class="number-style"></td>
+                                <td class="number-style"></td>
+                                <% shinryo_ym.dates.each do | date | %><td class="day-cell number-style <%if date.wday == 0 %>day-sunday<% elsif date.wday == 6 %>day-saturday<% end %>"></td><% end %>
+                            <% end %>
+                        </tr>
+                        <% end %>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    <% end %>
+
+    <hr class="receipt-separator" />
+<% end %>

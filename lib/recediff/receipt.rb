@@ -419,6 +419,19 @@ module Recediff
           age_type,
         ].each_slice(2).map { | c, s | '[%s %s]' % [c, s] }.join(' ')
       end
+
+      def to_details
+        [
+          ika_type_code,
+          ika_type,
+          shuhoken_type_code,
+          shuhoken_type,
+          hoken_multiple_type_code,
+          hoken_multiple_type,
+          age_type_code,
+          age_type,
+        ].each_slice(2).map { | c, s | [c, s] }
+      end
     end
   end
 end

@@ -23,8 +23,9 @@ module Recediff
     def reinitialize
       return self if @costs.empty?
 
-      @point   = @costs.sum { | c | c.point.to_i }
-      @done_at = @costs.reject { | c | c.is_a?(Comment) }.first.done_at
+      @point    = @costs.sum { | c | c.point.to_i }
+      @cost     = @costs.reject { | c | c.is_a?(Comment) }.first
+      @done_at  = @cost.done_at
       self
     end
 
@@ -64,6 +65,10 @@ module Recediff
 
     def count
       first.count
+    end
+
+    def count_at(day)
+      @cost.count_at(day)
     end
 
     attr_reader :shinku, :point, :done_at
