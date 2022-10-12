@@ -86,7 +86,7 @@ module Recediff
         buffer.in_seq? && buffer.receipt.add_hoken(Kohi.from_uke(row))
       when /SY/
         add_syobyo(row, buffer)
-      when /SJ/, /GO/, /SN/
+      when /SJ/, /GO/, /SN/, /JD/, /MF/, nil
         ignore
       else
         add_cost(buffer, category, row)

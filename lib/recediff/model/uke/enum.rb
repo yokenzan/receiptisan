@@ -333,7 +333,7 @@ module Recediff
           C_負担区分         = 2
           C_コメントコード   = 3
           C_文字データ       = 4
-          C_レセ電コード     = C_文字データ
+          C_レセ電コード     = C_コメントコード
 
           # @return [Array<Symbol>]
           def self.all

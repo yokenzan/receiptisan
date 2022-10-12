@@ -13,13 +13,13 @@ module Recediff
     RE = Model::Uke::Enum::RE
 
     @@tokki_jikos = {
-      '01': '公',
-      '02': '長',
+      '01': '公　',
+      '02': '長　',
       '03': '長処',
       '04': '後保',
       '07': '老併',
       '08': '老健',
-      '09': '施',
+      '09': '施　',
       '10': '第三',
       '11': '薬治',
       '12': '器治',
@@ -43,6 +43,8 @@ module Recediff
       '37': '申出',
       '38': '医併',
       '39': '医療',
+      '96': '災１',
+      '97': '災２',
     }
 
     # @param [Integer] id
@@ -62,15 +64,11 @@ module Recediff
       @row          = row
     end
 
-    # @return [Boolean]
-    def diff?
-      total_point != point
-    end
-
     def empty_header?
       [@type, @patient, @tokki_jiko, @hospital].all?(&:empty?)
     end
 
+    # @return [Month, nil]
     def shinryo_ym
       raw_value = @row.at(RE::C_診療年月)
       raw_value.nil? || raw_value.empty? ?
@@ -126,38 +124,110 @@ module Recediff
     end
 
     def show
-      text = ''
-      text << "\n#### %5s - %s - %d点 ########\n" % [@patient.id, @patient_name, point]
+      lines = []
+      birthday = patient.aged? && shinryo_ym ?  '%s生' %  patient.birthday.strftime('%Y-%m-%d') : ''
+      age      = patient.aged? && shinryo_ym ?  '%d歳%2dか月' % [
+          patient.age_of(shinryo_ym),
+          patient.age_month_of(shinryo_ym),
+        ] :
+        ''
+      lines << [
+        '患者基本',
+        "##{id}",
+        patient.id,
+        patient.name,
+        birthday,
+        age,
+      ].join("\t")
+      lines << show_syobyo
+      lines << show_meisai
 
-      text << show_meisai
-      text << "\n--------------------------------\n"
-      text << show_syobyo
-      text
+      lines.join("\n")
     end
 
     def show_meisai
-      text = ''
-      text << "\n\n"
-
-      parameters = [hoken.is_a?(Iho) ? hoken.hokenja_bango : hoken.is_a?(Kohi) ? hoken.futansha_bango : nil, hoken&.point]
-      format     = "## 保険者番号 %8s 請求点数 %d点\n"
-      text << format % parameters
+      util  = StringUtil.new
+      lines = []
 
       days.each do | d |
         # @type [Array<CalcUnit>] units
         # @type [CalcUnit] u
         units = @units.select { | u | u.done_at?(d) }
-
-        text << "\n### %2d日 %d点-----\n" % [d, units.sum { | u | u.point_at(d) }]
-        # @type [CalcUnit] u
-        text << units.map { | u | u.show(d) }.join("\n")
+        date  = Date.new(shinryo_ym.year, shinryo_ym.number, d)
+        lines << [
+          '診療明細',
+          "##{id}",
+          patient.id,
+          patient.name,
+          '',
+          '',
+          '',
+          '',
+          "#{date.strftime('%Y-%m-%d')}(#{util.int2money(units.sum { | u | u.point_at(d) })}点)",
+        ].join("\t")
+        lines << units.map { | u | show_unit(u, d) }
       end
 
-      text
+      lines.join("\n")
     end
 
     def show_syobyo
-      @syobyos.sort_by(&:code).map { | s | s.to_list(patient.id) }.join("\n")
+      @syobyos
+        .sort_by { | s | [s.main?, s.start_date, s.code].map(&:to_s).join('-') }
+        .map { | s | [
+          '患者傷病',
+          "##{id}",
+          patient.id,
+          patient.name,
+          s.code,
+          s.main_state_text + s.name,
+          s.start_date,
+          s.tenki,
+          ].join("\t")
+        }
+        .join("\n")
+    end
+
+    # @param [CalcUnit] unit
+    # @param [Integer] day
+    # @return [String]
+    def show_unit(unit, day)
+      util  = StringUtil.new
+      lines = []
+      lines << [
+        '診療明細',
+        "##{id}",
+        patient.id,
+        patient.name,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '診療識別%02d(%s点)' % [unit.shinku, util.int2money(unit.point_at(day))],
+      ].join("\t")
+
+      unit.map.with_index { | c, index | lines << [
+        '診療明細',
+        "##{id}",
+        patient.id,
+        patient.name,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        c.category,
+        index + 1,
+        c.code,
+        c.name,
+        c.amount,
+        index == unit.length - 1 ? unit.point : '',
+        c.is_a?(Cost) ? "x#{c.count_at(day)}" : '',
+      ].join("\t") }
+
+      lines.join("\n")
     end
 
     # @return [Integer]
@@ -177,8 +247,8 @@ module Recediff
         @type.shuhoken_type,
         @type.hoken_multiple_type,
         @type.age_type,
-        patient_id,
-        patient_name,
+        patient.id,
+        patient.name,
         # nil,
         # nil,
         # nil,
@@ -204,7 +274,9 @@ module Recediff
             cost.category,
             cost.code,
             cost.name,
+            cost.amount,
             cost.count,
+            cost.done_at.join(';'),
             cost.code_table_upper_category,
             cost.code_table_lower_category,
             cost.code_table_number,
@@ -244,7 +316,11 @@ module Recediff
       tokki_jiko.to_s.scan(/.{2}/).map { | code | '%s%s' % [code, @@tokki_jikos[code.intern]] }
     end
 
-    attr_reader :units, :patient_id, :patient_name, :tokki_jiko, :patient, :type, :id, :hokens, :hospital
+    def nyuin?
+      @type.age_type_code.to_i.odd?
+    end
+
+    attr_reader :units, :tokki_jiko, :patient, :type, :id, :hokens, :hospital
 
     class ReceiptType
       class << self

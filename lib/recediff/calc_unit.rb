@@ -48,16 +48,6 @@ module Recediff
       '%02d%02d%0d%05d%02d' % [shinku, done_at.first, first.code, point, length]
     end
 
-    # @param [Integer] day
-    # @return [String]
-    def show(day)
-      text = []
-      text << '# 診区 %02d - %5d点 - レコード%2d件' % [shinku, point_at(day), length]
-      text << map.with_index { | c, index | c.show(index, day) }
-
-      text.join("\n")
-    end
-
     # 第 +day+ 日目に実施されたか？
     # @param [Integer] day
     # @return [Boolean]
