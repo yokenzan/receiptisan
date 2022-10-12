@@ -28,10 +28,6 @@ module Recediff
       @comments << comment
     end
 
-    def show(index, day)
-      '--> %s - %2d - %4d点 - %s %s' % [category, index, point_at(day), code, @name]
-    end
-
     def point_at(day)
       @point.to_i * @count_at.at(day - 1)
     end
@@ -101,6 +97,8 @@ module Recediff
     def comments
       []
     end
+
+    def amount; end
 
     attr_reader :category, :point, :done_at, :count
 

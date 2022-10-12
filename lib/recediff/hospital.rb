@@ -18,7 +18,8 @@ module Recediff
           prefecture_code: row[IR::C_都道府県],
           name:            row[IR::C_医療機関名称],
           seikyu_ym:       row[IR::C_請求年月],
-          shaho_or_kokuho: row[IR::C_審査支払機関].to_i == 1 ? '社保' : '国保'
+          shaho_or_kokuho: row[IR::C_審査支払機関].to_i == 1 ? '社保' : '国保',
+          tel_number:      row[IR::C_電話番号]
         )
       end
 
@@ -29,7 +30,8 @@ module Recediff
           prefecture_code: nil,
           name:            '',
           seikyu_ym:       nil,
-          shaho_or_kokuho: nil
+          shaho_or_kokuho: nil,
+          tel_number:      nil
         )
       end
     end
@@ -39,12 +41,13 @@ module Recediff
     # @param [String] name
     # @param [Month?] seikyu_ym
     # @param [String?] shaho_or_kokuho
-    def initialize(code:, prefecture_code:, name:, seikyu_ym:, shaho_or_kokuho:)
+    def initialize(code:, prefecture_code:, name:, seikyu_ym:, shaho_or_kokuho:, tel_number:)
       @code            = code
       @prefecture_code = prefecture_code
       @name            = name
       @seikyu_ym       = seikyu_ym
       @shaho_or_kokuho = shaho_or_kokuho
+      @tel_number      = tel_number
     end
 
     def empty?
@@ -66,5 +69,6 @@ module Recediff
     # @!attribute [r]
     # @return [String?]
     attr_reader :shaho_or_kokuho
+    attr_reader :tel_number
   end
 end
