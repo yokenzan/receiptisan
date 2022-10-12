@@ -320,11 +320,7 @@ module Recediff
       @type.age_type_code.to_i.odd?
     end
 
-<<<<<<< HEAD
-    attr_reader :units, :patient_id, :patient_name, :tokki_jiko, :patient, :type, :id, :hokens, :hospital
-=======
     attr_reader :units, :tokki_jiko, :patient, :type, :id, :hokens, :hospital
->>>>>>> @{-1}
 
     class ReceiptType
       class << self
