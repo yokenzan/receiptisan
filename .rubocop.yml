@@ -95,8 +95,12 @@ Layout/HashAlignment:
 Style/ClassVars:
   Enabled: false
 
+Style/AccessorGrouping:
+  Enabled: false
+
 Naming/MethodParameterName:
   AllowedNames:
     - fg
     - bg
     - id
+    - ym
