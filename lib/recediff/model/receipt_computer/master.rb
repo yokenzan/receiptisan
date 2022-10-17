@@ -1,242 +1,14 @@
 # frozen_string_literal: true
 
-require 'nkf'
-require 'pathname'
 require_relative 'master/version'
 require_relative 'master/treatment'
 require_relative 'master/diagnose'
+require_relative 'master/loader'
 
 module Recediff
   module Model
     module ReceiptComputer
       class Master # rubocop:disable Metrics/ClassLength
-        class << self
-          MASTER_CSV_DIR = '../../../../csv/master'
-
-          # @param version [Version]
-          # @return [self]
-          def load(version)
-            pathname     = resolve_csv_dir_of(version)
-            # @type [Array<String>]
-            csv_files    = pathname.children
-            csv_paths    = {}
-            csv_prefixes = {
-              shinryou_koui: 's',
-              iyakuhin:      'y',
-              tokutei_kizai: 't',
-              comment:       'c',
-              shoubyoumei:   'b',
-              shuushokugo:   'z',
-            }
-            csv_prefixes.each do | key, value |
-              csv_paths["#{key}_csv_path".intern] = csv_files.delete_at(
-                csv_files.find_index { | c | c.basename.to_path.start_with?(value) }
-              )
-            end
-
-            load_from_version_and_csv(version, **csv_paths)
-          end
-
-          # @param version [Version]
-          # @param shinryou_koui_csv_path [String]
-          # @param iyakuhin_csv_path [String]
-          # @param tokutei_kizai_csv_path [String]
-          # @param comment_csv_path [String]
-          # @param shoubyoumei_csv_path [String]
-          # @param shuushokugo_csv_path [String]
-          # @return [self]
-          def load_from_version_and_csv(
-            version,
-            shinryou_koui_csv_path:,
-            iyakuhin_csv_path:,
-            tokutei_kizai_csv_path:,
-            comment_csv_path:,
-            shoubyoumei_csv_path:,
-            shuushokugo_csv_path:
-          )
-            new(
-              shinryou_koui: load_shinryou_koui_master(version, shinryou_koui_csv_path),
-              iyakuhin:      load_iyakuhin_master(iyakuhin_csv_path),
-              tokutei_kizai: load_tokutei_kizai_master(tokutei_kizai_csv_path),
-              comment:       load_comment_master(comment_csv_path),
-              shoubyoumei:   load_shoubyoumei_master(shoubyoumei_csv_path),
-              shuushokugo:   load_shuushokugo_master(shuushokugo_csv_path)
-            )
-          end
-
-          private
-
-          # @param version [Version]
-          # @return [Pathname]
-          def resolve_csv_dir_of(version)
-            pathname  = Pathname.new(MASTER_CSV_DIR)
-            pathname += version.year.to_s
-            pathname.expand_path(__dir__)
-          end
-
-          # @param version [Version]
-          # @param csv_path [String]
-          # @return [Hash<Treatment::ShinryouKoui>]
-          def load_shinryou_koui_master(version, csv_path)
-            {}.tap do | hash |
-              columns = Treatment::ShinryouKoui::Columns.resolve_columns_by_master_version(version)
-
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  row        = row.tr('"', '').split(',')
-                  code       = row[columns::C_コード]
-                  hash[code] = Treatment::ShinryouKoui.new(
-                    code:                              code,
-                    short_name:                        row[columns::C_省略名称_漢字名称],
-                    short_name_kana:                   convert_katakana(row[columns::C_省略名称_カナ名称]),
-                    unit:                              Unit.new(
-                      code: row[columns::C_データ規格コード],
-                      name: row[columns::C_データ規格名_漢字名称]
-                    ),
-                    price_type:                        Treatment::PriceType.new(row[columns::C_点数識別]),
-                    point:                             row[columns::C_新又は現点数],
-                    shuukeisaki_shikibetu_gairai:      row[columns::C_点数欄集計先識別_入院外],
-                    shuukeisaki_shikibetu_nyuuin:      row[columns::C_点数欄集計先識別_入院],
-                    code_hyou_you_bangou_alphabet:     row[columns::C_コード表用番号_章],
-                    code_hyou_you_bangou_shou:         row[columns::C_コード表用番号_部],
-                    code_hyou_you_bangou_kubun_bangou: row[columns::C_コード表用番号_区分番号],
-                    code_hyou_you_bangou_kubun_edaban: row[columns::C_コード表用番号_枝番],
-                    code_hyou_you_bangou_kubun_kouban: row[columns::C_コード表用番号_項番],
-                    tensuu_hyou_kubun_bangou:          row[columns::C_点数表区分番号],
-                    full_name:                         row[columns::C_基本漢字名称]
-                  )
-                end
-              end
-            end
-          end
-
-          # @param csv_path [String]
-          # @return [Hash<Treatment::Iyakuhin>]
-          def load_iyakuhin_master(csv_path)
-            {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  row        = row.tr('"', '').split(',')
-                  code       = row[Treatment::Iyakuhin::Columns::C_コード]
-                  hash[code] = Treatment::Iyakuhin.new(
-                    code:            code,
-                    name:            row[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_漢字名称],
-                    name_kana:       convert_katakana(row[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_カナ名称]),
-                    unit:            Unit.new(
-                      code: row[Treatment::Iyakuhin::Columns::C_単位_コード],
-                      name: row[Treatment::Iyakuhin::Columns::C_単位_漢字名称]
-                    ),
-                    price_type:      Treatment::PriceType.new(row[Treatment::Iyakuhin::Columns::C_金額種別]),
-                    price:           row[Treatment::Iyakuhin::Columns::C_新又は現金額],
-                    chuusha_youryou: row[Treatment::Iyakuhin::Columns::C_新又は現金額],
-                    dosage_form:     row[Treatment::Iyakuhin::Columns::C_剤形],
-                    full_name:       row[Treatment::Iyakuhin::Columns::C_基本漢字名称]
-                  )
-                end
-              end
-            end
-          end
-
-          # @param csv_path [String]
-          # @return [Hash<Treatment::TokuteiKizai>]
-          def load_tokutei_kizai_master(csv_path)
-            {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  row        = row.tr('"', '').split(',')
-                  code       = row[Treatment::TokuteiKizai::Columns::C_コード]
-                  hash[code] = Treatment::TokuteiKizai.new(
-                    code:       code,
-                    name:       row[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_漢字名称],
-                    name_kana:  convert_katakana(row[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_カナ名称]),
-                    unit:       Unit.new(
-                      code: row[Treatment::TokuteiKizai::Columns::C_単位_コード],
-                      name: row[Treatment::TokuteiKizai::Columns::C_単位_漢字名称]
-                    ),
-                    price_type: Treatment::PriceType.new(row[Treatment::TokuteiKizai::Columns::C_金額種別]),
-                    price:      row[Treatment::TokuteiKizai::Columns::C_新又は現金額],
-                    full_name:  row[Treatment::TokuteiKizai::Columns::C_基本漢字名称]
-                  )
-                end
-              end
-            end
-          end
-
-          # @param csv_path [String]
-          # @return [Hash<Treatment::Comment>]
-          def load_comment_master(csv_path)
-            embed_position_columns = [
-              Treatment::Comment::Columns::C_レセプト編集情報_1_カラム位置,
-              Treatment::Comment::Columns::C_レセプト編集情報_1_桁数,
-              Treatment::Comment::Columns::C_レセプト編集情報_2_カラム位置,
-              Treatment::Comment::Columns::C_レセプト編集情報_2_桁数,
-              Treatment::Comment::Columns::C_レセプト編集情報_3_カラム位置,
-              Treatment::Comment::Columns::C_レセプト編集情報_3_桁数,
-              Treatment::Comment::Columns::C_レセプト編集情報_4_カラム位置,
-              Treatment::Comment::Columns::C_レセプト編集情報_4_桁数,
-            ]
-            {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  comment = Treatment::Comment.new(
-                    code:      row[Treatment::Comment::Columns::C_コード],
-                    pattern:   row[Treatment::Comment::Columns::C_パターン],
-                    name:      row[Treatment::Comment::Columns::C_コメント文_漢字名称],
-                    name_kana: convert_katakana(row[Treatment::Comment::Columns::C_コメント文_カナ名称])
-                  )
-                  embed_position_columns.each_slice(2) do | position, length |
-                    comment.embed_positions << Treatment::Comment::EmbedPosition.new(position, length)
-                  end
-                  hash[comment.code] = comment
-                end
-              end
-            end
-          end
-
-          # @param csv_path [String]
-          # @return [Hash<Diagnose::Shoubyoumei>]
-          def load_shoubyoumei_master(csv_path)
-            {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  code       = row[Diagnose::Shoubyoumei::Columns::C_コード]
-                  hash[code] = Diagnose::Shoubyoumei.new(
-                    code:       code,
-                    full_name:  row[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
-                    short_name: row[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
-                    name_kana:  convert_katakana(row[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
-                  )
-                end
-              end
-            end
-          end
-
-          # @param csv_path [String]
-          # @return [Hash<Diagnose::Shuushokugo>]
-          def load_shuushokugo_master(csv_path)
-            {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  code       = row[Diagnose::Shuushokugo::Columns::C_コード]
-                  hash[code] = Diagnose::Shuushokugo.new(
-                    code:      code,
-                    name:      row[Diagnose::Shuushokugo::Columns::C_修飾語名称],
-                    name_kana: convert_katakana(row[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称])
-                  )
-                end
-              end
-            end
-          end
-
-          # 半角カナ→全角カナに変換する
-          #
-          # @param hankaku [String]
-          # @return [String]
-          def convert_katakana(hankaku)
-            NKF.nkf('-wWX', hankaku)
-          end
-        end
-
         def initialize(
           shinryou_koui:,
           iyakuhin:,
@@ -280,12 +52,140 @@ module Recediff
           # @!attribute [r] name
           #   @return [String]
           attr_reader :code, :name
+
+          class << self
+            # @param code [String]
+            # @return [self, nil]
+            def find_by_code(code)
+              @units.find { | unit | unit.code == code.to_i }
+            end
+          end
+
+          @units = [
+            new(code: 1,   name: '分'),
+            new(code: 2,   name: '回'),
+            new(code: 3,   name: '種'),
+            new(code: 4,   name: '箱'),
+            new(code: 5,   name: '巻'),
+            new(code: 6,   name: '枚'),
+            new(code: 7,   name: '本'),
+            new(code: 8,   name: '組'),
+            new(code: 9,   name: 'セット'),
+            new(code: 10,  name: '個'),
+            new(code: 11,  name: '裂'),
+            new(code: 12,  name: '方向'),
+            new(code: 13,  name: 'トローチ'),
+            new(code: 14,  name: 'アンプル'),
+            new(code: 15,  name: 'カプセル'),
+            new(code: 16,  name: '錠'),
+            new(code: 17,  name: '丸'),
+            new(code: 18,  name: '包'),
+            new(code: 19,  name: '瓶'),
+            new(code: 20,  name: '袋'),
+            new(code: 21,  name: '瓶（袋）'),
+            new(code: 22,  name: '管'),
+            new(code: 23,  name: 'シリンジ'),
+            new(code: 24,  name: '回分'),
+            new(code: 25,  name: 'テスト分'),
+            new(code: 26,  name: 'ガラス筒'),
+            new(code: 27,  name: '桿錠'),
+            new(code: 28,  name: '単位'),
+            new(code: 29,  name: '万単位'),
+            new(code: 30,  name: 'フィート'),
+            new(code: 31,  name: '滴'),
+            new(code: 32,  name: 'ｍｇ'),
+            new(code: 33,  name: 'ｇ'),
+            new(code: 34,  name: 'Ｋｇ'),
+            new(code: 35,  name: 'ｃｃ'),
+            new(code: 36,  name: 'ｍＬ'),
+            new(code: 37,  name: 'Ｌ'),
+            new(code: 38,  name: 'ｍＬＶ'),
+            new(code: 39,  name: 'バイアル'),
+            new(code: 40,  name: 'ｃｍ'),
+            new(code: 41,  name: 'ｃｍ２'),
+            new(code: 42,  name: 'ｍ'),
+            new(code: 43,  name: 'μＣｉ'),
+            new(code: 44,  name: 'ｍＣｉ'),
+            new(code: 45,  name: 'μｇ'),
+            new(code: 46,  name: '管（瓶）'),
+            new(code: 47,  name: '筒'),
+            new(code: 48,  name: 'ＧＢｑ'),
+            new(code: 49,  name: 'ＭＢｑ'),
+            new(code: 50,  name: 'ＫＢｑ'),
+            new(code: 51,  name: 'キット'),
+            new(code: 52,  name: '国際単位'),
+            new(code: 53,  name: '患者当り'),
+            new(code: 54,  name: '気圧'),
+            new(code: 55,  name: '缶'),
+            new(code: 56,  name: '手術当り'),
+            new(code: 57,  name: '容器'),
+            new(code: 58,  name: 'ｍＬ（ｇ）'),
+            new(code: 59,  name: 'ブリスター'),
+            new(code: 60,  name: 'シート'),
+            new(code: 61,  name: 'カセット'),
+            new(code: 101, name: '分画'),
+            new(code: 102, name: '染色'),
+            new(code: 103, name: '種類'),
+            new(code: 104, name: '株'),
+            new(code: 105, name: '菌株'),
+            new(code: 106, name: '照射'),
+            new(code: 107, name: '臓器'),
+            new(code: 108, name: '件'),
+            new(code: 109, name: '部位'),
+            new(code: 110, name: '肢'),
+            new(code: 111, name: '局所'),
+            new(code: 112, name: '種目'),
+            new(code: 113, name: 'スキャン'),
+            new(code: 114, name: 'コマ'),
+            new(code: 115, name: '処理'),
+            new(code: 116, name: '指'),
+            new(code: 117, name: '歯'),
+            new(code: 118, name: '面'),
+            new(code: 119, name: '側'),
+            new(code: 120, name: '個所'),
+            new(code: 121, name: '日'),
+            new(code: 122, name: '椎間'),
+            new(code: 123, name: '筋'),
+            new(code: 124, name: '菌種'),
+            new(code: 125, name: '項目'),
+            new(code: 126, name: '箇所'),
+            new(code: 127, name: '椎弓'),
+            new(code: 128, name: '食'),
+            new(code: 129, name: '根管'),
+            new(code: 130, name: '３分の１顎'),
+            new(code: 131, name: '月'),
+            new(code: 132, name: '入院初日'),
+            new(code: 133, name: '入院中'),
+            new(code: 134, name: '退院時'),
+            new(code: 135, name: '初回'),
+            new(code: 136, name: '口腔'),
+            new(code: 137, name: '顎'),
+            new(code: 138, name: '週'),
+            new(code: 139, name: '窩洞'),
+            new(code: 140, name: '神経'),
+            new(code: 141, name: '一連'),
+            new(code: 142, name: '２週'),
+            new(code: 143, name: '２月'),
+            new(code: 144, name: '３月'),
+            new(code: 145, name: '４月'),
+            new(code: 146, name: '６月'),
+            new(code: 147, name: '１２月'),
+            new(code: 148, name: '５年'),
+            new(code: 149, name: '妊娠中'),
+            new(code: 150, name: '検査当り'),
+            new(code: 151, name: '１疾患当り'),
+            new(code: 153, name: '装置'),
+            new(code: 154, name: '１歯１回'),
+            new(code: 155, name: '１口腔１回'),
+            new(code: 156, name: '床'),
+            new(code: 157, name: '１顎１回'),
+            new(code: 158, name: '椎体'),
+            new(code: 159, name: '初診時'),
+            new(code: 160, name: '１分娩当り'),
+            new(code: 161, name: '２年'),
+          ]
         end
       end
     end
   end
 end
-
-Recediff::Model::ReceiptComputer::Master.load(
-  Recediff::Model::ReceiptComputer::Master::Version::V2022_R04
-)

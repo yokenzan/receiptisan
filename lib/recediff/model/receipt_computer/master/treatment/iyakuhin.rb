@@ -28,6 +28,25 @@ module Recediff
               @full_name       = full_name
             end
 
+            # @!attribute [r] code
+            #   @return [String]
+            attr_reader :code
+            # @!attribute [r] name
+            #   @return [String]
+            attr_reader :name
+            # @!attribute [r] name_kana
+            #   @return [String]
+            attr_reader :name_kana
+            # @!attribute [r] unit
+            #   @return [Unit]
+            attr_reader :unit
+            # @!attribute [r] price
+            #   @return [Numeric]
+            attr_reader :price
+            # @!attribute [r] full_name
+            #   @return [String]
+            attr_reader :full_name
+
             module Columns
               C_変更区分                                     = 0
               C_マスター種別                                 = 1
@@ -65,16 +84,6 @@ module Recediff
               C_経過措置年月日又は商品名医薬品コード使用期限 = 33
               C_基本漢字名称                                 = 34
             end
-
-            attr_reader :code
-            attr_reader :name
-            attr_reader :name_kana
-            attr_reader :unit
-            attr_reader :price_type
-            attr_reader :price
-            attr_reader :chuusha_youryou
-            attr_reader :dosage_form
-            attr_reader :full_name
 
             class DosageFormType
               def initialize(code)

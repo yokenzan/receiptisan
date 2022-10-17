@@ -354,7 +354,7 @@ module Recediff
               class << self
                 # @param version [Master::Version]
                 # @return [Module]
-                def resolve_columns_by_master_version(version)
+                def resolve_columns_by(version)
                   @versions[version]
                 end
               end

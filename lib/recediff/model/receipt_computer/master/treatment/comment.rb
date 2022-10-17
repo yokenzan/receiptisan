@@ -19,11 +19,21 @@ module Recediff
               @embed_positions = []
             end
 
+            # @param embed_position [EmbedPosition]
+            # @return void
+            def add_embed_position(embed_position)
+              @embed_positions << embed_position
+            end
+
+            # @!attribute [r] code
+            #   @return [String]
             attr_reader :code
-            attr_reader :pattern
+            # @!attribute [r] name
+            #   @return [String]
             attr_reader :name
+            # @!attribute [r] name_kana
+            #   @return [String]
             attr_reader :name_kana
-            attr_reader :embed_positions
 
             class EmbedPosition
               def initialize(position, length)

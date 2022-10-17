@@ -24,12 +24,23 @@ module Recediff
               @full_name  = full_name
             end
 
+            # @!attribute [r] code
+            #   @return [String]
             attr_reader :code
+            # @!attribute [r] name
+            #   @return [String]
             attr_reader :name
+            # @!attribute [r] name_kana
+            #   @return [String]
             attr_reader :name_kana
+            # @!attribute [r] unit
+            #   @return [Unit]
             attr_reader :unit
-            attr_reader :price_type
+            # @!attribute [r] price
+            #   @return [Numeric]
             attr_reader :price
+            # @!attribute [r] full_name
+            #   @return [String]
             attr_reader :full_name
 
             module Columns
