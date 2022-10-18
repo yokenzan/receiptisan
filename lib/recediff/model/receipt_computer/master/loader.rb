@@ -12,7 +12,7 @@ module Recediff
           MASTER_CSV_ENCODING = 'Shift_JIS'
 
           # @param version [Version]
-          # @return [self]
+          # @return [Master]
           def load(version)
             pathname     = resolve_csv_dir_of(version)
             csv_files    = pathname.children
@@ -41,7 +41,7 @@ module Recediff
           # @param comment_csv_path [String]
           # @param shoubyoumei_csv_path [String]
           # @param shuushokugo_csv_path [String]
-          # @return [self]
+          # @return [Master]
           def load_from_version_and_csv(
             version,
             shinryou_koui_csv_path:,
@@ -51,7 +51,7 @@ module Recediff
             shoubyoumei_csv_path:,
             shuushokugo_csv_path:
           )
-            new(
+            Master.new(
               shinryou_koui: load_shinryou_koui_master(version, shinryou_koui_csv_path),
               iyakuhin:      load_iyakuhin_master(iyakuhin_csv_path),
               tokutei_kizai: load_tokutei_kizai_master(tokutei_kizai_csv_path),
@@ -80,21 +80,21 @@ module Recediff
               foreach(csv_path) do | values |
                 code       = values[columns::C_コード]
                 hash[code] = Treatment::ShinryouKoui.new(
-                  code:                          code,
-                  short_name:                    values[columns::C_省略名称_漢字名称],
-                  short_name_kana:               convert_katakana(values[columns::C_省略名称_カナ名称]),
-                  unit:                          Unit.find_by_code(values[columns::C_データ規格コード]),
-                  price_type:                    Treatment::PriceType.new(values[columns::C_点数識別]),
-                  point:                         values[columns::C_新又は現点数],
-                  shuukeisaki_shikibetu_gairai:  values[columns::C_点数欄集計先識別_入院外],
-                  shuukeisaki_shikibetu_nyuuin:  values[columns::C_点数欄集計先識別_入院],
-                  code_hyou_you_bangou_alphabet: values[columns::C_コード表用番号_アルファベット部],
-                  code_hyou_you_bangou_shou:     values[columns::C_コード表用番号_章],
-                  code_hyou_you_bangou_bangou:   values[columns::C_コード表用番号_区分番号],
-                  code_hyou_you_bangou_edaban:   values[columns::C_コード表用番号_枝番],
-                  code_hyou_you_bangou_kouban:   values[columns::C_コード表用番号_項番],
-                  tensuu_hyou_kubun_bangou:      values[columns::C_点数表区分番号],
-                  full_name:                     values[columns::C_基本漢字名称]
+                  code:                              code,
+                  short_name:                        values[columns::C_省略名称_漢字名称],
+                  short_name_kana:                   convert_katakana(values[columns::C_省略名称_カナ名称]),
+                  unit:                              Unit.find_by_code(values[columns::C_データ規格コード]),
+                  price_type:                        Treatment::PriceType.new(values[columns::C_点数識別]),
+                  point:                             values[columns::C_新又は現点数],
+                  shuukeisaki_shikibetu_gairai:      values[columns::C_点数欄集計先識別_入院外],
+                  shuukeisaki_shikibetu_nyuuin:      values[columns::C_点数欄集計先識別_入院],
+                  code_hyou_you_bangou_alphabet:     values[columns::C_コード表用番号_アルファベット部],
+                  code_hyou_you_bangou_shou:         values[columns::C_コード表用番号_章],
+                  code_hyou_you_bangou_kubun_bangou: values[columns::C_コード表用番号_区分番号],
+                  code_hyou_you_bangou_edaban:       values[columns::C_コード表用番号_枝番],
+                  code_hyou_you_bangou_kouban:       values[columns::C_コード表用番号_項番],
+                  tensuu_hyou_kubun_bangou:          values[columns::C_点数表区分番号],
+                  full_name:                         values[columns::C_基本漢字名称]
                 )
               end
             end
