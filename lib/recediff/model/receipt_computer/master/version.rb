@@ -42,7 +42,7 @@ module Recediff
           #   @return [Range<Month>]
           attr_reader :year, :term
 
-          def_delegator :@term, :include?
+          def_delegators :@term, :include?
 
           V2018_H30 = new(2018, Month.new(2018, 4), Month.new(2019, 3))
           V2019_R01 = new(2019, Month.new(2019, 4), Month.new(2020, 3))
