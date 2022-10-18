@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'receipt/tokki_jikou'
+require_relative 'receipt/type'
+
 module Recediff
   module Model
     module ReceiptComputer
@@ -8,15 +11,33 @@ module Recediff
         class Receipt
           # @param id [Integer]
           # @param patient [Patient]
-          # @param hospital [Hospital]
           # @param type [Type]
-          # @param tokki_jikous [Array<TokkiJikou>]
-          def initialize(id:, patient:, hospital:, type:, tokki_jikous:)
-            @id           = id
-            @patient      = patient
-            @hospital     = hospital
-            @type         = type
-            @tokki_jikous = tokki_jikous
+          def initialize(id:, patient:, type:)
+            @id                 = id
+            @patient            = patient
+            @type               = type
+            @tokki_jikous       = {}
+            @tekiyou            = {}
+            @iryou_hoken        = nil
+            @kouhi_futan_iryous = []
+          end
+
+          # @param tokki_jikou [TokkiJikou]
+          # @return [void]
+          def add_tokki_jikou(tokki_jikou)
+            @tokki_jikous[tokki_jikou.code] = tokki_jikou
+          end
+
+          # @param iryou_hoken [IryouHoken]
+          # @return [void]
+          def add_iryou_hoken(iryou_hoken)
+            @iryou_hoken = iryou_hoken
+          end
+
+          # @param kouhi_futan_iryou [KouhiFutanIryou]
+          # @return [void]
+          def add_kouhi_hutan_iryou(kouhi_futan_iryou)
+            @kouhi_futan_iryous << kouhi_futan_iryou
           end
 
           # @!attribute [r] id
@@ -25,18 +46,17 @@ module Recediff
           # @!attribute [r] patient
           #   @return [Patient]
           attr_reader :patient
-          # @!attribute [r] hospital
-          #   @return [Hospital]
-          attr_reader :hospital
           # @!attribute [r] type
           #   @return [Type]
           attr_reader :type
           # @!attribute [r] tokki_jikous
-          #   @return [Array<TokkiJikou]
+          #   @return [Hash<TokkiJikou]
           attr_reader :tokki_jikous
+          # @!attribute [r] iryou_hoken
+          #   @return [IryouHoken, nil]
+          attr_reader :iryou_hoken
         end
       end
     end
   end
 end
-

@@ -3,6 +3,9 @@
 require_relative 'digitalized_receipt/hospital'
 require_relative 'digitalized_receipt/patient'
 require_relative 'digitalized_receipt/receipt'
+require_relative 'digitalized_receipt/iryou_hoken'
+require_relative 'digitalized_receipt/kouhi_futan_iryou'
+require_relative 'digitalized_receipt/nissuu_kyuufu'
 require_relative 'digitalized_receipt/record'
 require_relative 'digitalized_receipt/parser'
 
@@ -12,16 +15,27 @@ module Recediff
       class DigitalizedReceipt
         # @param seikyu_ym [Month]
         # @param audit_payer [AuditPayer]
-        def initialize(seikyu_ym:, audit_payer:)
+        # @param hospital [Hospital]
+        def initialize(seikyu_ym:, audit_payer:, hospital:)
           @seikyu_ym   = seikyu_ym
           @audit_payer = audit_payer
+          @hospital    = hospital
+          @receipts    = {}
+        end
+
+        # @param receipt [Receipt]
+        # @return nil
+        def add_receipt(receipt)
+          @receipts[receipt.id] = receipt
         end
 
         # @!attribute [r] seikyu_ym
         #   @return [Month]
         # @!attribute [r] audit_payer
         #   @return [AuditPayer]
-        attr_reader :seikyu_ym, :audit_payer
+        # @!attribute [r] hospital
+        #   @return [Hospital]
+        attr_reader :seikyu_ym, :audit_payer, :hospital
 
         class Sex
           def initialize(code:, name:)
