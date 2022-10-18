@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class DigitalizedReceipt
         class Receipt
+          # レセプト特記事項
           class TokkiJikou
             def initialize(code:, name:)
               @code = code

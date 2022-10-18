@@ -8,7 +8,8 @@ require_relative 'master/loader'
 module Recediff
   module Model
     module ReceiptComputer
-      class Master # rubocop:disable Metrics/ClassLength
+      # 診療報酬マスタ
+      class Master
         def initialize(
           shinryou_koui:,
           iyakuhin:,

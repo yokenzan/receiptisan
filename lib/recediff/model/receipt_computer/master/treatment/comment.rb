@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Treatment
+          # コメント
           class Comment
             def initialize(
               code:,

@@ -7,8 +7,6 @@ require_relative 'parser/buffer'
 module Recediff
   module Model
     module ReceiptComputer
-      # 電子レセプト(RECEIPTC.UKE)
-      # 診療報酬請求書
       class DigitalizedReceipt
         class Parser
           ReceiptType   = DigitalizedReceipt::Receipt::Type

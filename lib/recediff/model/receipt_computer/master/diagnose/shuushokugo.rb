@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Diagnose
+          # 修飾語
           class Shuushokugo
             def initialize(code:, name:, name_kana:)
               @code      = code

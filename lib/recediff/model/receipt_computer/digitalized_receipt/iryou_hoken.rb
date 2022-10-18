@@ -6,6 +6,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
+        # 医療保険
         class IryouHoken
           extend Forwardable
 

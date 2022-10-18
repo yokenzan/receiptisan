@@ -12,12 +12,14 @@ require_relative 'digitalized_receipt/parser'
 module Recediff
   module Model
     module ReceiptComputer
+      # 電子レセプト(RECEIPTC.UKE)
+      # 診療報酬請求書
       class DigitalizedReceipt
-        # @param seikyu_ym [Month]
+        # @param seikyuu_ym [Month]
         # @param audit_payer [AuditPayer]
         # @param hospital [Hospital]
-        def initialize(seikyu_ym:, audit_payer:, hospital:)
-          @seikyu_ym   = seikyu_ym
+        def initialize(seikyuu_ym:, audit_payer:, hospital:)
+          @seikyuu_ym  = seikyuu_ym
           @audit_payer = audit_payer
           @hospital    = hospital
           @receipts    = {}
@@ -29,14 +31,15 @@ module Recediff
           @receipts[receipt.id] = receipt
         end
 
-        # @!attribute [r] seikyu_ym
+        # @!attribute [r] seikyuu_ym
         #   @return [Month]
         # @!attribute [r] audit_payer
         #   @return [AuditPayer]
         # @!attribute [r] hospital
         #   @return [Hospital]
-        attr_reader :seikyu_ym, :audit_payer, :hospital
+        attr_reader :seikyuu_ym, :audit_payer, :hospital
 
+        # 性別(男女区分)
         class Sex
           def initialize(code:, name:)
             @code = code
@@ -63,6 +66,7 @@ module Recediff
           end
         end
 
+        # 審査支払機関
         class AuditPayer
           def initialize(code:, name:)
             @code = code
@@ -89,6 +93,7 @@ module Recediff
           end
         end
 
+        # 都道府県
         class Prefecture
           def initialize(code:, name:)
             @code = code

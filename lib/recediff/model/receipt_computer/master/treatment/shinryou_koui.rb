@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Treatment
+          # 診療行為
           class ShinryouKoui
             def initialize(
               code:,

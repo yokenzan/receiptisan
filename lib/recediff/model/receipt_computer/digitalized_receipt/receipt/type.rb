@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class DigitalizedReceipt
         class Receipt
+          # レセプト種別
           class Type
             def initialize(tensuu_hyou_type, main_hoken_type, hoken_multiple_type, patient_age_type)
               @tensuu_hyou_type    = tensuu_hyou_type

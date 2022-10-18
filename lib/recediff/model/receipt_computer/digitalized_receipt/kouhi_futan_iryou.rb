@@ -6,6 +6,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
+        # 公費負担医療
         class KouhiFutanIryou
           extend Forwardable
 

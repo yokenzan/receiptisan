@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Treatment
+          # 医薬品
           class Iyakuhin
             def initialize(
               code:,

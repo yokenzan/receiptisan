@@ -4,6 +4,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
+        # 患者
         class Patient
           # @param id [String]
           # @param name [String]

@@ -4,6 +4,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
+        # RECEIPTC.UKEの各レコードのカラム定義
         module Record
           module IR
             C_レコード識別情報         = 0

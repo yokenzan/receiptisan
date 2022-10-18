@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Diagnose
+          # 傷病名
           class Shoubyoumei
             def initialize(code:, full_name:, short_name:, name_kana:)
               @code       = code

@@ -10,6 +10,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Treatment
+          # 点数・金額種別
           class PriceType
             # @param code [String]]
             # @param name [String]]

@@ -5,6 +5,7 @@ module Recediff
     module ReceiptComputer
       class Master
         module Treatment
+          # 特定器材
           class TokuteiKizai
             def initialize(
               code:,
