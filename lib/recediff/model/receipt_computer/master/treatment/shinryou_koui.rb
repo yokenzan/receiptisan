@@ -18,26 +18,28 @@ module Recediff
               code_hyou_you_bangou_alphabet:,
               code_hyou_you_bangou_shou:,
               code_hyou_you_bangou_kubun_bangou:,
-              code_hyou_you_bangou_kubun_edaban:,
-              code_hyou_you_bangou_kubun_kouban:,
+              code_hyou_you_bangou_edaban:,
+              code_hyou_you_bangou_kouban:,
               tensuu_hyou_kubun_bangou:,
               full_name:
             )
-              @code                              = code
-              @short_name                        = short_name
-              @short_name_kana                   = short_name_kana
-              @unit                              = unit
-              @price_type                        = price_type
-              @point                             = point
-              @shuukeisaki_shikibetu_gairai      = shuukeisaki_shikibetu_gairai
-              @shuukeisaki_shikibetu_nyuuin      = shuukeisaki_shikibetu_nyuuin
-              @code_hyou_you_bangou_alphabet     = code_hyou_you_bangou_alphabet
-              @code_hyou_you_bangou_shou         = code_hyou_you_bangou_shou
-              @code_hyou_you_bangou_kubun_bangou = code_hyou_you_bangou_kubun_bangou
-              @code_hyou_you_bangou_kubun_edaban = code_hyou_you_bangou_kubun_edaban
-              @code_hyou_you_bangou_kubun_kouban = code_hyou_you_bangou_kubun_kouban
-              @tensuu_hyou_kubun_bangou          = tensuu_hyou_kubun_bangou
-              @full_name                         = full_name
+              @code                         = code
+              @short_name                   = short_name
+              @short_name_kana              = short_name_kana
+              @unit                         = unit
+              @price_type                   = price_type
+              @point                        = point
+              @shuukeisaki_shikibetu_gairai = shuukeisaki_shikibetu_gairai
+              @shuukeisaki_shikibetu_nyuuin = shuukeisaki_shikibetu_nyuuin
+              @full_name                    = full_name
+              @code_hyou_you_bangou         = CodeHyouYouBangou.new(
+                code_hyou_you_bangou_alphabet:     code_hyou_you_bangou_alphabet,
+                code_hyou_you_bangou_shou:         code_hyou_you_bangou_shou,
+                code_hyou_you_bangou_kubun_bangou: code_hyou_you_bangou_kubun_bangou,
+                code_hyou_you_bangou_edaban:       code_hyou_you_bangou_edaban,
+                code_hyou_you_bangou_kouban:       code_hyou_you_bangou_kouban,
+                tensuu_hyou_kubun_bangou:          tensuu_hyou_kubun_bangou
+              )
             end
 
             # @!attribute [r] code
@@ -64,27 +66,49 @@ module Recediff
             # @!attribute [r] shuukeisaki_shikibetu_nyuuin
             #   @return [String]
             attr_reader :shuukeisaki_shikibetu_nyuuin
-            # @!attribute [r] code_hyou_you_bangou_alphabet
-            #   @return [String]
-            attr_reader :code_hyou_you_bangou_alphabet
-            # @!attribute [r] code_hyou_you_bangou_shou
-            #   @return [String]
-            attr_reader :code_hyou_you_bangou_shou
-            # @!attribute [r] code_hyou_you_bangou_kubun_bangou
-            #   @return [String]
-            attr_reader :code_hyou_you_bangou_kubun_bangou
-            # @!attribute [r] code_hyou_you_bangou_kubun_edaban
-            #   @return [String]
-            attr_reader :code_hyou_you_bangou_kubun_edaban
-            # @!attribute [r] code_hyou_you_bangou_kubun_kouban
-            #   @return [String]
-            attr_reader :code_hyou_you_bangou_kubun_kouban
-            # @!attribute [r] tensuu_hyou_kubun_bangou
-            #   @return [String]
-            attr_reader :tensuu_hyou_kubun_bangou
+            # @!attribute [r] code_hyou_you_bangou
+            #   @return [CodeHyouYouBangou]
+            attr_reader :code_hyou_you_bangou
             # @!attribute [r] full_name
             #   @return [String]
             attr_reader :full_name
+
+            class CodeHyouYouBangou
+              def initialize(
+                code_hyou_you_bangou_alphabet:,
+                code_hyou_you_bangou_shou:,
+                code_hyou_you_bangou_kubun_bangou:,
+                code_hyou_you_bangou_edaban:,
+                code_hyou_you_bangou_kouban:,
+                tensuu_hyou_kubun_bangou:
+              )
+                @alphabet                 = code_hyou_you_bangou_alphabet
+                @shou                     = code_hyou_you_bangou_shou
+                @kubun_bangou             = code_hyou_you_bangou_kubun_bangou
+                @edaban                   = code_hyou_you_bangou_edaban
+                @kouban                   = code_hyou_you_bangou_kouban
+                @tensuu_hyou_kubun_bangou = tensuu_hyou_kubun_bangou
+              end
+
+              # @!attribute [r] alphabet
+              #   @return [String]
+              attr_reader :alphabet
+              # @!attribute [r] shou
+              #   @return [String]
+              attr_reader :shou
+              # @!attribute [r] kubun_bangou
+              #   @return [String]
+              attr_reader :kubun_bangou
+              # @!attribute [r] edaban
+              #   @return [String]
+              attr_reader :edaban
+              # @!attribute [r] kouban
+              #   @return [String]
+              attr_reader :kouban
+              # @!attribute [r] tensuu_hyou_kubun_bangou
+              #   @return [String]
+              attr_reader :tensuu_hyou_kubun_bangou
+            end
 
             module Columns
               module Columns2022 # rubocop:disable Metrics/ModuleLength
