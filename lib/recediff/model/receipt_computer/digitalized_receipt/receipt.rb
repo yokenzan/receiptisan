@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'month'
 require_relative 'receipt/tokki_jikou'
 require_relative 'receipt/type'
 
@@ -10,10 +11,12 @@ module Recediff
         # 診療報酬請求明細書(レセプト)
         class Receipt
           # @param id [Integer]
+          # @param shinryou_ym [Month]
           # @param patient [Patient]
           # @param type [Type]
-          def initialize(id:, patient:, type:)
+          def initialize(id:, shinryou_ym:, patient:, type:)
             @id                 = id
+            @shinryou_ym        = shinryou_ym
             @patient            = patient
             @type               = type
             @tokki_jikous       = {}
@@ -43,6 +46,9 @@ module Recediff
           # @!attribute [r] id
           #   @return [Integer]
           attr_reader :id
+          # @!attribute [r] shinryou_ym
+          #   @return [Month]
+          attr_reader :shinryou_ym
           # @!attribute [r] patient
           #   @return [Patient]
           attr_reader :patient
