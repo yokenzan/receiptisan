@@ -176,16 +176,14 @@ module Recediff
           # @return [Hash<Diagnose::Shoubyoumei>]
           def load_shoubyoumei_master(csv_path)
             {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  code       = row[Diagnose::Shoubyoumei::Columns::C_コード]
-                  hash[code] = Diagnose::Shoubyoumei.new(
-                    code:       code,
-                    full_name:  row[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
-                    short_name: row[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
-                    name_kana:  convert_katakana(row[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
-                  )
-                end
+              foreach(csv_path) do | values |
+                code       = values[Diagnose::Shoubyoumei::Columns::C_コード]
+                hash[code] = Diagnose::Shoubyoumei.new(
+                  code:       code,
+                  full_name:  values[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
+                  short_name: values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
+                  name_kana:  convert_katakana(values[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
+                )
               end
             end
           end
@@ -194,15 +192,14 @@ module Recediff
           # @return [Hash<Diagnose::Shuushokugo>]
           def load_shuushokugo_master(csv_path)
             {}.tap do | hash |
-              File.open(csv_path, 'r:Windows-31J:UTF-8') do | f |
-                f.each_line(chomp: true) do | row |
-                  code       = row[Diagnose::Shuushokugo::Columns::C_コード]
-                  hash[code] = Diagnose::Shuushokugo.new(
-                    code:      code,
-                    name:      row[Diagnose::Shuushokugo::Columns::C_修飾語名称],
-                    name_kana: convert_katakana(row[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称])
-                  )
-                end
+              foreach(csv_path) do | values |
+                code       = values[Diagnose::Shuushokugo::Columns::C_コード]
+                hash[code] = Diagnose::Shuushokugo.new(
+                  code:      code,
+                  name:      values[Diagnose::Shuushokugo::Columns::C_修飾語名称],
+                  name_kana: convert_katakana(values[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称]),
+                  category:  values[Diagnose::Shuushokugo::Columns::C_修飾語区分]
+                )
               end
             end
           end
