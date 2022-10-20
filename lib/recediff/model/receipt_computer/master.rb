@@ -26,6 +26,26 @@ module Recediff
           @shuushokugo   = shuushokugo
         end
 
+        def find_by_code(code)
+          master =
+            case code
+            when ShinryouKouiCode
+              shinryou_koui
+            when IyakuhinCode
+              iyakuhin
+            when TokuteiKizaiCode
+              tokutei_kizai
+            when CommentCode
+              comment
+            when ShoubyoumeiCode
+              shoubyoumei
+            when ShuushokugoCode
+              shuushokugo
+            end
+
+          master[code.to_code] || raise(StandardError, "#{code.to_code} is not found")
+        end
+
         # @!attribute [r] shinryou_koui
         #   @return [Hash<String, Treatment::ShinryouKoui>]
         # @!attribute [r] iyakuhin
@@ -39,6 +59,60 @@ module Recediff
         # @!attribute [r] shuushokugo
         #   @return [Hash<String, Diagnose::Shuushokugo>]
         attr_reader :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
+
+        module MasterCodeTrait
+          module ClassMethod
+            def of(code)
+              raise StandardError, 'invalid code' if code.to_i.zero?
+
+              new(code)
+            end
+          end
+
+          def self.included(klass)
+            klass.extend ClassMethod
+          end
+
+          def initialize(code)
+            @code = code
+          end
+
+          def to_code
+            '%09d' % @code.to_i
+          end
+        end
+
+        class ShinryouKouiCode
+          include MasterCodeTrait
+        end
+
+        class IyakuhinCode
+          include MasterCodeTrait
+        end
+
+        class TokuteiKizaiCode
+          include MasterCodeTrait
+        end
+
+        class CommentCode
+          include MasterCodeTrait
+        end
+
+        class ShoubyoumeiCode
+          include MasterCodeTrait
+
+          def to_code
+            '%07d' % @code.to_i
+          end
+        end
+
+        class ShuushokugoCode
+          include MasterCodeTrait
+
+          def to_code
+            '%04d' % @code.to_i
+          end
+        end
 
         class Unit
           # @param code [String]
