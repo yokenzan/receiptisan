@@ -3,6 +3,13 @@
 require 'month'
 require_relative 'receipt/tokki_jikou'
 require_relative 'receipt/type'
+require_relative 'receipt/shinryou_koui'
+require_relative 'receipt/iyakuhin'
+require_relative 'receipt/tokutei_kizai'
+require_relative 'receipt/comment'
+require_relative 'receipt/shinryou_shikibetsu'
+require_relative 'receipt/futan_kubun'
+require_relative 'receipt/cost'
 
 module Recediff
   module Model
@@ -20,7 +27,7 @@ module Recediff
             @patient            = patient
             @type               = type
             @tokki_jikous       = {}
-            @tekiyou            = {}
+            @tekiyou            = Hash.new { | hash, key | hash[key] = [] }
             @iryou_hoken        = nil
             @kouhi_futan_iryous = []
             @shoubyoumeis       = []
@@ -48,6 +55,11 @@ module Recediff
           # @return [void]
           def add_shoubyoumei(shoubyoumei)
             @shoubyoumeis << shoubyoumei
+          end
+
+          # @return [void]
+          def add_tekiyou(tekiyou_item, shinryou_shikibetsu = nil)
+            @tekiyou[shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu.code] << tekiyou_item
           end
 
           # @!attribute [r] id

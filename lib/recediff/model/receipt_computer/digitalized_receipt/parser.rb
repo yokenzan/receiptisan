@@ -8,7 +8,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
-        class Parser
+        class Parser # rubocop:disable Metrics/ClassLength
           ReceiptType   = DigitalizedReceipt::Receipt::Type
           FILE_ENCODING = 'Shift_JIS'
 
@@ -100,6 +100,7 @@ module Recediff
                 birth_date: Date.parse(values[Record::RE::C_生年月日])
               )
             ))
+
             values[Record::RE::C_レセプト特記事項].scan(/\d\d/) do | code |
               buffer.current_receipt.add_tokki_jikou(Receipt::TokkiJikou.find_by_code(code))
             end
@@ -165,19 +166,81 @@ module Recediff
             )
 
             values[Record::SY::C_修飾語コード]&.scan(/\d{4}/) do | c |
-              shoubyoumei.add_shushokugo(@current_master.find_by_code(ShuushokugoCode.of(c)))
+              shoubyoumei.add_shushokugo(@current_master.find_by_code(Master::ShuushokugoCode.of(c)))
             end
 
             buffer.current_receipt.add_shoubyoumei(shoubyoumei)
           end
 
-          def process_si(values); end
+          def process_si(values)
+            shinryou_koui = @current_master.find_by_code(Master::ShinryouKouiCode.of(values[Record::SI::C_レセ電コード]))
+            cost          = Cost.new(
+              item:                Receipt::ShinryouKoui.new(
+                master_shinryou_koui: shinryou_koui,
+                shiyouryou:           values[Record::SI::C_数量データ].to_i
+              ),
+              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::SI::C_診療識別]),
+              futan_kubun:         values[Record::SI::C_負担区分],
+              tensuu:              values[Record::SI::C_点数],
+              kaisuu:              values[Record::SI::C_回数]
+            )
 
-          def process_iy(values); end
+            values[Record::SI::C_コメント_1_コメントコード..Record::SI::C_コメント_3_文字データ].each_sline(2) do | code, additional_text |
+              next unless code
+
+              comment = Receipt::Comment.new(
+                master_comment:      @current_master.find_by_code(Master::CommentCode.of(comment)),
+                additional_text:     additional_text,
+                futan_kubun:         cost.futan_kubun,
+                shinryou_shikibetsu: cost.shinryou_shikibetsu
+              )
+              cost.add_comment(comment)
+            end
+
+            buffer.add_tekiyou(cost)
+          end
+
+          def process_iy(values)
+            iyakuhin = @current_master.find_by_code(Master::IyakuhinCode.of(values[Record::IY::C_レセ電コード]))
+            cost     = Cost.new(
+              item:                Receipt::Iyakuhin.new(
+                master_iyakuhin: iyakuhin,
+                shiyouryou:      values[Record::IY::C_使用量].to_i
+              ),
+              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::IY::C_診療識別]),
+              futan_kubun:         values[Record::IY::C_負担区分],
+              tensuu:              values[Record::IY::C_点数],
+              kaisuu:              values[Record::IY::C_回数]
+            )
+
+            values[Record::IY::C_コメント_1_コメントコード..Record::IY::C_コメント_3_文字データ].each_sline(2) do | code, additional_text |
+              next unless code
+
+              comment = Receipt::Comment.new(
+                master_comment:      @current_master.find_by_code(Master::CommentCode.of(comment)),
+                additional_text:     additional_text,
+                futan_kubun:         cost.futan_kubun,
+                shinryou_shikibetsu: cost.shinryou_shikibetsu
+              )
+              cost.add_comment(comment)
+            end
+
+            buffer.add_tekiyou(cost)
+          end
 
           def process_to(values); end
 
-          def process_co(values); end
+          def process_co(values)
+            master_comment = @current_master.find_by_code(Master::CommentCode.of(values[Record::CO::C_レセ電コード]))
+            comment        = DigitalizedReceipt::Receipt::Comment.new(
+              master_comment:      master_comment,
+              additional_text:     values[Record::CO::C_文字データ],
+              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
+              futan_kubun:         values[Record::CO::C_負担区分]
+            )
+
+            buffer.add_tekiyou(comment)
+          end
 
           def process_sj(values); end
 

@@ -20,15 +20,24 @@ module Recediff
             # @return [void]
             def new_receipt(receipt)
               @digitalized_receipt.add_receipt(@current_receipt) if @current_receipt
-              @current_receipt = receipt
+              @current_receipt             = receipt
+              @current_shinryou_shikibetsu = nil
             end
 
-            # @return [self]
+            def add_tekiyou(tekiyou_item)
+              @current_shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu if tekiyou_item.shinryou_shikibetsu
+
+              @current_receipt.add_tekiyou(tekiyou_item, @current_shinryou_shikibetsu)
+            end
+
+            # @return [void]
             def clear
-              @digitalized_receipt = nil
-              @current_receipt     = nil
+              @digitalized_receipt         = nil
+              @current_receipt             = nil
+              @current_shinryou_shikibetsu = nil
             end
 
+            # @return [DigitalizedReceipt]
             def close
               digitalized_receipt = @digitalized_receipt
               clear

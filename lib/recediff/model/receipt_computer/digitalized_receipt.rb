@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require_relative 'digitalized_receipt/hospital'
 require_relative 'digitalized_receipt/patient'
 require_relative 'digitalized_receipt/receipt'
 require_relative 'digitalized_receipt/iryou_hoken'
 require_relative 'digitalized_receipt/kouhi_futan_iryou'
+require_relative 'digitalized_receipt/shoubyoumei'
 require_relative 'digitalized_receipt/nissuu_kyuufu'
 require_relative 'digitalized_receipt/record'
 require_relative 'digitalized_receipt/parser'
@@ -15,6 +17,8 @@ module Recediff
       # 電子レセプト(RECEIPTC.UKE)
       # 診療報酬請求書
       class DigitalizedReceipt
+        extend Forwardable
+
         # @param seikyuu_ym [Month]
         # @param audit_payer [AuditPayer]
         # @param hospital [Hospital]
@@ -38,6 +42,8 @@ module Recediff
         # @!attribute [r] hospital
         #   @return [Hospital]
         attr_reader :seikyuu_ym, :audit_payer, :hospital
+
+        def_delegators :@receipts, :each, :each_with_index, :map, :to_a
 
         # 性別(男女区分)
         class Sex
