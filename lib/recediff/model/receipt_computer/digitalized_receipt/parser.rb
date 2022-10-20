@@ -50,7 +50,13 @@ module Recediff
             when 'HO' then process_ho(values)
             when 'KO' then process_ko(values)
             when 'SN' then process_sn(values)
-            when 'SY', 'SJ', 'GO', 'JD', 'MF', nil
+            when 'SY' then process_sy(values)
+            when 'SJ' then process_sj(values)
+            when 'SI' then process_si(values)
+            when 'IY' then process_iy(values)
+            when 'TO' then process_to(values)
+            when 'CO' then process_co(values)
+            when 'GO', 'JD', 'MF', nil
               ignore
             else
               record_type
@@ -61,7 +67,7 @@ module Recediff
           # @return [void]
           def process_ir(values)
             buffer.new_digitalized_receipt(DigitalizedReceipt.new(
-              seikyu_ym:   values[Record::IR::C_請求年月],
+              seikyuu_ym:  values[Record::IR::C_請求年月],
               audit_payer: AuditPayer.find_by_code(
                 values[Record::IR::C_審査支払機関].to_i
               ),
@@ -145,6 +151,35 @@ module Recediff
           def process_sn(values)
             buffer.current_receipt.iryou_hoken.update_edaban(values[Record::SN::C_枝番])
           end
+
+          def process_sy(values)
+            shoubyoumei = Shoubyoumei.new(
+              master_shoubyoumei: @current_master.find_by_code(
+                Master::ShoubyoumeiCode.of(values[Record::SY::C_傷病名コード])
+              ),
+              name:               values[Record::SY::C_傷病名称],
+              is_main:            values[Record::SY::C_主傷病],
+              start_date:         values[Record::SY::C_診療開始日],
+              tenki:              Shoubyoumei::Tenki.find_by_code(values[Record::SY::C_転帰区分]),
+              additional_comment: values[Record::SY::C_補足コメント]
+            )
+
+            values[Record::SY::C_修飾語コード]&.scan(/\d{4}/) do | c |
+              shoubyoumei.add_shushokugo(@current_master.find_by_code(ShuushokugoCode.of(c)))
+            end
+
+            buffer.current_receipt.add_shoubyoumei(shoubyoumei)
+          end
+
+          def process_si(values); end
+
+          def process_iy(values); end
+
+          def process_to(values); end
+
+          def process_co(values); end
+
+          def process_sj(values); end
 
           # 新しいレセプトを読込む都度、レセプトの診療年月にあわせた版のマスタを用意する
           #

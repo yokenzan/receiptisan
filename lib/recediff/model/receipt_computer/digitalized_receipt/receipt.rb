@@ -23,6 +23,7 @@ module Recediff
             @tekiyou            = {}
             @iryou_hoken        = nil
             @kouhi_futan_iryous = []
+            @shoubyoumeis       = []
           end
 
           # @param tokki_jikou [TokkiJikou]
@@ -41,6 +42,12 @@ module Recediff
           # @return [void]
           def add_kouhi_hutan_iryou(kouhi_futan_iryou)
             @kouhi_futan_iryous << kouhi_futan_iryou
+          end
+
+          # @param shoubyoumei [Shoubyoumei]
+          # @return [void]
+          def add_shoubyoumei(shoubyoumei)
+            @shoubyoumeis << shoubyoumei
           end
 
           # @!attribute [r] id
