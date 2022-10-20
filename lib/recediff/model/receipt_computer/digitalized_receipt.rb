@@ -159,6 +159,7 @@ module Recediff
             '46': Prefecture.new(code: 46, name: '鹿児島県'),
             '47': Prefecture.new(code: 47, name: '沖縄県'),
           }
+          @prefectures.each(&:freeze).freeze
 
           class << self
             # @param code [String, Integer]

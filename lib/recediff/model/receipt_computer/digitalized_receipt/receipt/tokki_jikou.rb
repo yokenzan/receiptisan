@@ -52,6 +52,8 @@ module Recediff
               '96': TokkiJikou.new(code: '96', name: '災１'),
               '97': TokkiJikou.new(code: '97', name: '災２'),
             }
+            @tokki_jikous.each(&:freeze).freeze
+
             class << self
               # @param code [String, Integer]
               # @return [self, nil]

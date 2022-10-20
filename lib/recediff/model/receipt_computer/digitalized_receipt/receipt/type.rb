@@ -31,6 +31,7 @@ module Recediff
               @types = {
                 '1': new(code: 1, name: '医科'),
               }
+              @types.each(&:freeze).freeze
 
               class << self
                 # @param code [String, Integer]
@@ -59,6 +60,7 @@ module Recediff
                 '3': new(code: 3, name: '後期'),
                 '4': new(code: 4, name: '退職'),
               }
+              @types.each(&:freeze).freeze
 
               class << self
                 # @param code [String, Integer]
@@ -87,6 +89,7 @@ module Recediff
                 '3': new(code: 3, name: '３併'),
                 '4': new(code: 4, name: '４併'),
               }
+              @types.each(&:freeze).freeze
 
               class << self
                 # @param code [String, Integer]
@@ -121,6 +124,7 @@ module Recediff
                 '9': new(code: 0, name: '高入７'),
                 '0': new(code: 0, name: '高外７'),
               }
+              @types.each(&:freeze).freeze
 
               class << self
                 # @param code [String, Integer]
