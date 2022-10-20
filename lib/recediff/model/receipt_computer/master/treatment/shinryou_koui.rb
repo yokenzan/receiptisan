@@ -74,6 +74,7 @@ module Recediff
             #   @return [String]
             attr_reader :full_name
 
+            # コード表用番号
             class CodeHyouYouBangou
               def initialize(
                 code_hyou_you_bangou_alphabet:,

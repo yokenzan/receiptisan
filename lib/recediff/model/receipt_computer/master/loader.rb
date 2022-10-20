@@ -8,7 +8,9 @@ module Recediff
     module ReceiptComputer
       class Master
         class Loader # rubocop:disable Metrics/ClassLength
+          # レセプト電算処理システム基本マスターファイルのディレクトリへの相対パス
           MASTER_CSV_DIR      = '../../../../../csv/master'
+          # マスターファイルの文字コード
           MASTER_CSV_ENCODING = 'Shift_JIS'
 
           # @param version [Version]
@@ -27,7 +29,8 @@ module Recediff
             }
             csv_prefixes.each do | key, value |
               csv_paths["#{key}_csv_path".intern] = csv_files.delete_at(
-                csv_files.find_index { | c | c.basename.to_path.start_with?(value) }
+                # @param csv [Pathname]
+                csv_files.find_index { | csv | csv.basename.to_path.start_with?(value) }
               )
             end
 
@@ -204,6 +207,12 @@ module Recediff
             end
           end
 
+          # simple copy of `CSV.foreach()`
+          #
+          # @param csv_path [String]
+          # @return [void]
+          # @yieldparam values [Array<String, nil>]
+          # @yieldreturn [void]
           def foreach(csv_path)
             File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
               f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }

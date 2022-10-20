@@ -7,12 +7,11 @@ module Recediff
         module Treatment
           # コメント
           class Comment
-            def initialize(
-              code:,
-              pattern:,
-              name:,
-              name_kana:
-            )
+            # @param code [String]
+            # @param pattern [String]
+            # @param name [String]
+            # @param name_kana [String]
+            def initialize(code:, pattern:, name:, name_kana:)
               @code            = code
               @pattern         = pattern
               @name            = name
@@ -36,6 +35,7 @@ module Recediff
             #   @return [String]
             attr_reader :name_kana
 
+            # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
             class EmbedPosition
               def initialize(position, length)
                 @position = position

@@ -7,6 +7,13 @@ module Recediff
         module Treatment
           # 特定器材
           class TokuteiKizai
+            # @param code [String]
+            # @param name [String]
+            # @param name_kana [String]
+            # @param unit [Unit]
+            # @param price_type [PriceType]
+            # @param price [Numeric]
+            # @param full_name [String]
             def initialize(
               code:,
               name:,

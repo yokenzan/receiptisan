@@ -12,12 +12,8 @@ module Recediff
             # @param ym [Month]
             # @return [Version, nil]
             def resolve_by_ym(ym)
+              # @param v [Version]
               values.find { | v | v.include?(ym) }
-            end
-
-            # @return [Version, nil]
-            def resolve_by_year(year)
-              values.find { | v | v.year == year }
             end
 
             # @return [Array<Version>]

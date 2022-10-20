@@ -28,6 +28,7 @@ module Recediff
             buffer.clear
 
             File.open(path, "r:#{FILE_ENCODING}:UTF-8") do | f |
+              # @param line [String]
               f.each_line(chomp: true) do | line |
                 parse_line(line.tr('"', '').split(','))
               end
@@ -135,12 +136,18 @@ module Recediff
             ))
           end
 
+          # SN行を読込む
+          #
+          # 枝番を読込むだけ
+          #
           # @param values [Array<String, nil>]
           # @return [void]
           def process_sn(values)
             buffer.current_receipt.iryou_hoken.update_edaban(values[Record::SN::C_枝番])
           end
 
+          # 新しいレセプトを読込む都度、レセプトの診療年月にあわせた版のマスタを用意する
+          #
           # @param shinryou_ym [Month]
           # @return [Master]
           def prepare_master(shinryou_ym)

@@ -7,6 +7,15 @@ module Recediff
         module Treatment
           # 医薬品
           class Iyakuhin
+            # @param code [String]
+            # @param name [String]
+            # @param name_kana [String]
+            # @param unit [Unit]
+            # @param price_type [PriceType]
+            # @param price [Numeric]
+            # @param chuusha_youryou [Numeric]
+            # @param dosage_form [DosageFormType]
+            # @param full_name [String]
             def initialize(
               code:,
               name:,
@@ -48,6 +57,13 @@ module Recediff
             #   @return [String]
             attr_reader :full_name
 
+            # 剤形
+            class DosageFormType
+              def initialize(code)
+                @code = code
+              end
+            end
+
             module Columns
               C_変更区分                                     = 0
               C_マスター種別                                 = 1
@@ -84,12 +100,6 @@ module Recediff
               C_公表順序番号                                 = 32
               C_経過措置年月日又は商品名医薬品コード使用期限 = 33
               C_基本漢字名称                                 = 34
-            end
-
-            class DosageFormType
-              def initialize(code)
-                @code = code
-              end
             end
           end
         end

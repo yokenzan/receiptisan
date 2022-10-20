@@ -7,6 +7,10 @@ module Recediff
         module Diagnose
           # 傷病名
           class Shoubyoumei
+            # @param code [String]
+            # @param full_name [String]
+            # @param short_name [String]
+            # @param name_kana [String]
             def initialize(code:, full_name:, short_name:, name_kana:)
               @code       = code
               @full_name  = full_name
@@ -14,9 +18,17 @@ module Recediff
               @name_kana  = name_kana
             end
 
+            # @!attribute [r] code
+            #   @return [String]
             attr_reader :code
+            # @!attribute [r] full_name
+            #   @return [String]
             attr_reader :full_name
+            # @!attribute [r] short_name
+            #   @return [String]
             attr_reader :short_name
+            # @!attribute [r] name_kana
+            #   @return [String]
             attr_reader :name_kana
 
             module Columns
