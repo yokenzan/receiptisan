@@ -59,7 +59,7 @@ module Recediff
 
           # @return [void]
           def add_tekiyou(tekiyou_item, shinryou_shikibetsu = nil)
-            @tekiyou[shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu.code] << tekiyou_item
+            @tekiyou[(shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu).code] << tekiyou_item
           end
 
           # @!attribute [r] id

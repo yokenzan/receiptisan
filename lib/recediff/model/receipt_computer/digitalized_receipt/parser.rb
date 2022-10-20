@@ -166,66 +166,30 @@ module Recediff
             )
 
             values[Record::SY::C_修飾語コード]&.scan(/\d{4}/) do | c |
-              shoubyoumei.add_shushokugo(@current_master.find_by_code(Master::ShuushokugoCode.of(c)))
+              shoubyoumei.add_shuushokugo(@current_master.find_by_code(Master::ShuushokugoCode.of(c)))
             end
 
             buffer.current_receipt.add_shoubyoumei(shoubyoumei)
           end
 
           def process_si(values)
-            shinryou_koui = @current_master.find_by_code(Master::ShinryouKouiCode.of(values[Record::SI::C_レセ電コード]))
-            cost          = Cost.new(
-              item:                Receipt::ShinryouKoui.new(
-                master_shinryou_koui: shinryou_koui,
-                shiyouryou:           values[Record::SI::C_数量データ].to_i
-              ),
-              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::SI::C_診療識別]),
-              futan_kubun:         values[Record::SI::C_負担区分],
-              tensuu:              values[Record::SI::C_点数],
-              kaisuu:              values[Record::SI::C_回数]
+            shinryou_koui = Receipt::ShinryouKoui.new(
+              shiyouryou:           values[Record::SI::C_数量データ].to_i,
+              master_shinryou_koui: @current_master.find_by_code(
+                Master::ShinryouKouiCode.of(values[Record::SI::C_レセ電コード])
+              )
             )
 
-            values[Record::SI::C_コメント_1_コメントコード..Record::SI::C_コメント_3_文字データ].each_sline(2) do | code, additional_text |
-              next unless code
-
-              comment = Receipt::Comment.new(
-                master_comment:      @current_master.find_by_code(Master::CommentCode.of(comment)),
-                additional_text:     additional_text,
-                futan_kubun:         cost.futan_kubun,
-                shinryou_shikibetsu: cost.shinryou_shikibetsu
-              )
-              cost.add_comment(comment)
-            end
-
-            buffer.add_tekiyou(cost)
+            add_as_cost(shinryou_koui, Record::SI, values)
           end
 
           def process_iy(values)
-            iyakuhin = @current_master.find_by_code(Master::IyakuhinCode.of(values[Record::IY::C_レセ電コード]))
-            cost     = Cost.new(
-              item:                Receipt::Iyakuhin.new(
-                master_iyakuhin: iyakuhin,
-                shiyouryou:      values[Record::IY::C_使用量].to_i
-              ),
-              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::IY::C_診療識別]),
-              futan_kubun:         values[Record::IY::C_負担区分],
-              tensuu:              values[Record::IY::C_点数],
-              kaisuu:              values[Record::IY::C_回数]
+            iyakuhin = Receipt::Iyakuhin.new(
+              master_iyakuhin: @current_master.find_by_code(Master::IyakuhinCode.of(values[Record::IY::C_レセ電コード])),
+              shiyouryou:      values[Record::IY::C_使用量].to_i
             )
 
-            values[Record::IY::C_コメント_1_コメントコード..Record::IY::C_コメント_3_文字データ].each_sline(2) do | code, additional_text |
-              next unless code
-
-              comment = Receipt::Comment.new(
-                master_comment:      @current_master.find_by_code(Master::CommentCode.of(comment)),
-                additional_text:     additional_text,
-                futan_kubun:         cost.futan_kubun,
-                shinryou_shikibetsu: cost.shinryou_shikibetsu
-              )
-              cost.add_comment(comment)
-            end
-
-            buffer.add_tekiyou(cost)
+            add_as_cost(iyakuhin, Record::IY, values)
           end
 
           def process_to(values); end
@@ -243,6 +207,33 @@ module Recediff
           end
 
           def process_sj(values); end
+
+          def add_as_cost(item, column_definition, values)
+            cost = Cost.new(
+              item:                item,
+              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
+              futan_kubun:         values[column_definition::C_負担区分],
+              tensuu:              values[column_definition::C_点数],
+              kaisuu:              values[column_definition::C_回数]
+            )
+
+            comment_range = column_definition::C_コメント_1_コメントコード..column_definition::C_コメント_3_文字データ
+            # @param code [String]
+            # @param additional_text [String]
+            values[comment_range].each_slice(2) do | code, additional_text |
+              next if code.empty?
+
+              comment = Receipt::Comment.new(
+                master_comment:      @current_master.find_by_code(Master::CommentCode.of(comment)),
+                additional_text:     additional_text,
+                futan_kubun:         cost.futan_kubun,
+                shinryou_shikibetsu: cost.shinryou_shikibetsu
+              )
+              cost.add_comment(comment)
+            end
+
+            buffer.add_tekiyou(cost)
+          end
 
           # 新しいレセプトを読込む都度、レセプトの診療年月にあわせた版のマスタを用意する
           #
