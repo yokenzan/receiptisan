@@ -186,7 +186,7 @@ module Recediff
           def process_iy(values)
             iyakuhin = Receipt::Iyakuhin.new(
               master_iyakuhin: @current_master.find_by_code(Master::IyakuhinCode.of(values[Record::IY::C_レセ電コード])),
-              shiyouryou:      values[Record::IY::C_使用量].to_i
+              shiyouryou:      values[Record::IY::C_使用量].to_f
             )
 
             add_as_cost(iyakuhin, Record::IY, values)
@@ -213,8 +213,8 @@ module Recediff
               item:                item,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
               futan_kubun:         values[column_definition::C_負担区分],
-              tensuu:              values[column_definition::C_点数],
-              kaisuu:              values[column_definition::C_回数]
+              tensuu:              values[column_definition::C_点数].to_i,
+              kaisuu:              values[column_definition::C_回数].to_i
             )
 
             comment_range = column_definition::C_コメント_1_コメントコード..column_definition::C_コメント_3_文字データ
