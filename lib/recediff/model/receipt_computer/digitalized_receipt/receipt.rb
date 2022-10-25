@@ -62,6 +62,10 @@ module Recediff
             @tekiyou[(shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu).code] << tekiyou_item
           end
 
+          def nyuuin?
+            @type.nyuuin?
+          end
+
           # @!attribute [r] id
           #   @return [Integer]
           attr_reader :id

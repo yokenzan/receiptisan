@@ -7,6 +7,10 @@ module Recediff
         class Receipt
           # レセプト種別
           class Type
+            # @param tensuu_hyou_type [TensuuHyouType] 点数表種別
+            # @param main_hoken_type [MainHokenType] 主保険種別
+            # @param hoken_multiple_type [HokenMultipleType] 保険併用種別
+            # @param patient_age_type [PatientAgeType] 患者年齢種別
             def initialize(tensuu_hyou_type, main_hoken_type, hoken_multiple_type, patient_age_type)
               @tensuu_hyou_type    = tensuu_hyou_type
               @main_hoken_type     = main_hoken_type
@@ -14,8 +18,13 @@ module Recediff
               @patient_age_type    = patient_age_type
             end
 
+            def nyuuin?
+              @patient_age_type.nyuuin?
+            end
+
             attr_reader :tensuu_hyou_type, :main_hoken_type, :hoken_multiple_type, :patient_age_type
 
+            # 点数表種別
             class TensuuHyouType
               def initialize(code:, name:)
                 @code = code
@@ -42,6 +51,7 @@ module Recediff
               end
             end
 
+            # 主保険種別
             class MainHokenType
               def initialize(code:, name:)
                 @code = code
@@ -71,6 +81,7 @@ module Recediff
               end
             end
 
+            # 保険併用種別
             class HokenMultipleType
               def initialize(code:, name:)
                 @code = code
@@ -100,10 +111,15 @@ module Recediff
               end
             end
 
+            # 患者年齢種別
             class PatientAgeType
               def initialize(code:, name:)
                 @code = code
                 @name = name
+              end
+
+              def nyuuin?
+                code.odd?
               end
 
               # @!attribute [r] code
