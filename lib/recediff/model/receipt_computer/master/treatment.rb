@@ -13,26 +13,13 @@ module Recediff
           # 点数・金額種別
           class PriceType
             # @param code [String]]
-            # @param name [String]]
-            # @param calculator [Proc, nil]
             def initialize(code)
-              # def initialize(code:, name:, calculator:)
-              @code       = code
-              # @name       = name
-              # @calculator = calculator
+              @code = code
             end
-
-            # @param point [Numeric]
-            # @return [Numeric, nil]
-            # def calculate(point)
-            #   @calculator ? @calculator.call(point) : nil
-            # end
 
             # @!attribute [r] code
             #   @return [String]
-            # @!attribute [r] name
-            #   @return [String]
-            attr_reader :code, :name
+            attr_reader :code
           end
         end
       end
