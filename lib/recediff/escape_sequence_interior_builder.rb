@@ -263,8 +263,8 @@ module Recediff
 
     # @return self
     def colors_by_index(fg: nil, bg: nil, underline: nil)
-      fg && fg_color(name: fg)
-      bg && bg_color(name: bg)
+      fg && fg_color(index: fg)
+      bg && bg_color(index: bg)
       underline && underline_color(index: underline)
 
       self
