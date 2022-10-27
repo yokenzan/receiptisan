@@ -7,21 +7,39 @@ module Recediff
         class Receipt
           # コメント
           class Comment
+            # @param item [Master::Treatment::Comment]
+            # @param shinryou_shikibetsu [ShinryouShikibetsu, nil]
+            # @param futan_kubun [FutanKubun]
+            # @param additional_text [String, nil]
             def initialize(
-              master_comment:,
+              item:,
               additional_text:,
               shinryou_shikibetsu:,
               futan_kubun:
             )
-              @master_comment      = master_comment
+              @item                = item
               @additional_text     = additional_text
               @shinryou_shikibetsu = shinryou_shikibetsu
               @futan_kubun         = futan_kubun
             end
 
-            attr_reader :master_comment, :additional_text, :shinryou_shikibetsu, :futan_kubun
-            alias_method :item,        :master_comment
-            alias_method :master_item, :master_comment
+            def tensuu?
+              false
+            end
+
+            def to_s
+              item.format_with(additional_text)
+            end
+
+            # @!attribute [r] item
+            #   @return [Master::Treatment::Comment]
+            # @!attribute [r] additional_text
+            #   @return [String, nil]
+            # @!attribute [r] shinryou_shikibetsu
+            #   @return [ShinryouShikibetsu, nil]
+            # @!attribute [r] futan_kubun
+            #   @return [FutanKubun]
+            attr_reader :item, :additional_text, :shinryou_shikibetsu, :futan_kubun
           end
         end
       end
