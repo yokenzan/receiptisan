@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
         class Parser
           class Buffer
+            extend Forwardable
+
             def initialize
               clear
             end
@@ -24,10 +28,27 @@ module Recediff
               @current_shinryou_shikibetsu = nil
             end
 
-            def add_tekiyou(tekiyou_item)
-              @current_shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu if tekiyou_item.shinryou_shikibetsu
+            # @return [Month]
+            def current_shinryou_ym
+              @current_receipt.shinryou_ym
+            end
 
-              @current_receipt.add_tekiyou(tekiyou_item, @current_shinryou_shikibetsu)
+            # @return [IryouHoken, nil]
+            def current_iryou_hoken
+              @current_receipt.iryou_hoken
+            end
+
+            # @param tekiyou_item [Receipt::Cost, Receipt::Comment]
+            def add_tekiyou(tekiyou_item)
+              if (shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu)
+                @current_shinryou_shikibetsu = shinryou_shikibetsu
+                new_ichiren_unit(Receipt::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu))
+                new_santei_unit
+              end
+
+              @current_santei_unit.add_tekiyou(tekiyou_item)
+
+              fix_current_santei_unit if tekiyou_item.tensuu?
             end
 
             # @return [void]
@@ -39,14 +60,49 @@ module Recediff
 
             # @return [DigitalizedReceipt]
             def close
+              fix_current_santei_unit
+              fix_current_ichiren_unit
+
               digitalized_receipt = @digitalized_receipt
               clear
               digitalized_receipt
             end
 
-            # @!attribute [r]
+            # @!attribute [r] current_receipt
             #   @return [DigitalizedReceipt::Receipt]
             attr_reader :current_receipt
+
+            def_delegators :current_receipt,
+              :add_shoubyoumei,
+              :add_iryou_hoken,
+              :add_kouhi_futan_iryou,
+              :add_tokki_jikou
+
+            private
+
+            def new_ichiren_unit(ichiren_unit)
+              fix_current_ichiren_unit
+              @current_receipt.add_ichiren_unit(@current_ichiren_unit = ichiren_unit)
+            end
+
+            def fix_current_ichiren_unit
+              return unless @current_ichiren_unit
+
+              @current_ichiren_unit.fix
+              @current_receipt.add_ichiren_unit(@current_ichiren_unit)
+            end
+
+            def new_santei_unit
+              fix_current_santei_unit
+              @current_ichiren_unit.add_santei_unit(@current_santei_unit = Receipt::SanteiUnit.new)
+            end
+
+            def fix_current_santei_unit
+              return unless @current_santei_unit
+
+              @current_santei_unit&.fix
+              @current_ichiren_unit.add_santei_unit(@current_santei_unit)
+            end
           end
         end
       end

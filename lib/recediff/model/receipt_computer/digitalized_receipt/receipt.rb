@@ -10,6 +10,8 @@ require_relative 'receipt/comment'
 require_relative 'receipt/shinryou_shikibetsu'
 require_relative 'receipt/futan_kubun'
 require_relative 'receipt/cost'
+require_relative 'receipt/ichiren_unit'
+require_relative 'receipt/santei_unit'
 
 module Recediff
   module Model
@@ -47,7 +49,7 @@ module Recediff
 
           # @param kouhi_futan_iryou [KouhiFutanIryou]
           # @return [void]
-          def add_kouhi_hutan_iryou(kouhi_futan_iryou)
+          def add_kouhi_futan_iryou(kouhi_futan_iryou)
             @kouhi_futan_iryous << kouhi_futan_iryou
           end
 
@@ -57,10 +59,16 @@ module Recediff
             @shoubyoumeis << shoubyoumei
           end
 
+          # @param ichiren_unit [IchirenUnit]
           # @return [void]
-          def add_tekiyou(tekiyou_item, shinryou_shikibetsu = nil)
-            @tekiyou[(shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu).code] << tekiyou_item
+          def add_ichiren_unit(ichiren_unit)
+            @tekiyou[ichiren_unit.shinryou_shikibetsu] << ichiren_unit
           end
+
+          # @return [void]
+          # def add_tekiyou(tekiyou_item, shinryou_shikibetsu = nil)
+          #   @tekiyou[(shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu).code] << tekiyou_item
+          # end
 
           def nyuuin?
             @type.nyuuin?

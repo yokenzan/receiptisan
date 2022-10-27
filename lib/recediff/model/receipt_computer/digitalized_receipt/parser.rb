@@ -42,7 +42,7 @@ module Recediff
             when 'IR' then process_ir(values)
             when 'RE'
               process_re(values)
-              @current_master = handler.prepare(buffer.current_receipt.shinryou_ym)
+              handler.prepare(buffer.current_shinryou_ym)
             when 'HO' then process_ho(values)
             when 'KO' then process_ko(values)
             when 'SN' then process_sn(values)
@@ -97,14 +97,14 @@ module Recediff
             ))
 
             values[Record::RE::C_レセプト特記事項]&.scan(/\d\d/) do | code |
-              buffer.current_receipt.add_tokki_jikou(Receipt::TokkiJikou.find_by_code(code))
+              buffer.add_tokki_jikou(Receipt::TokkiJikou.find_by_code(code))
             end
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
-            buffer.current_receipt.add_iryou_hoken(IryouHoken.new(
+            buffer.add_iryou_hoken(IryouHoken.new(
               hokenja_bangou: values[Record::HO::C_保険者番号],
               kigou:          values[Record::HO::C_被保険者証等の記号],
               bangou:         values[Record::HO::C_被保険者証等の番号],
@@ -123,7 +123,7 @@ module Recediff
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ko(values)
-            buffer.current_receipt.add_kouhi_hutan_iryou(KouhiFutanIryou.new(
+            buffer.add_kouhi_futan_iryou(KouhiFutanIryou.new(
               futansha_bangou:  values[Record::KO::C_公費負担者番号],
               jukyuusha_bangou: values[Record::KO::C_公費受給者番号],
               nissuu_kyuufu:    NissuuKyuufu.new(
@@ -146,12 +146,12 @@ module Recediff
           # @param values [Array<String, nil>]
           # @return [void]
           def process_sn(values)
-            buffer.current_receipt.iryou_hoken.update_edaban(values[Record::SN::C_枝番])
+            buffer.current_iryou_hoken.update_edaban(values[Record::SN::C_枝番])
           end
 
           def process_sy(values)
             shoubyoumei = Shoubyoumei.new(
-              master_shoubyoumei: @current_master.find_by_code(
+              master_shoubyoumei: handler.find_by_code(
                 Master::ShoubyoumeiCode.of(values[Record::SY::C_傷病名コード])
               ),
               name:               values[Record::SY::C_傷病名称],
@@ -162,16 +162,16 @@ module Recediff
             )
 
             values[Record::SY::C_修飾語コード]&.scan(/\d{4}/) do | c |
-              shoubyoumei.add_shuushokugo(@current_master.find_by_code(Master::ShuushokugoCode.of(c)))
+              shoubyoumei.add_shuushokugo(handler.find_by_code(Master::ShuushokugoCode.of(c)))
             end
 
-            buffer.current_receipt.add_shoubyoumei(shoubyoumei)
+            buffer.add_shoubyoumei(shoubyoumei)
           end
 
           def process_si(values)
             shinryou_koui = Receipt::ShinryouKoui.new(
               shiyouryou:           values[Record::SI::C_数量データ].to_i,
-              master_shinryou_koui: @current_master.find_by_code(
+              master_shinryou_koui: handler.find_by_code(
                 Master::ShinryouKouiCode.of(values[Record::SI::C_レセ電コード])
               )
             )
@@ -181,7 +181,7 @@ module Recediff
 
           def process_iy(values)
             iyakuhin = Receipt::Iyakuhin.new(
-              master_iyakuhin: @current_master.find_by_code(
+              master_iyakuhin: handler.find_by_code(
                 Master::IyakuhinCode.of(values[Record::IY::C_レセ電コード])
               ),
               shiyouryou:      values[Record::IY::C_使用量]&.to_f
@@ -190,12 +190,20 @@ module Recediff
             add_as_cost(iyakuhin, Record::IY, values)
           end
 
-          def process_to(values); end
+          def process_to(values)
+            tokutei_kizai = Receipt::TokuteiKizai.new(
+              master_tokutei_kizai: handler.find_by_code(Master::TokuteiKizaiCode.of(values[Record::TO::C_レセ電コード])),
+              shiyouryou:           values[Record::TO::C_使用量]&.to_f,
+              product_name:         values[Record::TO::C_商品名及び規格又はサイズ]
+            )
+
+            add_as_cost(tokutei_kizai, Record::TO, values)
+          end
 
           def process_co(values)
-            master_comment = @current_master.find_by_code(Master::CommentCode.of(values[Record::CO::C_レセ電コード]))
+            master_comment = handler.find_by_code(Master::CommentCode.of(values[Record::CO::C_レセ電コード]))
             comment        = DigitalizedReceipt::Receipt::Comment.new(
-              master_comment:      master_comment,
+              item:                master_comment,
               additional_text:     values[Record::CO::C_文字データ],
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
               futan_kubun:         values[Record::CO::C_負担区分]
@@ -207,7 +215,7 @@ module Recediff
           def process_sj(values); end
 
           def add_as_cost(item, column_definition, values)
-            cost = Cost.new(
+            cost = Receipt::Cost.new(
               item:                item,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
               futan_kubun:         values[column_definition::C_負担区分],
@@ -222,7 +230,7 @@ module Recediff
               next if code.nil?
 
               comment = Receipt::Comment.new(
-                master_comment:      @current_master.find_by_code(Master::CommentCode.of(code)),
+                item:                handler.find_by_code(Master::CommentCode.of(code)),
                 additional_text:     additional_text,
                 futan_kubun:         cost.futan_kubun,
                 shinryou_shikibetsu: cost.shinryou_shikibetsu
