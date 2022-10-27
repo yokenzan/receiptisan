@@ -7,7 +7,7 @@ module Recediff
         module Treatment
           # 特定器材
           class TokuteiKizai
-            # @param code [String]
+            # @param code [TokuteiKizaiCode]
             # @param name [String]
             # @param name_kana [String]
             # @param unit [Unit]
@@ -33,7 +33,7 @@ module Recediff
             end
 
             # @!attribute [r] code
-            #   @return [String]
+            #   @return [TokuteiKizaiCode]
             attr_reader :code
             # @!attribute [r] name
             #   @return [String]

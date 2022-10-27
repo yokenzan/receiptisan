@@ -26,6 +26,32 @@ module Recediff
           @shuushokugo   = shuushokugo
         end
 
+        # @param code [MasterCodeTrait]
+        #
+        # @overload find_by_code(shinryou_koui_code)
+        #   診療行為を取得する
+        #   @param shinryou_koui_code [Master::ShinryouKouiCode]
+        #   @return [Master::ShinryouKoui, nil]
+        # @overload find_by_code(iyakuhin_code)
+        #   医薬品を取得する
+        #   @param iyakuhin_code [Master::IyakuhinCode]
+        #   @return [Master::Iyakuhin, nil]
+        # @overload find_by_code(tokutei_kizai_code)
+        #   特定器材を取得する
+        #   @param tokutei_kizai_code [Master::TokuteiKizaiCode]
+        #   @return [Master::TokuteiKizai, nil]
+        # @overload find_by_code(comment_code)
+        #   コメントを取得する
+        #   @param comment_code [Master::CommentCode]
+        #   @return [Master::Comment, nil]
+        # @overload find_by_code(shoubyoumei_code)
+        #   傷病名を取得する
+        #   @param shoubyoumei_code [Master::ShoubyoumeiCode]
+        #   @return [Master::Shoubyoumei, nil]
+        # @overload find_by_code(shuushokugo_code)
+        #   修飾語を取得する
+        #   @param shuushokugo_code [Master::ShuushokugoCode]
+        #   @return [Master::Shuushokugo, nil]
         def find_by_code(code)
           master =
             case code
@@ -43,7 +69,8 @@ module Recediff
               shuushokugo
             end
 
-          master[code.to_code] || raise(StandardError, "#{code.to_code} is not found")
+          master[code.value] ||
+            raise(StandardError, "#{code.name} #{code.value} is not found")
         end
 
         # @!attribute [r] shinryou_koui
@@ -60,8 +87,11 @@ module Recediff
         #   @return [Hash<String, Diagnose::Shuushokugo>]
         attr_reader :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
 
+        # 検索用のコード
+
         module MasterCodeTrait
           module ClassMethod
+            # @return [MasterCodeTrait]
             def of(code)
               raise StandardError, 'invalid code' if code.to_i.zero?
 
@@ -77,43 +107,87 @@ module Recediff
             @code = code
           end
 
-          def to_code
+          # @return [String]
+          def name
+            raise NotImplementedError
+          end
+
+          # @return [Symbol]
+          def value
+            __to_code.intern
+          end
+
+          private
+
+          # @return [String]
+          def __to_code
             '%09d' % @code.to_i
           end
         end
 
+        # 診療行為コード
         class ShinryouKouiCode
           include MasterCodeTrait
+
+          def name
+            '診療行為'
+          end
         end
 
+        # 診療行為コード
         class IyakuhinCode
           include MasterCodeTrait
+
+          def name
+            '医薬品'
+          end
         end
 
+        # 特定器材コード
         class TokuteiKizaiCode
           include MasterCodeTrait
+
+          def name
+            '特定器材'
+          end
         end
 
+        # コメントコード
         class CommentCode
           include MasterCodeTrait
+
+          def name
+            'コメント'
+          end
         end
 
+        # 傷病名コード
         class ShoubyoumeiCode
           include MasterCodeTrait
 
-          def to_code
+          def name
+            '傷病名'
+          end
+
+          def __to_code
             '%07d' % @code.to_i
           end
         end
 
+        # 修飾語コード
         class ShuushokugoCode
           include MasterCodeTrait
 
-          def to_code
+          def name
+            '修飾語'
+          end
+
+          def __to_code
             '%04d' % @code.to_i
           end
         end
 
+        # 単位コード
         class Unit
           # @param code [String]
           # @param name [String]

@@ -81,8 +81,8 @@ module Recediff
             {}.tap do | hash |
               columns = Treatment::ShinryouKoui::Columns.resolve_columns_by(version)
               foreach(csv_path) do | values |
-                code       = values[columns::C_コード]
-                hash[code] = Treatment::ShinryouKoui.new(
+                code             = ShinryouKouiCode.of(values[columns::C_コード])
+                hash[code.value] = Treatment::ShinryouKoui.new(
                   code:                              code,
                   short_name:                        values[columns::C_省略名称_漢字名称],
                   short_name_kana:                   convert_katakana(values[columns::C_省略名称_カナ名称]),
@@ -108,8 +108,8 @@ module Recediff
           def load_iyakuhin_master(csv_path)
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                code       = values[Treatment::Iyakuhin::Columns::C_コード]
-                hash[code] = Treatment::Iyakuhin.new(
+                code             = IyakuhinCode.of(values[Treatment::Iyakuhin::Columns::C_コード])
+                hash[code.value] = Treatment::Iyakuhin.new(
                   code:            code,
                   name:            values[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_漢字名称],
                   name_kana:       convert_katakana(values[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_カナ名称]),
@@ -129,8 +129,8 @@ module Recediff
           def load_tokutei_kizai_master(csv_path)
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                code       = values[Treatment::TokuteiKizai::Columns::C_コード]
-                hash[code] = Treatment::TokuteiKizai.new(
+                code             = TokuteiKizaiCode.of(values[Treatment::TokuteiKizai::Columns::C_コード])
+                hash[code.value] = Treatment::TokuteiKizai.new(
                   code:       code,
                   name:       values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_漢字名称],
                   name_kana:  convert_katakana(values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_カナ名称]),
@@ -158,16 +158,17 @@ module Recediff
             ]
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                comment = Treatment::Comment.new(
-                  code:      values[Treatment::Comment::Columns::C_コード],
-                  pattern:   values[Treatment::Comment::Columns::C_パターン],
-                  name:      values[Treatment::Comment::Columns::C_コメント文_漢字名称],
-                  name_kana: convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称])
-                )
-                embed_position_columns.each_slice(2) do | position, length |
-                  comment.add_embed_position(Treatment::Comment::EmbedPosition.new(position, length))
+                embed_positions = embed_position_columns.each_slice(2).map do | position, length |
+                  Treatment::Comment::EmbedPosition.new(position, length)
                 end
-                hash[comment.code] = comment
+                comment = Treatment::Comment.new(
+                  code:            CommentCode.of(values[Treatment::Comment::Columns::C_コード]),
+                  pattern:         values[Treatment::Comment::Columns::C_パターン],
+                  name:            values[Treatment::Comment::Columns::C_コメント文_漢字名称],
+                  name_kana:       convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称]),
+                  embed_positions: embed_positions
+                )
+                hash[comment.code.value] = comment
               end
             end
           end
@@ -177,8 +178,8 @@ module Recediff
           def load_shoubyoumei_master(csv_path)
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                code       = values[Diagnose::Shoubyoumei::Columns::C_コード]
-                hash[code] = Diagnose::Shoubyoumei.new(
+                code             = ShoubyoumeiCode.of(values[Diagnose::Shoubyoumei::Columns::C_コード])
+                hash[code.value] = Diagnose::Shoubyoumei.new(
                   code:       code,
                   full_name:  values[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
                   short_name: values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
@@ -193,8 +194,8 @@ module Recediff
           def load_shuushokugo_master(csv_path)
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                code       = values[Diagnose::Shuushokugo::Columns::C_コード]
-                hash[code] = Diagnose::Shuushokugo.new(
+                code             = ShuushokugoCode.of(values[Diagnose::Shuushokugo::Columns::C_コード])
+                hash[code.value] = Diagnose::Shuushokugo.new(
                   code:      code,
                   name:      values[Diagnose::Shuushokugo::Columns::C_修飾語名称],
                   name_kana: convert_katakana(values[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称]),

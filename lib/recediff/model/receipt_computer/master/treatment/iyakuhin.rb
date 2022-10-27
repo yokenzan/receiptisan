@@ -7,7 +7,7 @@ module Recediff
         module Treatment
           # 医薬品
           class Iyakuhin
-            # @param code [String]
+            # @param code [IyakuhinCode]
             # @param name [String]
             # @param name_kana [String]
             # @param unit [Unit]
@@ -39,7 +39,7 @@ module Recediff
             end
 
             # @!attribute [r] code
-            #   @return [String]
+            #   @return [IyakuhinCode]
             attr_reader :code
             # @!attribute [r] name
             #   @return [String]

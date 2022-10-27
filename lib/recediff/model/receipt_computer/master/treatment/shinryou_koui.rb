@@ -44,7 +44,7 @@ module Recediff
             end
 
             # @!attribute [r] code
-            #   @return [String]
+            #   @return [ShinryouKouiCode]
             attr_reader :code
             # @!attribute [r] short_name
             #   @return [String]

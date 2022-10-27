@@ -7,26 +7,23 @@ module Recediff
         module Treatment
           # コメント
           class Comment
-            # @param code [String]
+            # @param code [CommentCode]
             # @param pattern [String]
             # @param name [String]
             # @param name_kana [String]
-            def initialize(code:, pattern:, name:, name_kana:)
+            def initialize(code:, pattern:, name:, name_kana:, embed_positions:)
               @code            = code
               @pattern         = pattern
               @name            = name
               @name_kana       = name_kana
-              @embed_positions = []
+              @embed_positions = embed_positions
             end
 
-            # @param embed_position [EmbedPosition]
-            # @return void
-            def add_embed_position(embed_position)
-              @embed_positions << embed_position
-            end
+            # @param additional_text [String, nil]
+            def format_with(additional_text); end
 
             # @!attribute [r] code
-            #   @return [String]
+            #   @return [CommentCode]
             attr_reader :code
             # @!attribute [r] name
             #   @return [String]
@@ -76,4 +73,4 @@ module Recediff
       end
     end
   end
-end
+
