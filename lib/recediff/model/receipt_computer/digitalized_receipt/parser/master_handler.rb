@@ -20,10 +20,16 @@ module Recediff
             # 新しいレセプトを読込む都度、レセプトの診療年月にあわせた版のマスタを用意する
             #
             # @param shinryou_ym [Month]
-            # @return [Master]
+            # @return [void]
             def prepare(shinryou_ym)
               version = Master::Version.resolve_by_ym(shinryou_ym)
               @loaded_masters[version] ||= @master_loader.load(version)
+              @current_master = @loaded_masters[version]
+            end
+
+            # @param code [Master::MasterCodeTrait]
+            def find_by_code(code)
+              @current_master.find_by_code(code)
             end
           end
         end
