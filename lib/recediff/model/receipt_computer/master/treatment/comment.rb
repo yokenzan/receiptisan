@@ -8,9 +8,10 @@ module Recediff
           # コメント
           class Comment
             # @param code [CommentCode]
-            # @param pattern [String]
+            # @param pattern [Pattern]
             # @param name [String]
             # @param name_kana [String]
+            # @param embed_positions [Array<EmbedPosition>]
             def initialize(code:, pattern:, name:, name_kana:, embed_positions:)
               @code            = code
               @pattern         = pattern
@@ -20,7 +21,14 @@ module Recediff
             end
 
             # @param additional_text [String, nil]
-            def format_with(additional_text); end
+            def format_with(additional_text)
+              @pattern.format_with(name, additional_text, @embed_positions)
+              # @param position [EmbedPosition]
+              # @embed_positions.each do | position |
+              #   text[position.start - 1, position.length] = additional_text[0, position.length]
+              #   additional_text[0, position.length] = ''
+              # end
+            end
 
             # @!attribute [r] code
             #   @return [CommentCode]
@@ -34,12 +42,76 @@ module Recediff
 
             # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
             class EmbedPosition
-              def initialize(position, length)
-                @position = position
-                @length   = length
+              def initialize(start, length)
+                @start  = start
+                @length = length
               end
 
-              attr_reader :position, :length
+              attr_reader :start, :length
+            end
+
+            class Pattern
+              def initialize(code, formatter)
+                @code      = code
+                @formatter = formatter
+              end
+
+              def format_with(comment_name, additional_text, embed_positions)
+                @formatter.call(comment_name, additional_text, embed_positions)
+                # @param position [EmbedPosition]
+                # @embed_positions.each do | position |
+                #   text[position.start - 1, position.length] = additional_text[0, position.length]
+                #   additional_text[0, position.length] = ''
+                # end
+              end
+
+              @patterns = {
+                '10': new(:'10', lambda do | _, additional_text, _ |
+                  additional_text
+                end),
+                '20': new(:'20', lambda do | name, _, _ |
+                  name
+                end),
+                '30': new(:'30', lambda do | name, additional_text, _ |
+                  name << additional_text
+                end),
+                '31': new(:'31', lambda do | name, shinryou_koui, _ |
+                  [name, shinryou_koui].join('；').squeeze('；')
+                  # name << shinryou_koui.name
+                end),
+                '40': new(:'40', lambda do | name, digits, _ |
+                  name << digits
+                end),
+                '42': new(:'42', lambda do | name, integer, _ |
+                  [name, integer].join('；').squeeze('；')
+                end),
+                '50': new(:'50', lambda do | name, date, _ |
+                  [name, date].join('；').squeeze('；')
+                end),
+                '51': new(:'51', lambda do | name, time, _ |
+                  [name, time].join('；').squeeze('；')
+                end),
+                '52': new(:'52', lambda do | name, minutes, _ |
+                  [name, minutes].join('；').squeeze('；')
+                end),
+                '53': new(:'53', lambda do | name, day_and_time, _ |
+                  [name, day_and_time].join('；').squeeze('；')
+                end),
+                '80': new(:'80', lambda do | name, date_and_score, _ |
+                  [name, date_and_score].join('；').squeeze('；')
+                end),
+                '90': new(:'90', lambda do | name, shuushokugo, _ |
+                  [name, shuushokugo].join('；').squeeze('；')
+                end),
+              }
+
+              class << self
+                # @code [String, Integer, Symbol]
+                # @return [self, nil]
+                def find_by_code(code)
+                  @patterns[code.to_s.intern]
+                end
+              end
             end
 
             module Columns
@@ -73,4 +145,4 @@ module Recediff
       end
     end
   end
-
+end

@@ -90,6 +90,8 @@ module Recediff
         # 検索用のコード
 
         module MasterCodeTrait
+          include Comparable
+
           module ClassMethod
             # @return [MasterCodeTrait]
             def of(code)
@@ -115,6 +117,10 @@ module Recediff
           # @return [Symbol]
           def value
             __to_code.intern
+          end
+
+          def <=>(another)
+            another.instance_of?(self.class) && another.value == value
           end
 
           private

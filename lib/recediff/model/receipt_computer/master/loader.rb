@@ -84,8 +84,8 @@ module Recediff
                 code             = ShinryouKouiCode.of(values[columns::C_コード])
                 hash[code.value] = Treatment::ShinryouKoui.new(
                   code:                              code,
-                  short_name:                        values[columns::C_省略名称_漢字名称],
-                  short_name_kana:                   convert_katakana(values[columns::C_省略名称_カナ名称]),
+                  name:                              values[columns::C_省略名称_漢字名称],
+                  name_kana:                         convert_katakana(values[columns::C_省略名称_カナ名称]),
                   unit:                              Unit.find_by_code(values[columns::C_データ規格コード]),
                   price_type:                        Treatment::PriceType.new(values[columns::C_点数識別]),
                   point:                             values[columns::C_新又は現点数],
@@ -158,12 +158,12 @@ module Recediff
             ]
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                embed_positions = embed_position_columns.each_slice(2).map do | position, length |
-                  Treatment::Comment::EmbedPosition.new(position, length)
+                embed_positions = embed_position_columns.each_slice(2).map do | start, length |
+                  Treatment::Comment::EmbedPosition.new(start, length)
                 end
                 comment = Treatment::Comment.new(
                   code:            CommentCode.of(values[Treatment::Comment::Columns::C_コード]),
-                  pattern:         values[Treatment::Comment::Columns::C_パターン],
+                  pattern:         Treatment::Comment::Pattern.find_by_code(values[Treatment::Comment::Columns::C_パターン]),
                   name:            values[Treatment::Comment::Columns::C_コメント文_漢字名称],
                   name_kana:       convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称]),
                   embed_positions: embed_positions
@@ -181,8 +181,8 @@ module Recediff
                 code             = ShoubyoumeiCode.of(values[Diagnose::Shoubyoumei::Columns::C_コード])
                 hash[code.value] = Diagnose::Shoubyoumei.new(
                   code:       code,
+                  name:       values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
                   full_name:  values[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
-                  short_name: values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
                   name_kana:  convert_katakana(values[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
                 )
               end

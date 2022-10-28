@@ -9,13 +9,13 @@ module Recediff
           class Shoubyoumei
             # @param code [String]
             # @param full_name [String]
-            # @param short_name [String]
+            # @param name [String]
             # @param name_kana [String]
-            def initialize(code:, full_name:, short_name:, name_kana:)
-              @code       = code
-              @full_name  = full_name
-              @short_name = short_name
-              @name_kana  = name_kana
+            def initialize(code:, full_name:, name:, name_kana:)
+              @code      = code
+              @full_name = full_name
+              @name      = name
+              @name_kana = name_kana
             end
 
             # @!attribute [r] code
@@ -24,9 +24,9 @@ module Recediff
             # @!attribute [r] full_name
             #   @return [String]
             attr_reader :full_name
-            # @!attribute [r] short_name
+            # @!attribute [r] name
             #   @return [String]
-            attr_reader :short_name
+            attr_reader :name
             # @!attribute [r] name_kana
             #   @return [String]
             attr_reader :name_kana

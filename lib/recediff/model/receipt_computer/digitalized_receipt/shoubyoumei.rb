@@ -5,7 +5,9 @@ module Recediff
     module ReceiptComputer
       class DigitalizedReceipt
         class Shoubyoumei
-          WORPRO_SOUBYOUMEI_CODE = '0000999'
+          include Recediff::Model::ReceiptComputer
+
+          WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::ShoubyoumeiCode.of('0000999')
 
           def initialize(
             master_shoubyoumei:,

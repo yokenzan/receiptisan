@@ -65,13 +65,12 @@ module Recediff
             @tekiyou[ichiren_unit.shinryou_shikibetsu] << ichiren_unit
           end
 
-          # @return [void]
-          # def add_tekiyou(tekiyou_item, shinryou_shikibetsu = nil)
-          #   @tekiyou[(shinryou_shikibetsu || tekiyou_item.shinryou_shikibetsu).code] << tekiyou_item
-          # end
-
           def nyuuin?
             @type.nyuuin?
+          end
+
+          def to_s
+            @tekiyou.values.flatten.map(&:to_s).join("\n")
           end
 
           # @!attribute [r] id

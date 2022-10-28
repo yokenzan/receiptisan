@@ -9,8 +9,8 @@ module Recediff
           class ShinryouKoui
             def initialize(
               code:,
-              short_name:,
-              short_name_kana:,
+              name:,
+              name_kana:,
               unit:,
               price_type:,
               point:,
@@ -25,8 +25,8 @@ module Recediff
               full_name:
             )
               @code                         = code
-              @short_name                   = short_name
-              @short_name_kana              = short_name_kana
+              @name                         = name
+              @name_kana                    = name_kana
               @unit                         = unit
               @price_type                   = price_type
               @point                        = point
@@ -46,12 +46,12 @@ module Recediff
             # @!attribute [r] code
             #   @return [ShinryouKouiCode]
             attr_reader :code
-            # @!attribute [r] short_name
+            # @!attribute [r] name
             #   @return [String]
-            attr_reader :short_name
-            # @!attribute [r] short_name_kana
+            attr_reader :name
+            # @!attribute [r] name_kana
             #   @return [String]
-            attr_reader :short_name_kana
+            attr_reader :name_kana
             # @!attribute [r] unit
             #   @return [Unit]
             attr_reader :unit
