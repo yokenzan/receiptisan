@@ -154,7 +154,7 @@ module Recediff
               master_shoubyoumei: handler.find_by_code(
                 Master::ShoubyoumeiCode.of(values[Record::SY::C_傷病名コード])
               ),
-              name:               values[Record::SY::C_傷病名称],
+              worpro_name:        values[Record::SY::C_傷病名称],
               is_main:            values[Record::SY::C_主傷病],
               start_date:         values[Record::SY::C_診療開始日],
               tenki:              Shoubyoumei::Tenki.find_by_code(values[Record::SY::C_転帰区分]),

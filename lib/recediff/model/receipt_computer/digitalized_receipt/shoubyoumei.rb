@@ -9,14 +9,14 @@ module Recediff
 
           def initialize(
             master_shoubyoumei:,
-            name:,
+            worpro_name:,
             is_main:,
             start_date:,
             tenki:,
             additional_comment:
           )
             @master_shoubyoumei  = master_shoubyoumei
-            @name                = name
+            @worpro_name         = worpro_name
             @is_main             = is_main
             @start_date          = start_date
             @tenki               = tenki
@@ -32,7 +32,7 @@ module Recediff
 
           attr_reader :master_shoubyoumei
           attr_reader :master_shuushokugos
-          attr_reader :name
+          attr_reader :worpro_name
           attr_reader :is_main
           attr_reader :start_date
           attr_reader :tenki
