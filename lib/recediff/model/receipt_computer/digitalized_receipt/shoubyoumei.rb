@@ -24,13 +24,26 @@ module Recediff
             @master_shuushokugos = []
           end
 
-          # @param [ReceiptComputer::Master::Diagnose::Shuushokugo] shuushokugo
+          def to_s
+            return worpro_name if @master_shoubyoumei.code == WORPRO_SHOUBYOUMEI_CODE
+
+            # @param shuushokugo [Master::Diagnose::Shuushokugo]
+            master_shuushokugos.inject(@master_shoubyoumei.name) do | shoubyoumei_name, shuushokugo |
+              shuushokugo.prefix? ? shuushokugo.name + shoubyoumei_name : shoubyoumei_name + shuushokugo.name
+            end
+          end
+
+          # @param [Master::Diagnose::Shuushokugo] shuushokugo
           # @return [void]
           def add_shuushokugo(shuushokugo)
             @master_shuushokugos << shuushokugo
           end
 
+          # @!attribute [r] master_shoubyoumei
+          #   @return [Master::Diagnose::Shoubyoumei]
           attr_reader :master_shoubyoumei
+          # @!attribute [r] master_shuushokugos
+          #   @return [Array<Master::Diagnose::Shuushokugo>]
           attr_reader :master_shuushokugos
           attr_reader :worpro_name
           attr_reader :is_main

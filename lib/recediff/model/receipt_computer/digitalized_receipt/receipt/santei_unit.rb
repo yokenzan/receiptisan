@@ -12,11 +12,11 @@ module Recediff
               @tensuu = nil
               # @type kaisuu [Integer, nil]
               @kaisuu = nil
-              # @type items [Array<Receipt::ShinryouKoui, Receipt::Iyakuhin, Receipt::TokuteiKizai>]
+              # @type items [Array<Cost, Comment>]
               @items  = []
             end
 
-            # @param tekiyou_item [ShinryouKoui, Iyakuhin, TokuteiKizai]
+            # @param tekiyou_item [Cost, Comment]
             # @return [void]
             def add_tekiyou(tekiyou_item)
               @items << tekiyou_item
