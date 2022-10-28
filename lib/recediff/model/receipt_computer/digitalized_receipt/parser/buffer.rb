@@ -46,7 +46,7 @@ module Recediff
                 new_santei_unit
               end
 
-              @current_santei_unit.add_tekiyou(tekiyou_item)
+              @current_santei_unit&.add_tekiyou(tekiyou_item)
 
               fix_current_santei_unit if tekiyou_item.tensuu?
             end
@@ -82,7 +82,7 @@ module Recediff
 
             def new_ichiren_unit(ichiren_unit)
               fix_current_ichiren_unit
-              @current_receipt.add_ichiren_unit(@current_ichiren_unit = ichiren_unit)
+              @current_ichiren_unit = ichiren_unit
             end
 
             def fix_current_ichiren_unit
@@ -94,13 +94,13 @@ module Recediff
 
             def new_santei_unit
               fix_current_santei_unit
-              @current_ichiren_unit.add_santei_unit(@current_santei_unit = Receipt::SanteiUnit.new)
+              @current_santei_unit = Receipt::SanteiUnit.new
             end
 
             def fix_current_santei_unit
               return unless @current_santei_unit
 
-              @current_santei_unit&.fix
+              @current_santei_unit.fix
               @current_ichiren_unit.add_santei_unit(@current_santei_unit)
             end
           end
