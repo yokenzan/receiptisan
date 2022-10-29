@@ -158,12 +158,18 @@ module Recediff
             ]
             {}.tap do | hash |
               foreach(csv_path) do | values |
-                embed_positions = embed_position_columns.each_slice(2).map do | start, length |
+                embed_positions = embed_position_columns.each_slice(2).map do | column_start, column_length |
+                  start  = values[column_start].to_i
+                  length = values[column_length].to_i
+                  next if start.zero?
+
                   Treatment::Comment::EmbedPosition.new(start, length)
-                end
+                end.compact
                 comment = Treatment::Comment.new(
                   code:            CommentCode.of(values[Treatment::Comment::Columns::C_コード]),
-                  pattern:         Treatment::Comment::Pattern.find_by_code(values[Treatment::Comment::Columns::C_パターン]),
+                  pattern:         Treatment::Comment::Pattern.find_by_code(
+                    values[Treatment::Comment::Columns::C_パターン]
+                  ),
                   name:            values[Treatment::Comment::Columns::C_コメント文_漢字名称],
                   name_kana:       convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称]),
                   embed_positions: embed_positions
@@ -180,10 +186,10 @@ module Recediff
               foreach(csv_path) do | values |
                 code             = ShoubyoumeiCode.of(values[Diagnose::Shoubyoumei::Columns::C_コード])
                 hash[code.value] = Diagnose::Shoubyoumei.new(
-                  code:       code,
-                  name:       values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
-                  full_name:  values[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
-                  name_kana:  convert_katakana(values[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
+                  code:      code,
+                  name:      values[Diagnose::Shoubyoumei::Columns::C_傷病名_省略名称],
+                  full_name: values[Diagnose::Shoubyoumei::Columns::C_傷病名_基本名称],
+                  name_kana: convert_katakana(values[Diagnose::Shoubyoumei::Columns::C_傷病名_カナ名称])
                 )
               end
             end
