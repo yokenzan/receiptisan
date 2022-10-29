@@ -87,7 +87,7 @@ module Recediff
               id:          values[Record::RE::C_レセプト番号].to_i,
               shinryou_ym: Month.new(
                 values[Record::RE::C_診療年月][0,  4].to_i,
-                values[Record::RE::C_診療年月][-1, 2].to_i
+                values[Record::RE::C_診療年月][-2, 2].to_i
               ),
               type:        ReceiptType.of(values[Record::RE::C_レセプト種別]),
               patient:     Patient.new(
