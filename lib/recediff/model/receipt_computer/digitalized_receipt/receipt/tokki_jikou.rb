@@ -49,6 +49,10 @@ module Recediff
               '37': TokkiJikou.new(code: '37', name: '申出'),
               '38': TokkiJikou.new(code: '38', name: '医併'),
               '39': TokkiJikou.new(code: '39', name: '医療'),
+              '41': TokkiJikou.new(code: '41', name: '区カ'),
+              '42': TokkiJikou.new(code: '42', name: '区キ'),
+              '43': TokkiJikou.new(code: '43', name: '多カ'),
+              '44': TokkiJikou.new(code: '44', name: '多キ'),
               '96': TokkiJikou.new(code: '96', name: '災１'),
               '97': TokkiJikou.new(code: '97', name: '災２'),
             }
