@@ -20,14 +20,19 @@ module Recediff
               @embed_positions = embed_positions
             end
 
-            # @param additional_text [String, nil]
-            def format_with(additional_text)
-              @pattern.format_with(name, additional_text, @embed_positions)
-              # @param position [EmbedPosition]
-              # @embed_positions.each do | position |
-              #   text[position.start - 1, position.length] = additional_text[0, position.length]
-              #   additional_text[0, position.length] = ''
-              # end
+            # @param additional_comment [ReceiptComputer::DigitalizedReceipt::Receipt::Comment::AdditionalComment, nil]
+            def format_with(additional_comment)
+              additional_text = @pattern.format(name, additional_comment)
+              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') if pattern.needs_embdding?
+
+              comment_text = name
+              comment_text.tap do | text |
+                # @param position [EmbedPosition]
+                @embed_positions.each do | position |
+                  text[position.start - 1, position.length] = additional_text[0, position.length]
+                  additional_text[0, position.length]       = ''
+                end
+              end
             end
 
             # @!attribute [r] code
@@ -39,6 +44,9 @@ module Recediff
             # @!attribute [r] name_kana
             #   @return [String]
             attr_reader :name_kana
+            # @!attribute [r] pattern
+            #   @return [Pattern]
+            attr_reader :pattern
 
             # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
             class EmbedPosition
@@ -51,58 +59,41 @@ module Recediff
             end
 
             class Pattern
-              def initialize(code, formatter)
-                @code      = code
-                @formatter = formatter
+              # @param code [Symbol]
+              # @paaram needs_embdding [Boolean]
+              # @param formatter [Proc]
+              def initialize(code, needs_embdding, formatter)
+                @code           = code
+                @needs_embdding = needs_embdding
+                @formatter      = formatter
               end
 
-              def format_with(comment_name, additional_text, embed_positions)
-                @formatter.call(comment_name, additional_text, embed_positions)
-                # @param position [EmbedPosition]
-                # @embed_positions.each do | position |
-                #   text[position.start - 1, position.length] = additional_text[0, position.length]
-                #   additional_text[0, position.length] = ''
-                # end
+              def needs_embdding?
+                @needs_embdding
               end
+
+              # @return [String]
+              def format(name, additional_comment)
+                @formatter.call(name, additional_comment)
+              end
+
+              # @!attribute [r] code
+              #   @return [Symbol]
+              attr_reader :code
 
               @patterns = {
-                '10': new(:'10', lambda do | _, additional_text, _ |
-                  additional_text
-                end),
-                '20': new(:'20', lambda do | name, _, _ |
-                  name
-                end),
-                '30': new(:'30', lambda do | name, additional_text, _ |
-                  name << additional_text
-                end),
-                '31': new(:'31', lambda do | name, shinryou_koui, _ |
-                  [name, shinryou_koui].join('；').squeeze('；')
-                  # name << shinryou_koui.name
-                end),
-                '40': new(:'40', lambda do | name, digits, _ |
-                  name << digits
-                end),
-                '42': new(:'42', lambda do | name, integer, _ |
-                  [name, integer].join('；').squeeze('；')
-                end),
-                '50': new(:'50', lambda do | name, date, _ |
-                  [name, date].join('；').squeeze('；')
-                end),
-                '51': new(:'51', lambda do | name, time, _ |
-                  [name, time].join('；').squeeze('；')
-                end),
-                '52': new(:'52', lambda do | name, minutes, _ |
-                  [name, minutes].join('；').squeeze('；')
-                end),
-                '53': new(:'53', lambda do | name, day_and_time, _ |
-                  [name, day_and_time].join('；').squeeze('；')
-                end),
-                '80': new(:'80', lambda do | name, date_and_score, _ |
-                  [name, date_and_score].join('；').squeeze('；')
-                end),
-                '90': new(:'90', lambda do | name, shuushokugo, _ |
-                  [name, shuushokugo].join('；').squeeze('；')
-                end),
+                '10': new(:'10', false, proc { | _, additional_comment | additional_comment.value }),
+                '20': new(:'20', false, proc { | name, _ | name }),
+                '30': new(:'30', false, proc { | _, additional_comment | additional_comment.value }),
+                '31': new(:'31', false, proc { | _, additional_comment | additional_comment.item.name }),
+                '40': new(:'40', true,  proc { | _, additional_comment | additional_comment.value }),
+                '42': new(:'42', false, proc { | _, additional_comment | additional_comment.value }),
+                '50': new(:'50', false, proc { | _, additional_comment | additional_comment.item.strftime('%Y年%m月%d日') }),
+                '51': new(:'51', false, proc { | _, additional_comment | additional_comment.item }),
+                '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
+                '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
+                '80': new(:'80', false, proc { | _, additional_comment | additional_comment.item.name }),
+                '90': new(:'90', false, proc { | _, additional_comment | additional_comment.item.name }),
               }
 
               class << self

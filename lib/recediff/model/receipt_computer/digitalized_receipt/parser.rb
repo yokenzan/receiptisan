@@ -205,9 +205,11 @@ module Recediff
 
           def process_co(values)
             master_comment = handler.find_by_code(Master::CommentCode.of(values[Record::CO::C_レセ電コード]))
-            comment        = DigitalizedReceipt::Receipt::Comment.new(
+            comment        = Receipt::Comment.new(
               item:                master_comment,
-              additional_text:     values[Record::CO::C_文字データ],
+              additional_comment:  Receipt::Comment::AdditionalComment.build(
+                master_comment, values[Record::CO::C_文字データ], handler
+              ),
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
               futan_kubun:         values[Record::CO::C_負担区分]
             )
@@ -232,12 +234,16 @@ module Recediff
             values[comment_range].each_slice(2) do | code, additional_text |
               next if code.nil?
 
-              comment = Receipt::Comment.new(
-                item:                handler.find_by_code(Master::CommentCode.of(code)),
-                additional_text:     additional_text,
+              master_comment = handler.find_by_code(Master::CommentCode.of(code))
+              comment        = Receipt::Comment.new(
+                item:                master_comment,
+                additional_comment:  Receipt::Comment::AdditionalComment.build(
+                  master_comment, additional_text, handler
+                ),
                 futan_kubun:         cost.futan_kubun,
                 shinryou_shikibetsu: cost.shinryou_shikibetsu
               )
+
               cost.add_comment(comment)
             end
 

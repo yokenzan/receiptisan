@@ -119,8 +119,15 @@ module Recediff
             __to_code.intern
           end
 
-          def <=>(another)
-            another.instance_of?(self.class) && another.value == value
+          def <=>(other)
+            case other
+            when self.class
+              value <=> other.value
+            when Symbol
+              value <=> other
+            else
+              value <=> other.intern
+            end
           end
 
           private
