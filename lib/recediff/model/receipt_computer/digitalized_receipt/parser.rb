@@ -24,16 +24,19 @@ module Recediff
             buffer.clear
 
             File.open(path_of_uke, "r:#{FILE_ENCODING}:UTF-8") do | f |
-              # @param line [String]
-              f.each_line(chomp: true) do | line |
-                parse_line(line.tr('"', '').split(',').map { | value | value.empty? ? nil : value })
-              end
+              f.each_line(chomp: true) { | line | parse_line(line2values(line)) }
             end
 
             buffer.close
           end
 
           private
+
+          # @param line [String]
+          # @return [Array<String, nil>]
+          def line2values(line)
+            line.tr('"', '').split(',').map { | value | value.empty? ? nil : value }
+          end
 
           # @param values [Array<String, nil>]
           # @return [void]
