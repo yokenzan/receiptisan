@@ -38,6 +38,16 @@ module Recediff
               @current_receipt.iryou_hoken
             end
 
+            def nyuuin?
+              @current_receipt.nyuuin?
+            end
+
+            # @param shoujou_shouki [ShoujouShouki]
+            # @return [void]
+            def add_shoujou_shouki(shoujou_shouki)
+              @current_receipt.add_shoujou_shouki(shoujou_shouki)
+            end
+
             # @param tekiyou_item [Receipt::Cost, Receipt::Comment]
             def add_tekiyou(tekiyou_item)
               if (shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu)
@@ -75,8 +85,7 @@ module Recediff
             def_delegators :current_receipt,
               :add_shoubyoumei,
               :add_iryou_hoken,
-              :add_kouhi_futan_iryou,
-              :add_tokki_jikou
+              :add_kouhi_futan_iryou
 
             private
 

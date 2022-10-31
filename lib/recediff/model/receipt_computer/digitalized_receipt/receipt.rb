@@ -12,6 +12,7 @@ require_relative 'receipt/futan_kubun'
 require_relative 'receipt/cost'
 require_relative 'receipt/ichiren_unit'
 require_relative 'receipt/santei_unit'
+require_relative 'receipt/shoujou_shouki'
 
 module Recediff
   module Model
@@ -63,6 +64,12 @@ module Recediff
           # @return [void]
           def add_ichiren_unit(ichiren_unit)
             @tekiyou[ichiren_unit.shinryou_shikibetsu] << ichiren_unit
+          end
+
+          # @param shoujou_shouki [ShoujouShouki]
+          # @return [void]
+          def add_shoujou_shouki(shoujou_shouki)
+            @shoujou_shoukis << shoujou_shouki
           end
 
           def nyuuin?

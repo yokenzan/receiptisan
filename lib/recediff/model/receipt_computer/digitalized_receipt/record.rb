@@ -318,6 +318,12 @@ module Recediff
             C_文字データ       = 4
             C_レセ電コード     = C_コメントコード
           end
+
+          module SJ
+            C_レコード識別情報 = 0
+            C_症状詳記区分     = 1
+            C_症状詳記データ   = 2
+          end
         end
       end
     end
