@@ -11,7 +11,7 @@ module Recediff
           class Shuushokugo
             extend Forwardable
 
-            # @param code [String]
+            # @param code [ShoubyoumeiCode]
             # @param name [String]
             # @param name_kana [String]
             def initialize(code:, name:, name_kana:, category:)
@@ -22,7 +22,7 @@ module Recediff
             end
 
             # @!attribute [r] code
-            #   @return [String]
+            #   @return [ShoubyoumeiCode]
             # @!attribute [r] name
             #   @return [String]
             # @!attribute [r] name_kana
