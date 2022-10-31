@@ -7,7 +7,7 @@ module Recediff
         # 医療機関
         class Hospital
           # @param code [String]
-          # @param prefecture
+          # @param prefecture [Prefecture]
           # @param name [String]
           # @param tel [String]
           def initialize(code:, name:, tel:, prefecture:)
@@ -23,6 +23,8 @@ module Recediff
           #   @return [String]
           # @!attribute [r] tel
           #   @return [String]
+          # @!attribute [r] prefecture
+          #   @return [Prefecture]
           attr_reader :code, :name, :tel, :prefecture
         end
       end

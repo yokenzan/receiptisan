@@ -22,6 +22,14 @@ module Recediff
               @patient_age_type.nyuuin?
             end
 
+            # @!attribute [r] tensuu_hyou_type
+            #   @return [TensuuHyouType] 点数表種別
+            # @!attribute [r] main_hoken_type
+            #   @return [MainHokenType] 主保険種別
+            # @!attribute [r] hoken_multiple_type
+            #   @return [HokenMultipleType] 保険併用種別
+            # @!attribute [r] patient_age_type
+            #   @return [PatientAgeType] 患者年齢種別
             attr_reader :tensuu_hyou_type, :main_hoken_type, :hoken_multiple_type, :patient_age_type
 
             # 点数表種別
@@ -32,7 +40,7 @@ module Recediff
               end
 
               # @!attribute [r] code
-              #   @return [String]
+              #   @return [Integer]
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name
@@ -59,7 +67,7 @@ module Recediff
               end
 
               # @!attribute [r] code
-              #   @return [String]
+              #   @return [Integer]
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name
@@ -89,7 +97,7 @@ module Recediff
               end
 
               # @!attribute [r] code
-              #   @return [String]
+              #   @return [Integer]
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name
@@ -123,7 +131,7 @@ module Recediff
               end
 
               # @!attribute [r] code
-              #   @return [String]
+              #   @return [Integer]
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name

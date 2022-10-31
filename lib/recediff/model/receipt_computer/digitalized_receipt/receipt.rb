@@ -83,6 +83,9 @@ module Recediff
           # @!attribute [r] id
           #   @return [Integer]
           attr_reader :id
+          # @!attribute [r] hospital
+          #   @return [Hospital]
+          attr_reader :hospital
           # @!attribute [r] shinryou_ym
           #   @return [Month]
           attr_reader :shinryou_ym
