@@ -9,20 +9,13 @@ module Recediff
 
           WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::ShoubyoumeiCode.of('0000999')
 
-          def initialize(
-            master_shoubyoumei:,
-            worpro_name:,
-            is_main:,
-            start_date:,
-            tenki:,
-            additional_comment:
-          )
+          def initialize(master_shoubyoumei:, worpro_name:, is_main:, start_date:, tenki:, comment:)
             @master_shoubyoumei  = master_shoubyoumei
             @worpro_name         = worpro_name
             @is_main             = is_main
             @start_date          = start_date
             @tenki               = tenki
-            @additional_comment  = additional_comment
+            @comment             = comment
             @master_shuushokugos = []
           end
 
@@ -51,7 +44,7 @@ module Recediff
           attr_reader :is_main
           attr_reader :start_date
           attr_reader :tenki
-          attr_reader :additional_comment
+          attr_reader :comment
 
           # 転帰
           class Tenki

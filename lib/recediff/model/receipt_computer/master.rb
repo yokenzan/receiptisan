@@ -95,7 +95,7 @@ module Recediff
           module ClassMethod
             # @return [MasterCodeTrait]
             def of(code)
-              raise StandardError, 'invalid code' if code.to_i.zero?
+              raise StandardError, 'invalid code' unless code.to_s =~ /\A[0-9]+\z/
 
               new(code)
             end
@@ -125,8 +125,10 @@ module Recediff
               value <=> other.value
             when Symbol
               value <=> other
-            else
+            when String
               value <=> other.intern
+            else
+              value <=> other.to_s.intern
             end
           end
 
@@ -134,7 +136,7 @@ module Recediff
 
           # @return [String]
           def __to_code
-            '%09d' % @code.to_i
+            '%09d' % @code.to_s.to_i
           end
         end
 
@@ -183,7 +185,7 @@ module Recediff
           end
 
           def __to_code
-            '%07d' % @code.to_i
+            '%07d' % @code.to_s.to_i
           end
         end
 
@@ -196,7 +198,7 @@ module Recediff
           end
 
           def __to_code
-            '%04d' % @code.to_i
+            '%04d' % @code.to_s.to_i
           end
         end
 
@@ -216,7 +218,7 @@ module Recediff
           attr_reader :code, :name
 
           class << self
-            # @param code [String]
+            # @param code [String, Symbol]
             # @return [self, nil]
             def find_by_code(code)
               @units[code.intern]
