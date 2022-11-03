@@ -131,7 +131,7 @@ module Recediff
                 master_comment, values[Record::CO::C_文字データ], handler
               ),
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
-              futan_kubun:         values[Record::CO::C_負担区分]
+              futan_kubun:         Receipt::FutanKubun.find_by_code(values[Record::CO::C_負担区分])
             )
 
             buffer.add_tekiyou(comment)
@@ -145,7 +145,7 @@ module Recediff
             cost = Receipt::Cost.new(
               item:                item,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
-              futan_kubun:         values[column_definition::C_負担区分],
+              futan_kubun:         Receipt::FutanKubun.find_by_code(values[column_definition::C_負担区分]),
               tensuu:              values[column_definition::C_点数]&.to_i,
               kaisuu:              values[column_definition::C_回数]&.to_i
             )
