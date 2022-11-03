@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
         class Shoubyoumei
           include Recediff::Model::ReceiptComputer
+          extend Forwardable
 
           WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::ShoubyoumeiCode.of('0000999')
 
@@ -34,6 +37,10 @@ module Recediff
             @master_shuushokugos << shuushokugo
           end
 
+          def main?
+            @is_main
+          end
+
           # @!attribute [r] master_shoubyoumei
           #   @return [Master::Diagnose::Shoubyoumei]
           attr_reader :master_shoubyoumei
@@ -41,10 +48,11 @@ module Recediff
           #   @return [Array<Master::Diagnose::Shuushokugo>]
           attr_reader :master_shuushokugos
           attr_reader :worpro_name
-          attr_reader :is_main
           attr_reader :start_date
           attr_reader :tenki
           attr_reader :comment
+
+          def_delegators :master_shoubyoumei, :code
 
           # 転帰
           class Tenki
