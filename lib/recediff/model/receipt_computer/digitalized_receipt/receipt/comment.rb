@@ -31,8 +31,20 @@ module Recediff
               false
             end
 
+            def kaisuu?
+              false
+            end
+
             def to_s
               item.format_with(additional_comment)
+            end
+
+            def tensuu
+              nil
+            end
+
+            def kaisuu
+              nil
             end
 
             # @!attribute [r] item

@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
         class Receipt
           class ShinryouKoui
+            extend Forwardable
+
             def initialize(master_shinryou_koui:, shiyouryou:)
               @master_shinryou_koui = master_shinryou_koui
               @shiyouryou           = shiyouryou
@@ -13,6 +17,8 @@ module Recediff
 
             attr_reader :master_shinryou_koui, :shiyouryou
             alias_method :master_item, :master_shinryou_koui
+
+            def_delegators :master_item, :code, :name
           end
         end
       end

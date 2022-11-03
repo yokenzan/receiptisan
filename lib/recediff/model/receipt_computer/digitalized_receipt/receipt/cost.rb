@@ -51,6 +51,10 @@ module Recediff
               !@tensuu.nil?
             end
 
+            def kaisuu?
+              !@kaisuu.nil?
+            end
+
             # @!attribute [r] item
             #   @return [ShinryouKoui, Iyakuhin, TokuteiKizai]
             # @!attribute [r] futan_kubun
@@ -63,7 +67,7 @@ module Recediff
             #   @return [ShinryouShikibetsu]
             attr_reader :item, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
 
-            def_delegators :item, :master_item
+            def_delegators :item, :master_item, :code, :name
 
             private
 
