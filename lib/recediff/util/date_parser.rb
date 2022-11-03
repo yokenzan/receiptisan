@@ -38,7 +38,8 @@ module Recediff
         # @param text [String]
         # @return [Date]
         # @raise ArgumentError
-        def parse_date(text)
+        def parse_date(date_text)
+          text = date_text.tr('０-９', '0-9')
           case text.length
           when 7
             parse_wareki_date(text)
@@ -52,7 +53,8 @@ module Recediff
         # @param text [String]
         # @return [Date]
         # @raise ArgumentError
-        def parse_year_month(text)
+        def parse_year_month(year_month_text)
+          text = year_month_text.tr('０-９', '0-9')
           case text.length
           when 5
             parse_wareki_month(text)
@@ -68,7 +70,7 @@ module Recediff
         # @param text [String]
         # @return [Date]
         def parse_wareki_date(text)
-          gengou = @gengous[text[0].to_i]
+          gengou = @gengous[text[0].to_s.intern]
           year   = text[1, 2].to_i
           month  = text[3, 2].to_i
           day    = text[5, 2].to_i
