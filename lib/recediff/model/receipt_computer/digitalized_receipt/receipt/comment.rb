@@ -35,6 +35,11 @@ module Recediff
               false
             end
 
+            # 仮
+            def name
+              to_s
+            end
+
             def to_s
               item.format_with(additional_comment)
             end
