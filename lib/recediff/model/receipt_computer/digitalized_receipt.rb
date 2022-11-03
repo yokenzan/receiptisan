@@ -26,13 +26,14 @@ module Recediff
           @seikyuu_ym  = seikyuu_ym
           @audit_payer = audit_payer
           @hospital    = hospital
-          @receipts    = {}
+          @receipts    = []
         end
 
         # @param receipt [Receipt]
         # @return nil
         def add_receipt(receipt)
-          @receipts[receipt.id] = receipt
+          @receipts << receipt
+          # @receipts[receipt.id] = receipt
         end
 
         # @!attribute [r] seikyuu_ym
@@ -43,7 +44,7 @@ module Recediff
         #   @return [Hospital]
         attr_reader :seikyuu_ym, :audit_payer, :hospital
 
-        def_delegators :@receipts, :each, :each_with_index, :map, :to_a
+        def_delegators :@receipts, :each, :each_with_index, :map, :to_a, :[]
 
         # 性別(男女区分)
         class Sex

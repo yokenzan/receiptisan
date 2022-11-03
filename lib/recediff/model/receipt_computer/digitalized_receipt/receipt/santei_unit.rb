@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   module Model
     module ReceiptComputer
@@ -7,6 +9,8 @@ module Recediff
         class Receipt
           # 点数・回数算定単位
           class SanteiUnit
+            extend Forwardable
+
             def initialize
               # @type tensuu [Integer, nil]
               @tensuu = nil
@@ -30,13 +34,16 @@ module Recediff
             # @return [void]
             def fix
               @tensuu = @items.reverse.find(&:tensuu?)&.tensuu
+              @kaisuu = @items.reverse.find(&:kaisuu?)&.kaisuu
             end
 
             # @!attribute [r] tensuu
             #   @return [Integer, nil]
             # @!attribute [r] kaisuu
             #   @return [Integer, nil]
-            attr_writer :tensuu, :kaisuu
+            attr_reader :tensuu, :kaisuu
+
+            def_delegators :@items, :each, :map
           end
         end
       end
