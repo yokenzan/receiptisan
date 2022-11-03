@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'month'
+require 'forwardable'
+
 require_relative 'receipt/tokki_jikou'
 require_relative 'receipt/type'
 require_relative 'receipt/shinryou_koui'
@@ -20,20 +22,25 @@ module Recediff
       class DigitalizedReceipt
         # 診療報酬請求明細書(レセプト)
         class Receipt
+          extend Forwardable
+
           # @param id [Integer]
           # @param shinryou_ym [Month]
           # @param patient [Patient]
           # @param type [Type]
+          # @param hospital [Hospital]
           def initialize(id:, shinryou_ym:, patient:, type:)
             @id                 = id
             @shinryou_ym        = shinryou_ym
             @patient            = patient
             @type               = type
+            @hospital           = nil
             @tokki_jikous       = {}
             @tekiyou            = Hash.new { | hash, key | hash[key] = [] }
             @iryou_hoken        = nil
             @kouhi_futan_iryous = []
             @shoubyoumeis       = []
+            @shoujou_shoukis    = []
           end
 
           # @param tokki_jikou [TokkiJikou]
@@ -83,9 +90,6 @@ module Recediff
           # @!attribute [r] id
           #   @return [Integer]
           attr_reader :id
-          # @!attribute [r] hospital
-          #   @return [Hospital]
-          attr_reader :hospital
           # @!attribute [r] shinryou_ym
           #   @return [Month]
           attr_reader :shinryou_ym
@@ -101,6 +105,20 @@ module Recediff
           # @!attribute [r] iryou_hoken
           #   @return [IryouHoken, nil]
           attr_reader :iryou_hoken
+          # @!attribute [r] kouhi_futan_iryous
+          #   @return [Array<KouhiFutanIryou>, nil]
+          attr_reader :kouhi_futan_iryous
+          # @!attribute [r] shoubyoumeis
+          #   @return [Array<Shoubyoumei>]
+          attr_reader :shoubyoumeis
+          # @!attribute [r] shoujou_shoukis
+          #   @return [Array<ShoujouShouki>]
+          attr_reader :shoujou_shoukis
+          # @!attribute [rw] hospital
+          #   @return [Hospital]
+          attr_accessor :hospital
+
+          def_delegators :@tekiyou, :each, :map
         end
       end
     end

@@ -25,6 +25,7 @@ module Recediff
             def new_receipt(receipt)
               @digitalized_receipt.add_receipt(@current_receipt) if @current_receipt
               @current_receipt             = receipt
+              @current_receipt.hospital    = @digitalized_receipt.hospital
               @current_shinryou_shikibetsu = nil
             end
 
