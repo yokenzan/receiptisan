@@ -205,7 +205,9 @@ module Recediff
                   code:      code,
                   name:      values[Diagnose::Shuushokugo::Columns::C_修飾語名称],
                   name_kana: convert_katakana(values[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称]),
-                  category:  values[Diagnose::Shuushokugo::Columns::C_修飾語区分]
+                  category:  Diagnose::Shuushokugo::Category.find_by_code(
+                    values[Diagnose::Shuushokugo::Columns::C_修飾語区分][1].intern
+                  )
                 )
               end
             end
