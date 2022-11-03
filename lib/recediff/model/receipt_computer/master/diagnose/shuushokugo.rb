@@ -54,35 +54,39 @@ module Recediff
             end
 
             class Category
+              # @param code [Symbol]
+              # @param name [String]
               def initialize(code:, name:)
                 @code = code
                 @name = name
               end
 
+              # 接尾語？
               def suffix?
-                @code != 8
+                code == :'8'
               end
 
+              # 接頭語？
               def prefix?
                 !suffix?
               end
 
               # @!attribute [r] code
-              #   @return [String]
+              #   @return [Symbol]
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name
 
               @types = {
-                '1': new(code: 1, name: '部位（頭部、頸部等）'),
-                '2': new(code: 2, name: '位置（左、右等）'),
-                '3': new(code: 3, name: '病因（外傷性、感染症等）'),
-                '4': new(code: 4, name: '経過表現（急性、慢性等）'),
-                '5': new(code: 5, name: '状態表現（悪性、良性等）'),
-                '6': new(code: 6, name: '患者帰属（胎児、老人性等）'),
-                '7': new(code: 7, name: 'その他（高度、生理的等）'),
-                '8': new(code: 8, name: '接尾語'),
-                '9': new(code: 9, name: '歯科用（未収録）'),
+                '1': new(code: :'1', name: '部位（頭部、頸部等）'),
+                '2': new(code: :'2', name: '位置（左、右等）'),
+                '3': new(code: :'3', name: '病因（外傷性、感染症等）'),
+                '4': new(code: :'4', name: '経過表現（急性、慢性等）'),
+                '5': new(code: :'5', name: '状態表現（悪性、良性等）'),
+                '6': new(code: :'6', name: '患者帰属（胎児、老人性等）'),
+                '7': new(code: :'7', name: 'その他（高度、生理的等）'),
+                '8': new(code: :'8', name: '接尾語'),
+                '9': new(code: :'9', name: '歯科用（未収録）'),
               }
 
               class << self
