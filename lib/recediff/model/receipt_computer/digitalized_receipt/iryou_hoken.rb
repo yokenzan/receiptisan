@@ -49,7 +49,7 @@ module Recediff
 
           def_delegators :@nissuu_kyuufu,
             :goukei_tensuu,
-            :shinryou_jitsunisuu,
+            :shinryou_jitsunissuu,
             :ichibu_futankin,
             :kyuufu_taishou_ichibu_futankin,
             :shokuji_seikatsu_ryouyou_kaisuu,
