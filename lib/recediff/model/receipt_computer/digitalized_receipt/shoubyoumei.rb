@@ -37,6 +37,7 @@ module Recediff
             @master_shuushokugos << shuushokugo
           end
 
+          # 主傷病か？
           def main?
             @is_main
           end

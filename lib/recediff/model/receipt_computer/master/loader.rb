@@ -217,7 +217,7 @@ module Recediff
           #
           # @param csv_path [String]
           # @return [void]
-          # @yieldparam values [Array<String, nil>]
+          # @yieldparam values [Array<String, NilClass>]
           # @yieldreturn [void]
           def foreach(csv_path)
             File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
