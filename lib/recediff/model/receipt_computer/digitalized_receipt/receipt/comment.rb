@@ -35,6 +35,10 @@ module Recediff
               false
             end
 
+            def comment?
+              true
+            end
+
             # 仮
             def name
               to_s
@@ -50,6 +54,18 @@ module Recediff
 
             def kaisuu
               nil
+            end
+
+            def shiyouryou
+              nil
+            end
+
+            def unit
+              nil
+            end
+
+            def type
+              :CO
             end
 
             # @!attribute [r] item
@@ -85,7 +101,7 @@ module Recediff
                   gengou      = wareki_text[0].to_i
                   date_text   = wareki_text[1..].scan(/\d\d/).map(&:to_i)
                   base_year   = { '1': 1867, '2': 1911, '3': 1925, '4': 1988, '5': 2018 }[gengou.to_s.intern]
-                  Struct.new(date, score) do
+                  Struct.new(:date, :score) do
                     def name
                       '%s　検査値：%s' % [date, score]
                     end

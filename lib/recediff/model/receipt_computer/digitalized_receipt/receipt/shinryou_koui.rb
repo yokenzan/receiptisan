@@ -15,10 +15,14 @@ module Recediff
               @shiyouryou           = shiyouryou
             end
 
+            def to_s
+              name
+            end
+
             attr_reader :master_shinryou_koui, :shiyouryou
             alias_method :master_item, :master_shinryou_koui
 
-            def_delegators :master_item, :code, :name
+            def_delegators :master_item, :code, :name, :unit
           end
         end
       end

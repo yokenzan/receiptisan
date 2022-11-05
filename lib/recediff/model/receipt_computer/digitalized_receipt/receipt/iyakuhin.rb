@@ -15,6 +15,10 @@ module Recediff
               @shiyouryou      = shiyouryou
             end
 
+            def to_s
+              master_item.name
+            end
+
             attr_reader :master_iyakuhin, :shiyouryou
             alias_method :master_item, :master_iyakuhin
 
