@@ -198,6 +198,8 @@ module Recediff
           # @param csv_path [String]
           # @return [Hash<Diagnose::Shuushokugo>]
           def load_shuushokugo_master(csv_path)
+            kubun2category_code = proc { | value | value[1].intern }
+
             {}.tap do | hash |
               foreach(csv_path) do | values |
                 code             = ShuushokugoCode.of(values[Diagnose::Shuushokugo::Columns::C_コード])
@@ -206,7 +208,7 @@ module Recediff
                   name:      values[Diagnose::Shuushokugo::Columns::C_修飾語名称],
                   name_kana: convert_katakana(values[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称]),
                   category:  Diagnose::Shuushokugo::Category.find_by_code(
-                    values[Diagnose::Shuushokugo::Columns::C_修飾語区分][1].intern
+                    kubun2category_code.call(values[Diagnose::Shuushokugo::Columns::C_修飾語区分])
                   )
                 )
               end
@@ -217,7 +219,7 @@ module Recediff
           #
           # @param csv_path [String]
           # @return [void]
-          # @yieldparam values [Array<String, NilClass>]
+          # @yieldparam [Array<String, NilClass>] values
           # @yieldreturn [void]
           def foreach(csv_path)
             File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
