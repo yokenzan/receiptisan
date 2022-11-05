@@ -23,7 +23,7 @@ module Recediff
             # @param additional_comment [ReceiptComputer::DigitalizedReceipt::Receipt::Comment::AdditionalComment, nil]
             def format_with(additional_comment)
               additional_text = @pattern.format(name, additional_comment)
-              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') if pattern.needs_embdding?
+              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') unless pattern.needs_embdding?
 
               comment_text = name
               comment_text.tap do | text |
