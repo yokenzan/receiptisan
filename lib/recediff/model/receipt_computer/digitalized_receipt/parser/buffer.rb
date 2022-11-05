@@ -53,13 +53,22 @@ module Recediff
             def add_tekiyou(tekiyou_item)
               if (shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu)
                 @current_shinryou_shikibetsu = shinryou_shikibetsu
+                fix_current_santei_unit
+                fix_current_ichiren_unit
                 new_ichiren_unit(Receipt::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu))
                 new_santei_unit
+                @can_fix_current_santei_unit = false
               end
 
-              @current_santei_unit&.add_tekiyou(tekiyou_item)
+              if @can_fix_current_santei_unit && !tekiyou_item.comment?
+                fix_current_santei_unit
+                new_santei_unit
+                @can_fix_current_santei_unit = false
+              end
 
-              fix_current_santei_unit if tekiyou_item.tensuu?
+              @current_santei_unit.add_tekiyou(tekiyou_item)
+
+              @can_fix_current_santei_unit = true if tekiyou_item.tensuu?
             end
 
             # @return [void]
@@ -67,6 +76,8 @@ module Recediff
               @digitalized_receipt         = nil
               @current_receipt             = nil
               @current_shinryou_shikibetsu = nil
+              @previous_was_comment_item   = false
+              @can_fix_current_santei_unit = false
             end
 
             # @return [DigitalizedReceipt]
@@ -91,7 +102,6 @@ module Recediff
             private
 
             def new_ichiren_unit(ichiren_unit)
-              fix_current_ichiren_unit
               @current_ichiren_unit = ichiren_unit
             end
 
@@ -100,10 +110,10 @@ module Recediff
 
               @current_ichiren_unit.fix
               @current_receipt.add_ichiren_unit(@current_ichiren_unit)
+              @current_ichiren_unit = nil
             end
 
             def new_santei_unit
-              fix_current_santei_unit
               @current_santei_unit = Receipt::SanteiUnit.new
             end
 
@@ -112,6 +122,7 @@ module Recediff
 
               @current_santei_unit.fix
               @current_ichiren_unit.add_santei_unit(@current_santei_unit)
+              @current_santei_unit = nil
             end
           end
         end
