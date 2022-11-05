@@ -21,7 +21,7 @@ module Recediff
                 attr_reader :master_tokutei_kizai
                 attr_reader :shiyouryou
                 attr_reader :product_name
-                alias_method :master_item, :master_tokutei_kizai
+                alias master_item master_tokutei_kizai
               end
             end
           end

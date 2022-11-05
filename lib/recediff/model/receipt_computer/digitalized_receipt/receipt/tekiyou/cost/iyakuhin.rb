@@ -22,7 +22,7 @@ module Recediff
                 end
 
                 attr_reader :master_iyakuhin, :shiyouryou
-                alias_method :master_item, :master_iyakuhin
+                alias master_item master_iyakuhin
 
                 def_delegators :master_item, :code, :name
               end
