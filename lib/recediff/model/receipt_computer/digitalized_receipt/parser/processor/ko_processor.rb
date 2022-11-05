@@ -17,10 +17,10 @@ module Recediff
               def process(is_nyuuin, values)
                 raise StandardError, 'line isnt KO record' unless values.first == 'KO'
 
-                DigitalizedReceipt::KouhiFutanIryou.new(
+                DigitalizedReceipt::Receipt::KouhiFutanIryou.new(
                   futansha_bangou:  values[KO::C_公費負担者番号],
                   jukyuusha_bangou: values[KO::C_公費受給者番号],
-                  nissuu_kyuufu:    DigitalizedReceipt::NissuuKyuufu.new(
+                  nissuu_kyuufu:    DigitalizedReceipt::Receipt::NissuuKyuufu.new(
                     goukei_tensuu:                           values[KO::C_合計点数].to_i,
                     shinryou_jitsunissuu:                    values[KO::C_診療実日数].to_i,
                     ichibu_futankin:                         values[KO::C_負担金額_公費].to_i,

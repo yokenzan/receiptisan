@@ -43,19 +43,19 @@ module Recediff
               @current_receipt.nyuuin?
             end
 
-            # @param shoujou_shouki [ShoujouShouki]
+            # @param shoujou_shouki [Receipt::ShoujouShouki]
             # @return [void]
             def add_shoujou_shouki(shoujou_shouki)
               @current_receipt.add_shoujou_shouki(shoujou_shouki)
             end
 
-            # @param tekiyou_item [Receipt::Cost, Receipt::Comment]
+            # @param tekiyou_item [Receipt::Tekiyou::Cost, Receipt::Tekiyou::Comment]
             def add_tekiyou(tekiyou_item)
               if (shinryou_shikibetsu = tekiyou_item.shinryou_shikibetsu)
                 @current_shinryou_shikibetsu = shinryou_shikibetsu
                 fix_current_santei_unit
                 fix_current_ichiren_unit
-                new_ichiren_unit(Receipt::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu))
+                new_ichiren_unit(Receipt::Tekiyou::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu))
                 new_santei_unit
                 @can_fix_current_santei_unit = false
               end
@@ -114,7 +114,7 @@ module Recediff
             end
 
             def new_santei_unit
-              @current_santei_unit = Receipt::SanteiUnit.new
+              @current_santei_unit = Receipt::Tekiyou::SanteiUnit.new
             end
 
             def fix_current_santei_unit

@@ -2,8 +2,6 @@
 
 require 'month'
 
-require_relative '../../../../../util/date_parser'
-
 module Recediff
   module Model
     module ReceiptComputer
@@ -11,10 +9,10 @@ module Recediff
         class Parser
           module Processor
             class REProcessor
-              include Record::RE
               RE          = Record::RE
-              ReceiptType = DigitalizedReceipt::Receipt::Type
               DateParser  = Recediff::Util::DateParser
+              ReceiptType = DigitalizedReceipt::Receipt::Type
+              Patient     = DigitalizedReceipt::Receipt::Patient
 
               # @param values [Array<String, nil>]
               # @return [Receipt]

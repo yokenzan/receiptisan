@@ -72,7 +72,7 @@ module Recediff
             }
           end
 
-          # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::IryouHoken]
+          # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
           def from_iryou_hoken(iryou_hoken)
             {
               hokenja_bangou: iryou_hoken.hokenja_bangou,
@@ -84,9 +84,9 @@ module Recediff
             }
           end
 
-          # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::KouhiFutanIryou>]
+          # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou>]
           def from_kouhi_futan_iryous(kouhi_futan_iryous)
-            # @param kouhi_futan_iryou [Recediff::Model::ReceiptComputer::DigitalizedReceipt::KouhiFutanIryou]
+            # @param kouhi_futan_iryou [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou]
             # @param index [Integer]
             kouhi_futan_iryous.map.with_index do | kouhi_futan_iryou, index |
               [
@@ -99,7 +99,7 @@ module Recediff
             end.to_h
           end
 
-          # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::IryouHoken]
+          # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
           def ryouyou_no_kyuufu_from_iryou_hoken(iryou_hoken)
             {
               goukei_tensuu:                           iryou_hoken.goukei_tensuu,
@@ -111,9 +111,9 @@ module Recediff
             }
           end
 
-          # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::KouhiFutanIryou>]
+          # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou>]
           def ryouyou_no_kyuufu_from_kouhi_futan_iryous(kouhi_futan_iryous)
-            # @param kouhi_futan_iryou [Recediff::Model::ReceiptComputer::DigitalizedReceipt::KouhiFutanIryou]
+            # @param kouhi_futan_iryou [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou]
             # @param index [Integer]
             kouhi_futan_iryous.map.with_index do | kouhi_futan_iryou, index |
               [
@@ -150,10 +150,10 @@ module Recediff
             }
           end
 
-          # @param shoubyoumeis [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Shoubyoumei>]
+          # @param shoubyoumeis [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
           def from_shoubyoumeis(shoubyoumeis)
             # @param start_date [Date]
-            # @param hash [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Shoubyoumei>]
+            # @param hash [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
             shoubyoumeis.group_by do | shoubyoumei |
               {
                 start_date: {
@@ -190,17 +190,17 @@ module Recediff
                   code: shinryou_shikibetsu.code,
                   name: shinryou_shikibetsu.name,
                 },
-                # @param ichiren [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IchirenUnit]
+                # @param ichiren [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::IchirenUnit]
                 ichiren_units:       ichiren_units.map do | ichiren |
                   {
                     futan_kubun:  ichiren.futan_kubun.code,
-                    # @param santei_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::SanteiUnit]
+                    # @param santei_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
                     santei_units: ichiren.map do | santei_unit |
                       {
                         tensuu: santei_unit.tensuu,
                         kaisuu: santei_unit.kaisuu,
-                        # @param item [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Cost,
-                        #              Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Comment]
+                        # @param item [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost,
+                        #              Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment]
                         items:  santei_unit.map do | item |
                           {
                             item:   {

@@ -15,11 +15,11 @@ module Recediff
               end
 
               # @param values [Array<String, nil>] IY行
-              # @return [Receipt::ShinryouKoui]
+              # @return [Receipt::Tekiyou::Cost::Iyakuhin]
               def process(values)
                 raise StandardError, 'line isnt IY record' unless values.first == 'IY'
 
-                Receipt::Iyakuhin.new(
+                Receipt::Tekiyou::Cost::Iyakuhin.new(
                   master_iyakuhin: handler.find_by_code(Master::IyakuhinCode.of(values[IY::C_レセ電コード])),
                   shiyouryou:      values[Record::IY::C_使用量]&.to_f
                 )

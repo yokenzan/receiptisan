@@ -15,6 +15,7 @@ require_relative 'recediff/receipt'
 require_relative 'recediff/parser'
 require_relative 'recediff/summary_parser'
 require_relative 'recediff/previewer'
+require_relative 'recediff/output'
 require_relative 'recediff/cli'
 require_relative 'recediff/escape_sequence_interior_builder'
 

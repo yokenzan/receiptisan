@@ -9,7 +9,8 @@ module Recediff
         class Parser
           module Processor
             class SYProcessor
-              SY = DigitalizedReceipt::Record::SY
+              SY          = DigitalizedReceipt::Record::SY
+              Shoubyoumei = DigitalizedReceipt::Receipt::Shoubyoumei
 
               # @param handler [MasterHandler]
               def initialize(handler)
@@ -42,7 +43,7 @@ module Recediff
                 )
               end
 
-              # @param shoubyoumei [DigitalizedReceipt::Shoubyoumei]
+              # @param shoubyoumei [Shoubyoumei]
               # @param values [Array<String, nil>]
               # @return [void]
               def process_shuushokugo(shoubyoumei, values)

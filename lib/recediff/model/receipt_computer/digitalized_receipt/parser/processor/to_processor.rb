@@ -15,11 +15,11 @@ module Recediff
               end
 
               # @param values [Array<String, nil>] TO行
-              # @return [Receipt::ShinryouKoui]
+              # @return [Receipt::Tekiyou::Cost::TokuteiKizai]
               def process(values)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
-                Receipt::TokuteiKizai.new(
+                Receipt::Tekiyou::Cost::TokuteiKizai.new(
                   master_tokutei_kizai: handler.find_by_code(Master::TokuteiKizaiCode.of(values[TO::C_レセ電コード])),
                   shiyouryou:           values[TO::C_使用量]&.to_f,
                   product_name:         values[TO::C_商品名及び規格又はサイズ]

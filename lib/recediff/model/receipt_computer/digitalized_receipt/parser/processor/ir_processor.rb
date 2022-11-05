@@ -2,8 +2,6 @@
 
 require 'month'
 
-require_relative '../../../../../util/date_parser'
-
 module Recediff
   module Model
     module ReceiptComputer

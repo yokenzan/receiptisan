@@ -16,12 +16,12 @@ module Recediff
               def process(values)
                 raise StandardError, 'line isnt HO record' unless values.first == 'HO'
 
-                DigitalizedReceipt::IryouHoken.new(
+                DigitalizedReceipt::Receipt::IryouHoken.new(
                   hokenja_bangou: values[HO::C_保険者番号],
                   kigou:          values[HO::C_被保険者証等の記号],
                   bangou:         values[HO::C_被保険者証等の番号],
                   gemmen_kubun:   values[HO::C_負担金額_減免区分],
-                  nissuu_kyuufu:  DigitalizedReceipt::NissuuKyuufu.new(
+                  nissuu_kyuufu:  DigitalizedReceipt::Receipt::NissuuKyuufu.new(
                     goukei_tensuu:                           values[HO::C_合計点数]&.to_i,
                     shinryou_jitsunissuu:                    values[HO::C_診療実日数]&.to_i,
                     ichibu_futankin:                         values[HO::C_負担金額_医療保険]&.to_i,

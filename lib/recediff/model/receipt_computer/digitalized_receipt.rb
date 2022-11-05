@@ -2,12 +2,7 @@
 
 require 'forwardable'
 require_relative 'digitalized_receipt/hospital'
-require_relative 'digitalized_receipt/patient'
 require_relative 'digitalized_receipt/receipt'
-require_relative 'digitalized_receipt/iryou_hoken'
-require_relative 'digitalized_receipt/kouhi_futan_iryou'
-require_relative 'digitalized_receipt/shoubyoumei'
-require_relative 'digitalized_receipt/nissuu_kyuufu'
 require_relative 'digitalized_receipt/record'
 require_relative 'digitalized_receipt/parser'
 

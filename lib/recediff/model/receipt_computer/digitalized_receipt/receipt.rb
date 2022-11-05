@@ -5,16 +5,15 @@ require 'forwardable'
 
 require_relative 'receipt/tokki_jikou'
 require_relative 'receipt/type'
-require_relative 'receipt/shinryou_koui'
-require_relative 'receipt/iyakuhin'
-require_relative 'receipt/tokutei_kizai'
-require_relative 'receipt/comment'
+require_relative 'receipt/shoubyoumei'
+require_relative 'receipt/shoujou_shouki'
+require_relative 'receipt/patient'
+require_relative 'receipt/iryou_hoken'
+require_relative 'receipt/kouhi_futan_iryou'
+require_relative 'receipt/nissuu_kyuufu'
 require_relative 'receipt/shinryou_shikibetsu'
 require_relative 'receipt/futan_kubun'
-require_relative 'receipt/cost'
-require_relative 'receipt/ichiren_unit'
-require_relative 'receipt/santei_unit'
-require_relative 'receipt/shoujou_shouki'
+require_relative 'receipt/tekiyou'
 
 module Recediff
   module Model

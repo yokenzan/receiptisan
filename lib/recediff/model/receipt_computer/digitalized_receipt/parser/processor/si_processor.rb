@@ -15,11 +15,11 @@ module Recediff
               end
 
               # @param values [Array<String, nil>] SI行
-              # @return [Receipt::ShinryouKoui]
+              # @return [Receipt::Tekiyou::Cost::ShinryouKoui]
               def process(values)
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 
-                Receipt::ShinryouKoui.new(
+                Receipt::Tekiyou::Cost::ShinryouKoui.new(
                   shiyouryou:           values[SI::C_数量データ].to_i,
                   master_shinryou_koui: handler.find_by_code(
                     Master::ShinryouKouiCode.of(values[SI::C_レセ電コード])
