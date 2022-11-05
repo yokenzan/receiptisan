@@ -75,20 +75,23 @@ module Recediff
 
         # 審査支払機関
         class AuditPayer
-          def initialize(code:, name:)
-            @code = code
-            @name = name
+          def initialize(code:, name:, short_name:)
+            @code       = code
+            @name       = name
+            @short_name = short_name
           end
 
           # @!attribute [r] code
           #   @return [String]
           # @!attribute [r] name
           #   @return [String]
-          attr_reader :code, :name
+          # @!attribute [r] short_name
+          #   @return [String]
+          attr_reader :code, :name, :short_name
 
           @payers = {
-            '1': new(code: 1, name: '社会保険診療報酬支払基金'),
-            '2': new(code: 2, name: '国民健康保険団体連合会'),
+            '1': new(code: 1, name: '社会保険診療報酬支払基金', short_name: '社'),
+            '2': new(code: 2, name: '国民健康保険団体連合会',   short_name: '国'),
           }
 
           class << self
