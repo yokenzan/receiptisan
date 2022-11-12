@@ -102,26 +102,26 @@ module Recediff
             #     @kouban                   = code_hyou_you_bangou_kouban
             #     @tensuu_hyou_kubun_bangou = tensuu_hyou_kubun_bangou
             #   end
-
-              # @!attribute [r] alphabet
-              #   @return [String]
-              attr_reader :alphabet
-              # @!attribute [r] shou
-              #   @return [String]
-              attr_reader :shou
-              # @!attribute [r] kubun_bangou
-              #   @return [String]
-              attr_reader :kubun_bangou
-              # @!attribute [r] edaban
-              #   @return [String]
-              attr_reader :edaban
-              # @!attribute [r] kouban
-              #   @return [String]
-              attr_reader :kouban
-              # @!attribute [r] tensuu_hyou_kubun_bangou
-              #   @return [String]
-              attr_reader :tensuu_hyou_kubun_bangou
-            end
+            #
+            #   # @!attribute [r] alphabet
+            #   #   @return [String]
+            #   attr_reader :alphabet
+            #   # @!attribute [r] shou
+            #   #   @return [String]
+            #   attr_reader :shou
+            #   # @!attribute [r] kubun_bangou
+            #   #   @return [String]
+            #   attr_reader :kubun_bangou
+            #   # @!attribute [r] edaban
+            #   #   @return [String]
+            #   attr_reader :edaban
+            #   # @!attribute [r] kouban
+            #   #   @return [String]
+            #   attr_reader :kouban
+            #   # @!attribute [r] tensuu_hyou_kubun_bangou
+            #   #   @return [String]
+            #   attr_reader :tensuu_hyou_kubun_bangou
+            # end
 
             module Columns
               module Columns2022 # rubocop:disable Metrics/ModuleLength
