@@ -15,6 +15,7 @@ module Recediff
               Patient     = DigitalizedReceipt::Receipt::Patient
 
               def initialize
+                @receipt_type_builder = Parser::ReceiptTypeBuilder.new
                 @kyuufu_wariai        = nil
                 @teishotoku_kubun     = nil
               end
@@ -43,13 +44,15 @@ module Recediff
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
               def process_new_receipt(values, audit_payer)
+                @receipt_type_builder.audit_payer = audit_payer
+
                 @kyuufu_wariai    = values[RE::C_給付割合]&.to_i
                 @teishotoku_kubun = values[RE::C_一部負担金・食事療養費・生活療養費標準負担額区分]&.to_i
 
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,
                   shinryou_ym: DateParser.parse_year_month(values[RE::C_診療年月]),
-                  type:        ReceiptType.of(values[RE::C_レセプト種別]),
+                  type:        @receipt_type_builder.build_with(values[RE::C_レセプト種別]),
                   patient:     Patient.new(
                     id:         values[RE::C_カルテ番号等],
                     name:       values[RE::C_氏名],

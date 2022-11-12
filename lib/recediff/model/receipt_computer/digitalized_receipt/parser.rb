@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'parser/master_handler'
+require_relative 'parser/receipt_type_builder'
 require_relative 'parser/buffer'
 require_relative 'parser/processor'
 

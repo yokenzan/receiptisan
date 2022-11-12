@@ -71,22 +71,6 @@ module Recediff
               # @!attribute [r] name
               #   @return [String]
               attr_reader :code, :name
-
-              @types = {
-                '1': new(code: 1, name: '国保・社保'),
-                '2': new(code: 2, name: '公費'),
-                '3': new(code: 3, name: '後期'),
-                '4': new(code: 4, name: '退職'),
-              }
-              @types.each(&:freeze).freeze
-
-              class << self
-                # @param code [String, Integer]
-                # @return [self, nil]
-                def find_by_code(code)
-                  @types[code.to_s.intern]
-                end
-              end
             end
 
             # 保険併用種別
@@ -156,27 +140,6 @@ module Recediff
                 def find_by_code(code)
                   @types[code.to_s.intern]
                 end
-              end
-            end
-
-            class << self
-              @@types = [
-                TensuuHyouType,
-                MainHokenType,
-                HokenMultipleType,
-                PatientAgeType,
-              ]
-
-              # @param code_of_types [String]
-              # @return [self, nil]
-              def of(code_of_types)
-                types = code_of_types
-                  .to_s
-                  .chars
-                  .map.with_index { | code, index | @@types[index].find_by_code(code) }
-                  .compact
-
-                new(*types)
               end
             end
           end
