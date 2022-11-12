@@ -17,17 +17,18 @@ module Recediff
               # @param values [Array<String, nil>]
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
-              def process(values)
+              def process(values, audit_payer)
                 raise StandardError, 'line isnt RE record' unless values.first == 'RE'
 
-                process_new_receipt(values).tap { | receipt | process_tokki_jikous(receipt, values) }
+                process_new_receipt(values, audit_payer).tap { | receipt | process_tokki_jikous(receipt, values) }
               end
 
               private
 
               # @param values [Array<String, nil>]
+              # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
-              def process_new_receipt(values)
+              def process_new_receipt(values, audit_payer)
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,
                   shinryou_ym: DateParser.parse_year_month(values[RE::C_診療年月]),

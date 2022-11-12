@@ -34,6 +34,7 @@ module Recediff
             @patient            = patient
             @type               = type
             @hospital           = nil
+            @audit_payer        = nil
             @tokki_jikous       = {}
             @tekiyou            = Hash.new { | hash, key | hash[key] = [] }
             @iryou_hoken        = nil
@@ -116,6 +117,9 @@ module Recediff
           # @!attribute [rw] hospital
           #   @return [Hospital]
           attr_accessor :hospital
+          # @!attribute [rw] hospital
+          #   @return [AuditPayer]
+          attr_accessor :audit_payer
 
           def_delegators :@tekiyou, :each, :map
         end

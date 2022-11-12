@@ -39,6 +39,11 @@ module Recediff
               @current_receipt.iryou_hoken
             end
 
+            # @return [AuditPayer nil]
+            def current_audit_payer
+              @digitalized_receipt.audit_payer
+            end
+
             def nyuuin?
               @current_receipt.nyuuin?
             end
