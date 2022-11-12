@@ -15,6 +15,7 @@ module Recediff
               Patient     = DigitalizedReceipt::Receipt::Patient
 
               # @param values [Array<String, nil>]
+              # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
               def process(values)
                 raise StandardError, 'line isnt RE record' unless values.first == 'RE'

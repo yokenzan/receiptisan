@@ -48,6 +48,17 @@ module Recediff
             #   @return [Pattern]
             attr_reader :pattern
 
+            # コメントコード
+            class Code
+              include MasterItemCodeInterface
+
+              class << self
+                def __name
+                  'コメント'
+                end
+              end
+            end
+
             # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
             class EmbedPosition
               def initialize(start, length)

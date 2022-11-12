@@ -7,7 +7,9 @@ module Recediff
         class Parser
           module Processor
             class SIProcessor
-              SI = DigitalizedReceipt::Record::SI
+              SI                 = DigitalizedReceipt::Record::SI
+              ShinryouKoui       = Receipt::Tekiyou::Cost::ShinryouKoui
+              MasterShinryouKoui = Master::Treatment::ShinryouKoui
 
               # @param handler [MasterHandler]
               def initialize(handler)
@@ -19,10 +21,10 @@ module Recediff
               def process(values)
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 
-                Receipt::Tekiyou::Cost::ShinryouKoui.new(
-                  shiyouryou:           values[SI::C_数量データ].to_i,
+                ShinryouKoui.new(
+                  shiyouryou:           values[SI::C_数量データ]&.to_i,
                   master_shinryou_koui: handler.find_by_code(
-                    Master::ShinryouKouiCode.of(values[SI::C_レセ電コード])
+                    MasterShinryouKoui::Code.of(values[SI::C_レセ電コード])
                   )
                 )
               end

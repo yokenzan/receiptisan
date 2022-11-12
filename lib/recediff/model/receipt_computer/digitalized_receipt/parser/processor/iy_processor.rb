@@ -7,7 +7,9 @@ module Recediff
         class Parser
           module Processor
             class IYProcessor
-              IY = DigitalizedReceipt::Record::IY
+              IY             = DigitalizedReceipt::Record::IY
+              Iyakuhin       = Receipt::Tekiyou::Cost::Iyakuhin
+              MasterIyakuhin = Master::Treatment::Iyakuhin
 
               # @param handler [MasterHandler]
               def initialize(handler)
@@ -19,8 +21,8 @@ module Recediff
               def process(values)
                 raise StandardError, 'line isnt IY record' unless values.first == 'IY'
 
-                Receipt::Tekiyou::Cost::Iyakuhin.new(
-                  master_iyakuhin: handler.find_by_code(Master::IyakuhinCode.of(values[IY::C_レセ電コード])),
+                Iyakuhin.new(
+                  master_iyakuhin: handler.find_by_code(MasterIyakuhin::Code.of(values[IY::C_レセ電コード])),
                   shiyouryou:      values[Record::IY::C_使用量]&.to_f
                 )
               end

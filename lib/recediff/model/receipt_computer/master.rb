@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'master/version'
+require_relative 'master/master_item_code_interface'
 require_relative 'master/treatment'
 require_relative 'master/diagnose'
 require_relative 'master/loader'
@@ -26,46 +27,46 @@ module Recediff
           @shuushokugo   = shuushokugo
         end
 
-        # @param code [MasterCodeTrait]
+        # @param code [MasterItemCodeInterface]
         #
         # @overload find_by_code(shinryou_koui_code)
         #   診療行為を取得する
-        #   @param shinryou_koui_code [Master::ShinryouKouiCode]
-        #   @return [Master::ShinryouKoui, nil]
+        #   @param shinryou_koui_code [Treatment::ShinryouKoui::Code]
+        #   @return [Treatment::ShinryouKoui, nil]
         # @overload find_by_code(iyakuhin_code)
         #   医薬品を取得する
-        #   @param iyakuhin_code [Master::IyakuhinCode]
-        #   @return [Master::Iyakuhin, nil]
+        #   @param iyakuhin_code [Treatment::Iyakuhin::Code]
+        #   @return [Treatment::Iyakuhin, nil]
         # @overload find_by_code(tokutei_kizai_code)
         #   特定器材を取得する
-        #   @param tokutei_kizai_code [Master::TokuteiKizaiCode]
-        #   @return [Master::TokuteiKizai, nil]
+        #   @param tokutei_kizai_code [Treatment::TokuteiKizai::Code]
+        #   @return [Treatment::TokuteiKizai, nil]
         # @overload find_by_code(comment_code)
         #   コメントを取得する
-        #   @param comment_code [Master::CommentCode]
-        #   @return [Master::Comment, nil]
+        #   @param comment_code [Treatment::Comment::Code]
+        #   @return [Treatment::Comment, nil]
         # @overload find_by_code(shoubyoumei_code)
         #   傷病名を取得する
-        #   @param shoubyoumei_code [Master::ShoubyoumeiCode]
-        #   @return [Master::Shoubyoumei, nil]
+        #   @param shoubyoumei_code [Diagnose::Shoubyoumei::Code]
+        #   @return [Diagnose::Shoubyoumei, nil]
         # @overload find_by_code(shuushokugo_code)
         #   修飾語を取得する
-        #   @param shuushokugo_code [Master::ShuushokugoCode]
-        #   @return [Master::Shuushokugo, nil]
+        #   @param shuushokugo_code [Diagnose::Shuushokugo::Code]
+        #   @return [Diagnose::Shuushokugo, nil]
         def find_by_code(code)
           master =
             case code
-            when ShinryouKouiCode
+            when Treatment::ShinryouKoui::Code
               shinryou_koui
-            when IyakuhinCode
+            when Treatment::Iyakuhin::Code
               iyakuhin
-            when TokuteiKizaiCode
+            when Treatment::TokuteiKizai::Code
               tokutei_kizai
-            when CommentCode
+            when Treatment::Comment::Code
               comment
-            when ShoubyoumeiCode
+            when Diagnose::Shoubyoumei::Code
               shoubyoumei
-            when ShuushokugoCode
+            when Diagnose::Shuushokugo::Code
               shuushokugo
             end
 
@@ -86,121 +87,6 @@ module Recediff
         # @!attribute [r] shuushokugo
         #   @return [Hash<String, Diagnose::Shuushokugo>]
         attr_reader :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
-
-        # 検索用のコード
-
-        module MasterCodeTrait
-          include Comparable
-
-          module ClassMethod
-            # @return [MasterCodeTrait]
-            def of(code)
-              raise StandardError, 'invalid code' unless code.to_s =~ /\A[0-9]+\z/
-
-              new(code)
-            end
-          end
-
-          def self.included(klass)
-            klass.extend ClassMethod
-          end
-
-          def initialize(code)
-            @code = code
-          end
-
-          # @return [String]
-          def name
-            raise NotImplementedError
-          end
-
-          # @return [Symbol]
-          def value
-            __to_code.intern
-          end
-
-          def <=>(other)
-            case other
-            when self.class
-              value <=> other.value
-            when Symbol
-              value <=> other
-            when String
-              value <=> other.intern
-            else
-              value <=> other.to_s.intern
-            end
-          end
-
-          private
-
-          # @return [String]
-          def __to_code
-            '%09d' % @code.to_s.to_i
-          end
-        end
-
-        # 診療行為コード
-        class ShinryouKouiCode
-          include MasterCodeTrait
-
-          def name
-            '診療行為'
-          end
-        end
-
-        # 診療行為コード
-        class IyakuhinCode
-          include MasterCodeTrait
-
-          def name
-            '医薬品'
-          end
-        end
-
-        # 特定器材コード
-        class TokuteiKizaiCode
-          include MasterCodeTrait
-
-          def name
-            '特定器材'
-          end
-        end
-
-        # コメントコード
-        class CommentCode
-          include MasterCodeTrait
-
-          def name
-            'コメント'
-          end
-        end
-
-        # 傷病名コード
-        class ShoubyoumeiCode
-          include MasterCodeTrait
-
-          def name
-            '傷病名'
-          end
-
-          def __to_code
-            '%07d' % @code.to_s.to_i
-          end
-        end
-
-        # 修飾語コード
-        class ShuushokugoCode
-          include MasterCodeTrait
-
-          def name
-            '修飾語'
-          end
-
-          def __to_code
-            '%04d' % @code.to_s.to_i
-          end
-        end
 
         # 単位コード
         class Unit

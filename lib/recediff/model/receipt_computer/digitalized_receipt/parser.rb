@@ -125,7 +125,7 @@ module Recediff
           end
 
           def process_co(values)
-            master_comment = handler.find_by_code(Master::CommentCode.of(values[Record::CO::C_レセ電コード]))
+            master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(values[Record::CO::C_レセ電コード]))
             comment        = Comment.new(
               item:                master_comment,
               additional_comment:  Comment::AdditionalComment.build(
@@ -157,7 +157,7 @@ module Recediff
             values[comment_range].each_slice(2) do | code, additional_text |
               next if code.nil?
 
-              master_comment = handler.find_by_code(Master::CommentCode.of(code))
+              master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
               comment        = Comment.new(
                 item:                master_comment,
                 additional_comment:  Comment::AdditionalComment.build(

@@ -57,6 +57,17 @@ module Recediff
             #   @return [String]
             attr_reader :full_name
 
+            # 医薬品コード
+            class Code
+              include MasterItemCodeInterface
+
+              class << self
+                def __name
+                  '医薬品'
+                end
+              end
+            end
+
             # 剤形
             class DosageFormType
               def initialize(code)

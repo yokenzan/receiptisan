@@ -7,7 +7,9 @@ module Recediff
         class Parser
           module Processor
             class TOProcessor
-              TO = DigitalizedReceipt::Record::TO
+              TO                 = DigitalizedReceipt::Record::TO
+              TokuteiKizai       = Receipt::Tekiyou::Cost::TokuteiKizai
+              MasterTokuteiKizai = Master::Treatment::TokuteiKizai
 
               # @param handler [MasterHandler]
               def initialize(handler)
@@ -19,8 +21,8 @@ module Recediff
               def process(values)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
-                Receipt::Tekiyou::Cost::TokuteiKizai.new(
-                  master_tokutei_kizai: handler.find_by_code(Master::TokuteiKizaiCode.of(values[TO::C_レセ電コード])),
+                TokuteiKizai.new(
+                  master_tokutei_kizai: handler.find_by_code(MasterTokuteiKizai::Code.of(values[TO::C_レセ電コード])),
                   shiyouryou:           values[TO::C_使用量]&.to_f,
                   product_name:         values[TO::C_商品名及び規格又はサイズ]
                 )

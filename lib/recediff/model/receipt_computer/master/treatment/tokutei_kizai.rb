@@ -51,6 +51,17 @@ module Recediff
             #   @return [String]
             attr_reader :full_name
 
+            # 特定器材コード
+            class Code
+              include MasterItemCodeInterface
+
+              class << self
+                def __name
+                  '特定器材'
+                end
+              end
+            end
+
             module Columns
               C_変更区分                        = 0
               C_マスター種別                    = 1

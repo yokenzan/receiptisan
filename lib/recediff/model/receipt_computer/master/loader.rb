@@ -13,6 +13,13 @@ module Recediff
           # マスターファイルの文字コード
           MASTER_CSV_ENCODING = 'Shift_JIS'
 
+          ShinryouKouiCode = Treatment::ShinryouKoui::Code
+          IyakuhinCode     = Treatment::Iyakuhin::Code
+          TokuteiKizaiCode = Treatment::TokuteiKizai::Code
+          CommentCode      = Treatment::Comment::Code
+          ShoubyoumeiCode  = Diagnose::Shoubyoumei::Code
+          ShuushokugoCode  = Diagnose::Shuushokugo::Code
+
           # @param version [Version]
           # @return [Master]
           def load(version)

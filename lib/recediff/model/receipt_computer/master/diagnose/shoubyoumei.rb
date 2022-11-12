@@ -31,6 +31,25 @@ module Recediff
             #   @return [String]
             attr_reader :name_kana
 
+            # 傷病名コード
+            class Code
+              include MasterItemCodeInterface
+
+              class << self
+                def __name
+                  '傷病名'
+                end
+
+                def __digit_length
+                  7
+                end
+              end
+
+              def __to_code
+                '%07d' % @code.to_s.to_i
+              end
+            end
+
             module Columns
               C_変更区分                           = 0
               C_マスター種別                       = 1

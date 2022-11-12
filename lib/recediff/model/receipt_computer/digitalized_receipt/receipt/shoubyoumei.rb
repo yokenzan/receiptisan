@@ -11,7 +11,7 @@ module Recediff
             include Recediff::Model::ReceiptComputer
             extend Forwardable
 
-            WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::ShoubyoumeiCode.of('0000999')
+            WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::Diagnose::Shoubyoumei::Code.of('0000999')
 
             def initialize(master_shoubyoumei:, worpro_name:, is_main:, start_date:, tenki:, comment:)
               @master_shoubyoumei  = master_shoubyoumei

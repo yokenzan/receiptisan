@@ -89,7 +89,7 @@ module Recediff
                   # @param text [String]
                   # @param handler [Parser::MasterHandler]
                   '31': lambda do | text, handler |
-                    handler.find_by_code(Master::ShinryouKouiCode.of(text.tr('０-９', '0-9')))
+                    handler.find_by_code(Master::Treatment::ShinryouKoui::Code.of(text.tr('０-９', '0-9')))
                   end,
                   '40': proc { | text | text.gsub(/\A０+/, '　') },
                   '42': proc {},
@@ -114,7 +114,10 @@ module Recediff
                   # @param text [String]
                   # @param handler [Parser::MasterHandler]
                   '90': proc do | text, handler |
-                    handler.find_by_code(Master::ShuushokugoCode.of(text.tr('０-９', '0-9')))
+                    text
+                      .tr('０-９', '0-9')
+                      .scan(/\d{4}/)
+                      .map { | code | handler.find_by_code(Master::Diagnose::Shuushokugo::Code.of(code)) }
                   end,
                 }.freeze
 

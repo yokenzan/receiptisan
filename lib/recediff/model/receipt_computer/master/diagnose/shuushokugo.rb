@@ -31,6 +31,25 @@ module Recediff
 
             def_delegators :@category, :prefix?, :suffix?
 
+            # 修飾語コード
+            class Code
+              include MasterItemCodeInterface
+
+              class << self
+                def __name
+                  '修飾語'
+                end
+
+                def __digit_length
+                  4
+                end
+              end
+
+              def __to_code
+                '%04d' % @code.to_s.to_i
+              end
+            end
+
             module Columns
               C_変更区分           = 0
               C_マスター種別       = 1
