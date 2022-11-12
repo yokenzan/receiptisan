@@ -16,12 +16,12 @@ module Recediff
               point:,
               shuukeisaki_shikibetu_gairai:,
               shuukeisaki_shikibetu_nyuuin:,
-              code_hyou_you_bangou_alphabet:,
-              code_hyou_you_bangou_shou:,
-              code_hyou_you_bangou_kubun_bangou:,
-              code_hyou_you_bangou_edaban:,
-              code_hyou_you_bangou_kouban:,
-              tensuu_hyou_kubun_bangou:,
+              # code_hyou_you_bangou_alphabet:,
+              # code_hyou_you_bangou_shou:,
+              # code_hyou_you_bangou_kubun_bangou:,
+              # code_hyou_you_bangou_edaban:,
+              # code_hyou_you_bangou_kouban:,
+              # tensuu_hyou_kubun_bangou:,
               full_name:
             )
               @code                         = code
@@ -33,14 +33,14 @@ module Recediff
               @shuukeisaki_shikibetu_gairai = shuukeisaki_shikibetu_gairai
               @shuukeisaki_shikibetu_nyuuin = shuukeisaki_shikibetu_nyuuin
               @full_name                    = full_name
-              @code_hyou_you_bangou         = CodeHyouYouBangou.new(
-                code_hyou_you_bangou_alphabet:     code_hyou_you_bangou_alphabet,
-                code_hyou_you_bangou_shou:         code_hyou_you_bangou_shou,
-                code_hyou_you_bangou_kubun_bangou: code_hyou_you_bangou_kubun_bangou,
-                code_hyou_you_bangou_edaban:       code_hyou_you_bangou_edaban,
-                code_hyou_you_bangou_kouban:       code_hyou_you_bangou_kouban,
-                tensuu_hyou_kubun_bangou:          tensuu_hyou_kubun_bangou
-              )
+              # @code_hyou_you_bangou         = CodeHyouYouBangou.new(
+              #   code_hyou_you_bangou_alphabet:     code_hyou_you_bangou_alphabet,
+              #   code_hyou_you_bangou_shou:         code_hyou_you_bangou_shou,
+              #   code_hyou_you_bangou_kubun_bangou: code_hyou_you_bangou_kubun_bangou,
+              #   code_hyou_you_bangou_edaban:       code_hyou_you_bangou_edaban,
+              #   code_hyou_you_bangou_kouban:       code_hyou_you_bangou_kouban,
+              #   tensuu_hyou_kubun_bangou:          tensuu_hyou_kubun_bangou
+              # )
             end
 
             # @!attribute [r] code
@@ -69,7 +69,7 @@ module Recediff
             attr_reader :shuukeisaki_shikibetu_nyuuin
             # @!attribute [r] code_hyou_you_bangou
             #   @return [CodeHyouYouBangou]
-            attr_reader :code_hyou_you_bangou
+            # attr_reader :code_hyou_you_bangou
             # @!attribute [r] full_name
             #   @return [String]
             attr_reader :full_name
@@ -85,23 +85,23 @@ module Recediff
               end
             end
 
-            # コード表用番号
-            class CodeHyouYouBangou
-              def initialize(
-                code_hyou_you_bangou_alphabet:,
-                code_hyou_you_bangou_shou:,
-                code_hyou_you_bangou_kubun_bangou:,
-                code_hyou_you_bangou_edaban:,
-                code_hyou_you_bangou_kouban:,
-                tensuu_hyou_kubun_bangou:
-              )
-                @alphabet                 = code_hyou_you_bangou_alphabet
-                @shou                     = code_hyou_you_bangou_shou
-                @kubun_bangou             = code_hyou_you_bangou_kubun_bangou
-                @edaban                   = code_hyou_you_bangou_edaban
-                @kouban                   = code_hyou_you_bangou_kouban
-                @tensuu_hyou_kubun_bangou = tensuu_hyou_kubun_bangou
-              end
+            # # コード表用番号
+            # class CodeHyouYouBangou
+            #   def initialize(
+            #     code_hyou_you_bangou_alphabet:,
+            #     code_hyou_you_bangou_shou:,
+            #     code_hyou_you_bangou_kubun_bangou:,
+            #     code_hyou_you_bangou_edaban:,
+            #     code_hyou_you_bangou_kouban:,
+            #     tensuu_hyou_kubun_bangou:
+            #   )
+            #     @alphabet                 = code_hyou_you_bangou_alphabet
+            #     @shou                     = code_hyou_you_bangou_shou
+            #     @kubun_bangou             = code_hyou_you_bangou_kubun_bangou
+            #     @edaban                   = code_hyou_you_bangou_edaban
+            #     @kouban                   = code_hyou_you_bangou_kouban
+            #     @tensuu_hyou_kubun_bangou = tensuu_hyou_kubun_bangou
+            #   end
 
               # @!attribute [r] alphabet
               #   @return [String]
