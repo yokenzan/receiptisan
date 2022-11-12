@@ -15,16 +15,19 @@ module Recediff
               hokenja_bangou:,
               kigou:,
               bangou:,
+              kyuufu_wariai:,
+              teishotoku_kubun:,
               gemmen_kubun:,
               nissuu_kyuufu:
             )
-              @hokenja_bangou = hokenja_bangou
-              @kigou          = kigou
-              @bangou         = bangou
-              @gemmen_kubun   = gemmen_kubun
-              @nissuu_kyuufu  = nissuu_kyuufu
-              @kyuufu_wariai  = nil
-              @edaban         = nil
+              @hokenja_bangou   = hokenja_bangou
+              @kigou            = kigou
+              @bangou           = bangou
+              @nissuu_kyuufu    = nissuu_kyuufu
+              @teishotoku_kubun = teishotoku_kubun
+              @gemmen_kubun     = gemmen_kubun
+              @kyuufu_wariai    = kyuufu_wariai
+              @edaban           = nil
             end
 
             # @param edaban [String]
@@ -42,6 +45,12 @@ module Recediff
             # @!attribute [r] bangou
             #   @return [String]
             attr_reader :bangou
+            # @!attribute [r] kyuufu_wariai
+            #   @return [Integer, nil]
+            attr_reader :kyuufu_wariai
+            # @!attribute [r] teishotoku_kubun
+            #   @return [Integer, nil]
+            attr_reader :teishotoku_kubun
             # @!attribute [r] gemmen_kubun
             #   @return [Integer]
             attr_reader :gemmen_kubun

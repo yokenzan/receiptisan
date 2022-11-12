@@ -81,6 +81,8 @@ module Recediff
               @digitalized_receipt         = nil
               @current_receipt             = nil
               @current_shinryou_shikibetsu = nil
+              @latest_kyuufu_wariai        = nil
+              @latest_teishotoku_kubun     = nil
               @previous_was_comment_item   = false
               @can_fix_current_santei_unit = false
             end
@@ -95,9 +97,21 @@ module Recediff
               digitalized_receipt
             end
 
-            # @!attribute [r] current_receipt
-            #   @return [DigitalizedReceipt::Receipt]
-            attr_reader :current_receipt
+            def latest_kyuufu_wariai=(kyuufu_wariai)
+              @latest_kyuufu_wariai = kyuufu_wariai
+            end
+
+            def latest_kyuufu_wariai
+              @latest_kyuufu_wariai.tap { @latest_kyuufu_wariai = nil }
+            end
+
+            def latest_teishotoku_kubun=(teishotoku_kubun)
+              @latest_teishotoku_kubun = teishotoku_kubun
+            end
+
+            def latest_teishotoku_kubun
+              @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }
+            end
 
             def_delegators :current_receipt,
               :add_shoubyoumei,
@@ -129,6 +143,10 @@ module Recediff
               @current_ichiren_unit.add_santei_unit(@current_santei_unit)
               @current_santei_unit = nil
             end
+
+            # @!attribute [r] current_receipt
+            #   @return [DigitalizedReceipt::Receipt]
+            attr_reader :current_receipt
           end
         end
       end

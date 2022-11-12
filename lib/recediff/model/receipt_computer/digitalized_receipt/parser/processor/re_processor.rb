@@ -14,13 +14,27 @@ module Recediff
               ReceiptType = DigitalizedReceipt::Receipt::Type
               Patient     = DigitalizedReceipt::Receipt::Patient
 
+              def initialize
+                @kyuufu_wariai        = nil
+                @teishotoku_kubun     = nil
+              end
               # @param values [Array<String, nil>]
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
               def process(values, audit_payer)
                 raise StandardError, 'line isnt RE record' unless values.first == 'RE'
 
+                @kyuufu_wariai    = nil
+                @teishotoku_kubun = nil
                 process_new_receipt(values, audit_payer).tap { | receipt | process_tokki_jikous(receipt, values) }
+              end
+
+              def kyuufu_wariai
+                @kyuufu_wariai.tap { @kyuufu_wariai = nil }
+              end
+
+              def teishotoku_kubun
+                @teishotoku_kubun.tap { @teishotoku_kubun = nil }
               end
 
               private
@@ -29,6 +43,9 @@ module Recediff
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
               def process_new_receipt(values, audit_payer)
+                @kyuufu_wariai    = values[RE::C_給付割合]&.to_i
+                @teishotoku_kubun = values[RE::C_一部負担金・食事療養費・生活療養費標準負担額区分]&.to_i
+
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,
                   shinryou_ym: DateParser.parse_year_month(values[RE::C_診療年月]),

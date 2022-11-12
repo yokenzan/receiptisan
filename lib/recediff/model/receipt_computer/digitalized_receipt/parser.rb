@@ -83,13 +83,18 @@ module Recediff
           # @param values [Array<String, nil>]
           # @return [void]
           def process_re(values)
-            buffer.new_receipt(@processors[values.first].process(values))
+            processor = @processors[values.first]
+            buffer.new_receipt(processor.process(values, buffer.current_audit_payer))
+            buffer.latest_kyuufu_wariai    = processor.kyuufu_wariai
+            buffer.latest_teishotoku_kubun = processor.teishotoku_kubun
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
-            buffer.add_iryou_hoken(@processors[values.first].process(values))
+            buffer.add_iryou_hoken(
+              @processors[values.first].process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
+            )
           end
 
           # @param values [Array<String, nil>]
