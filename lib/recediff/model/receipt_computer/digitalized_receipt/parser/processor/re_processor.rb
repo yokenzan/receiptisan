@@ -10,7 +10,7 @@ module Recediff
           module Processor
             class REProcessor
               RE          = Record::RE
-              DateParser  = Recediff::Util::DateParser
+              DateUtil    = Recediff::Util::DateUtil
               ReceiptType = DigitalizedReceipt::Receipt::Type
               Patient     = DigitalizedReceipt::Receipt::Patient
 
@@ -19,6 +19,7 @@ module Recediff
                 @kyuufu_wariai        = nil
                 @teishotoku_kubun     = nil
               end
+
               # @param values [Array<String, nil>]
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
@@ -51,7 +52,7 @@ module Recediff
 
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,
-                  shinryou_ym: DateParser.parse_year_month(values[RE::C_診療年月]),
+                  shinryou_ym: DateUtil.parse_year_month(values[RE::C_診療年月]),
                   type:        @receipt_type_builder.build_with(values[RE::C_レセプト種別]),
                   patient:     Patient.new(
                     id:         values[RE::C_カルテ番号等],

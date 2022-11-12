@@ -10,7 +10,7 @@ module Recediff
           module Processor
             class IRProcessor
               IR         = Record::IR
-              DateParser = Recediff::Util::DateParser
+              DateUtil = Recediff::Util::DateUtil
 
               # @param values [Array<String, nil>] IR行
               # @return [DigitalizedReceipt]
@@ -24,7 +24,7 @@ module Recediff
                   prefecture: Prefecture.find_by_code(values[IR::C_都道府県].to_i)
                 )
                 DigitalizedReceipt.new(
-                  seikyuu_ym:  DateParser.parse_year_month(values[IR::C_請求年月]),
+                  seikyuu_ym:  DateUtil.parse_year_month(values[IR::C_請求年月]),
                   audit_payer: AuditPayer.find_by_code(values[IR::C_審査支払機関].to_i),
                   hospital:    hospital
                 )

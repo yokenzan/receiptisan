@@ -5,13 +5,24 @@ require 'month'
 
 module Recediff
   module Util
-    class DateParser
+    class DateUtil
       class Gengou
-        def initialize(code, name, short_name, base_year)
+        def initialize(code, name, short_name, alphabet, base_year)
           @code       = code
           @name       = name
           @short_name = short_name
+          @alphabet   = alphabet
           @base_year  = base_year
+        end
+
+        def to_h
+          {
+            code:       code,
+            name:       name,
+            short_name: short_name,
+            alphabet:   alphabet,
+            base_year:  base_year,
+          }
         end
 
         # @!attribute [r] code
@@ -22,17 +33,24 @@ module Recediff
         #   @return [String]
         # @!attribute [r] base_year
         #   @return [Integer]
-        attr_reader :code, :name, :short_name, :base_year
+        attr_reader :code, :name, :short_name, :alphabet, :base_year
       end
 
       # @type [Hash<Symbol, Gengou>]
       @gengous = {
-        '1': Gengou.new(1, '明治', '明', 1967),
-        '2': Gengou.new(2, '大正', '大', 1911),
-        '3': Gengou.new(3, '昭和', '昭', 1925),
-        '4': Gengou.new(4, '平成', '平', 1988),
-        '5': Gengou.new(5, '令和', '令', 2018),
+        '1': Gengou.new(1, '明治', '明', 'M', 1967),
+        '2': Gengou.new(2, '大正', '大', 'T', 1911),
+        '3': Gengou.new(3, '昭和', '昭', 'S', 1925),
+        '4': Gengou.new(4, '平成', '平', 'H', 1988),
+        '5': Gengou.new(5, '令和', '令', 'R', 2018),
       }
+
+      class << @gengous
+        # @return [Gengou, nil]
+        def find_by_alphabet(alphabet)
+          values.find { | gengou | gengou.alphabet == alphabet }
+        end
+      end
 
       class << self
         # @param text [String]
@@ -63,6 +81,38 @@ module Recediff
           else
             throw ArgumentError, 'cant parse as date: ' << text.to_s
           end
+        end
+
+        # @overload to_wareki(dat_or_monthe)
+        #   @param date_or_month [Date]
+        # @overload to_wareki(date_or_month)
+        #   @param date_or_month [Month]
+        def to_wareki(date_or_month)
+          is_month    = date_or_month.instance_of?(Month)
+          date        = is_month ? Date.new(date_or_month.year, date_or_month.number, 1) : date_or_month
+          jisx0301    = date.jisx0301
+          jisx0301[3] = '年'
+          jisx0301[6] = '月'
+          jisx0301 << '日'
+          jisx0301[0] = @gengous.find_by_alphabet(jisx0301[0]).name
+          jisx0301.tr('0-9', '０-９').tap { | text | text[-3..-1] = '' if is_month }
+        end
+
+        # @overload to_wareki_components(dat_or_monthe)
+        #   @param date_or_month [Date]
+        # @overload to_wareki_components(date_or_month)
+        #   @param date_or_month [Month]
+        def to_wareki_components(date_or_month)
+          is_month = date_or_month.instance_of?(Month)
+          date     = is_month ? Date.new(date_or_month.year, date_or_month.number, 1) : date_or_month
+          jisx0301 = date.jisx0301
+          {
+            gengou: @gengous.find_by_alphabet(jisx0301[0]).to_h,
+            year:   jisx0301[1, 2].to_i,
+            month:  date.month,
+            day:    date.day,
+            text:   to_wareki(date_or_month),
+          }.tap { | hash | hash.delete(:day) if is_month }
         end
 
         private

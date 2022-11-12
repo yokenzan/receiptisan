@@ -93,20 +93,17 @@ module Recediff
                   end,
                   '40': proc { | text | text.gsub(/\A０+/, '　') },
                   '42': proc {},
-                  '50': proc { | text | ::Recediff::Util::DateParser.parse_date(text) },
+                  '50': proc { | text | Recediff::Util::DateUtil.parse_date(text) },
                   '51': proc { | text | '%s時%s分' % [text[0, 2], text[2, 2]] },
                   '52': proc { | text | text.gsub(/\A０+/, '') + '分' },
                   '53': proc { | text | ('%s日%s時%s分' % text.scan(/\d\d/)).gsub(/\A０+/, '　') },
                   '80': proc do | text |
-                    wareki_text = text[0, 7].tr('０-９', '0-9')
-                    gengou      = wareki_text[0].to_i
-                    date_text   = wareki_text[1..].scan(/\d\d/).map(&:to_i)
-                    base_year   = { '1': 1867, '2': 1911, '3': 1925, '4': 1988, '5': 2018 }[gengou.to_s.intern]
                     Struct.new(:date, :score) do
                       def name
                         '%s　検査値：%s' % [date, score]
                       end
                     end.new(
+                      Recediff::Util::DateUtil.to_wareki(Recediff::Util::DateUtil.parse_date(text[0, 7])),
                       Time.new(date_text[0] + base_year, date_text[1], date_text[2]),
                       text[-8..].gsub(/\A０+/, '')
                     )
