@@ -4,6 +4,7 @@ require_relative 'master/version'
 require_relative 'master/master_item_code_interface'
 require_relative 'master/treatment'
 require_relative 'master/diagnose'
+require_relative 'master/resource_resolver'
 require_relative 'master/loader'
 
 module Recediff
