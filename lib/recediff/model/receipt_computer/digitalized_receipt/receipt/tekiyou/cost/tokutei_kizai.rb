@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Recediff
   module Model
     module ReceiptComputer
@@ -8,6 +10,8 @@ module Recediff
           module Tekiyou
             class Cost
               class TokuteiKizai
+                extend Forwardable
+
                 def initialize(
                   master_tokutei_kizai:,
                   shiyouryou:,
@@ -22,6 +26,8 @@ module Recediff
                 attr_reader :shiyouryou
                 attr_reader :product_name
                 alias master_item master_tokutei_kizai
+
+                def_delegators :master_item, :code, :name, :unit
               end
             end
           end

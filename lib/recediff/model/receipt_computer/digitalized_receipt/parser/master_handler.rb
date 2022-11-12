@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'month'
+require 'forwardable'
 
 module Recediff
   module Model
@@ -8,6 +9,8 @@ module Recediff
       class DigitalizedReceipt
         class Parser
           class MasterHandler
+            extend Forwardable
+
             # @param master_loader [Master::Loader]
             def initialize(master_loader)
               @master_loader  = master_loader
@@ -27,10 +30,7 @@ module Recediff
               @current_master = @loaded_masters[version]
             end
 
-            # @param code [Master::MasterCodeTrait]
-            def find_by_code(code)
-              @current_master.find_by_code(code)
-            end
+            def_delegators :@current_master, :find_by_code
           end
         end
       end

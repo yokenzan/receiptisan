@@ -24,7 +24,7 @@ module Recediff
                 attr_reader :master_iyakuhin, :shiyouryou
                 alias master_item master_iyakuhin
 
-                def_delegators :master_item, :code, :name
+                def_delegators :master_item, :code, :name, :unit
               end
             end
           end
