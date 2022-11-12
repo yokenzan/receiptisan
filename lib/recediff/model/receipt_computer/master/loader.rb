@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require 'nkf'
+require_relative 'loader/loader_trait'
+require_relative 'loader/shinryou_koui_loader'
 
 module Recediff
   module Model
     module ReceiptComputer
       class Master
-        class Loader # rubocop:disable Metrics/ClassLength
-          # マスターファイルの文字コード
-          MASTER_CSV_ENCODING = 'Shift_JIS'
-
-          ShinryouKouiCode = Treatment::ShinryouKoui::Code
+        class Loader
           IyakuhinCode     = Treatment::Iyakuhin::Code
           TokuteiKizaiCode = Treatment::TokuteiKizai::Code
           CommentCode      = Treatment::Comment::Code
@@ -19,7 +16,8 @@ module Recediff
 
           # @param resource_resolver [ResourceResolver]
           def initialize(resource_resolver)
-            @resource_resolver = resource_resolver
+            @resource_resolver    = resource_resolver
+            @shinryou_koui_loader = ShinryouKouiLoader.new
           end
 
           # @param version [Version]
@@ -47,44 +45,13 @@ module Recediff
             shuushokugo_csv_path:
           )
             Master.new(
-              shinryou_koui: load_shinryou_koui_master(version, shinryou_koui_csv_path),
+              shinryou_koui: @shinryou_koui_loader.load(version, shinryou_koui_csv_path),
               iyakuhin:      load_iyakuhin_master(iyakuhin_csv_path),
               tokutei_kizai: load_tokutei_kizai_master(tokutei_kizai_csv_path),
               comment:       load_comment_master(comment_csv_path),
               shoubyoumei:   load_shoubyoumei_master(shoubyoumei_csv_path),
               shuushokugo:   load_shuushokugo_master(shuushokugo_csv_path)
             )
-          end
-
-          private
-
-          # @param version [Version]
-          # @param csv_path [String]
-          # @return [Hash<Treatment::ShinryouKoui>]
-          def load_shinryou_koui_master(version, csv_path)
-            {}.tap do | hash |
-              columns = Treatment::ShinryouKoui::Columns.resolve_columns_by(version)
-              foreach(csv_path) do | values |
-                code             = ShinryouKouiCode.of(values[columns::C_コード])
-                hash[code.value] = Treatment::ShinryouKoui.new(
-                  code:                         code,
-                  name:                         values[columns::C_省略名称_漢字名称],
-                  name_kana:                    convert_katakana(values[columns::C_省略名称_カナ名称]),
-                  unit:                         Unit.find_by_code(values[columns::C_データ規格コード]),
-                  price_type:                   Treatment::PriceType.new(values[columns::C_点数識別]),
-                  point:                        values[columns::C_新又は現点数],
-                  shuukeisaki_shikibetu_gairai: values[columns::C_点数欄集計先識別_入院外],
-                  shuukeisaki_shikibetu_nyuuin: values[columns::C_点数欄集計先識別_入院],
-                  # code_hyou_you_bangou_alphabet:     values[columns::C_コード表用番号_アルファベット部],
-                  # code_hyou_you_bangou_shou:         values[columns::C_コード表用番号_章],
-                  # code_hyou_you_bangou_kubun_bangou: values[columns::C_コード表用番号_区分番号],
-                  # code_hyou_you_bangou_edaban:       values[columns::C_コード表用番号_枝番],
-                  # code_hyou_you_bangou_kouban:       values[columns::C_コード表用番号_項番],
-                  # tensuu_hyou_kubun_bangou:          values[columns::C_点数表区分番号],
-                  full_name:                    values[columns::C_基本漢字名称]
-                )
-              end
-            end
           end
 
           # @param csv_path [String]
@@ -197,26 +164,6 @@ module Recediff
                 )
               end
             end
-          end
-
-          # simple copy of `CSV.foreach()`
-          #
-          # @param csv_path [String]
-          # @return [void]
-          # @yieldparam [Array<String, NilClass>] values
-          # @yieldreturn [void]
-          def foreach(csv_path)
-            File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
-              f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }
-            end
-          end
-
-          # 半角カナ→全角カナに変換する
-          #
-          # @param hankaku [String]
-          # @return [String]
-          def convert_katakana(hankaku)
-            NKF.nkf('-wWX', hankaku)
           end
         end
       end
