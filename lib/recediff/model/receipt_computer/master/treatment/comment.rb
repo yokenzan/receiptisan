@@ -23,7 +23,7 @@ module Recediff
             # @param additional_comment [ReceiptComputer::DigitalizedReceipt::Receipt::Comment::AdditionalComment, nil]
             def format_with(additional_comment)
               additional_text = @pattern.format(name, additional_comment)
-              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') unless pattern.needs_embdding?
+              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') unless pattern.requires_embdding?
 
               comment_text = name
               comment_text.tap do | text |
@@ -71,16 +71,16 @@ module Recediff
 
             class Pattern
               # @param code [Symbol]
-              # @paaram needs_embdding [Boolean]
+              # @paaram requires_embdding [Boolean]
               # @param formatter [Proc]
-              def initialize(code, needs_embdding, formatter)
-                @code           = code
-                @needs_embdding = needs_embdding
-                @formatter      = formatter
+              def initialize(code, requires_embdding, formatter)
+                @code              = code
+                @requires_embdding = requires_embdding
+                @formatter         = formatter
               end
 
-              def needs_embdding?
-                @needs_embdding
+              def requires_embdding?
+                @requires_embdding
               end
 
               # @return [String]
@@ -104,7 +104,7 @@ module Recediff
                 '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
                 '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
                 '80': new(:'80', false, proc { | _, additional_comment | additional_comment.item.name }),
-                '90': new(:'90', false, proc { | _, additional_comment | additional_comment.item.name }),
+                '90': new(:'90', false, proc { | _, additional_comment | additional_comment.item.map(&:name).join }),
               }
 
               class << self
