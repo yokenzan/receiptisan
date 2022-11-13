@@ -12,7 +12,7 @@ module Recediff
         def from_digitalized_receipt(digitalized_receipt)
           parameterized_audit_payer         = convert_audit_payer(digitalized_receipt.audit_payer)
           parameterized_hospital            = convert_hospital(digitalized_receipt.hospital)
-          parameterized_prefecture          = convert_prefecture(digitalized_receipt.prefecture)
+          parameterized_prefecture          = convert_prefecture(digitalized_receipt.hospital.prefecture)
           parameterized_digitalized_receipt = Parameter::DigitalizedReceipt.new(
             seikyuu_ym:  convert_month(digitalized_receipt.seikyuu_ym),
             audit_payer: parameterized_audit_payer,
@@ -45,7 +45,7 @@ module Recediff
             hospital:          parameterized_hospital,
             type:              convert_receipt_type(receipt.type),
             patient:           convert_patient(receipt.patient),
-            tekiyou:           Tekiyou.new,
+            tekiyou:           Parameter::Tekiyou.new,
             ryouyou_no_kyuufu: []
           )
         end
