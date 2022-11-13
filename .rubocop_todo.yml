@@ -40,6 +40,9 @@ Metrics/MethodLength:
 # Configuration parameters: CountKeywordArgs, MaxOptionalParameters.
 Metrics/ParameterLists:
   Max: 6
+  Exclude:
+    - 'lib/recediff/model/receipt_computer/master.rb'
+    - 'lib/recediff/model/receipt_computer/master/**/*.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedVariables.

@@ -29,6 +29,8 @@ Layout/LineLength:
   Max: 120
   AllowHeredoc: enabled
   AllowURI: enabled
+  Exclude:
+    - 'spec/**/*.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -95,8 +97,12 @@ Layout/HashAlignment:
 Style/ClassVars:
   Enabled: false
 
+Style/AccessorGrouping:
+  Enabled: false
+
 Naming/MethodParameterName:
   AllowedNames:
     - fg
     - bg
     - id
+    - ym

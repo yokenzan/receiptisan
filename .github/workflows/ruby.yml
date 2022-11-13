@@ -9,7 +9,7 @@ name: Ruby
 
 on:
   push:
-    branches: [ master ]
+    branches: [ refine_master_loader ]
   pull_request:
     branches: [ master ]
 
@@ -32,6 +32,6 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Run tests
-      run: bundle exec rake test
+      run: bundle exec rake test -- spec/lib/recediff/model/receipt_computer
     - name: Run linters
       run: bundle exec rake lint
