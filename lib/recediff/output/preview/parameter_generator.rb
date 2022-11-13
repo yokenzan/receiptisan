@@ -8,63 +8,53 @@ module Recediff
         DateUtil = Recediff::Util::DateUtil
 
         # @param digitalized_receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt]
+        # @return [Parameter::DigitalizedReceipt]
         def from_digitalized_receipt(digitalized_receipt)
-          audit_payer = digitalized_receipt.audit_payer
-          hospital    = digitalized_receipt.hospital
-          {
-            seikyuu_ym:  convert_date_or_month(digitalized_receipt.seikyuu_ym),
-            audit_payer: {
-              code:       audit_payer.code,
-              name:       audit_payer.name,
-              short_name: audit_payer.short_name,
-            },
-            hospital:    convert_hospital(hospital),
-            prefecture:  {
-              code:      hospital.prefecture.code,
-              name:      hospital.prefecture.name_without_suffix,
-              full_name: hospital.prefecture.name,
-            },
-            receipts:    digitalized_receipt.map { | receipt | convert_receipt(receipt, audit_payer) },
-          }
+          parameterized_audit_payer         = convert_audit_payer(digitalized_receipt.audit_payer)
+          parameterized_hospital            = convert_hospital(digitalized_receipt.hospital)
+          parameterized_prefecture          = convert_prefecture(digitalized_receipt.prefecture)
+          parameterized_digitalized_receipt = Parameter::DigitalizedReceipt.new(
+            seikyuu_ym:  convert_month(digitalized_receipt.seikyuu_ym),
+            audit_payer: parameterized_audit_payer,
+            hospital:    parameterized_hospital,
+            prefecture:  parameterized_prefecture,
+            receipts:    []
+          )
+
+          digitalized_receipt.map do | receipt |
+            parameterized_digitalized_receipt.add_receipt(
+              convert_receipt(receipt, parameterized_audit_payer, parameterized_hospital, parameterized_prefecture)
+            )
+          end
+
+          parameterized_digitalized_receipt
+        end
+
+        # @param receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
+        # @param parameterized_audit_payer [Parameter::AuditPayer]
+        # @param parameterized_hospital [Parameter::Hospital]
+        # @param parameterized_prefecture [Parameter::Prefecture]
+        # @return [Parameter::Receipt]
+        def convert_receipt(receipt, parameterized_audit_payer, parameterized_hospital, parameterized_prefecture)
+          Parameter::Receipt.new(
+            id:                receipt.id,
+            shinryou_ym:       convert_month(receipt.shinryou_ym),
+            nyuugai:           receipt.nyuuin? ? :nyuugai : :gairai,
+            audit_payer:       parameterized_audit_payer,
+            prefecture:        parameterized_prefecture,
+            hospital:          parameterized_hospital,
+            type:              convert_receipt_type(receipt.type),
+            patient:           convert_patient(receipt.patient),
+            tekiyou:           Tekiyou.new,
+            ryouyou_no_kyuufu: []
+          )
         end
 
         # @param receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
         # @param audit_payer [Recediff::Model::ReceiptComputer::DigitalizedReceipt::AuditPayer]
         # @rubocop:disable Metrics/MethodLength
-        def convert_receipt(receipt, audit_payer)
+        def __convert_receipt(receipt)
           {
-            id:                  receipt.id,
-            shinryou_ym:         convert_date_or_month(receipt.shinryou_ym),
-            nyuugai:             receipt.nyuuin? ? :nyuuin : :gairai,
-            prefecture:          {
-              code:      receipt.hospital.prefecture.code,
-              name:      receipt.hospital.prefecture.name_without_suffix,
-              full_name: receipt.hospital.prefecture.name,
-            },
-            audit_payer:         {
-              code: audit_payer.code,
-              name: audit_payer.short_name,
-            },
-            type:                {
-              tensuu_hyou_type:    {
-                code: receipt.type.tensuu_hyou_type.code,
-                name: receipt.type.tensuu_hyou_type.name,
-              },
-              main_hoken_type:     {
-                code: receipt.type.main_hoken_type.code,
-                name: receipt.type.main_hoken_type.name,
-              },
-              hoken_multiple_type: {
-                code: receipt.type.hoken_multiple_type.code,
-                name: receipt.type.hoken_multiple_type.name,
-              },
-              patient_age_type:    {
-                code: receipt.type.patient_age_type.code,
-                name: receipt.type.patient_age_type.name,
-              },
-            },
-            patient:             convert_patient(receipt.patient),
-            hospital:            convert_hospital(receipt.hospital),
             hokens:              {
               iryou_hoken:        convert_iryou_hoken(receipt.iryou_hoken),
               kouhi_futan_iryous: convert_kouhi_futan_iryous(receipt.kouhi_futan_iryous),
@@ -81,13 +71,14 @@ module Recediff
         end
 
         # @param hospital [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Hospital]
+        # @return [Parameter::Hospital]
         def convert_hospital(hospital)
-          {
+          Parameter::Hospital.new(
             code:    hospital.code,
             name:    hospital.name,
             tel:     hospital.tel,
-            address: '', # extensible
-          }
+            address: hospital.address
+          )
         end
 
         # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
@@ -151,17 +142,57 @@ module Recediff
         end
 
         # @param patient [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Patient]
+        # @return [Parameter::Patient]
         def convert_patient(patient)
-          {
+          Parameter::Patient.new(
             id:         patient.id,
             name:       patient.name,
             name_kana:  patient.name_kana,
-            sex:        {
-              code: patient.sex.code,
-              name: patient.sex.name,
-            },
-            birth_date: convert_date_or_month(patient.birth_date),
-          }
+            sex:        Parameter::Sex.new(code: patient.sex.code, name: patient.sex.name),
+            birth_date: convert_date(patient.birth_date)
+          )
+        end
+
+        # @param type [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Type]
+        # @return [Parameter::Type]
+        def convert_receipt_type(type)
+          Parameter::Type.new(
+            tensuu_hyou_type:    Parameter::TensuuHyouType.new(
+              code: type.tensuu_hyou_type.code,
+              name: type.tensuu_hyou_type.name
+            ),
+            main_hoken_type:     Parameter::MainHokenType.new(
+              code: type.main_hoken_type.code,
+              name: type.main_hoken_type.name
+            ),
+            hoken_multiple_type: Parameter::HokenMultipleType.new(
+              code: type.hoken_multiple_type.code,
+              name: type.hoken_multiple_type.name
+            ),
+            patient_age_type:    Parameter::PatientAgeType.new(
+              code: type.patient_age_type.code,
+              name: type.patient_age_type.name
+            )
+          )
+        end
+
+        # @param audit_payer [Recediff::Model::ReceiptComputer::DigitalizedReceipt::AuditPayer]
+        # @return [Parameter::AuditPayer]
+        def convert_audit_payer(audit_payer)
+          Parameter::AuditPayer.new(
+            code:       audit_payer.code,
+            name:       audit_payer.name,
+            short_name: audit_payer.short_name
+          )
+        end
+
+        # @param prefecture [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Prefecture]
+        def convert_prefecture(prefecture)
+          Parameter::Prefecture.new(
+            code:       prefecture.code,
+            name:       prefecture.name,
+            short_name: prefecture.name_without_suffix
+          )
         end
 
         # @param shoubyoumeis [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
@@ -242,11 +273,22 @@ module Recediff
           end.sort_by { | s | s[:shinryou_shikibetsu][:code].to_s.to_i }
         end
 
-        def convert_date_or_month(date_or_month)
+        # @param month [Date]
+        def convert_date(date)
           {
-            year:   date_or_month.year,
-            month:  date_or_month.month,
-            wareki: DateUtil.to_wareki_components(date_or_month),
+            year:   date.year,
+            month:  date.month,
+            day:    date.day,
+            wareki: DateUtil.to_wareki_components(date),
+          }
+        end
+
+        # @param month [Month]
+        def convert_month(month)
+          {
+            year:   month.year,
+            month:  month.month,
+            wareki: DateUtil.to_wareki_components(month),
           }
         end
 
