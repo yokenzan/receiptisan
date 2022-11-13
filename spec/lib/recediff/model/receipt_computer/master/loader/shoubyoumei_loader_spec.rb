@@ -9,7 +9,7 @@ Shoubyoumei       = Recediff::Model::ReceiptComputer::Master::Diagnose::Shoubyou
 Unit              = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShoubyoumeiLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/0000' }
+  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
     let(:loader) { ShoubyoumeiLoader.new }

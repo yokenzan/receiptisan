@@ -9,7 +9,7 @@ TokuteiKizai       = Recediff::Model::ReceiptComputer::Master::Treatment::Tokute
 Unit               = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe TokuteiKizaiLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/0000' }
+  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
     let(:loader) { TokuteiKizaiLoader.new }

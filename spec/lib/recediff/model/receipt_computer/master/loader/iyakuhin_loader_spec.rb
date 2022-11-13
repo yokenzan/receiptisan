@@ -9,7 +9,7 @@ Iyakuhin       = Recediff::Model::ReceiptComputer::Master::Treatment::Iyakuhin
 Unit           = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe IyakuhinLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/0000' }
+  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
     let(:loader) { IyakuhinLoader.new }

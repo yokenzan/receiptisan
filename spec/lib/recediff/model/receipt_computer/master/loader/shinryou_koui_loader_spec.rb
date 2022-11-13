@@ -9,7 +9,7 @@ ShinryouKoui       = Recediff::Model::ReceiptComputer::Master::Treatment::Shinry
 Unit               = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShinryouKouiLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/0000' }
+  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
     let(:loader) { ShinryouKouiLoader.new }

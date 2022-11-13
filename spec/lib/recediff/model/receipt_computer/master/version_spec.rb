@@ -9,13 +9,13 @@ RSpec.describe Version do
   let!(:target) { Version.new(2022, Month.new(2022, 4), Month.new(2024, 3)) }
 
   describe '#year' do
-    specify '年を返すこと' do
+    specify '点数表の版の初年を返すこと' do
       expect(target.year).to eq 2022
     end
   end
 
   describe '#term' do
-    specify 'Rangeを返すこと' do
+    specify '版の期間をRangeで返すこと' do
       expect(target.term).to be_an_instance_of Range
     end
 
@@ -31,22 +31,22 @@ RSpec.describe Version do
   describe '#include?' do
     context 'ある暦月が期間内の場合' do
       specify '暦月が期間の起点の場合、真を返す' do
-        expect(target.include?(Month.new(2022, 4))).to be_truthy
+        expect(target.include?(Month.new(2022, 4))).to be true
       end
       specify '暦月が期中の場合、真を返す' do
-        expect(target.include?(Month.new(2022, 4))).to be_truthy
+        expect(target.include?(Month.new(2022, 4))).to be true
       end
       specify '暦月が期間の終点の場合、真を返す' do
-        expect(target.include?(Month.new(2024, 3))).to be_truthy
+        expect(target.include?(Month.new(2024, 3))).to be true
       end
     end
 
     context 'ある暦月が期間外の場合' do
       specify '暦月が期間の起点よりも過去の場合、偽を返す' do
-        expect(target.include?(Month.new(2022, 3))).to be_falsey
+        expect(target.include?(Month.new(2022, 3))).to be false
       end
       specify '暦月が期間の終点よりも未来の場合、偽を返す' do
-        expect(target.include?(Month.new(2024, 5))).to be_falsey
+        expect(target.include?(Month.new(2024, 5))).to be false
       end
     end
   end

@@ -9,7 +9,7 @@ Shuushokugo       = Recediff::Model::ReceiptComputer::Master::Diagnose::Shuushok
 Unit              = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShuushokugoLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/0000' }
+  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
     let(:loader) { ShuushokugoLoader.new }
