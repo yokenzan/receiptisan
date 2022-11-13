@@ -37,7 +37,7 @@ module Recediff
             buffer.clear
 
             File.open(path_of_uke, "r:#{FILE_ENCODING}:UTF-8") do | f |
-              f.each_line(chomp: true) { | line | parse_line(line2values(line)) }
+              f.each_line(chomp: true).with_index { | line, index | parse_line(line2values(line), index) }
             end
 
             buffer.close
@@ -53,7 +53,7 @@ module Recediff
 
           # @param values [Array<String, nil>]
           # @return [void]
-          def parse_line(values)
+          def parse_line(values, line_index)
             case record_type = values.first
             when 'IR' then process_ir(values)
             when 'RE'
@@ -73,6 +73,11 @@ module Recediff
             else
               record_type
             end
+          rescue StandardError => e
+            p e
+            puts "at line #{line_index + 1}"
+            p values.join(',')
+            puts e.backtrace
           end
 
           # @param values [Array<String, nil>]
