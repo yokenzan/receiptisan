@@ -16,9 +16,10 @@ module Recediff
 
           # @param handler [MasterHandler]
           def initialize(handler)
-            @handler    = handler
-            @buffer     = Parser::Buffer.new
-            @processors = {
+            @handler           = handler
+            @buffer            = Parser::Buffer.new
+            @current_processor = nil
+            @processors        = {
               'IR' => Processor::IRProcessor.new,
               'RE' => Processor::REProcessor.new,
               'HO' => Processor::HOProcessor.new,
@@ -54,7 +55,9 @@ module Recediff
           # @param values [Array<String, nil>]
           # @return [void]
           def parse_line(values, line_index)
-            case record_type = values.first
+            @current_processor = @processors[record_type = values.first]
+
+            case record_type
             when 'IR' then process_ir(values)
             when 'RE'
               process_re(values)
@@ -83,30 +86,29 @@ module Recediff
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ir(values)
-            buffer.new_digitalized_receipt(@processors[values.first].process(values))
+            buffer.new_digitalized_receipt(current_processor.process(values))
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_re(values)
-            processor = @processors[values.first]
-            buffer.new_receipt(processor.process(values, buffer.current_audit_payer))
-            buffer.latest_kyuufu_wariai    = processor.kyuufu_wariai
-            buffer.latest_teishotoku_kubun = processor.teishotoku_kubun
+            buffer.new_receipt(current_processor.process(values, buffer.current_audit_payer))
+            buffer.latest_kyuufu_wariai    = current_processor.kyuufu_wariai
+            buffer.latest_teishotoku_kubun = current_processor.teishotoku_kubun
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
             buffer.add_iryou_hoken(
-              @processors[values.first].process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
+              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
             )
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ko(values)
-            buffer.add_kouhi_futan_iryou(@processors[values.first].process(buffer.nyuuin?, values))
+            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values))
           end
 
           # SN行を読込む
@@ -120,19 +122,19 @@ module Recediff
           end
 
           def process_sy(values)
-            buffer.add_shoubyoumei(@processors[values.first].process(values))
+            buffer.add_shoubyoumei(current_processor.process(values))
           end
 
           def process_si(values)
-            wrap_as_cost(@processors[values.first].process(values), Record::SI, values)
+            wrap_as_cost(current_processor.process(values), Record::SI, values)
           end
 
           def process_iy(values)
-            wrap_as_cost(@processors[values.first].process(values), Record::IY, values)
+            wrap_as_cost(current_processor.process(values), Record::IY, values)
           end
 
           def process_to(values)
-            wrap_as_cost(@processors[values.first].process(values), Record::TO, values)
+            wrap_as_cost(current_processor.process(values), Record::TO, values)
           end
 
           def process_co(values)
@@ -150,7 +152,7 @@ module Recediff
           end
 
           def process_sj(values)
-            buffer.add_shoujou_shouki(@processors[values.first].process(values))
+            buffer.add_shoujou_shouki(current_processor.process(values))
           end
 
           def wrap_as_cost(item, column_definition, values)
@@ -191,7 +193,7 @@ module Recediff
           #   @return [Buffer]
           # @!attribute [r] handler
           #   @return [MasterHandler]
-          attr_reader :buffer, :handler
+          attr_reader :buffer, :handler, :current_processor
         end
       end
     end
