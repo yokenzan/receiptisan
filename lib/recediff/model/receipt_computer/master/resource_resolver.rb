@@ -11,9 +11,10 @@ module Recediff
           MASTER_CSV_DIR = '../../../../../csv/master'
 
           # @param version [Version]
+          # @param root_dir [String]
           # @return [Hash<Symbol, String>]
-          def detect_csv_files(version)
-            pathname       = resolve_csv_dir_of(version)
+          def detect_csv_files(version, root_dir = MASTER_CSV_DIR)
+            pathname       = resolve_csv_dir_of(version, root_dir)
             csv_files      = pathname.children
             detected_paths = {}
             csv_prefixes   = {
@@ -38,9 +39,10 @@ module Recediff
           private
 
           # @param version [Version]
+          # @param root_dir [String]
           # @return [Pathname]
-          def resolve_csv_dir_of(version)
-            pathname  = Pathname.new(MASTER_CSV_DIR)
+          def resolve_csv_dir_of(version, root_dir)
+            pathname  = Pathname.new(root_dir)
             pathname += version.year.to_s
             pathname.expand_path(__dir__)
           end

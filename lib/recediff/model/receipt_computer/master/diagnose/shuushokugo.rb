@@ -116,6 +116,10 @@ module Recediff
                 end
               end
             end
+
+            private
+
+            attr_reader :category
           end
         end
       end

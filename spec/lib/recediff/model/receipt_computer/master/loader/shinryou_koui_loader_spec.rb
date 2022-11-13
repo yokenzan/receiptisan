@@ -19,7 +19,7 @@ RSpec.describe ShinryouKouiLoader do
       expect(result).to be_instance_of Hash
     end
     specify '診療行為コードのシンボルがキーになっている' do
-      expect(result.keys).to include(:'111000110', :'140009310', :'160000190', :'170000410')
+      expect(result.keys).to include(*%i[111000110 140009310 160000190 170000410])
     end
     specify '値は診療行為オブジェクトになっている' do
       expect(result.values).to all(be_instance_of ShinryouKoui)
@@ -48,16 +48,36 @@ RSpec.describe ShinryouKouiLoader do
       end
 
       context '初診料' do
-        it_behaves_like '#load_shinryou_koui_master_examples', :'111000110', '初診料', 'ショシンリョウ', nil, '初診料'
+        it_behaves_like '#load_shinryou_koui_master_examples',
+          _code_by_symbol = :'111000110',
+          _name           = '初診料',
+          _name_kana      = 'ショシンリョウ',
+          _unit           = nil,
+          _full_name      = '初診料'
       end
       context '人工呼吸' do
-        it_behaves_like '#load_shinryou_koui_master_examples', :'140009310', '人工呼吸', 'ジンコウコキュウ', Unit.find_by_code('1'), '人工呼吸'
+        it_behaves_like '#load_shinryou_koui_master_examples',
+          _code_by_symbol = :'140009310',
+          _name           = '人工呼吸',
+          _name_kana      = 'ジンコウコキュウ',
+          _unit           = Unit.find_by_code('1'),
+          _full_name      = '人工呼吸'
       end
       context '検査逓減' do
-        it_behaves_like '#load_shinryou_koui_master_examples', :'160000190', '検査逓減', 'ケンサテイゲン', nil, '検査逓減'
+        it_behaves_like '#load_shinryou_koui_master_examples',
+          _code_by_symbol = :'160000190',
+          _name           = '検査逓減',
+          _name_kana      = 'ケンサテイゲン',
+          _unit           = nil,
+          _full_name      = '検査逓減'
       end
       context '単純撮影（イ）の写真診断' do
-        it_behaves_like '#load_shinryou_koui_master_examples', :'170000410', '単純撮影（イ）の写真診断', 'タンジュンサツエイノシャシンシンダン', Unit.find_by_code('6'), '単純撮影（頭部、胸部、腹部又は脊椎）の写真診断'
+        it_behaves_like '#load_shinryou_koui_master_examples',
+          _code_by_symbol = :'170000410',
+          _name           = '単純撮影（イ）の写真診断',
+          _name_kana      = 'タンジュンサツエイノシャシンシンダン',
+          _unit           = Unit.find_by_code('6'),
+          _full_name      = '単純撮影（頭部、胸部、腹部又は脊椎）の写真診断'
       end
     end
   end
