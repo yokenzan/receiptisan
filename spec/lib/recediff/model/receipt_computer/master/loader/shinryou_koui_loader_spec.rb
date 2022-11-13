@@ -80,5 +80,41 @@ RSpec.describe ShinryouKouiLoader do
           _full_name      = '単純撮影（頭部、胸部、腹部又は脊椎）の写真診断'
       end
     end
+
+    describe 'マスターテーブルのスキーマが変っても、正しく各診療行為オブジェクトが読込まれる' do
+      let(:root_dir) { '../../../../../../resource/csv/master' }
+      let(:result_v2022) { loader.load(Version::V2022_R04, Pathname(root_dir).join('2022/s_ALL00000000.csv').expand_path(__dir__)) }
+      let(:result_v2020) { loader.load(Version::V2020_R02, Pathname(root_dir).join('2020/s_ALL00000000.csv').expand_path(__dir__)) }
+
+      describe '初診料の点数の変更が正しく切替わる' do
+        let(:shoshinryou_code) { :'111000110' }
+
+        context Version::V2022_R04 do
+          specify '点数は282点であること' do
+            expect(result_v2022[shoshinryou_code].point).to eq 282
+          end
+        end
+        context Version::V2020_R02 do
+          specify '点数は288点であること' do
+            expect(result_v2020[shoshinryou_code].point).to eq 288
+          end
+        end
+      end
+
+      describe '処方箋料の名称の変更が正しく切替わる' do
+        let(:shohousenryou_code) { :'120002910' }
+
+        context Version::V2022_R04 do
+          specify '名称は"処方箋料（リフィル以外・その他）"であること' do
+            expect(result_v2022[shohousenryou_code].name).to eq '処方箋料（リフィル以外・その他）'
+          end
+        end
+        context Version::V2020_R02 do
+          specify '名称は"処方箋料（その他）"であること' do
+            expect(result_v2020[shohousenryou_code].name).to eq '処方箋料（その他）'
+          end
+        end
+      end
+    end
   end
 end

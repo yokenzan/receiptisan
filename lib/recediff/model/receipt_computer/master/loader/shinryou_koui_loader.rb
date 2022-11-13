@@ -25,7 +25,7 @@ module Recediff
                     name_kana:                    convert_katakana(values[columns::C_省略名称_カナ名称]),
                     unit:                         Unit.find_by_code(values[columns::C_データ規格コード]),
                     price_type:                   Treatment::PriceType.new(values[columns::C_点数識別]),
-                    point:                        values[columns::C_新又は現点数],
+                    point:                        values[columns::C_新又は現点数].to_i,
                     shuukeisaki_shikibetu_gairai: values[columns::C_点数欄集計先識別_入院外],
                     shuukeisaki_shikibetu_nyuuin: values[columns::C_点数欄集計先識別_入院],
                     # code_hyou_you_bangou_alphabet:     values[columns::C_コード表用番号_アルファベット部],
