@@ -10,7 +10,7 @@ module Recediff
 
             # @param version [Version]
             # @param csv_path [String]
-            # @return [Hash<Treatment::ShinryouKoui>]
+            # @return [Hash<Symbol, Treatment::ShinryouKoui>]
             def load(version, csv_path)
               {}.tap do | hash |
                 unless (columns = Treatment::ShinryouKoui::Columns.resolve_columns_by(version))
