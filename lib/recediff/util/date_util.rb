@@ -31,24 +31,26 @@ module Recediff
         #   @return [String]
         # @!attribute [r] short_name
         #   @return [String]
+        # @!attribute [r] alphabet
+        #   @return [String]
         # @!attribute [r] base_year
         #   @return [Integer]
         attr_reader :code, :name, :short_name, :alphabet, :base_year
-      end
 
-      # @type [Hash<Symbol, Gengou>]
-      @gengous = {
-        '1': Gengou.new(1, '明治', '明', 'M', 1967),
-        '2': Gengou.new(2, '大正', '大', 'T', 1911),
-        '3': Gengou.new(3, '昭和', '昭', 'S', 1925),
-        '4': Gengou.new(4, '平成', '平', 'H', 1988),
-        '5': Gengou.new(5, '令和', '令', 'R', 2018),
-      }
+        # @type [Hash<Symbol, Gengou>]
+        @gengous = {
+          '1': Gengou.new(1, '明治', '明', 'M', 1967),
+          '2': Gengou.new(2, '大正', '大', 'T', 1911),
+          '3': Gengou.new(3, '昭和', '昭', 'S', 1925),
+          '4': Gengou.new(4, '平成', '平', 'H', 1988),
+          '5': Gengou.new(5, '令和', '令', 'R', 2018),
+        }
 
-      class << @gengous
-        # @return [Gengou, nil]
-        def find_by_alphabet(alphabet)
-          values.find { | gengou | gengou.alphabet == alphabet }
+        class << self
+          # @return [Gengou, nil]
+          def find_by_alphabet(alphabet)
+            @gengous.values.find { | gengou | gengou.alphabet == alphabet }
+          end
         end
       end
 
