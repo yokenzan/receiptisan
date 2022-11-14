@@ -6,20 +6,23 @@ module Recediff
       class DigitalizedReceipt
         # 性別(男女区分)
         class Sex
-          def initialize(code:, name:)
-            @code = code
-            @name = name
+          def initialize(code:, name:, short_name:)
+            @code       = code
+            @name       = name
+            @short_name = short_name
           end
 
           # @!attribute [r] code
           #   @return [String]
           # @!attribute [r] name
           #   @return [String]
-          attr_reader :code, :name
+          # @!attribute [r] short_name
+          #   @return [String]
+          attr_reader :code, :name, :short_name
 
           @sexes = {
-            '1': new(code: 1, name: '男性'),
-            '2': new(code: 2, name: '女性'),
+            '1': new(code: 1, name: '男性', short_name: '男'),
+            '2': new(code: 2, name: '女性', short_name: '女'),
           }
 
           class << self
