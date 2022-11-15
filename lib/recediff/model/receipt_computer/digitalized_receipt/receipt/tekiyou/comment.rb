@@ -80,6 +80,7 @@ module Recediff
               attr_reader :item, :additional_comment, :shinryou_shikibetsu, :futan_kubun
 
               def_delegators :item, :code, :pattern
+              alias master_item item
 
               class AdditionalComment
                 @patterns = {

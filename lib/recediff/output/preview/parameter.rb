@@ -344,6 +344,30 @@ module Recediff
 
         Tekiyou                   = Struct.new(:shinryou_shikibetsu_sections, keyword_init: true)
         ShinryouShikibetsuSection = Struct.new(:shinryou_shikibetsu, :ichiren_units, keyword_init: true)
+        class ShinryouShikibetsu < CodedItem
+          extend CodedItemFactory
+        end
+        IchirenUnit   = Struct.new(:futan_kubun, :santei_units, keyword_init: true)
+        SanteiUnit    = Struct.new(:tensuu, :kaisuu, :items, keyword_init: true)
+        TekiyouItem   = Struct.new(:treat, :tensuu, :kaisuu, keyword_init: true)
+        Treat         = Struct.new(:item, :text, :shiyouryou, keyword_init: true)
+        TreatmentItem = Struct.new(:type, :code, :name, :unit, keyword_init: true)
+        class Unit < CodedItem
+          extend CodedItemFactory
+        end
+
+        # 療養の給付欄
+
+        RyouyouNoKyuufuList = Struct.new(:iryou_hoken, :kouhi_futan_iryous, keyword_init: true)
+        RyouyouNoKyuufu     = Struct.new(
+          :goukei_tensuu,
+          :shinryou_jitsunissuu,
+          :ichibu_futankin,
+          :kyuufu_taishou_ichibu_futankin,
+          :shokuji_seikatsu_ryouyou_kaisuu,
+          :shokuji_seikatsu_ryouyou_goukei_kingaku,
+          keyword_init: true
+        )
       end
     end
   end

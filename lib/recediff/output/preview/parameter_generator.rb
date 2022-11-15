@@ -41,20 +41,16 @@ module Recediff
             prefecture:        parameterized_prefecture,
             hospital:          parameterized_hospital,
             type:              Parameter::Type.from(receipt.type),
-            tokki_jikous:      [],
+            tokki_jikous:      receipt.tokki_jikous.values.map { | tokki_jikou | Parameter::TokkiJikou.from(tokki_jikou) },
             patient:           Parameter::Patient.from(receipt.patient),
             hokens:            convert_applied_hoken_list(
               receipt.iryou_hoken,
               receipt.kouhi_futan_iryous
             ),
-            shoubyoumeis:      [],
-            tekiyou:           Parameter::Tekiyou.new,
-            ryouyou_no_kyuufu: []
+            shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
+            tekiyou:           convert_tekiyou(receipt),
+            ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.iryou_hoken, receipt.kouhi_futan_iryous)
           ).tap do | parameterized_receipt |
-            # 特記事項
-            parameterized_receipt.tokki_jikous = receipt.tokki_jikous.values.map { | tokki_jikou | Parameter::TokkiJikou.from(tokki_jikou) }
-            # 傷病名
-            parameterized_receipt.shoubyoumeis = convert_shoubyoumeis(receipt.shoubyoumeis)
             # 摘要欄
           end
         end
@@ -84,38 +80,47 @@ module Recediff
         end
 
         # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
-        def ryouyou_no_kyuufu_convert_iryou_hoken(iryou_hoken)
-          {
-            goukei_tensuu:                           iryou_hoken&.goukei_tensuu,
-            shinryou_jitsunissuu:                    iryou_hoken&.shinryou_jitsunissuu,
-            ichibu_futankin:                         iryou_hoken&.ichibu_futankin,
-            kyuufu_taishou_ichibu_futankin:          iryou_hoken&.kyuufu_taishou_ichibu_futankin,
-            shokuji_seikatsu_ryouyou_kaisuu:         iryou_hoken&.shokuji_seikatsu_ryouyou_kaisuu,
-            shokuji_seikatsu_ryouyou_goukei_kingaku: iryou_hoken&.shokuji_seikatsu_ryouyou_goukei_kingaku,
-          }
-        end
-
         # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou>]
-        def ryouyou_no_kyuufu_convert_kouhi_futan_iryous(kouhi_futan_iryous)
-          # @param kouhi_futan_iryou [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou]
-          # @param index [Integer]
+        def convert_ryouyou_no_kyuufu(iryou_hoken, kouhi_futan_iryous)
+          list = Parameter::RyouyouNoKyuufuList.new
+
+          if iryou_hoken
+            list.iryou_hoken = Parameter::RyouyouNoKyuufu.new(
+              goukei_tensuu:                           iryou_hoken.goukei_tensuu,
+              shinryou_jitsunissuu:                    iryou_hoken.shinryou_jitsunissuu,
+              ichibu_futankin:                         iryou_hoken.ichibu_futankin,
+              kyuufu_taishou_ichibu_futankin:          iryou_hoken.kyuufu_taishou_ichibu_futankin,
+              shokuji_seikatsu_ryouyou_kaisuu:         iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu,
+              shokuji_seikatsu_ryouyou_goukei_kingaku: iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku
+            )
+          end
+
+          list.kouhi_futan_iryous = []
           kouhi_futan_iryous.map do | kouhi_futan_iryou |
-            {
+            list.kouhi_futan_iryous << Parameter::RyouyouNoKyuufu.new(
               goukei_tensuu:                           kouhi_futan_iryou.goukei_tensuu,
               shinryou_jitsunissuu:                    kouhi_futan_iryou.shinryou_jitsunissuu,
               ichibu_futankin:                         kouhi_futan_iryou.ichibu_futankin,
               kyuufu_taishou_ichibu_futankin:          kouhi_futan_iryou.kyuufu_taishou_ichibu_futankin,
               shokuji_seikatsu_ryouyou_kaisuu:         kouhi_futan_iryou.shokuji_seikatsu_ryouyou_kaisuu,
-              shokuji_seikatsu_ryouyou_goukei_kingaku: kouhi_futan_iryou.shokuji_seikatsu_ryouyou_goukei_kingaku,
-            }
+              shokuji_seikatsu_ryouyou_goukei_kingaku: kouhi_futan_iryou.shokuji_seikatsu_ryouyou_goukei_kingaku
+            )
           end
+
+          list
         end
 
         # @param shoubyoumeis [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
         # @return [Array<Parameter::GroupedShoubyoumeiList>]
         def convert_shoubyoumeis(shoubyoumeis)
           sorter = proc do | grouped_list, _ |
-            [grouped_list.main? ? 0 : 1, grouped_list.start_date.year, grouped_list.start_date.month ,grouped_list.start_date.day, grouped_list.tenki.code]
+            [
+              grouped_list.main? ? 0 : 1,
+              grouped_list.start_date.year,
+              grouped_list.start_date.month,
+              grouped_list.start_date.day,
+              grouped_list.tenki.code,
+            ]
           end
 
           # @param shoubyoumei [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei]
@@ -126,8 +131,8 @@ module Recediff
               is_main:      shoubyoumei.main?,
               shoubyoumeis: []
             )
-          # @param grouped_list [Parameter::GroupedShoubyoumeiList]
-          # @param shoubyoumeis [<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
+            # @param grouped_list [Parameter::GroupedShoubyoumeiList]
+            # @param shoubyoumeis [<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
           end.sort_by(&sorter).each do | grouped_list, shoubyoumeis |
             grouped_list.shoubyoumeis = shoubyoumeis
               .sort_by(&:code)
@@ -139,45 +144,54 @@ module Recediff
 
         # @param receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
         def convert_tekiyou(receipt)
-          receipt.map do | shinryou_shikibetsu, ichiren_units |
-            {
-              shinryou_shikibetsu: {
-                code: shinryou_shikibetsu.code,
-                name: shinryou_shikibetsu.name,
-              },
-              # @param ichiren [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::IchirenUnit]
-              ichiren_units:       ichiren_units.map do | ichiren |
-                {
-                  futan_kubun:  ichiren.futan_kubun.code,
-                  # @param santei_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
-                  santei_units: ichiren.map do | santei_unit |
-                    {
-                      tensuu: santei_unit.tensuu,
-                      kaisuu: santei_unit.kaisuu,
-                      # @param item [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost,
-                      #              Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment]
-                      items:  santei_unit.map do | item |
-                        {
-                          item:   {
-                            type:       item.type,
-                            code:       item.code.value,
-                            name:       item.name,
-                            shiyouryou: item.shiyouryou,
-                            unit:       item.unit ? {
-                              code: item.unit&.code,
-                              name: item.unit&.name,
-                            } : nil,
-                          },
-                          tensuu: item.tensuu,
-                          kaisuu: item.kaisuu,
-                        }
-                      end,
-                    }
-                  end,
-                }
-              end,
-            }
-          end.sort_by { | s | s[:shinryou_shikibetsu][:code].to_s.to_i }
+          Parameter::Tekiyou.new(
+            shinryou_shikibetsu_sections: receipt.map do | shinryou_shikibetsu, ichiren_units |
+              Parameter::ShinryouShikibetsuSection.new(
+                shinryou_shikibetsu: Parameter::ShinryouShikibetsu.from(shinryou_shikibetsu),
+                ichiren_units:       ichiren_units.map { | ichiren_unit | convert_ichiren_unit(ichiren_unit) }
+              )
+            end.sort_by { | section | section.shinryou_shikibetsu.code }
+          )
+        end
+
+        # @param ichiren_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::IchirenUnit]
+        # @return [Parameter::IchirenUnit]
+        def convert_ichiren_unit(ichiren_unit)
+          Parameter::IchirenUnit.new(
+            futan_kubun:  ichiren_unit.futan_kubun.code,
+            santei_units: ichiren_unit.map { | santei_unit | convert_santei_unit(santei_unit) }
+          )
+        end
+
+        # @param santei_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
+        # @return [Parameter::SanteiUnit]
+        def convert_santei_unit(santei_unit)
+          Parameter::SanteiUnit.new(
+            tensuu: santei_unit.tensuu,
+            kaisuu: santei_unit.kaisuu,
+            items:  santei_unit.map { | tekiyou_item | convert_tekiyou_item(tekiyou_item) }
+          )
+        end
+
+        # @param tekiyou_item [
+        #   Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost,
+        #   Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment
+        # ]
+        def convert_tekiyou_item(tekiyou_item)
+          Parameter::TekiyouItem.new(
+            tensuu: tekiyou_item.tensuu,
+            kaisuu: tekiyou_item.kaisuu,
+            treat:  Parameter::Treat.new(
+              shiyouryou: tekiyou_item.shiyouryou,
+              text:       '%s %s%s' % [tekiyou_item, tekiyou_item.shiyouryou, tekiyou_item.unit&.name],
+              item:       Parameter::TreatmentItem.new(
+                type: tekiyou_item.type,
+                code: tekiyou_item.code.value,
+                name: tekiyou_item.name,
+                unit: tekiyou_item.unit ? Parameter::Unit.from(tekiyou_item.unit) : nil
+              )
+            )
+          )
         end
 
         def calculate_summary_of(_receipt)
