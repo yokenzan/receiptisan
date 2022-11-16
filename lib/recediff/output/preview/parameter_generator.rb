@@ -43,48 +43,30 @@ module Recediff
             type:              Parameter::Type.from(receipt.type),
             tokki_jikous:      receipt.tokki_jikous.values.map { | tokki_jikou | Parameter::TokkiJikou.from(tokki_jikou) },
             patient:           Parameter::Patient.from(receipt.patient),
-            hokens:            convert_applied_hoken_list(
-              receipt.iryou_hoken,
-              receipt.kouhi_futan_iryous
-            ),
+            hokens:            convert_applied_hoken_list(receipt.hoken_list),
             shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
             tekiyou:           convert_tekiyou(receipt),
-            ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.iryou_hoken, receipt.kouhi_futan_iryous)
+            ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list)
           ).tap do | parameterized_receipt |
             # 摘要欄
           end
         end
 
-        # @param receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
-        # @param audit_payer [Recediff::Model::ReceiptComputer::DigitalizedReceipt::AuditPayer]
-        # @rubocop:disable Metrics/MethodLength
-        def __convert_receipt(receipt)
-          {
-            shoubyoumeis:        convert_shoubyoumeis(receipt.shoubyoumeis),
-            tekiyou:             convert_tekiyou(receipt),
-            point_summary_board: calculate_summary_of(receipt),
-            ryouyou_no_kyuufu:   {
-              iryou_hoken:        ryouyou_no_kyuufu_convert_iryou_hoken(receipt.iryou_hoken),
-              kouhi_futan_iryous: ryouyou_no_kyuufu_convert_kouhi_futan_iryous(receipt.kouhi_futan_iryous),
-            },
-          }
-        end
-
-        # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
-        # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou>]
-        def convert_applied_hoken_list(iryou_hoken, kouhi_futan_iryous)
+        # @param applied_hoken_list [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::AppliedHokenList]
+        def convert_applied_hoken_list(applied_hoken_list)
+          iryou_hoken        = applied_hoken_list.iryou_hoken
+          kouhi_futan_iryous = applied_hoken_list.kouhi_futan_iryous
           Parameter::AppliedHokenList.new(
             iryou_hoken:        iryou_hoken ? Parameter::IryouHoken.from(iryou_hoken) : nil,
             kouhi_futan_iryous: kouhi_futan_iryous.map { | kouhi_futan_iryou | Parameter::KouhiFutanIryou.from(kouhi_futan_iryou) }
           )
         end
 
-        # @param iryou_hoken [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::IryouHoken]
-        # @param kouhi_futan_iryous [Array<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::KouhiFutanIryou>]
-        def convert_ryouyou_no_kyuufu(iryou_hoken, kouhi_futan_iryous)
+        # @param applied_hoken_list [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::AppliedHokenList]
+        def convert_ryouyou_no_kyuufu(applied_hoken_list)
           list = Parameter::RyouyouNoKyuufuList.new
 
-          if iryou_hoken
+          if (iryou_hoken = applied_hoken_list.iryou_hoken)
             list.iryou_hoken = Parameter::RyouyouNoKyuufu.new(
               goukei_tensuu:                           iryou_hoken.goukei_tensuu,
               shinryou_jitsunissuu:                    iryou_hoken.shinryou_jitsunissuu,
@@ -96,7 +78,7 @@ module Recediff
           end
 
           list.kouhi_futan_iryous = []
-          kouhi_futan_iryous.map do | kouhi_futan_iryou |
+          applied_hoken_list.kouhi_futan_iryous.map do | kouhi_futan_iryou |
             list.kouhi_futan_iryous << Parameter::RyouyouNoKyuufu.new(
               goukei_tensuu:                           kouhi_futan_iryou.goukei_tensuu,
               shinryou_jitsunissuu:                    kouhi_futan_iryou.shinryou_jitsunissuu,

@@ -10,6 +10,7 @@ require_relative 'receipt/shoujou_shouki'
 require_relative 'receipt/patient'
 require_relative 'receipt/iryou_hoken'
 require_relative 'receipt/kouhi_futan_iryou'
+require_relative 'receipt/applied_hoken_list'
 require_relative 'receipt/nissuu_kyuufu'
 require_relative 'receipt/shinryou_shikibetsu'
 require_relative 'receipt/futan_kubun'
@@ -37,8 +38,7 @@ module Recediff
             @audit_payer        = nil
             @tokki_jikous       = {}
             @tekiyou            = Hash.new { | hash, key | hash[key] = [] }
-            @iryou_hoken        = nil
-            @kouhi_futan_iryous = []
+            @hoken_list         = AppliedHokenList.new
             @shoubyoumeis       = []
             @shoujou_shoukis    = []
           end
@@ -47,18 +47,6 @@ module Recediff
           # @return [void]
           def add_tokki_jikou(tokki_jikou)
             @tokki_jikous[tokki_jikou.code] = tokki_jikou
-          end
-
-          # @param iryou_hoken [IryouHoken]
-          # @return [void]
-          def add_iryou_hoken(iryou_hoken)
-            @iryou_hoken = iryou_hoken
-          end
-
-          # @param kouhi_futan_iryou [KouhiFutanIryou]
-          # @return [void]
-          def add_kouhi_futan_iryou(kouhi_futan_iryou)
-            @kouhi_futan_iryous << kouhi_futan_iryou
           end
 
           # @param shoubyoumei [Shoubyoumei]
@@ -102,12 +90,9 @@ module Recediff
           # @!attribute [r] tokki_jikous
           #   @return [Hash<TokkiJikou]
           attr_reader :tokki_jikous
-          # @!attribute [r] iryou_hoken
-          #   @return [IryouHoken, nil]
-          attr_reader :iryou_hoken
-          # @!attribute [r] kouhi_futan_iryous
-          #   @return [Array<KouhiFutanIryou>, nil]
-          attr_reader :kouhi_futan_iryous
+          # @!attribute [r] hoken_list
+          #   @return [AppliedHokenList]
+          attr_reader :hoken_list
           # @!attribute [r] shoubyoumeis
           #   @return [Array<Shoubyoumei>]
           attr_reader :shoubyoumeis
@@ -122,6 +107,15 @@ module Recediff
           attr_accessor :audit_payer
 
           def_delegators :@tekiyou, :each, :map
+          # @!attribute [r] iryou_hoken
+          #   @return [IryouHoken, nil]
+          # @!attribute [r] kouhi_futan_iryous
+          #   @return [Array<KouhiFutanIryou>, nil]
+          def_delegators :@hoken_list,
+            :iryou_hoken,
+            :kouhi_futan_iryous,
+            :add_iryou_hoken,
+            :add_kouhi_futan_iryou
         end
       end
     end
