@@ -118,6 +118,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
               C_変更区分                      = 0
               C_マスター種別                  = 1
@@ -144,6 +145,7 @@ module Recediff
               C_コード                        = 22
               C_公表順序番号                  = 23
             end
+            # rubocop:enable Layout/SpaceAroundOperators, Layout/ExtraSpacing
           end
         end
       end

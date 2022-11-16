@@ -75,6 +75,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
               C_変更区分                                     = 0
               C_マスター種別                                 = 1
@@ -112,6 +113,7 @@ module Recediff
               C_経過措置年月日又は商品名医薬品コード使用期限 = 33
               C_基本漢字名称                                 = 34
             end
+            # rubocop:enable Layout/SpaceAroundOperators, Layout/ExtraSpacing
           end
         end
       end

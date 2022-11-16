@@ -123,8 +123,9 @@ module Recediff
             #   attr_reader :tensuu_hyou_kubun_bangou
             # end
 
+            # rubocop:disable Metrics/ModuleLength, Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
-              module Columns2022 # rubocop:disable Metrics/ModuleLength
+              module Columns2022
                 C_変更区分                             = 0
                 C_マスター種別                         = 1
                 C_コード                               = 2
@@ -251,7 +252,7 @@ module Recediff
                 # end more..
               end
 
-              module Columns2020 # rubocop:disable Metrics/ModuleLength
+              module Columns2020
                 C_変更区分                             = 0
                 C_マスター種別                         = 1
                 C_コード                               = 2
@@ -396,6 +397,7 @@ module Recediff
                 end
               end
             end
+            # rubocop:enable Metrics/ModuleLength, Layout/SpaceAroundOperators, Layout/ExtraSpacing
           end
         end
       end
