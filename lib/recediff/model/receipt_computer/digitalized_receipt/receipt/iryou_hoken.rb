@@ -11,6 +11,7 @@ module Recediff
           class IryouHoken
             extend Forwardable
 
+            # rubocop:disable Metrics/ParameterLists
             def initialize(
               hokenja_bangou:,
               kigou:,
@@ -29,6 +30,7 @@ module Recediff
               @kyuufu_wariai    = kyuufu_wariai
               @edaban           = nil
             end
+            # rubocop:enable Metrics/ParameterLists
 
             # @param edaban [String]
             # @return [void]

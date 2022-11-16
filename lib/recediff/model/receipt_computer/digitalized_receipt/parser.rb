@@ -54,6 +54,7 @@ module Recediff
 
           # @param values [Array<String, nil>]
           # @return [void]
+          # rubocop:disable Metrics/CyclomaticComplexity
           def parse_line(values, line_index)
             @current_processor = @processors[record_type = values.first]
 
@@ -82,6 +83,7 @@ module Recediff
             p values.join(',')
             puts e.backtrace
           end
+          # rubocop:enable Metrics/CyclomaticComplexity
 
           # @param values [Array<String, nil>]
           # @return [void]

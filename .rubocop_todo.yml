@@ -62,7 +62,9 @@ Style/RescueStandardError:
 Layout/SpaceAroundOperators:
   Exclude:
     - 'lib/recediff/model/uke/enum.rb'
+    - 'lib/recediff/model/receipt_computer/digitalized_receipt/record.rb'
 
 Layout/ExtraSpacing:
   Exclude:
     - 'lib/recediff/model/uke/enum.rb'
+    - 'lib/recediff/model/receipt_computer/digitalized_receipt/record.rb'

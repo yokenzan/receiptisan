@@ -35,4 +35,5 @@ jobs:
       run: bundle exec rspec -- spec/lib/recediff/model
       # run: bundle exec rake test -- spec/lib/recediff/model/receipt_computer
     - name: Run linters
-      run: bundle exec rake lint
+      run: bundle exec rubocop -- lib/recediff/model/receipt_computer
+      # run: bundle exec rake lint

@@ -62,6 +62,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/ExtraSpacing, Layout/SpaceAroundOperators
             module Columns
               C_変更区分                        = 0
               C_マスター種別                    = 1
@@ -101,6 +102,7 @@ module Recediff
               C_予備_5                          = 35
               C_基本漢字名称                    = 36
             end
+            # rubocop:enable Layout/ExtraSpacing, Layout/SpaceAroundOperators
           end
         end
       end

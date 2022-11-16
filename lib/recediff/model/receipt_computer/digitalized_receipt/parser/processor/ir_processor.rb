@@ -9,7 +9,7 @@ module Recediff
         class Parser
           module Processor
             class IRProcessor
-              IR         = Record::IR
+              IR       = Record::IR
               DateUtil = Recediff::Util::DateUtil
 
               # @param values [Array<String, nil>] IR行

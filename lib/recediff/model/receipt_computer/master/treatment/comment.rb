@@ -99,7 +99,9 @@ module Recediff
                 '31': new(:'31', false, proc { | _, additional_comment | additional_comment.item.name }),
                 '40': new(:'40', true,  proc { | _, additional_comment | additional_comment.value }),
                 '42': new(:'42', false, proc { | _, additional_comment | additional_comment.value }),
-                '50': new(:'50', false, proc { | _, additional_comment | Recediff::Util::DateUtil.to_wareki(additional_comment.item) }),
+                '50': new(:'50', false, proc { | _, additional_comment |
+                  Recediff::Util::DateUtil.to_wareki(additional_comment.item)
+                }),
                 '51': new(:'51', false, proc { | _, additional_comment | additional_comment.item }),
                 '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
                 '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
@@ -116,6 +118,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
               C_変更区分                      = 0
               C_マスター種別                  = 1
@@ -142,6 +145,7 @@ module Recediff
               C_コード                        = 22
               C_公表順序番号                  = 23
             end
+            # rubocop:enable Layout/SpaceAroundOperators, Layout/ExtraSpacing
           end
         end
       end

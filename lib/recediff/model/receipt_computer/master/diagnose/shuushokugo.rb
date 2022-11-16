@@ -50,6 +50,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/ExtraSpacing, Layout/SpaceAroundOperators
             module Columns
               C_変更区分           = 0
               C_マスター種別       = 1
@@ -71,6 +72,7 @@ module Recediff
               C_修飾語交換用コード = 17
               C_修飾語区分         = 18
             end
+            # rubocop:enable Layout/ExtraSpacing, Layout/SpaceAroundOperators
 
             class Category
               # @param code [Symbol]

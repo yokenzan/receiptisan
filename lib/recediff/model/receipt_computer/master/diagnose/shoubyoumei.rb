@@ -50,6 +50,7 @@ module Recediff
               end
             end
 
+            # rubocop:disable Layout/ExtraSpacing, Layout/SpaceAroundOperators
             module Columns
               C_変更区分                           = 0
               C_マスター種別                       = 1
@@ -98,6 +99,7 @@ module Recediff
               C_ＩＣＤ－１０－１_２０１３_変更情報 = 44
               C_ＩＣＤ－１０－２_２０１３_変更情報 = 45
             end
+            # rubocop:enable Layout/ExtraSpacing, Layout/SpaceAroundOperators
           end
         end
       end

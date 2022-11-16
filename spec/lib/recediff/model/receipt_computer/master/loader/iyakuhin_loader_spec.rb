@@ -43,10 +43,10 @@ RSpec.describe IyakuhinLoader do
           expect(result[code_by_symbol].unit).to be unit
         end
         specify '注射容量がCSVとオブジェクトで一致する' do
-          expect(result[code_by_symbol].unit).to be unit
+          expect(result[code_by_symbol].chuusha_youryou).to be chuusha_youryou
         end
         specify '剤形がCSVとオブジェクトで一致する' do
-          expect(result[code_by_symbol].unit).to be unit
+          expect(result[code_by_symbol].dosage_form).to be dosage_form
         end
         specify '医薬品漢字名称がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].full_name).to eq full_name
@@ -69,7 +69,7 @@ RSpec.describe IyakuhinLoader do
           _name            = '生理食塩液　１．３Ｌ',
           _name_kana       = 'セイリショクエンエキ',
           _unit            = Unit.find_by_code('20'),
-          _chuusha_youryou = nil,
+          _chuusha_youryou = 1300,
           _dosage_form     = 4,
           _full_name       = '生理食塩液'
       end
