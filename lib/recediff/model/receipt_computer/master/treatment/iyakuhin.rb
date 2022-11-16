@@ -13,7 +13,7 @@ module Recediff
             # @param unit [Unit]
             # @param price_type [PriceType]
             # @param price [Numeric]
-            # @param chuusha_youryou [Numeric]
+            # @param chuusha_youryou [Numeric, nil]
             # @param dosage_form [DosageFormType]
             # @param full_name [String]
             def initialize(
@@ -56,6 +56,12 @@ module Recediff
             # @!attribute [r] full_name
             #   @return [String]
             attr_reader :full_name
+            # @!attribute [r] chuusha_youryou
+            #   @return [Numeric, nil]
+            attr_reader :chuusha_youryou
+            # @!attribute [r] dosage_form
+            #   @return [DosageFormType]
+            attr_reader :dosage_form
 
             # 医薬品コード
             class Code
