@@ -15,16 +15,6 @@ module Recediff
           @base_year  = base_year
         end
 
-        def to_h
-          {
-            code:       code,
-            name:       name,
-            short_name: short_name,
-            alphabet:   alphabet,
-            base_year:  base_year,
-          }
-        end
-
         # @!attribute [r] code
         #   @return [Symbol]
         # @!attribute [r] name
@@ -83,38 +73,6 @@ module Recediff
           else
             throw ArgumentError, 'cant parse as date: ' << text.to_s
           end
-        end
-
-        # @overload to_wareki(dat_or_monthe)
-        #   @param date_or_month [Date]
-        # @overload to_wareki(date_or_month)
-        #   @param date_or_month [Month]
-        def to_wareki(date_or_month)
-          is_month    = date_or_month.instance_of?(Month)
-          date        = is_month ? Date.new(date_or_month.year, date_or_month.number, 1) : date_or_month
-          jisx0301    = date.jisx0301
-          jisx0301[3] = '年'
-          jisx0301[6] = '月'
-          jisx0301 << '日'
-          jisx0301[0] = @gengous.find_by_alphabet(jisx0301[0]).name
-          jisx0301.tr('0-9', '０-９').tap { | text | text[-3..-1] = '' if is_month }
-        end
-
-        # @overload to_wareki_components(dat_or_monthe)
-        #   @param date_or_month [Date]
-        # @overload to_wareki_components(date_or_month)
-        #   @param date_or_month [Month]
-        def to_wareki_components(date_or_month)
-          is_month = date_or_month.instance_of?(Month)
-          date     = is_month ? Date.new(date_or_month.year, date_or_month.number, 1) : date_or_month
-          jisx0301 = date.jisx0301
-          {
-            gengou: @gengous.find_by_alphabet(jisx0301[0]).to_h,
-            year:   jisx0301[1, 2].to_i,
-            month:  date.month,
-            day:    date.day,
-            text:   to_wareki(date_or_month),
-          }.tap { | hash | hash.delete(:day) if is_month }
         end
 
         private
