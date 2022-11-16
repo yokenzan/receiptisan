@@ -10,11 +10,12 @@ module Recediff
           # @param prefecture [Prefecture]
           # @param name [String]
           # @param tel [String]
-          def initialize(code:, name:, tel:, prefecture:)
+          def initialize(code:, name:, tel:, prefecture:, address: nil)
             @code       = code
             @name       = name
             @tel        = tel
             @prefecture = prefecture
+            @address    = address
           end
 
           # @!attribute [r] code
@@ -25,7 +26,9 @@ module Recediff
           #   @return [String]
           # @!attribute [r] prefecture
           #   @return [Prefecture]
-          attr_reader :code, :name, :tel, :prefecture
+          # @!attribute [r] address
+          #   @return [String]
+          attr_reader :code, :name, :tel, :prefecture, :address
         end
       end
     end
