@@ -32,9 +32,11 @@ module Recediff
           def initialize(code)
             @code = code
 
+            # rubocop:disable Style/GuardClause
             unless __to_code.length == self.class.__digit_length
               raise StandardError, 'invalid code of %s : %s' % [self.class.__name, code]
             end
+            # rubocop:enable Style/GuardClause
           end
 
           # @return [String]

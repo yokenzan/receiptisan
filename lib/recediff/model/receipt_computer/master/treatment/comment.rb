@@ -99,7 +99,9 @@ module Recediff
                 '31': new(:'31', false, proc { | _, additional_comment | additional_comment.item.name }),
                 '40': new(:'40', true,  proc { | _, additional_comment | additional_comment.value }),
                 '42': new(:'42', false, proc { | _, additional_comment | additional_comment.value }),
-                '50': new(:'50', false, proc { | _, additional_comment | Recediff::Util::DateUtil.to_wareki(additional_comment.item) }),
+                '50': new(:'50', false, proc { | _, additional_comment |
+                  Recediff::Util::DateUtil.to_wareki(additional_comment.item)
+                }),
                 '51': new(:'51', false, proc { | _, additional_comment | additional_comment.item }),
                 '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
                 '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
