@@ -53,6 +53,7 @@ module Recediff
 
           # @param values [Array<String, nil>]
           # @return [void]
+          # rubocop:disable Metrics/CyclomaticComplexity
           def parse_line(values, line_index)
             case record_type = values.first
             when 'IR' then process_ir(values)
@@ -79,6 +80,7 @@ module Recediff
             p values.join(',')
             puts e.backtrace
           end
+          # rubocop:enable Metrics/CyclomaticComplexity
 
           # @param values [Array<String, nil>]
           # @return [void]

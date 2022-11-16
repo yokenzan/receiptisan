@@ -97,17 +97,13 @@ module Recediff
               digitalized_receipt
             end
 
-            def latest_kyuufu_wariai=(kyuufu_wariai)
-              @latest_kyuufu_wariai = kyuufu_wariai
-            end
+            attr_writer :latest_kyuufu_wariai
 
             def latest_kyuufu_wariai
               @latest_kyuufu_wariai.tap { @latest_kyuufu_wariai = nil }
             end
 
-            def latest_teishotoku_kubun=(teishotoku_kubun)
-              @latest_teishotoku_kubun = teishotoku_kubun
-            end
+            attr_writer :latest_teishotoku_kubun
 
             def latest_teishotoku_kubun
               @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }

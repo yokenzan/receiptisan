@@ -10,12 +10,16 @@ module Recediff
           class ReceiptTypeBuilder
             ReceiptType = DigitalizedReceipt::Receipt::Type
 
+            # rubocop:disable Layout/HashAlignment
             def initialize
               @main_hoken_types = {
                 '1': {
-                  DigitalizedReceipt::AuditPayer::PAYER_CODE_UNKNOWN => ReceiptType::MainHokenType.new(code: 1, name: '国保・社保'),
-                  DigitalizedReceipt::AuditPayer::PAYER_CODE_SHAHO   => ReceiptType::MainHokenType.new(code: 1, name: '社保'),
-                  DigitalizedReceipt::AuditPayer::PAYER_CODE_KOKUHO  => ReceiptType::MainHokenType.new(code: 1, name: '国保'),
+                  DigitalizedReceipt::AuditPayer::PAYER_CODE_UNKNOWN =>
+                    ReceiptType::MainHokenType.new(code: 1, name: '国保・社保'),
+                  DigitalizedReceipt::AuditPayer::PAYER_CODE_SHAHO   =>
+                    ReceiptType::MainHokenType.new(code: 1, name: '社保'),
+                  DigitalizedReceipt::AuditPayer::PAYER_CODE_KOKUHO  =>
+                    ReceiptType::MainHokenType.new(code: 1, name: '国保'),
                 },
                 '2': ReceiptType::MainHokenType.new(code: 2, name: '公費'),
                 '3': ReceiptType::MainHokenType.new(code: 3, name: '後期'),
@@ -24,6 +28,7 @@ module Recediff
 
               clear
             end
+            # rubocop:enable Layout/HashAlignment
 
             def clear
               @audit_payer        = nil
