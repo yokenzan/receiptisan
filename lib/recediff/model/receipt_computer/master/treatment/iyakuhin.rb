@@ -81,6 +81,37 @@ module Recediff
               end
             end
 
+            # 金額種別
+            class PriceType
+              # @param code [Symbol]
+              # @param code [String]
+              def initialize(code:, name:)
+                @code = code
+                @name = name
+              end
+
+              # @!attribute [r] code
+              #   @return [Symbol]
+              attr_reader :code
+              # @!attribute [r] name
+              #   @return [String]
+              attr_reader :name
+
+              @list = {
+                '1': new(code: :'1', name: '金額'),
+                '3': new(code: :'3', name: '薬剤使用量省略'),
+                '7': new(code: :'7', name: '減点'),
+              }
+
+              class << self
+                # @param code [Symbol, Integer, String]
+                # @return [self, nil]
+                def find_by_code(code)
+                  @list[code.to_s.intern]
+                end
+              end
+            end
+
             # rubocop:disable Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
               C_変更区分                                     = 0

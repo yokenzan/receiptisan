@@ -19,7 +19,9 @@ module Recediff
                     name:       values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_漢字名称],
                     name_kana:  convert_katakana(values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_カナ名称]),
                     unit:       Unit.find_by_code(values[Treatment::TokuteiKizai::Columns::C_単位_コード]),
-                    price_type: Treatment::PriceType.new(values[Treatment::TokuteiKizai::Columns::C_金額種別]),
+                    price_type: Treatment::TokuteiKizai::PriceType.find_by_code(
+                      values[Treatment::TokuteiKizai::Columns::C_金額種別].intern
+                    ),
                     price:      values[Treatment::TokuteiKizai::Columns::C_新又は現金額],
                     full_name:  values[Treatment::TokuteiKizai::Columns::C_基本漢字名称]
                   )

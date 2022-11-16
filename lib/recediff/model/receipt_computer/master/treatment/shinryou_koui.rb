@@ -12,7 +12,7 @@ module Recediff
               name:,
               name_kana:,
               unit:,
-              price_type:,
+              point_type:,
               point:,
               shuukeisaki_shikibetu_gairai:,
               shuukeisaki_shikibetu_nyuuin:,
@@ -28,7 +28,7 @@ module Recediff
               @name                         = name
               @name_kana                    = name_kana
               @unit                         = unit
-              @price_type                   = price_type
+              @point_type                   = point_type
               @point                        = point
               @shuukeisaki_shikibetu_gairai = shuukeisaki_shikibetu_gairai
               @shuukeisaki_shikibetu_nyuuin = shuukeisaki_shikibetu_nyuuin
@@ -55,9 +55,9 @@ module Recediff
             # @!attribute [r] unit
             #   @return [Unit]
             attr_reader :unit
-            # @!attribute [r] price_type
-            #   @return [PriceType]
-            attr_reader :price_type
+            # @!attribute [r] point_type
+            #   @return [PointType]
+            attr_reader :point_type
             # @!attribute [r] point
             #   @return [Numeric]
             attr_reader :point
@@ -122,6 +122,41 @@ module Recediff
             #   #   @return [String]
             #   attr_reader :tensuu_hyou_kubun_bangou
             # end
+
+            # 点数種別
+            class PointType
+              # @param code [Symbol]
+              # @param code [String]
+              def initialize(code:, name:)
+                @code = code
+                @name = name
+              end
+
+              # @!attribute [r] code
+              #   @return [Symbol]
+              attr_reader :code
+              # @!attribute [r] name
+              #   @return [String]
+              attr_reader :name
+
+              @list = {
+                '1': new(code: :'1', name: '金額'),
+                '3': new(code: :'3', name: '点数(プラス)'),
+                '4': new(code: :'4', name: '購入価格(点数)'),
+                '5': new(code: :'5', name: '%加算'),
+                '6': new(code: :'6', name: '減算'),
+                '7': new(code: :'7', name: '減点診療行為'),
+                '8': new(code: :'8', name: '点数(マイナス)'),
+              }
+
+              class << self
+                # @param code [Symbol, Integer, String]
+                # @return [self, nil]
+                def find_by_code(code)
+                  @list[code.to_s.intern]
+                end
+              end
+            end
 
             # rubocop:disable Metrics/ModuleLength, Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
