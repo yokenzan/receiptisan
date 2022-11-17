@@ -41,6 +41,11 @@ module Recediff
           def find_by_alphabet(alphabet)
             @gengous.values.find { | gengou | gengou.alphabet == alphabet }
           end
+
+          # @return [Gengou, nil]
+          def find_by_code(code)
+            @gengous[code.to_s.intern]
+          end
         end
       end
 
@@ -80,7 +85,7 @@ module Recediff
         # @param text [String]
         # @return [Date]
         def parse_wareki_date(text)
-          gengou = @gengous[text[0].to_s.intern]
+          gengou = Gengou.find_by_code(text[0])
           year   = text[1, 2].to_i
           month  = text[3, 2].to_i
           day    = text[5, 2].to_i
@@ -97,7 +102,7 @@ module Recediff
         # @param text [String]
         # @return [Month]
         def parse_wareki_month(text)
-          gengou = @gengous[text[0].to_i]
+          gengou = Gengou.find_by_code(text[0])
           year   = text[1, 2].to_i
           month  = text[3, 2].to_i
 
