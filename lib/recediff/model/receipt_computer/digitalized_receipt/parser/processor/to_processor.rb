@@ -24,7 +24,9 @@ module Recediff
                 TokuteiKizai.new(
                   master_item:  handler.find_by_code(MasterTokuteiKizai::Code.of(values[TO::C_レセ電コード])),
                   shiyouryou:   values[TO::C_使用量]&.to_f,
-                  product_name: values[TO::C_商品名及び規格又はサイズ]
+                  product_name: values[TO::C_商品名及び規格又はサイズ],
+                  unit:         Master::Unit.find_by_code(values[TO::C_単位コード]),
+                  unit_price:   values[TO::C_単価]&.to_f
                 )
               end
 

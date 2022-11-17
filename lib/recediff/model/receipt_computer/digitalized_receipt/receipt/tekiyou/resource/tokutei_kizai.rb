@@ -15,11 +15,25 @@ module Recediff
                 def initialize(
                   master_item:,
                   shiyouryou:,
-                  product_name:
+                  product_name:,
+                  unit:,
+                  unit_price:
                 )
                   @master_item  = master_item
                   @shiyouryou   = shiyouryou
                   @product_name = product_name
+                  @unit         = unit
+                  @unit_price   = unit_price
+                end
+
+                # @return [Master::Unit, nil]
+                def unit
+                  @unit || master_item.unit
+                end
+
+                # @return [Float, nil]
+                def unit_price
+                  @unit_price || master_item.unit_price
                 end
 
                 # @!attribute [r] master_item
@@ -34,9 +48,7 @@ module Recediff
                 #   @return [Master::Treatment::TokuteiKizai::Code]
                 # @!attribute [r] name
                 #   @return [String]
-                # @!attribute [r] unit
-                #   @return [Master::Unit, nil]
-                def_delegators :master_item, :code, :name, :unit
+                def_delegators :master_item, :code, :name
               end
             end
           end
