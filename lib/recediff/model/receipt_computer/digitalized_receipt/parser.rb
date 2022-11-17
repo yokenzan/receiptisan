@@ -15,8 +15,9 @@ module Recediff
           FILE_ENCODING = 'Shift_JIS'
 
           # @param handler [MasterHandler]
-          def initialize(handler)
+          def initialize(handler, logger)
             @handler           = handler
+            @logger            = logger
             @buffer            = Parser::Buffer.new
             @current_processor = nil
             @processors        = {
@@ -35,7 +36,7 @@ module Recediff
           # @param path_of_uke [String]
           # @return [DigitalizedReceipt]
           def parse(path_of_uke)
-            buffer.clear
+            buffer.prepare(path_of_uke)
 
             File.open(path_of_uke, "r:#{FILE_ENCODING}:UTF-8") do | f |
               f.each_line(chomp: true).with_index { | line, index | parse_line(line2values(line), index) }
@@ -78,10 +79,9 @@ module Recediff
               record_type
             end
           rescue StandardError => e
-            p e
-            puts "at line #{line_index + 1}"
-            p values.join(',')
-            puts e.backtrace
+            # ブロックをつかっていないのはスタックトレースも表示するため
+            @logger.error "Exception occurred while parsing #{buffer.uke_file_path}:#{line_index + 1}:#{values.join(',')}"
+            @logger.error e
           end
           # rubocop:enable Metrics/CyclomaticComplexity
 

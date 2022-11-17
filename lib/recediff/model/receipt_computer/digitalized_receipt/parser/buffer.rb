@@ -10,8 +10,8 @@ module Recediff
           class Buffer
             extend Forwardable
 
-            def initialize
-              clear
+            def initialize(uke_file_path = nil)
+              prepare(uke_file_path)
             end
 
             # @param digitalized_receipt [DigitalizedReceipt]
@@ -78,6 +78,12 @@ module Recediff
 
             # @return [void]
             def clear
+              prepare
+            end
+
+            # @return [void]
+            def prepare(uke_file_path = nil)
+              @uke_file_path               = uke_file_path
               @digitalized_receipt         = nil
               @current_receipt             = nil
               @current_shinryou_shikibetsu = nil
@@ -97,6 +103,7 @@ module Recediff
               digitalized_receipt
             end
 
+            attr_reader :uke_file_path
             attr_writer :latest_kyuufu_wariai
 
             def latest_kyuufu_wariai
