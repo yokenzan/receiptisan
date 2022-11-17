@@ -8,7 +8,7 @@ module Recediff
           module Processor
             class SIProcessor
               SI                 = DigitalizedReceipt::Record::SI
-              ShinryouKoui       = Receipt::Tekiyou::Cost::ShinryouKoui
+              ShinryouKoui       = Receipt::Tekiyou::Resource::ShinryouKoui
               MasterShinryouKoui = Master::Treatment::ShinryouKoui
 
               # @param handler [MasterHandler]
@@ -17,15 +17,15 @@ module Recediff
               end
 
               # @param values [Array<String, nil>] SI行
-              # @return [Receipt::Tekiyou::Cost::ShinryouKoui]
+              # @return [Receipt::Tekiyou::Resource::ShinryouKoui]
               def process(values)
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 
                 ShinryouKoui.new(
-                  shiyouryou:           values[SI::C_数量データ]&.to_i,
-                  master_shinryou_koui: handler.find_by_code(
+                  master_item: handler.find_by_code(
                     MasterShinryouKoui::Code.of(values[SI::C_レセ電コード])
-                  )
+                  ),
+                  shiyouryou:  values[SI::C_数量データ]&.to_i
                 )
               end
 

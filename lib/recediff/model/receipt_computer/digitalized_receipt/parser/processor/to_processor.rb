@@ -8,7 +8,7 @@ module Recediff
           module Processor
             class TOProcessor
               TO                 = DigitalizedReceipt::Record::TO
-              TokuteiKizai       = Receipt::Tekiyou::Cost::TokuteiKizai
+              TokuteiKizai       = Receipt::Tekiyou::Resource::TokuteiKizai
               MasterTokuteiKizai = Master::Treatment::TokuteiKizai
 
               # @param handler [MasterHandler]
@@ -17,14 +17,14 @@ module Recediff
               end
 
               # @param values [Array<String, nil>] TO行
-              # @return [Receipt::Tekiyou::Cost::TokuteiKizai]
+              # @return [Receipt::Tekiyou::Resource::TokuteiKizai]
               def process(values)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
                 TokuteiKizai.new(
-                  master_tokutei_kizai: handler.find_by_code(MasterTokuteiKizai::Code.of(values[TO::C_レセ電コード])),
-                  shiyouryou:           values[TO::C_使用量]&.to_f,
-                  product_name:         values[TO::C_商品名及び規格又はサイズ]
+                  master_item:  handler.find_by_code(MasterTokuteiKizai::Code.of(values[TO::C_レセ電コード])),
+                  shiyouryou:   values[TO::C_使用量]&.to_f,
+                  product_name: values[TO::C_商品名及び規格又はサイズ]
                 )
               end
 

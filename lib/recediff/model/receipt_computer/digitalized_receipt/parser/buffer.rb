@@ -103,18 +103,18 @@ module Recediff
               digitalized_receipt
             end
 
-            attr_reader :uke_file_path
-            attr_writer :latest_kyuufu_wariai
-
             def latest_kyuufu_wariai
               @latest_kyuufu_wariai.tap { @latest_kyuufu_wariai = nil }
             end
 
-            attr_writer :latest_teishotoku_kubun
 
             def latest_teishotoku_kubun
               @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }
             end
+
+            attr_reader :uke_file_path
+            attr_writer :latest_kyuufu_wariai
+            attr_writer :latest_teishotoku_kubun
 
             def_delegators :current_receipt,
               :add_shoubyoumei,
@@ -130,7 +130,6 @@ module Recediff
             def fix_current_ichiren_unit
               return unless @current_ichiren_unit
 
-              @current_ichiren_unit.fix
               @current_receipt.add_ichiren_unit(@current_ichiren_unit)
               @current_ichiren_unit = nil
             end

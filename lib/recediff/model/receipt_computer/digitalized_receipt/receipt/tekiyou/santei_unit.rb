@@ -14,28 +14,31 @@ module Recediff
 
               def initialize
                 # @type tensuu [Integer, nil]
-                @tensuu = nil
+                @tensuu        = nil
                 # @type kaisuu [Integer, nil]
-                @kaisuu = nil
-                # @type items [Array<Cost, Comment>]
-                @items  = []
+                @kaisuu        = nil
+                # @type tekiyou_items [Array<Cost, Comment>]
+                @tekiyou_items = []
               end
 
               # @param tekiyou_item [Cost, Comment]
               # @return [void]
               def add_tekiyou(tekiyou_item)
-                @items << tekiyou_item
+                @tekiyou_items << tekiyou_item
               end
 
               # @return [FutanKubun]
               def futan_kubun
-                @items.first.futan_kubun
+                @tekiyou_items.first.futan_kubun
               end
 
               # @return [void]
               def fix
-                @tensuu = @items.reverse.find(&:tensuu?)&.tensuu
-                @kaisuu = @items.reverse.find(&:kaisuu?)&.kaisuu
+                bottom_cost = @tekiyou_items.reverse.find(&:tensuu?)
+                return unless bottom_cost
+
+                @tensuu = bottom_cost.tensuu
+                @kaisuu = bottom_cost.kaisuu
               end
 
               # @!attribute [r] tensuu
@@ -44,7 +47,7 @@ module Recediff
               #   @return [Integer, nil]
               attr_reader :tensuu, :kaisuu
 
-              def_delegators :@items, :each, :map
+              def_delegators :@tekiyou_items, :each, :map
             end
           end
         end

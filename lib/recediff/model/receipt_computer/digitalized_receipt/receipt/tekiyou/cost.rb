@@ -2,10 +2,6 @@
 
 require 'forwardable'
 
-require_relative 'cost/shinryou_koui'
-require_relative 'cost/iyakuhin'
-require_relative 'cost/tokutei_kizai'
-
 module Recediff
   module Model
     module ReceiptComputer
@@ -15,95 +11,87 @@ module Recediff
             class Cost
               extend Forwardable
 
-              # @param item [ShinryouKoui, Iyakuhin, TokuteiKizai]
-              # @param shinryou_shikibetsu [ShinryouShikibetsu]
-              # @param futan_kubun [FutanKubun]
-              # @param tensuu [Integer, nil]
-              # @param kaisuu [Integer, nil]
+              # @param resource [ShinryouKoui, Iyakuhin, TokuteiKizai] 医療資源
+              # @param shinryou_shikibetsu [ShinryouShikibetsu] 診療識別
+              # @param futan_kubun [FutanKubun] 負担区分
+              # @param tensuu [Integer, nil] 算定点数
+              # @param kaisuu [Integer, nil] 算定回数
               def initialize(
-                item:,
+                resource:,
                 shinryou_shikibetsu:,
                 futan_kubun:,
                 tensuu:,
                 kaisuu:
               )
-                @item                = item
+                @resource            = resource
                 @shinryou_shikibetsu = shinryou_shikibetsu
                 @futan_kubun         = futan_kubun
                 @tensuu              = tensuu&.to_i
                 @kaisuu              = kaisuu&.to_i
+                @comments            = []
               end
 
               # @param comment [Comment]
               # @return [void]
               def add_comment(comment)
-                @comments << comment
+                comments << comment
               end
 
               def has_comments? # rubocop:disable Naming/PredicateName
-                !@comments.empty?
+                !comments.empty?
               end
 
-              # @param day [Integer]
-              # @return [Integer]
-              def kaisuu_at(day)
-                days[day - 1].to_i
-              end
+              # # @param day [Integer]
+              # # @return [Integer]
+              # def kaisuu_at(day)
+              #   days[day - 1].to_i
+              # end
+              #
+              # # @param day [Integer]
+              # # @return [Boolean]
+              # def done_at?(day)
+              #   kaisuu_at(day).positive?
+              # end
+              #
+              # def done_at_breakdown; end
+              #
+              # def kaisuu_at_breakdown; end
 
-              # @param day [Integer]
-              # @return [Boolean]
-              def done_at?(day)
-                kaisuu_at(day).positive?
-              end
-
-              def done_at_breakdown; end
-
-              def kaisuu_at_breakdown; end
-
+              # 算定点数の記載があるか？
               def tensuu?
-                !@tensuu.nil?
+                !tensuu.nil?
               end
 
+              # 算定回数の記載があるか？
               def kaisuu?
-                !@kaisuu.nil?
+                !kaisuu.nil?
               end
 
               def comment?
                 false
               end
+              #
+              # def to_s
+              #   @resource.to_s
+              # end
 
-              def to_s
-                @item.to_s
-              end
-
-              def type
-                case @item
-                when ShinryouKoui
-                  :SI
-                when Iyakuhin
-                  :IY
-                else
-                  :TO
-                end
-              end
-
-              # @!attribute [r] item
-              #   @return [ShinryouKoui, Iyakuhin, TokuteiKizai]
+              # @!attribute [r] resource
+              #   @return [ShinryouKoui, Iyakuhin, TokuteiKizai] 医療資源
               # @!attribute [r] futan_kubun
-              #   @return [FutanKubun]
+              #   @return [FutanKubun]負担区分
               # @!attribute [r] tensuu
-              #   @return [Integer, nil]
+              #   @return [Integer, nil] 算定点数
               # @!attribute [r] kaisuu
-              #   @return [Integer, nil]
+              #   @return [Integer, nil] 算定回数
               # @!attribute [r] shinryou_shikibetsu
-              #   @return [ShinryouShikibetsu]
-              attr_reader :item, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
+              #   @return [ShinryouShikibetsu] 診療識別
+              attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
 
-              def_delegators :item, :master_item, :code, :name, :shiyouryou, :unit
+              # def_delegators :resource, :master_item, :code, :name, :shiyouryou, :unit
 
               private
 
-              attr_reader :days
+              attr_reader :days, :comments
             end
           end
         end

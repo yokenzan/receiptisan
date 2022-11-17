@@ -35,7 +35,7 @@ module Recediff
               end
 
               # @return [void]
-              def fix; end
+              # def fix; end
 
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu]

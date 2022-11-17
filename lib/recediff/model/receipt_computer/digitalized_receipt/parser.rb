@@ -142,7 +142,7 @@ module Recediff
           def process_co(values)
             master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(values[Record::CO::C_レセ電コード]))
             comment        = Comment.new(
-              item:                master_comment,
+              master_item:         master_comment,
               additional_comment:  Comment::AdditionalComment.build(
                 master_comment, values[Record::CO::C_文字データ], handler
               ),
@@ -157,9 +157,9 @@ module Recediff
             buffer.add_shoujou_shouki(current_processor.process(values))
           end
 
-          def wrap_as_cost(item, column_definition, values)
+          def wrap_as_cost(resource, column_definition, values)
             cost = Receipt::Tekiyou::Cost.new(
-              item:                item,
+              resource:            resource,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
               futan_kubun:         Receipt::FutanKubun.find_by_code(values[column_definition::C_負担区分]),
               tensuu:              values[column_definition::C_点数]&.to_i,
@@ -174,7 +174,7 @@ module Recediff
 
               master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
               comment        = Comment.new(
-                item:                master_comment,
+                master_item:         master_comment,
                 additional_comment:  Comment::AdditionalComment.build(
                   master_comment, additional_text, handler
                 ),

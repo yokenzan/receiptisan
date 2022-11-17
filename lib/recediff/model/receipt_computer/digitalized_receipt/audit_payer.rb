@@ -20,11 +20,11 @@ module Recediff
           end
 
           # @!attribute [r] code
-          #   @return [Symbol]
+          #   @return [Symbol] 審査支払機関コード
           # @!attribute [r] name
-          #   @return [String]
+          #   @return [String] 名称
           # @!attribute [r] short_name
-          #   @return [String]
+          #   @return [String] 略号
           attr_reader :code, :name, :short_name
 
           @payers = {

@@ -13,16 +13,16 @@ module Recediff
               extend Forwardable
 
               # @param item [Master::Treatment::Comment]
-              # @param shinryou_shikibetsu [ShinryouShikibetsu, nil]
-              # @param futan_kubun [FutanKubun]
-              # @param additional_comment [Additionalcomment, nil]
+              # @param additional_comment [Additionalcomment, nil] コメント文
+              # @param shinryou_shikibetsu [ShinryouShikibetsu, nil] 診療識別
+              # @param futan_kubun [FutanKubun] 負担区分
               def initialize(
-                item:,
+                master_item:,
                 additional_comment:,
                 shinryou_shikibetsu:,
                 futan_kubun:
               )
-                @item                = item
+                @master_item         = master_item
                 @additional_comment  = additional_comment
                 @shinryou_shikibetsu = shinryou_shikibetsu
                 @futan_kubun         = futan_kubun
@@ -40,34 +40,34 @@ module Recediff
                 true
               end
 
-              # 仮
-              def name
-                to_s
-              end
-
-              def to_s
-                item.format_with(additional_comment)
-              end
-
-              def tensuu
-                nil
-              end
-
-              def kaisuu
-                nil
-              end
-
-              def shiyouryou
-                nil
-              end
-
-              def unit
-                nil
-              end
-
-              def type
-                :CO
-              end
+              # # 仮
+              # def name
+              #   to_s
+              # end
+              #
+              # def to_s
+              #   item.format_with(additional_comment)
+              # end
+              #
+              # def tensuu
+              #   nil
+              # end
+              #
+              # def kaisuu
+              #   nil
+              # end
+              #
+              # def shiyouryou
+              #   nil
+              # end
+              #
+              # def unit
+              #   nil
+              # end
+              #
+              # def type
+              #   :CO
+              # end
 
               # @!attribute [r] item
               #   @return [Master::Treatment::Comment]
@@ -77,10 +77,14 @@ module Recediff
               #   @return [ShinryouShikibetsu, nil]
               # @!attribute [r] futan_kubun
               #   @return [FutanKubun]
-              attr_reader :item, :additional_comment, :shinryou_shikibetsu, :futan_kubun
+              attr_reader :master_item, :additional_comment, :shinryou_shikibetsu, :futan_kubun
 
-              def_delegators :item, :code, :pattern
-              alias master_item item
+              # @!attribute [r] code
+              #   @return [Master::Treatment::Comment::Code]
+              # @!attribute [r] pattern
+              #   @return [Master::Treatment::Comment::Pattern]
+              def_delegators :master_item, :code
+              # def_delegators :master_item, :code, :pattern
 
               class AdditionalComment
                 @patterns = {

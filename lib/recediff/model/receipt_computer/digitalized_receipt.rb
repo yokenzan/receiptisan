@@ -17,9 +17,9 @@ module Recediff
       class DigitalizedReceipt
         extend Forwardable
 
-        # @param seikyuu_ym [Month]
-        # @param audit_payer [AuditPayer]
-        # @param hospital [Hospital]
+        # @param seikyuu_ym [Month] 請求年月
+        # @param audit_payer [AuditPayer] 審査支払機関
+        # @param hospital [Hospital] 医療機関
         def initialize(seikyuu_ym:, audit_payer:, hospital:)
           @seikyuu_ym  = seikyuu_ym
           @audit_payer = audit_payer
@@ -28,18 +28,17 @@ module Recediff
         end
 
         # @param receipt [Receipt]
-        # @return nil
+        # @return [void]
         def add_receipt(receipt)
           @receipts << receipt
-          # @receipts[receipt.id] = receipt
         end
 
         # @!attribute [r] seikyuu_ym
-        #   @return [Month]
+        #   @return [Month] 請求年月
         # @!attribute [r] audit_payer
-        #   @return [AuditPayer]
+        #   @return [AuditPayer] 審査支払機関
         # @!attribute [r] hospital
-        #   @return [Hospital]
+        #   @return [Hospital] 医療機関
         attr_reader :seikyuu_ym, :audit_payer, :hospital
 
         def_delegators :@receipts, :each, :each_with_index, :map, :to_a, :[]
