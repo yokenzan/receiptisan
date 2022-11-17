@@ -3,7 +3,7 @@
 require_relative 'master/version'
 require_relative 'master/master_item_code_interface'
 require_relative 'master/treatment'
-require_relative 'master/diagnose'
+require_relative 'master/diagnosis'
 require_relative 'master/resource_resolver'
 require_relative 'master/loader'
 
@@ -48,12 +48,12 @@ module Recediff
         #   @return [Treatment::Comment, nil]
         # @overload find_by_code(shoubyoumei_code)
         #   傷病名を取得する
-        #   @param shoubyoumei_code [Diagnose::Shoubyoumei::Code]
-        #   @return [Diagnose::Shoubyoumei, nil]
+        #   @param shoubyoumei_code [Diagnosis::Shoubyoumei::Code]
+        #   @return [Diagnosis::Shoubyoumei, nil]
         # @overload find_by_code(shuushokugo_code)
         #   修飾語を取得する
-        #   @param shuushokugo_code [Diagnose::Shuushokugo::Code]
-        #   @return [Diagnose::Shuushokugo, nil]
+        #   @param shuushokugo_code [Diagnosis::Shuushokugo::Code]
+        #   @return [Diagnosis::Shuushokugo, nil]
         def find_by_code(code)
           master =
             case code
@@ -65,9 +65,9 @@ module Recediff
               tokutei_kizai
             when Treatment::Comment::Code
               comment
-            when Diagnose::Shoubyoumei::Code
+            when Diagnosis::Shoubyoumei::Code
               shoubyoumei
-            when Diagnose::Shuushokugo::Code
+            when Diagnosis::Shuushokugo::Code
               shuushokugo
             end
 
@@ -84,9 +84,9 @@ module Recediff
         # @!attribute [r] comment
         #   @return [Hash<String, Treatment::Comment>]
         # @!attribute [r] shoubyoumei
-        #   @return [Hash<String, Diagnose::Shoubyoumei>]
+        #   @return [Hash<String, Diagnosis::Shoubyoumei>]
         # @!attribute [r] shuushokugo
-        #   @return [Hash<String, Diagnose::Shuushokugo>]
+        #   @return [Hash<String, Diagnosis::Shuushokugo>]
         attr_reader :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
 
         # 単位コード

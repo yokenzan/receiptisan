@@ -4,7 +4,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class Master
-        module Diagnose
+        module Diagnosis
           # 傷病名
           class Shoubyoumei
             # @param code [String]

@@ -5,7 +5,7 @@ require 'recediff'
 
 ShoubyoumeiLoader = Recediff::Model::ReceiptComputer::Master::Loader::ShoubyoumeiLoader
 Version           = Recediff::Model::ReceiptComputer::Master::Version
-Shoubyoumei       = Recediff::Model::ReceiptComputer::Master::Diagnose::Shoubyoumei
+Shoubyoumei       = Recediff::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei
 Unit              = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShoubyoumeiLoader do

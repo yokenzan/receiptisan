@@ -11,7 +11,7 @@ module Recediff
             include Recediff::Model::ReceiptComputer
             extend Forwardable
 
-            WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::Diagnose::Shoubyoumei::Code.of('0000999')
+            WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::Diagnosis::Shoubyoumei::Code.of('0000999')
 
             def initialize(master_shoubyoumei:, worpro_name:, is_main:, start_date:, tenki:, comment:)
               @master_shoubyoumei  = master_shoubyoumei
@@ -26,13 +26,13 @@ module Recediff
             def to_s
               return worpro_name if @master_shoubyoumei.code == WORPRO_SHOUBYOUMEI_CODE
 
-              # @param shuushokugo [Master::Diagnose::Shuushokugo]
+              # @param shuushokugo [Master::Diagnosis::Shuushokugo]
               master_shuushokugos.inject(@master_shoubyoumei.name) do | shoubyoumei_name, shuushokugo |
                 shuushokugo.prefix? ? shuushokugo.name + shoubyoumei_name : shoubyoumei_name + shuushokugo.name
               end
             end
 
-            # @param [Master::Diagnose::Shuushokugo] shuushokugo
+            # @param [Master::Diagnosis::Shuushokugo] shuushokugo
             # @return [void]
             def add_shuushokugo(shuushokugo)
               @master_shuushokugos << shuushokugo
@@ -44,10 +44,10 @@ module Recediff
             end
 
             # @!attribute [r] master_shoubyoumei
-            #   @return [Master::Diagnose::Shoubyoumei]
+            #   @return [Master::Diagnosis::Shoubyoumei]
             attr_reader :master_shoubyoumei
             # @!attribute [r] master_shuushokugos
-            #   @return [Array<Master::Diagnose::Shuushokugo>]
+            #   @return [Array<Master::Diagnosis::Shuushokugo>]
             attr_reader :master_shuushokugos
             attr_reader :worpro_name
             attr_reader :start_date

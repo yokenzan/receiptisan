@@ -6,7 +6,7 @@ module Recediff
   module Model
     module ReceiptComputer
       class Master
-        module Diagnose
+        module Diagnosis
           # 修飾語
           class Shuushokugo
             extend Forwardable

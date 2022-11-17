@@ -307,7 +307,7 @@ module Recediff
         end
         MasterShoubyoumei = Struct.new(:code, :name, keyword_init: true) do
           class << self
-            # @param master_shoubyoumei [Recediff::Model::ReceiptComputer::Master::Diagnose::Shoubyoumei]
+            # @param master_shoubyoumei [Recediff::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei]
             def from(master_shoubyoumei)
               new(
                 code: master_shoubyoumei.code,
@@ -318,7 +318,7 @@ module Recediff
         end
         MasterShuushokugo = Struct.new(:code, :name, :is_prefix, keyword_init: true) do
           class << self
-            # @param master_shuushokugo [Recediff::Model::ReceiptComputer::Master::Diagnose::Shuushokugo]
+            # @param master_shuushokugo [Recediff::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo]
             def from(master_shuushokugo)
               new(
                 code:      master_shuushokugo.code,

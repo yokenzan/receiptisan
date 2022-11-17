@@ -11,8 +11,8 @@ module Recediff
             class SYProcessor
               SY                = DigitalizedReceipt::Record::SY
               Shoubyoumei       = DigitalizedReceipt::Receipt::Shoubyoumei
-              MasterShoubyoumei = Master::Diagnose::Shoubyoumei
-              MasterShuushokugo = Master::Diagnose::Shuushokugo
+              MasterShoubyoumei = Master::Diagnosis::Shoubyoumei
+              MasterShuushokugo = Master::Diagnosis::Shuushokugo
 
               # @param handler [MasterHandler]
               def initialize(handler)

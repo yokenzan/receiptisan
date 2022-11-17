@@ -119,7 +119,7 @@ module Recediff
                     text
                       .tr('０-９', '0-9')
                       .scan(/\d{4}/)
-                      .map { | code | handler.find_by_code(Master::Diagnose::Shuushokugo::Code.of(code)) }
+                      .map { | code | handler.find_by_code(Master::Diagnosis::Shuushokugo::Code.of(code)) }
                   end,
                 }.freeze
 
@@ -139,7 +139,7 @@ module Recediff
                 end
 
                 # @param value [String]
-                # @param item [Master::Treatment::ShinryouKoui, Master::Diagnose::Shoubyoumei, nil]
+                # @param item [Master::Treatment::ShinryouKoui, Master::Diagnosis::Shoubyoumei, nil]
                 def initialize(value:, item:)
                   @value = value
                   @item  = item

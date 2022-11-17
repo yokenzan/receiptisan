@@ -9,17 +9,17 @@ module Recediff
             include LoaderTrait
 
             # @param csv_path [String]
-            # @return [Hash<Symbol, Diagnose::Shuushokugo>]
+            # @return [Hash<Symbol, Diagnosis::Shuushokugo>]
             def load(csv_path)
               {}.tap do | hash |
                 foreach(csv_path) do | values |
-                  code             = Diagnose::Shuushokugo::Code.of(values[Diagnose::Shuushokugo::Columns::C_コード])
-                  hash[code.value] = Diagnose::Shuushokugo.new(
+                  code             = Diagnosis::Shuushokugo::Code.of(values[Diagnosis::Shuushokugo::Columns::C_コード])
+                  hash[code.value] = Diagnosis::Shuushokugo.new(
                     code:      code,
-                    name:      values[Diagnose::Shuushokugo::Columns::C_修飾語名称],
-                    name_kana: convert_katakana(values[Diagnose::Shuushokugo::Columns::C_修飾語カナ名称]),
-                    category:  Diagnose::Shuushokugo::Category.find_by_code(
-                      kubun2category_code(values[Diagnose::Shuushokugo::Columns::C_修飾語区分])
+                    name:      values[Diagnosis::Shuushokugo::Columns::C_修飾語名称],
+                    name_kana: convert_katakana(values[Diagnosis::Shuushokugo::Columns::C_修飾語カナ名称]),
+                    category:  Diagnosis::Shuushokugo::Category.find_by_code(
+                      kubun2category_code(values[Diagnosis::Shuushokugo::Columns::C_修飾語区分])
                     )
                   )
                 end

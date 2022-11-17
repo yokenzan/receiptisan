@@ -5,7 +5,7 @@ require 'recediff'
 
 ShuushokugoLoader = Recediff::Model::ReceiptComputer::Master::Loader::ShuushokugoLoader
 Version           = Recediff::Model::ReceiptComputer::Master::Version
-Shuushokugo       = Recediff::Model::ReceiptComputer::Master::Diagnose::Shuushokugo
+Shuushokugo       = Recediff::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo
 Unit              = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShuushokugoLoader do
