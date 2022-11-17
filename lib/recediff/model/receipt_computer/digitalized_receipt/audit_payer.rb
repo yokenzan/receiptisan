@@ -33,7 +33,7 @@ module Recediff
               name:       '社会保険診療報酬支払基金',
               short_name: '社'
             ),
-            PAYER_CODE_SHAHO  => new(
+            PAYER_CODE_SHAHO => new(
               code:       PAYER_CODE_KOKUHO.to_s.intern,
               name:       '国民健康保険団体連合会',
               short_name: '国'

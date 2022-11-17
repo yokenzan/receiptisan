@@ -80,7 +80,11 @@ module Recediff
             end
           rescue StandardError => e
             # ブロックをつかっていないのはスタックトレースも表示するため
-            @logger.error "Exception occurred while parsing #{buffer.uke_file_path}:#{line_index + 1}:#{values.join(',')}"
+            @logger.error 'Exception occurred while parsing %s:%d:%s' % [
+              buffer.uke_file_path,
+              line_index + 1,
+              values.join(','),
+            ]
             @logger.error e
           end
           # rubocop:enable Metrics/CyclomaticComplexity

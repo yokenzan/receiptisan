@@ -107,7 +107,6 @@ module Recediff
               @latest_kyuufu_wariai.tap { @latest_kyuufu_wariai = nil }
             end
 
-
             def latest_teishotoku_kubun
               @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }
             end
