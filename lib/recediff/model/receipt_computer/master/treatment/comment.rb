@@ -114,6 +114,102 @@ module Recediff
               end
             end
 
+            # 「文字データ」として補足される追記テキスト
+            module AppendedContent
+              # フォーマットが定められていない任意形式の文字列
+              #
+              # パターン10, 30
+              class FreeFormat
+                # @param value [String]
+                def initialize(value)
+                  @value = value
+                end
+              end
+
+              # 診療行為による補足
+              #
+              # パターン31
+              class ShinryouKouiFormat
+                # @param master_shinryou_koui [Master::Treatment::ShinryouKoui]
+                def initialize(master_shinryou_koui)
+                  @shinryou_koui = master_shinryou_koui
+                end
+              end
+
+              # 数値による補足
+              #
+              # パターン40, 42
+              class NumberFormat
+                # @param value [String] 全角数字による数値文字列
+                def initialize(value)
+                  @value = value
+                end
+              end
+
+              # 和暦年月日による補足
+              #
+              # パターン50
+              class WarekiDateFormat
+                def initialize(wareki, date)
+                  @value = wareki
+                  @date  = date
+                end
+              end
+
+              # 時・分による補足
+              #
+              # パターン51
+              class HourMinuteFormat
+                # @param hour_minute [String] 全角数字による数値文字列
+                def initialize(hour, minute)
+                  @hour   = hour
+                  @minute = minute
+                end
+              end
+
+              # 分による補足
+              #
+              # パターン52
+              class MinuteFormat
+                # @param minute [String] 全角数字による数値文字列
+                def initialize(minute)
+                  @minute = minute
+                end
+              end
+
+              # 日・時・分による補足
+              #
+              # パターン53
+              class DayHourMinuteFormat
+                # @param hour_minute [String] 全角数字による数値文字列
+                def initialize(day, hour, minute)
+                  @day    = day
+                  @hour   = hour
+                  @minute = minute
+                end
+              end
+
+              # 和暦年月日・数値による補足
+              #
+              # パターン80
+              class WarekiDateAndNumberFormat
+                def initialize(wareki_date_format, number_format)
+                  @wareki = wareki_date_format
+                  @number = number_format
+                end
+              end
+
+              # 修飾語による補足
+              #
+              # パターン90
+              class ShuushokugoFormat
+                # @param master_shuushokugos [Array<Master::Diagnosis::Shuushokugo>]
+                def initialize(*master_shuushokugos)
+                  @shuushokugos = master_shuushokugos
+                end
+              end
+            end
+
             # rubocop:disable Layout/SpaceAroundOperators, Layout/ExtraSpacing
             module Columns
               C_変更区分                      = 0
