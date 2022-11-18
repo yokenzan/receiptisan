@@ -9,7 +9,7 @@ name: Ruby
 
 on:
   push:
-    branches: [ refine_master_loader ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
