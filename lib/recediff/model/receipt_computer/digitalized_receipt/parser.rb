@@ -179,7 +179,7 @@ module Recediff
               master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
               comment        = Comment.new(
                 master_item:         master_comment,
-                appended_content:    @comment_content_builder.build(master_comment.pattern, values[Record::CO::C_文字データ]),
+                appended_content:    @comment_content_builder.build(master_comment.pattern, appended_value),
                 shinryou_shikibetsu: cost.shinryou_shikibetsu,
                 futan_kubun:         cost.futan_kubun
               )
