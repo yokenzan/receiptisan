@@ -2,6 +2,7 @@
 
 require_relative 'parser/master_handler'
 require_relative 'parser/receipt_type_builder'
+require_relative 'parser/comment_content_builder'
 require_relative 'parser/buffer'
 require_relative 'parser/processor'
 
@@ -16,11 +17,12 @@ module Recediff
 
           # @param handler [MasterHandler]
           def initialize(handler, logger)
-            @handler           = handler
-            @logger            = logger
-            @buffer            = Parser::Buffer.new
-            @current_processor = nil
-            @processors        = {
+            @handler                 = handler
+            @logger                  = logger
+            @comment_content_builder = Parser::CommentContentBuilder.new(@handler)
+            @buffer                  = Parser::Buffer.new
+            @current_processor       = nil
+            @processors              = {
               'IR' => Processor::IRProcessor.new,
               'RE' => Processor::REProcessor.new,
               'HO' => Processor::HOProcessor.new,
@@ -147,9 +149,7 @@ module Recediff
             master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(values[Record::CO::C_レセ電コード]))
             comment        = Comment.new(
               master_item:         master_comment,
-              additional_comment:  Comment::AdditionalComment.build(
-                master_comment, values[Record::CO::C_文字データ], handler
-              ),
+              appended_content:    @comment_content_builder.build(master_comment.pattern, values[Record::CO::C_文字データ]),
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
               futan_kubun:         Receipt::FutanKubun.find_by_code(values[Record::CO::C_負担区分])
             )
@@ -172,18 +172,16 @@ module Recediff
 
             comment_range = column_definition::C_コメント_1_コメントコード..column_definition::C_コメント_3_文字データ
             # @param code [String]
-            # @param additional_text [String]
-            values[comment_range].each_slice(2) do | code, additional_text |
+            # @param appended_value [String]
+            values[comment_range].each_slice(2) do | code, appended_value |
               next if code.nil?
 
               master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
               comment        = Comment.new(
                 master_item:         master_comment,
-                additional_comment:  Comment::AdditionalComment.build(
-                  master_comment, additional_text, handler
-                ),
-                futan_kubun:         cost.futan_kubun,
-                shinryou_shikibetsu: cost.shinryou_shikibetsu
+                appended_content:    @comment_content_builder.build(master_comment.pattern, values[Record::CO::C_文字データ]),
+                shinryou_shikibetsu: cost.shinryou_shikibetsu,
+                futan_kubun:         cost.futan_kubun
               )
 
               cost.add_comment(comment)
