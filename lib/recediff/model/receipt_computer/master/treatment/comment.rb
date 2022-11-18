@@ -60,6 +60,8 @@ module Recediff
             end
 
             # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
+            #
+            # 埋込のロジックは持たない
             class EmbedPosition
               def initialize(start, length)
                 @start  = start
@@ -69,23 +71,19 @@ module Recediff
               attr_reader :start, :length
             end
 
+            # コメントパターン
+            #
+            # テキスト生成のロジックは持たない
             class Pattern
               # @param code [Symbol]
               # @paaram requires_embdding [Boolean]
-              # @param formatter [Proc]
-              def initialize(code, requires_embdding, formatter)
+              def initialize(code, requires_embdding)
                 @code              = code
                 @requires_embdding = requires_embdding
-                @formatter         = formatter
               end
 
               def requires_embdding?
                 @requires_embdding
-              end
-
-              # @return [String]
-              def format(name, additional_comment)
-                @formatter.call(name, additional_comment)
               end
 
               # @!attribute [r] code
@@ -93,20 +91,18 @@ module Recediff
               attr_reader :code
 
               @patterns = {
-                '10': new(:'10', false, proc { | _, additional_comment | additional_comment.value }),
-                '20': new(:'20', false, proc { | name, _ | name }),
-                '30': new(:'30', false, proc { | _, additional_comment | additional_comment.value }),
-                '31': new(:'31', false, proc { | _, additional_comment | additional_comment.item.name }),
-                '40': new(:'40', true,  proc { | _, additional_comment | additional_comment.value }),
-                '42': new(:'42', false, proc { | _, additional_comment | additional_comment.value }),
-                '50': new(:'50', false, proc { | _, additional_comment |
-                  Recediff::Util::DateUtil.to_wareki(additional_comment.item)
-                }),
-                '51': new(:'51', false, proc { | _, additional_comment | additional_comment.item }),
-                '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
-                '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
-                '80': new(:'80', false, proc { | _, additional_comment | additional_comment.item.name }),
-                '90': new(:'90', false, proc { | _, additional_comment | additional_comment.item.map(&:name).join }),
+                '10': new(:'10', false),
+                '20': new(:'20', false),
+                '30': new(:'30', false),
+                '31': new(:'31', false),
+                '40': new(:'40', true),
+                '42': new(:'42', false),
+                '50': new(:'50', false),
+                '51': new(:'51', false),
+                '52': new(:'52', false),
+                '53': new(:'53', false),
+                '80': new(:'80', false),
+                '90': new(:'90', false),
               }
 
               class << self
