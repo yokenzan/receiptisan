@@ -60,6 +60,8 @@ module Recediff
             end
 
             # 追記テキストを `コメント文_漢字名称` に埋込む位置情報
+            #
+            # 埋込のロジックは持たない
             class EmbedPosition
               def initialize(start, length)
                 @start  = start
@@ -69,23 +71,19 @@ module Recediff
               attr_reader :start, :length
             end
 
+            # コメントパターン
+            #
+            # テキスト生成のロジックは持たない
             class Pattern
               # @param code [Symbol]
               # @paaram requires_embdding [Boolean]
-              # @param formatter [Proc]
-              def initialize(code, requires_embdding, formatter)
+              def initialize(code, requires_embdding)
                 @code              = code
                 @requires_embdding = requires_embdding
-                @formatter         = formatter
               end
 
               def requires_embdding?
                 @requires_embdding
-              end
-
-              # @return [String]
-              def format(name, additional_comment)
-                @formatter.call(name, additional_comment)
               end
 
               # @!attribute [r] code
@@ -93,20 +91,18 @@ module Recediff
               attr_reader :code
 
               @patterns = {
-                '10': new(:'10', false, proc { | _, additional_comment | additional_comment.value }),
-                '20': new(:'20', false, proc { | name, _ | name }),
-                '30': new(:'30', false, proc { | _, additional_comment | additional_comment.value }),
-                '31': new(:'31', false, proc { | _, additional_comment | additional_comment.item.name }),
-                '40': new(:'40', true,  proc { | _, additional_comment | additional_comment.value }),
-                '42': new(:'42', false, proc { | _, additional_comment | additional_comment.value }),
-                '50': new(:'50', false, proc { | _, additional_comment |
-                  Recediff::Util::DateUtil.to_wareki(additional_comment.item)
-                }),
-                '51': new(:'51', false, proc { | _, additional_comment | additional_comment.item }),
-                '52': new(:'52', false, proc { | _, additional_comment | additional_comment.item }),
-                '53': new(:'53', false, proc { | _, additional_comment | additional_comment.item }),
-                '80': new(:'80', false, proc { | _, additional_comment | additional_comment.item.name }),
-                '90': new(:'90', false, proc { | _, additional_comment | additional_comment.item.map(&:name).join }),
+                '10': new(:'10', false),
+                '20': new(:'20', false),
+                '30': new(:'30', false),
+                '31': new(:'31', false),
+                '40': new(:'40', true),
+                '42': new(:'42', false),
+                '50': new(:'50', false),
+                '51': new(:'51', false),
+                '52': new(:'52', false),
+                '53': new(:'53', false),
+                '80': new(:'80', false),
+                '90': new(:'90', false),
               }
 
               class << self
@@ -114,6 +110,102 @@ module Recediff
                 # @return [self, nil]
                 def find_by_code(code)
                   @patterns[code.to_s.intern]
+                end
+              end
+            end
+
+            # 「文字データ」として補足される追記テキスト
+            module AppendedContent
+              # フォーマットが定められていない任意形式の文字列
+              #
+              # パターン10, 30
+              class FreeFormat
+                # @param value [String]
+                def initialize(value)
+                  @value = value
+                end
+              end
+
+              # 診療行為による補足
+              #
+              # パターン31
+              class ShinryouKouiFormat
+                # @param master_shinryou_koui [Master::Treatment::ShinryouKoui]
+                def initialize(master_shinryou_koui)
+                  @shinryou_koui = master_shinryou_koui
+                end
+              end
+
+              # 数値による補足
+              #
+              # パターン40, 42
+              class NumberFormat
+                # @param value [String] 全角数字による数値文字列
+                def initialize(value)
+                  @value = value
+                end
+              end
+
+              # 和暦年月日による補足
+              #
+              # パターン50
+              class WarekiDateFormat
+                def initialize(wareki, date)
+                  @value = wareki
+                  @date  = date
+                end
+              end
+
+              # 時・分による補足
+              #
+              # パターン51
+              class HourMinuteFormat
+                # @param hour_minute [String] 全角数字による数値文字列
+                def initialize(hour, minute)
+                  @hour   = hour
+                  @minute = minute
+                end
+              end
+
+              # 分による補足
+              #
+              # パターン52
+              class MinuteFormat
+                # @param minute [String] 全角数字による数値文字列
+                def initialize(minute)
+                  @minute = minute
+                end
+              end
+
+              # 日・時・分による補足
+              #
+              # パターン53
+              class DayHourMinuteFormat
+                # @param hour_minute [String] 全角数字による数値文字列
+                def initialize(day, hour, minute)
+                  @day    = day
+                  @hour   = hour
+                  @minute = minute
+                end
+              end
+
+              # 和暦年月日・数値による補足
+              #
+              # パターン80
+              class WarekiDateAndNumberFormat
+                def initialize(wareki_date_format, number_format)
+                  @wareki = wareki_date_format
+                  @number = number_format
+                end
+              end
+
+              # 修飾語による補足
+              #
+              # パターン90
+              class ShuushokugoFormat
+                # @param master_shuushokugos [Array<Master::Diagnosis::Shuushokugo>]
+                def initialize(*master_shuushokugos)
+                  @shuushokugos = master_shuushokugos
                 end
               end
             end
