@@ -40,35 +40,6 @@ module Recediff
                 true
               end
 
-              # # 仮
-              # def name
-              #   to_s
-              # end
-              #
-              # def to_s
-              #   item.format_with(additional_comment)
-              # end
-              #
-              # def tensuu
-              #   nil
-              # end
-              #
-              # def kaisuu
-              #   nil
-              # end
-              #
-              # def shiyouryou
-              #   nil
-              # end
-              #
-              # def unit
-              #   nil
-              # end
-              #
-              # def type
-              #   :CO
-              # end
-
               # @!attribute [r] item
               #   @return [Master::Treatment::Comment]
               # @!attribute [r] appended_content
