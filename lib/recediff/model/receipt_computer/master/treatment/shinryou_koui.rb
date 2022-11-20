@@ -14,8 +14,8 @@ module Recediff
               unit:,
               point_type:,
               point:,
-              shuukeisaki_shikibetu_gairai:,
-              shuukeisaki_shikibetu_nyuuin:,
+              # shuukeisaki_shikibetu_gairai:,
+              # shuukeisaki_shikibetu_nyuuin:,
               # code_hyou_you_bangou_alphabet:,
               # code_hyou_you_bangou_shou:,
               # code_hyou_you_bangou_kubun_bangou:,
@@ -24,15 +24,15 @@ module Recediff
               # tensuu_hyou_kubun_bangou:,
               full_name:
             )
-              @code                         = code
-              @name                         = name
-              @name_kana                    = name_kana
-              @unit                         = unit
-              @point_type                   = point_type
-              @point                        = point
-              @shuukeisaki_shikibetu_gairai = shuukeisaki_shikibetu_gairai
-              @shuukeisaki_shikibetu_nyuuin = shuukeisaki_shikibetu_nyuuin
-              @full_name                    = full_name
+              @code       = code
+              @name       = name
+              @name_kana  = name_kana
+              @unit       = unit
+              @point_type = point_type
+              @point      = point
+              @full_name  = full_name
+              # @shuukeisaki_shikibetu_gairai = shuukeisaki_shikibetu_gairai
+              # @shuukeisaki_shikibetu_nyuuin = shuukeisaki_shikibetu_nyuuin
               # @code_hyou_you_bangou         = CodeHyouYouBangou.new(
               #   code_hyou_you_bangou_alphabet:     code_hyou_you_bangou_alphabet,
               #   code_hyou_you_bangou_shou:         code_hyou_you_bangou_shou,
@@ -63,10 +63,10 @@ module Recediff
             attr_reader :point
             # @!attribute [r] shuukeisaki_shikibetu_gairai
             #   @return [String]
-            attr_reader :shuukeisaki_shikibetu_gairai
+            # attr_reader :shuukeisaki_shikibetu_gairai
             # @!attribute [r] shuukeisaki_shikibetu_nyuuin
             #   @return [String]
-            attr_reader :shuukeisaki_shikibetu_nyuuin
+            # attr_reader :shuukeisaki_shikibetu_nyuuin
             # @!attribute [r] code_hyou_you_bangou
             #   @return [CodeHyouYouBangou]
             # attr_reader :code_hyou_you_bangou
