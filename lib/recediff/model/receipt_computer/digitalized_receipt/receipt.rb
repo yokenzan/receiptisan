@@ -55,10 +55,10 @@ module Recediff
             @shoubyoumeis << shoubyoumei
           end
 
-          # @param ichiren_unit [IchirenUnit]
+          # @param ichiren_unit [Tekiyou::IchirenUnit]
           # @return [void]
           def add_ichiren_unit(ichiren_unit)
-            @tekiyou[ichiren_unit.shinryou_shikibetsu] << ichiren_unit
+            @tekiyou[ichiren_unit.shinryou_shikibetsu.code] << ichiren_unit
           end
 
           # @param shoujou_shouki [ShoujouShouki]
@@ -73,6 +73,11 @@ module Recediff
 
           def to_s
             @tekiyou.values.flatten.map(&:to_s).join("\n")
+          end
+
+          # @return [void]
+          def fix!
+            @tekiyou = @tekiyou.sort_by { | shinryou_shikibetsu, _ | shinryou_shikibetsu.to_s.to_i }.to_h
           end
 
           # @!attribute [r] id

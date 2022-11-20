@@ -127,9 +127,9 @@ module Recediff
         # @param receipt [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
         def convert_tekiyou(receipt)
           Parameter::Tekiyou.new(
-            shinryou_shikibetsu_sections: receipt.map do | shinryou_shikibetsu, ichiren_units |
+            shinryou_shikibetsu_sections: receipt.map do | _, ichiren_units |
               Parameter::ShinryouShikibetsuSection.new(
-                shinryou_shikibetsu: Parameter::ShinryouShikibetsu.from(shinryou_shikibetsu),
+                shinryou_shikibetsu: Parameter::ShinryouShikibetsu.from(ichiren_units.first.shinryou_shikibetsu),
                 ichiren_units:       ichiren_units.map { | ichiren_unit | convert_ichiren_unit(ichiren_unit) }
               )
             end.sort_by { | section | section.shinryou_shikibetsu.code }

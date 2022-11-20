@@ -23,7 +23,8 @@ module Recediff
             # @param receipt [DigitalizedReceipt::Receipt]
             # @return [void]
             def new_receipt(receipt)
-              @digitalized_receipt.add_receipt(@current_receipt) if @current_receipt
+              fix_current_receipt
+
               @current_receipt             = receipt
               @current_receipt.hospital    = @digitalized_receipt.hospital
               @current_shinryou_shikibetsu = nil
@@ -122,6 +123,17 @@ module Recediff
 
             private
 
+            def fix_current_receipt
+              return unless @current_receipt
+
+              fix_current_santei_unit
+              fix_current_ichiren_unit
+
+              @digitalized_receipt.add_receipt(@current_receipt)
+              @current_receipt.fix!
+              @current_receipt = nil
+            end
+
             def new_ichiren_unit(ichiren_unit)
               @current_ichiren_unit = ichiren_unit
             end
@@ -140,7 +152,7 @@ module Recediff
             def fix_current_santei_unit
               return unless @current_santei_unit
 
-              @current_santei_unit.fix
+              @current_santei_unit.fix!
               @current_ichiren_unit.add_santei_unit(@current_santei_unit)
               @current_santei_unit = nil
             end

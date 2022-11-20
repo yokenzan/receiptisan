@@ -33,7 +33,7 @@ module Recediff
               end
 
               # @return [void]
-              def fix
+              def fix!
                 bottom_cost = @tekiyou_items.reverse.find(&:tensuu?)
                 return unless bottom_cost
 
