@@ -24,11 +24,9 @@ module Recediff
                 raise StandardError, 'line isnt SY record' unless values.first == 'SY'
 
                 process_new_shoubyoumei(values).tap do | shoubyoumei |
-                  process_shuushokugo(shoubyoumei, values)
+                  process_shuushokugos(values[SY::C_修飾語コード]) { | shuushokugo | shoubyoumei.add_shuushokugo(shuushokugo) }
                 end
               end
-
-              private
 
               # @param values [Array<String, nil>]
               # @return [DigitalizedReceipt::Receipt::Shoubyoumei]
@@ -45,13 +43,18 @@ module Recediff
                 )
               end
 
-              # @param shoubyoumei [Shoubyoumei]
-              # @param values [Array<String, nil>]
-              # @return [void]
-              def process_shuushokugo(shoubyoumei, values)
-                values[SY::C_修飾語コード]&.scan(/\d{4}/) do | c |
-                  shoubyoumei.add_shuushokugo(handler.find_by_code(MasterShuushokugo::Code.of(c)))
-                end
+              # @param combined_values_of_code [String, nil]
+              # @return [Array<Master::Diagnosis::Shuushokugo>]
+              def process_shuushokugos(combined_values_of_code)
+                return [] unless combined_values_of_code
+
+                combined_values_of_code.scan(/\d{4}/).map { | c | process_shuushokugo(c) }
+              end
+
+              private
+
+              def process_shuushokugo(value_of_code)
+                handler.find_by_code(MasterShuushokugo::Code.of(value_of_code))
               end
 
               attr_reader :handler

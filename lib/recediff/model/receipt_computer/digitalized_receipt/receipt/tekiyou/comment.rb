@@ -40,6 +40,10 @@ module Recediff
                 true
               end
 
+              def format
+                master_item.format(appended_content)
+              end
+
               # @!attribute [r] item
               #   @return [Master::Treatment::Comment]
               # @!attribute [r] appended_content
@@ -54,7 +58,7 @@ module Recediff
               #   @return [Master::Treatment::Comment::Code]
               # @!attribute [r] pattern
               #   @return [Master::Treatment::Comment::Pattern]
-              def_delegators :master_item, :code, :pattern
+              def_delegators :master_item, :code, :name, :pattern
             end
           end
         end

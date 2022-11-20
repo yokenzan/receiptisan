@@ -20,17 +20,39 @@ module Recediff
               @embed_positions = embed_positions
             end
 
-            # @param additional_comment [ReceiptComputer::DigitalizedReceipt::Receipt::Comment::AdditionalComment, nil]
-            def format_with(additional_comment)
-              additional_text = @pattern.format(name, additional_comment)
-              return [name, additional_text].reject(&:empty?).join('；').squeeze('；') unless pattern.requires_embdding?
+            # @param appended_content [
+            #   AppendedContent::FreeFormat,
+            #   AppendedContent::DayHourMinuteFormat,
+            #   AppendedContent::HourMinuteFormat,
+            #   AppendedContent::MinuteFormat,
+            #   AppendedContent::NumberFormat,
+            #   AppendedContent::ShinryouKouiFormat,
+            #   AppendedContent::ShuushokugoFormat,
+            #   AppendedContent::WarekiDateAndNumberFormat,
+            #   AppendedContent::WarekiDateFormat,
+            #   nil
+            # ]
+            # @return [String]
+            def format(appended_content)
+              unless pattern.requires_embdding?
+                return case pattern.code
+                  when :'10'
+                    appended_content
+                  when :'20'
+                    name
+                  else
+                    [name, appended_content].join('；').squeeze('；')
+                  end.to_s
+              end
 
-              comment_text = name
+              comment_text  = name
+              appended_text = appended_content.to_s
+
               comment_text.tap do | text |
                 # @param position [EmbedPosition]
                 @embed_positions.each do | position |
-                  text[position.start - 1, position.length] = additional_text[0, position.length]
-                  additional_text[0, position.length]       = ''
+                  text[position.start - 1, position.length] = appended_text[0, position.length]
+                  appended_text[0, position.length]      = ''
                 end
               end
             end
@@ -124,6 +146,10 @@ module Recediff
                 def initialize(value)
                   @value = value
                 end
+
+                def to_s
+                  @value
+                end
               end
 
               # 診療行為による補足
@@ -133,6 +159,10 @@ module Recediff
                 # @param master_shinryou_koui [Master::Treatment::ShinryouKoui]
                 def initialize(master_shinryou_koui)
                   @shinryou_koui = master_shinryou_koui
+                end
+
+                def to_s
+                  @shinryou_koui.name
                 end
               end
 
@@ -144,6 +174,10 @@ module Recediff
                 def initialize(value)
                   @value = value
                 end
+
+                def to_s
+                  @value
+                end
               end
 
               # 和暦年月日による補足
@@ -153,6 +187,10 @@ module Recediff
                 def initialize(wareki, date)
                   @value = wareki
                   @date  = date
+                end
+
+                def to_s
+                  @date.jisx0301
                 end
               end
 
@@ -165,6 +203,10 @@ module Recediff
                   @hour   = hour
                   @minute = minute
                 end
+
+                def to_s
+                  '%s時%s分' % [@hour, @minute]
+                end
               end
 
               # 分による補足
@@ -174,6 +216,10 @@ module Recediff
                 # @param minute [String] 全角数字による数値文字列
                 def initialize(minute)
                   @minute = minute
+                end
+
+                def to_s
+                  '%s分' % @minute
                 end
               end
 
@@ -187,6 +233,10 @@ module Recediff
                   @hour   = hour
                   @minute = minute
                 end
+
+                def to_s
+                  '%s日%s時%s分' % [@day, @hour, @minute]
+                end
               end
 
               # 和暦年月日・数値による補足
@@ -197,6 +247,10 @@ module Recediff
                   @wareki = wareki_date_format
                   @number = number_format
                 end
+
+                def to_s
+                  '%s%s' % [@wareki, @number]
+                end
               end
 
               # 修飾語による補足
@@ -206,6 +260,10 @@ module Recediff
                 # @param master_shuushokugos [Array<Master::Diagnosis::Shuushokugo>]
                 def initialize(*master_shuushokugos)
                   @shuushokugos = master_shuushokugos
+                end
+
+                def to_s
+                  @shuushokugos.map(&:name).join
                 end
               end
             end

@@ -19,20 +19,21 @@ module Recediff
           def initialize(handler, logger)
             @handler                 = handler
             @logger                  = logger
-            @comment_content_builder = Parser::CommentContentBuilder.new(@handler)
             @buffer                  = Parser::Buffer.new
             @current_processor       = nil
+            sy_processor             = Processor::SYProcessor.new(@handler)
             @processors              = {
               'IR' => Processor::IRProcessor.new,
               'RE' => Processor::REProcessor.new,
               'HO' => Processor::HOProcessor.new,
               'KO' => Processor::KOProcessor.new,
-              'SY' => Processor::SYProcessor.new(@handler),
+              'SY' => sy_processor,
               'SJ' => Processor::SJProcessor.new,
               'SI' => Processor::SIProcessor.new(@handler),
               'IY' => Processor::IYProcessor.new(@handler),
               'TO' => Processor::TOProcessor.new(@handler),
             }
+            @comment_content_builder = Parser::CommentContentBuilder.new(@handler, sy_processor)
           end
 
           # @param path_of_uke [String]

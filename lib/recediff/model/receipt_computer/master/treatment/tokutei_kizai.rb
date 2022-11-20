@@ -47,6 +47,9 @@ module Recediff
             # @!attribute [r] price
             #   @return [Numeric]
             attr_reader :price
+            # @!attribute [r] price_type
+            #   @return [PriceType]
+            attr_reader :price_type
             # @!attribute [r] full_name
             #   @return [String]
             attr_reader :full_name

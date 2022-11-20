@@ -33,7 +33,7 @@ module Recediff
 
                 # @return [Float, nil]
                 def unit_price
-                  @unit_price || master_item.unit_price
+                  @unit_price || master_item.price
                 end
 
                 # @!attribute [r] master_item
@@ -48,7 +48,7 @@ module Recediff
                 #   @return [Master::Treatment::TokuteiKizai::Code]
                 # @!attribute [r] name
                 #   @return [String]
-                def_delegators :master_item, :code, :name
+                def_delegators :master_item, :code, :name, :price_type
               end
             end
           end
