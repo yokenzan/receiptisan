@@ -30,6 +30,7 @@ module Recediff
 
                     Treatment::Comment::EmbedPosition.new(start, length)
                   end.compact
+
                   comment = Treatment::Comment.new(
                     code:            Treatment::Comment::Code.of(values[Treatment::Comment::Columns::C_コード]),
                     pattern:         Treatment::Comment::Pattern.find_by_code(
@@ -39,6 +40,7 @@ module Recediff
                     name_kana:       convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称]),
                     embed_positions: embed_positions
                   )
+
                   hash[comment.code.value] = comment
                 end
               end
