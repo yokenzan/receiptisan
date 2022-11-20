@@ -347,11 +347,94 @@ module Recediff
         class ShinryouShikibetsu < CodedItem
           extend CodedItemFactory
         end
-        IchirenUnit   = Struct.new(:futan_kubun, :santei_units, keyword_init: true)
-        SanteiUnit    = Struct.new(:tensuu, :kaisuu, :items, keyword_init: true)
-        TekiyouItem   = Struct.new(:treat, :tensuu, :kaisuu, keyword_init: true)
-        Treat         = Struct.new(:item, :text, :shiyouryou, keyword_init: true)
-        TreatmentItem = Struct.new(:type, :code, :name, :unit, keyword_init: true)
+        IchirenUnit    = Struct.new(:futan_kubun, :santei_units, keyword_init: true)
+        SanteiUnit     = Struct.new(:tensuu, :kaisuu, :items, keyword_init: true)
+
+        # 診療行為
+
+        ShinryouKoui = Struct.new(
+          :type,
+          :master,
+          :text,
+          :shiyouryou,
+          :unit,
+          keyword_init: true
+        )
+        MasterShinryouKoui = Struct.new(
+          :code,
+          :name,
+          # :point,
+          # :point_type,
+          :unit,
+          keyword_init: true
+        )
+
+        # 医薬品
+
+        Iyakuhin = Struct.new(
+          :type,
+          :master,
+          :text,
+          :shiyouryou,
+          :unit,
+          keyword_init: true
+        )
+        MasterIyakuhin = Struct.new(
+          :code,
+          :name,
+          # :price,
+          # :price_type,
+          :unit,
+          keyword_init: true
+        )
+
+        # 特定器材
+
+        TokuteiKizai   = Struct.new(
+          :type,
+          :master,
+          :product_name,
+          :text,
+          :shiyouryou,
+          :unit_price,
+          :unit,
+          keyword_init: true
+        )
+        MasterTokuteiKizai = Struct.new(
+          :code,
+          :name,
+          :price,
+          :price_type,
+          :unit,
+          keyword_init: true
+        )
+
+        # コメント
+
+        Comment = Struct.new(
+          :type,
+          :master,
+          :text,
+          :appended_content,
+          keyword_init: true
+        )
+        MasterComment  = Struct.new(
+          :code,
+          :pattern,
+          :name,
+          keyword_init: true
+        )
+        AppendedContent = Struct.new(
+          :value,
+          :text,
+          keyword_init: true
+        ) do
+          class << self
+            def from(appended_content)
+            end
+          end
+        end
+
         class Unit < CodedItem
           extend CodedItemFactory
         end

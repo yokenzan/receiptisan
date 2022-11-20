@@ -47,9 +47,7 @@ module Recediff
             shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
             tekiyou:           convert_tekiyou(receipt),
             ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list)
-          ).tap do | parameterized_receipt |
-            # 摘要欄
-          end
+          )
         end
 
         # @param applied_hoken_list [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::AppliedHokenList]
@@ -160,19 +158,97 @@ module Recediff
         #   Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment
         # ]
         def convert_tekiyou_item(tekiyou_item)
-          Parameter::TekiyouItem.new(
-            tensuu: tekiyou_item.tensuu,
-            kaisuu: tekiyou_item.kaisuu,
-            treat:  Parameter::Treat.new(
-              shiyouryou: tekiyou_item.shiyouryou,
-              text:       '%s %s%s' % [tekiyou_item, tekiyou_item.shiyouryou, tekiyou_item.unit&.name],
-              item:       Parameter::TreatmentItem.new(
-                type: tekiyou_item.type,
-                code: tekiyou_item.code.value,
-                name: tekiyou_item.name,
-                unit: tekiyou_item.unit ? Parameter::Unit.from(tekiyou_item.unit) : nil
-              )
-            )
+          case tekiyou_item
+          when DigitalizedReceipt::Receipt::Tekiyou::Comment
+            convert_comment(tekiyou_item)
+          else
+            case tekiyou_item.resource
+            when DigitalizedReceipt::Receipt::Tekiyou::Resource::ShinryouKoui
+              convert_shinryou_koui(tekiyou_item)
+            when DigitalizedReceipt::Receipt::Tekiyou::Resource::Iyakuhin
+              convert_iyakuhin(tekiyou_item)
+            when DigitalizedReceipt::Receipt::Tekiyou::Resource::TokuteiKizai
+              convert_tokutei_kizai(tekiyou_item)
+            end
+          end
+        end
+
+        # @param tekiyou_shinryou_koui [Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost]
+        def convert_shinryou_koui(tekiyou_shinryou_koui)
+          resource = tekiyou_shinryou_koui.resource
+          unit     = resource.unit ? Parameter::Unit.from(resource.unit) : nil
+
+          Parameter::ShinryouKoui.new(
+            type:       :shinryou_koui,
+            master:     Parameter::MasterShinryouKoui.new(
+              code: resource.code.value,
+              name: resource.name,
+              unit: unit
+            ),
+            text:       [
+              resource.name,
+              resource.unit ? '%s%s' % [resource.shiyouryou, resource.unit.name] : ''
+            ].join('　'),
+            shiyouryou: resource.shiyouryou,
+            unit:       unit
+          )
+        end
+
+        # @param tekiyou_iyakuhin [Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost]
+        def convert_iyakuhin(tekiyou_iyakuhin)
+          resource = tekiyou_iyakuhin.resource
+          unit     = resource.unit ? Parameter::Unit.from(resource.unit) : nil
+
+          Parameter::Iyakuhin.new(
+            type:       :iyakuhin,
+            master:     Parameter::MasterIyakuhin.new(
+              code: resource.code.value,
+              name: resource.name,
+              unit: unit
+            ),
+            text:       '%s %s%s' % [
+              resource.name,
+              resource.shiyouryou,
+              resource.unit.name,
+            ],
+            shiyouryou: resource.shiyouryou,
+            unit:       unit
+          )
+        end
+
+        # @param tekiyou_tokutei_kizai [Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Cost]
+        def convert_tokutei_kizai(tekiyou_tokutei_kizai)
+          resource = tekiyou_tokutei_kizai.resource
+          unit     = resource.unit ? Parameter::Unit.from(resource.unit) : nil
+
+          Parameter::TokuteiKizai.new(
+            type:         :tokutei_kizai,
+            master:       Parameter::MasterTokuteiKizai.new(
+              code:       resource.code.value,
+              name:       resource.name,
+              price:      resource.unit_price,
+              price_type: resource.price_type,
+              unit:       unit,
+            ),
+            product_name: resource.product_name,
+            text:         'pending',
+            shiyouryou:   resource.shiyouryou,
+            unit_price:   resource.unit_price,
+            unit:         unit,
+          )
+        end
+
+        # @param tekiyou_comment [Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment]
+        def convert_comment(tekiyou_comment)
+          Parameter::Comment.new(
+            type:             :comment,
+            master:           Parameter::MasterComment.new(
+              code:    tekiyou_comment.code.value,
+              name:    tekiyou_comment.name,
+              pattern: tekiyou_comment.pattern.code
+            ),
+            text:             tekiyou_comment.format,
+            appended_content: tekiyou_comment.appended_content
           )
         end
 
