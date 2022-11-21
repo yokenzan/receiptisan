@@ -177,21 +177,27 @@ module Recediff
             )
           end
         end
+
         class TensuuHyouType < CodedItem
           extend CodedItemFactory
         end
+
         class MainHokenType < CodedItem
           extend CodedItemFactory
         end
+
         class HokenMultipleType < CodedItem
           extend CodedItemFactory
         end
+
         class PatientAgeType < CodedItem
           extend CodedItemFactory
         end
+
         class TokkiJikou < CodedItem
           extend CodedItemFactory
         end
+
         class Prefecture < CodedItemWithShortName
           class << self
             # @param prefecture [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Prefecture]
@@ -205,6 +211,7 @@ module Recediff
             end
           end
         end
+
         class Sex < CodedItemWithShortName
           class << self
             # @param sex [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Sex]
@@ -292,7 +299,7 @@ module Recediff
                 is_main:             shoubyoumei.main?,
                 start_date:          Date.from(shoubyoumei.start_date),
                 tenki:               Tenki.from(shoubyoumei.tenki),
-                comment:             shoubyoumei.comment,
+                comment:             shoubyoumei.comment
               )
             end
           end
@@ -430,8 +437,7 @@ module Recediff
           keyword_init: true
         ) do
           class << self
-            def from(appended_content)
-            end
+            def from(appended_content); end
           end
         end
 

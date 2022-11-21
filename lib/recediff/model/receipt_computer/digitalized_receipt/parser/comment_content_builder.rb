@@ -48,7 +48,7 @@ module Recediff
                   @@patterns[:'42'].call(wareki_and_number[-8..])
                 )
               end,
-              '90': proc do | code_of_shuushokugos, handler, sy_processor |
+              '90': proc do | code_of_shuushokugos, _handler, sy_processor |
                 shuushokugos = sy_processor.process_shuushokugos(@@to_half_number.call(code_of_shuushokugos))
                 ShuushokugoFormat.new(*shuushokugos)
               end,

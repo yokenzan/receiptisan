@@ -18,9 +18,11 @@ RSpec.describe IyakuhinLoader do
     specify '読込結果はHashで返す' do
       expect(result).to be_instance_of Hash
     end
+
     specify '医薬品コードのシンボルがキーになっている' do
       expect(result.keys).to include(*%i[610406079 620000237 630010002 620008965])
     end
+
     specify '値は医薬品オブジェクトになっている' do
       expect(result.values).to all(be_instance_of Iyakuhin)
     end
@@ -30,24 +32,31 @@ RSpec.describe IyakuhinLoader do
         specify '医薬品コードは、Iyakuhin::Codeオブジェクトとして読込まれる' do
           expect(result[code_by_symbol].code).to be_instance_of Iyakuhin::Code
         end
+
         specify '医薬品コードがCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].code).to eq Iyakuhin::Code.of(code_by_symbol)
         end
+
         specify '医薬品省略漢字名称がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].name).to eq name
         end
+
         specify '医薬品カナ名称は、全角カナで読込まれる' do
           expect(result[code_by_symbol].name_kana).to eq name_kana
         end
+
         specify '単位がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].unit).to be unit
         end
+
         specify '注射容量がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].chuusha_youryou).to be chuusha_youryou
         end
+
         specify '剤形がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].dosage_form).to be dosage_form
         end
+
         specify '医薬品漢字名称がCSVとオブジェクトで一致する' do
           expect(result[code_by_symbol].full_name).to eq full_name
         end
@@ -63,6 +72,7 @@ RSpec.describe IyakuhinLoader do
           _dosage_form     = 1,
           _full_name       = 'ガスター散２％'
       end
+
       context '生理食塩液　１．３Ｌ' do
         it_behaves_like '#load_iyakuhin_master_examples',
           _code_by_symbol  = :'620000237',
@@ -73,6 +83,7 @@ RSpec.describe IyakuhinLoader do
           _dosage_form     = 4,
           _full_name       = '生理食塩液'
       end
+
       context '薬剤料逓減（９０／１００）（内服薬）' do
         it_behaves_like '#load_iyakuhin_master_examples',
           _code_by_symbol  = :'630010002',
@@ -83,6 +94,7 @@ RSpec.describe IyakuhinLoader do
           _dosage_form     = 3,
           _full_name       = '薬剤料逓減（９０／１００）（内服薬）'
       end
+
       context 'アンテベート軟膏０．０５％' do
         it_behaves_like '#load_iyakuhin_master_examples',
           _code_by_symbol  = :'620008965',

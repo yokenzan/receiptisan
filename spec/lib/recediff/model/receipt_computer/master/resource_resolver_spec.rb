@@ -19,18 +19,23 @@ RSpec.describe ResourceResolver do
         specify '固定のキーでアクセスできる' do
           expect(resolved_paths).to have_key(key)
         end
+
         specify 'Pathnameオブジェクトを返す' do
           expect(resolved_paths[key]).to be_instance_of Pathname
         end
+
         specify '絶対パスを返す' do
           expect(resolved_paths[key]).to be_absolute
         end
+
         specify '存在するファイルのパスを返す' do
           expect(resolved_paths[key]).to be_exist
         end
+
         specify 'ファイルである' do
           expect(resolved_paths[key]).to be_file
         end
+
         specify "ファイル名は'#{file_prefix}'ではじまる" do
           expect(resolved_paths[key].basename.to_path).to start_with(file_prefix)
         end

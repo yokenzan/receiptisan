@@ -33,9 +33,11 @@ RSpec.describe Version do
       specify '暦月が期間の起点の場合、真を返す' do
         expect(target.include?(Month.new(2022, 4))).to be true
       end
+
       specify '暦月が期中の場合、真を返す' do
         expect(target.include?(Month.new(2022, 4))).to be true
       end
+
       specify '暦月が期間の終点の場合、真を返す' do
         expect(target.include?(Month.new(2024, 3))).to be true
       end
@@ -45,6 +47,7 @@ RSpec.describe Version do
       specify '暦月が期間の起点よりも過去の場合、偽を返す' do
         expect(target.include?(Month.new(2022, 3))).to be false
       end
+
       specify '暦月が期間の終点よりも未来の場合、偽を返す' do
         expect(target.include?(Month.new(2024, 5))).to be false
       end
@@ -54,7 +57,7 @@ RSpec.describe Version do
   describe '.resolve_by_ym' do
     context '2018年度点数表期間の起点よりも過去の暦月の場合' do
       specify 'nilを返す' do
-        expect(described_class.resolve_by_ym(Month.new(2018, 3))).to be nil
+        expect(described_class.resolve_by_ym(Month.new(2018, 3))).to be_nil
       end
     end
 
@@ -62,6 +65,7 @@ RSpec.describe Version do
       specify '起点月の場合、2018年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2018, 4))).to eq Version::V2018_H30
       end
+
       specify '終点月の場合、2018年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2019, 3))).to eq Version::V2018_H30
       end
@@ -71,6 +75,7 @@ RSpec.describe Version do
       specify '起点月の場合、2020年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2019, 4))).to eq Version::V2019_R01
       end
+
       specify '終点月の場合、2020年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2020, 3))).to eq Version::V2019_R01
       end
@@ -80,6 +85,7 @@ RSpec.describe Version do
       specify '起点月の場合、2022年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2020, 4))).to eq Version::V2020_R02
       end
+
       specify '終点月の場合、2022年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2022, 3))).to eq Version::V2020_R02
       end
@@ -89,6 +95,7 @@ RSpec.describe Version do
       specify '起点月の場合、2022年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2022, 4))).to eq Version::V2022_R04
       end
+
       specify '終点月の場合、2022年度診療報酬点数表の版を返す' do
         expect(described_class.resolve_by_ym(Month.new(2024, 3))).to eq Version::V2022_R04
       end
@@ -96,7 +103,7 @@ RSpec.describe Version do
 
     context '2022年度点数表期間の終点よりも未来の暦月の場合' do
       specify 'nilを返す' do
-        expect(described_class.resolve_by_ym(Month.new(2024, 4))).to be nil
+        expect(described_class.resolve_by_ym(Month.new(2024, 4))).to be_nil
       end
     end
   end
