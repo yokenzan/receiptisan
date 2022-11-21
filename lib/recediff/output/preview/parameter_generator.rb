@@ -185,10 +185,7 @@ module Recediff
               name: resource.name,
               unit: unit
             ),
-            text:       [
-              resource.name,
-              resource.unit ? '%s%s' % [resource.shiyouryou, resource.unit.name] : ''
-            ].join('　'),
+            text:       resource2text(resource),
             shiyouryou: resource.shiyouryou,
             unit:       unit
           )
@@ -206,11 +203,7 @@ module Recediff
               name: resource.name,
               unit: unit
             ),
-            text:       '%s %s%s' % [
-              resource.name,
-              resource.shiyouryou,
-              resource.unit.name,
-            ],
+            text:       resource2text(resource),
             shiyouryou: resource.shiyouryou,
             unit:       unit
           )
@@ -228,13 +221,13 @@ module Recediff
               name:       resource.name,
               price:      resource.unit_price,
               price_type: resource.price_type,
-              unit:       unit,
+              unit:       unit
             ),
             product_name: resource.product_name,
             text:         'pending',
             shiyouryou:   resource.shiyouryou,
             unit_price:   resource.unit_price,
-            unit:         unit,
+            unit:         unit
           )
         end
 
@@ -254,6 +247,22 @@ module Recediff
 
         def calculate_summary_of(_receipt)
           'pending'
+        end
+
+        private
+
+        def resource2text(resource)
+          return resource.name unless (unit = resource.unit)
+
+          shiyouryou = resource.shiyouryou.to_i == resource.shiyouryou ?
+            resource.shiyouryou.to_i :
+            resource.shiyouryou
+
+          resource.name + '　%s%s' % [hankaku2zenkaku(shiyouryou), unit.name]
+        end
+
+        def hankaku2zenkaku(hankaku_number)
+          hankaku_number.to_s.tr('0-9', '０-９')
         end
       end
     end
