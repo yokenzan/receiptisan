@@ -121,15 +121,15 @@ module Recediff
               attr_reader :code, :name
 
               @types = {
-                '1': new(code: 2, name: '本入'),
+                '1': new(code: 1, name: '本入'),
                 '2': new(code: 2, name: '本外'),
-                '3': new(code: 4, name: '六入'),
+                '3': new(code: 3, name: '六入'),
                 '4': new(code: 4, name: '六外'),
-                '5': new(code: 6, name: '家入'),
+                '5': new(code: 5, name: '家入'),
                 '6': new(code: 6, name: '家外'),
-                '7': new(code: 8, name: '高入一'),
+                '7': new(code: 7, name: '高入一'),
                 '8': new(code: 8, name: '高外一'),
-                '9': new(code: 0, name: '高入７'),
+                '9': new(code: 9, name: '高入７'),
                 '0': new(code: 0, name: '高外７'),
               }
               @types.each(&:freeze).freeze
