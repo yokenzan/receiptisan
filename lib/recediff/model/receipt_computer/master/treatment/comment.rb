@@ -191,13 +191,7 @@ module Recediff
                 end
 
                 def to_s
-                  text = '%s%s年%s月%s日' % [
-                    Util::DateUtil::Gengou.find_by_alphabet(@date.jisx0301[0]).name,
-                    @value[1, 2],
-                    @value[3, 2],
-                    @value[5, 2],
-                  ]
-                  text.gsub!(/０([０-９])/, '　\1')
+                  Util::DateUtil.to_wareki(@date, zenkaku: true)
                 end
               end
 

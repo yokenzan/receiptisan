@@ -80,6 +80,21 @@ module Recediff
           end
         end
 
+        # @param date [Date]
+        def to_wareki(date, zenkaku: false)
+          jisx0301 = date.jisx0301
+          gengou   = Gengou.find_by_alphabet(jisx0301[0])
+          text     = '%s%s年%s月%s日' % [
+            gengou.name,
+            jisx0301[1, 2],
+            jisx0301[4, 2],
+            jisx0301[7, 2],
+          ]
+
+          text.gsub!(/0([0-9])/, '　\1')
+          zenkaku ? text.tr('0-9', '０-９') : text
+        end
+
         private
 
         # @param text [String]

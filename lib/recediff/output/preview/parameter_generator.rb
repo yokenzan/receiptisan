@@ -241,7 +241,9 @@ module Recediff
               pattern: tekiyou_comment.pattern.code
             ),
             text:             tekiyou_comment.format,
-            appended_content: tekiyou_comment.appended_content
+            appended_content: tekiyou_comment.appended_content&.then do | content |
+              Parameter::AppendedContent.new(text: content.to_s)
+            end
           )
         end
 

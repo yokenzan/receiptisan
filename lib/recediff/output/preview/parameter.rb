@@ -37,7 +37,7 @@ module Recediff
             end
           end
         end
-        WarekiDate = Struct.new(:gengou, :year, :month, :day, keyword_init: true) do
+        WarekiDate = Struct.new(:gengou, :year, :month, :day, :text, keyword_init: true) do
           class << self
             # @param date [::Date]
             def from(date)
@@ -46,7 +46,9 @@ module Recediff
                 gengou: WarekiGengou.from(date),
                 year:   jisx0301[1, 2].to_i,
                 month:  date.month,
-                day:    date.day
+                day:    date.day,
+                text:   Util::DateUtil.to_wareki(date, zenkaku: true)
+
               )
             end
           end
@@ -67,7 +69,7 @@ module Recediff
           class << self
             # @param month [::Date]
             def from(date)
-              gengou = Recediff::Util::DateUtil::Gengou.find_by_alphabet(date.jisx0301[0])
+              gengou = Util::DateUtil::Gengou.find_by_alphabet(date.jisx0301[0])
               new(
                 code:       gengou.code,
                 name:       gengou.name,
@@ -431,15 +433,7 @@ module Recediff
           :name,
           keyword_init: true
         )
-        AppendedContent = Struct.new(
-          :value,
-          :text,
-          keyword_init: true
-        ) do
-          class << self
-            def from(appended_content); end
-          end
-        end
+        AppendedContent = Struct.new(:text, keyword_init: true)
 
         class Unit < CodedItem
           extend CodedItemFactory
