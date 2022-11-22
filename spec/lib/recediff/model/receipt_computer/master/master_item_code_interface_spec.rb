@@ -7,7 +7,7 @@ require 'recediff'
 RSpec.shared_examples Recediff::Model::ReceiptComputer::Master::MasterItemCodeInterface do | digit_length, name |
   describe '.of' do
     specify '文字列からインスタンスを生成できる' do
-      expect(described_class.of(10**(digit_length - 1))).to be_instance_of(described_class)
+      expect(described_class.of((10**(digit_length - 1)).to_i)).to be_instance_of(described_class)
     end
 
     specify '数値からインスタンスを生成できる' do
@@ -40,7 +40,7 @@ RSpec.shared_examples Recediff::Model::ReceiptComputer::Master::MasterItemCodeIn
     end
 
     specify '前ゼロを省略しても同じ桁数のコードになる(シンボルより生成)' do
-      expect(described_class.of(1).value).to eq zero_padded_digits.intern
+      expect(described_class.of(:'1').value).to eq zero_padded_digits.intern
     end
   end
 

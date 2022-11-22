@@ -12,7 +12,7 @@ RSpec.describe ShoubyoumeiLoader do
   let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
-    let(:loader) { ShoubyoumeiLoader.new }
+    let(:loader) { described_class.new }
     let(:result) { loader.load(Pathname(csv_dir).join('b_ALL00000000.csv').expand_path(__dir__)) }
 
     specify '読込結果はHashで返す' do

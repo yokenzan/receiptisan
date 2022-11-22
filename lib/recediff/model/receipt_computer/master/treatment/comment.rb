@@ -35,7 +35,8 @@ module Recediff
             # @return [String]
             def format(appended_content)
               unless pattern.requires_embdding?
-                return case pattern.code
+                return \
+                  case pattern.code
                   when :'10'
                     appended_content
                   when :'20'
@@ -52,7 +53,7 @@ module Recediff
                 # @param position [EmbedPosition]
                 @embed_positions.each do | position |
                   text[position.start - 1, position.length] = appended_text[0, position.length]
-                  appended_text[0, position.length]      = ''
+                  appended_text[0, position.length] = ''
                 end
               end
             end
@@ -194,7 +195,7 @@ module Recediff
                     Util::DateUtil::Gengou.find_by_alphabet(@date.jisx0301[0]).name,
                     @value[1, 2],
                     @value[3, 2],
-                    @value[5, 2]
+                    @value[5, 2],
                   ]
                   text.gsub!(/０([０-９])/, '　\1')
                 end

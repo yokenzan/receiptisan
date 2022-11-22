@@ -6,7 +6,7 @@ require 'recediff'
 Version = Recediff::Model::ReceiptComputer::Master::Version
 
 RSpec.describe Version do
-  let!(:target) { Version.new(2022, Month.new(2022, 4), Month.new(2024, 3)) }
+  let!(:target) { described_class.new(2022, Month.new(2022, 4), Month.new(2024, 3)) }
 
   describe '#year' do
     specify '点数表の版の初年を返すこと' do
@@ -35,7 +35,7 @@ RSpec.describe Version do
       end
 
       specify '暦月が期中の場合、真を返す' do
-        expect(target.include?(Month.new(2022, 4))).to be true
+        expect(target.include?(Month.new(2023, 4))).to be true
       end
 
       specify '暦月が期間の終点の場合、真を返す' do

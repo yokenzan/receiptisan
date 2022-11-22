@@ -12,7 +12,7 @@ RSpec.describe IyakuhinLoader do
   let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
-    let(:loader) { IyakuhinLoader.new }
+    let(:loader) { described_class.new }
     let(:result) { loader.load(Pathname(csv_dir).join('y_ALL00000000.csv').expand_path(__dir__)) }
 
     specify '読込結果はHashで返す' do
@@ -28,7 +28,7 @@ RSpec.describe IyakuhinLoader do
     end
 
     describe '各医薬品オブジェクトの各属性が正しく読込まれている' do
-      shared_examples '#load_iyakuhin_master_examples' do | code_by_symbol, name, name_kana, unit, chuusha_youryou, dosage_form, full_name |
+      shared_examples '#load_iyakuhin_master_examples' do | code_by_symbol, name, name_kana, unit, chuusha_youryou, dosage_form, full_name | # rubocop:disable Metrics/ParameterLists
         specify '医薬品コードは、Iyakuhin::Codeオブジェクトとして読込まれる' do
           expect(result[code_by_symbol].code).to be_instance_of Iyakuhin::Code
         end

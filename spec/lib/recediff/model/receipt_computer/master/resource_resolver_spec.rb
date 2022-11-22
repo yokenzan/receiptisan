@@ -7,7 +7,7 @@ ResourceResolver = Recediff::Model::ReceiptComputer::Master::ResourceResolver
 Version          = Recediff::Model::ReceiptComputer::Master::Version
 
 RSpec.describe ResourceResolver do
-  let!(:resolver) { ResourceResolver.new }
+  let!(:resolver) { described_class.new }
 
   describe '#detect_csv_files' do
     describe '各マスターCSVのパスをHashで返す' do

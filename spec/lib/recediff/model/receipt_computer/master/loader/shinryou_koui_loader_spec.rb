@@ -9,11 +9,10 @@ ShinryouKoui       = Recediff::Model::ReceiptComputer::Master::Treatment::Shinry
 Unit               = Recediff::Model::ReceiptComputer::Master::Unit
 
 RSpec.describe ShinryouKouiLoader do
-  let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
-
   describe '#load' do
-    let(:loader) { ShinryouKouiLoader.new }
-    let(:result) { loader.load(Version::V2022_R04, Pathname(csv_dir).join('s_ALL00000000.csv').expand_path(__dir__)) }
+    let(:result) { described_class.new.load(Version::V2022_R04, Pathname('../../../../../../resource/csv/master/2022').join('s_ALL00000000.csv').expand_path(__dir__)) }
+    let(:result_v2020) { described_class.new.load(Version::V2020_R02, Pathname('../../../../../../resource/csv/master').join('2020/s_ALL00000000.csv').expand_path(__dir__)) }
+    let(:result_v2022) { described_class.new.load(Version::V2022_R04, Pathname('../../../../../../resource/csv/master').join('2022/s_ALL00000000.csv').expand_path(__dir__)) }
 
     specify '読込結果はHashで返す' do
       expect(result).to be_instance_of Hash
@@ -91,41 +90,27 @@ RSpec.describe ShinryouKouiLoader do
       end
     end
 
-    describe 'マスターテーブルのスキーマが変っても、正しく各診療行為オブジェクトが読込まれる' do
-      let(:root_dir) { '../../../../../../resource/csv/master' }
-      let(:result_v2022) { loader.load(Version::V2022_R04, Pathname(root_dir).join('2022/s_ALL00000000.csv').expand_path(__dir__)) }
-      let(:result_v2020) { loader.load(Version::V2020_R02, Pathname(root_dir).join('2020/s_ALL00000000.csv').expand_path(__dir__)) }
+    describe '初診料の点数の変更が正しく切替わる' do
+      let(:shoshinryou_code) { :'111000110' }
 
-      describe '初診料の点数の変更が正しく切替わる' do
-        let(:shoshinryou_code) { :'111000110' }
-
-        context Version::V2022_R04 do
-          specify '点数は282点であること' do
-            expect(result_v2022[shoshinryou_code].point).to eq 282
-          end
-        end
-
-        context Version::V2020_R02 do
-          specify '点数は288点であること' do
-            expect(result_v2020[shoshinryou_code].point).to eq 288
-          end
-        end
+      specify '2022年度、初診料の点数は282点であること' do
+        expect(result_v2022[shoshinryou_code].point).to eq 282
       end
 
-      describe '処方箋料の名称の変更が正しく切替わる' do
-        let(:shohousenryou_code) { :'120002910' }
+      specify '2022年度、初診料の点数は288点であること' do
+        expect(result_v2020[shoshinryou_code].point).to eq 288
+      end
+    end
 
-        context Version::V2022_R04 do
-          specify '名称は"処方箋料（リフィル以外・その他）"であること' do
-            expect(result_v2022[shohousenryou_code].name).to eq '処方箋料（リフィル以外・その他）'
-          end
-        end
+    describe '処方箋料の名称の変更が正しく切替わる' do
+      let(:shohousenryou_code) { :'120002910' }
 
-        context Version::V2020_R02 do
-          specify '名称は"処方箋料（その他）"であること' do
-            expect(result_v2020[shohousenryou_code].name).to eq '処方箋料（その他）'
-          end
-        end
+      specify '2022年度、名称は"処方箋料（リフィル以外・その他）"であること' do
+        expect(result_v2022[shohousenryou_code].name).to eq '処方箋料（リフィル以外・その他）'
+      end
+
+      specify '2022年度、名称は"処方箋料（その他）"であること' do
+        expect(result_v2020[shohousenryou_code].name).to eq '処方箋料（その他）'
       end
     end
   end
