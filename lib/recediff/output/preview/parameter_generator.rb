@@ -36,7 +36,7 @@ module Recediff
           Parameter::Receipt.new(
             id:                receipt.id,
             shinryou_ym:       Parameter::Month.from(receipt.shinryou_ym),
-            nyuugai:           receipt.nyuuin? ? :nyuugai : :gairai,
+            nyuugai:           receipt.nyuuin? ? :nyuuin : :gairai,
             audit_payer:       parameterized_audit_payer,
             prefecture:        parameterized_prefecture,
             hospital:          parameterized_hospital,
