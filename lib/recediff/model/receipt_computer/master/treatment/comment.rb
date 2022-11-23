@@ -46,7 +46,7 @@ module Recediff
                   end.to_s
               end
 
-              comment_text  = name
+              comment_text  = name.dup
               appended_text = appended_content.to_s
 
               comment_text.tap do | text |
