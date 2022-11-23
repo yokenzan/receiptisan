@@ -319,7 +319,7 @@ module Recediff
             # @param master_shoubyoumei [Recediff::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei]
             def from(master_shoubyoumei)
               new(
-                code: master_shoubyoumei.code,
+                code: master_shoubyoumei.code.value,
                 name: master_shoubyoumei.name
               )
             end
@@ -330,7 +330,7 @@ module Recediff
             # @param master_shuushokugo [Recediff::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo]
             def from(master_shuushokugo)
               new(
-                code:      master_shuushokugo.code,
+                code:      master_shuushokugo.code.value,
                 name:      master_shuushokugo.name,
                 is_prefix: master_shuushokugo.prefix?
               )
