@@ -34,11 +34,11 @@ module Recediff
               # @param comment [Comment]
               # @return [void]
               def add_comment(comment)
-                comments << comment
+                @comments << comment
               end
 
               def has_comments? # rubocop:disable Naming/PredicateName
-                !comments.empty?
+                !@comments.empty?
               end
 
               # # @param day [Integer]
@@ -72,7 +72,9 @@ module Recediff
               end
 
               def each_comment
-                comments.enum_for(:each)
+                enum = @comments.enum_for(:each)
+
+                block_given? ? enum.each { | c | yield c } : enum
               end
 
               # def to_s
@@ -95,7 +97,7 @@ module Recediff
 
               private
 
-              attr_reader :days, :comments
+              attr_reader :days
             end
           end
         end

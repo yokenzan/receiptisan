@@ -151,13 +151,16 @@ module Recediff
             kaisuu: santei_unit.kaisuu,
             items:  []
           )
-
           santei_unit.each do | tekiyou_item |
             parameterized_santei_unit.items << convert_tekiyou_item(tekiyou_item)
             next if tekiyou_item.comment?
 
-            tekiyou_item.each_comment { | comment | parameterized_santei_unit.items << convert_tekiyou_item(comment) }
+            tekiyou_item.each_comment do | comment |
+              parameterized_santei_unit.items << convert_tekiyou_item(comment)
+            end
           end
+
+          parameterized_santei_unit
         end
 
         # @param tekiyou_item [
