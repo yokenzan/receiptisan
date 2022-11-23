@@ -146,11 +146,18 @@ module Recediff
         # @param santei_unit [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
         # @return [Parameter::SanteiUnit]
         def convert_santei_unit(santei_unit)
-          Parameter::SanteiUnit.new(
+          parameterized_santei_unit = Parameter::SanteiUnit.new(
             tensuu: santei_unit.tensuu,
             kaisuu: santei_unit.kaisuu,
-            items:  santei_unit.map { | tekiyou_item | convert_tekiyou_item(tekiyou_item) }
+            items:  []
           )
+
+          santei_unit.each do | tekiyou_item |
+            parameterized_santei_unit.items << convert_tekiyou_item(tekiyou_item)
+            next if tekiyou_item.comment?
+
+            tekiyou_item.each_comment { | comment | parameterized_santei_unit.items << convert_tekiyou_item(comment) }
+          end
         end
 
         # @param tekiyou_item [

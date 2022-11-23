@@ -70,7 +70,11 @@ module Recediff
               def comment?
                 false
               end
-              #
+
+              def each_comment
+                comments.enum_for(:each)
+              end
+
               # def to_s
               #   @resource.to_s
               # end
