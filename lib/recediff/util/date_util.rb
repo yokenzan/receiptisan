@@ -80,8 +80,17 @@ module Recediff
           end
         end
 
-        # @param date [Date]
-        def to_wareki(date, zenkaku: false)
+        # @overload to_wareki(date, zenkaku: false)
+        #   @param date [Date]
+        # @overload to_wareki(month, zenkaku: false)
+        #   @param date [Month]
+        # @param date_or_month [Date, Month]
+        def to_wareki(date_or_month, zenkaku: false)
+          is_month = date_or_month.instance_of?(Month)
+          date = is_month ?
+            Date.new(date_or_month.year, date_or_month.month, date_or_month.length) :
+            date_or_month
+
           jisx0301 = date.jisx0301
           gengou   = Gengou.find_by_alphabet(jisx0301[0])
           text     = '%s%s年%s月%s日' % [
@@ -92,7 +101,7 @@ module Recediff
           ]
 
           text.gsub!(/0([0-9])/, '　\1')
-          zenkaku ? text.tr('0-9', '０-９') : text
+          (zenkaku ? text.tr('0-9', '０-９') : text).tap { | ret | ret[-3..] = '' if is_month }
         end
 
         private

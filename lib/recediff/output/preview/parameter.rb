@@ -3,7 +3,7 @@
 module Recediff
   module Output
     module Preview
-      class Parameter
+      module Parameter
         # 汎用
 
         CodedItem              = Struct.new(:code, :name, keyword_init: true)
@@ -53,14 +53,15 @@ module Recediff
             end
           end
         end
-        WarekiMonth = Struct.new(:gengou, :year, :month, keyword_init: true) do
+        WarekiMonth = Struct.new(:gengou, :year, :month, :text, keyword_init: true) do
           class << self
             # @param month [::Month]
             def from(month)
               new(
                 gengou: WarekiGengou.from(::Date.new(month.year, month.month, month.length)),
                 year:   month.year,
-                month:  month.month
+                month:  month.month,
+                text:   Util::DateUtil.to_wareki(month, zenkaku: true)
               )
             end
           end
