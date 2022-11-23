@@ -282,6 +282,7 @@ module Recediff
           :text,
           :full_text,
           :is_main,
+          :is_worpro,
           :start_date,
           :tenki,
           :comment,
@@ -300,6 +301,7 @@ module Recediff
                   "（#{shoubyoumei.comment}）".sub(/（）\z/, ''),
                 ],
                 is_main:             shoubyoumei.main?,
+                is_worpro:           shoubyoumei.worpro?,
                 start_date:          Date.from(shoubyoumei.start_date),
                 tenki:               Tenki.from(shoubyoumei.tenki),
                 comment:             shoubyoumei.comment

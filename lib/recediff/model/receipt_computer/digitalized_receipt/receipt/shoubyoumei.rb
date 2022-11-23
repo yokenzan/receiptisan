@@ -24,7 +24,7 @@ module Recediff
             end
 
             def to_s
-              return worpro_name if @master_shoubyoumei.code == WORPRO_SHOUBYOUMEI_CODE
+              return worpro_name if worpro?
 
               # @param shuushokugo [Master::Diagnosis::Shuushokugo]
               master_shuushokugos.inject(@master_shoubyoumei.name) do | shoubyoumei_name, shuushokugo |
@@ -41,6 +41,10 @@ module Recediff
             # 主傷病か？
             def main?
               @is_main
+            end
+
+            def worpro?
+              @master_shoubyoumei.code == WORPRO_SHOUBYOUMEI_CODE
             end
 
             # @!attribute [r] master_shoubyoumei
