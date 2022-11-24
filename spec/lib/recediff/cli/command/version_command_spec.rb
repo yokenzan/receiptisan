@@ -5,7 +5,7 @@ require 'recediff'
 
 RSpec.describe Recediff::Cli::Command::VersionCommand do
   # @type [Recediff::Cli::Command::VersionCommand] command
-  let(:klass)   { Recediff::Cli::Command::VersionCommand }
+  let(:klass)   { described_class }
   let(:command) { klass.new }
 
   describe "shows gem's version" do

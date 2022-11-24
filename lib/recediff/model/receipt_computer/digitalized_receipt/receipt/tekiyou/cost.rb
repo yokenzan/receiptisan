@@ -71,10 +71,10 @@ module Recediff
                 false
               end
 
-              def each_comment
+              def each_comment(&block)
                 enum = @comments.enum_for(:each)
 
-                block_given? ? enum.each { | c | yield c } : enum
+                block_given? ? enum.each(&block) : enum
               end
 
               # def to_s
@@ -92,8 +92,6 @@ module Recediff
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu] 診療識別
               attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
-
-              # def_delegators :resource, :master_item, :code, :name, :shiyouryou, :unit
 
               private
 

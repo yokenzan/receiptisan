@@ -3,7 +3,7 @@
 module Recediff
   module Output
     module Preview
-      # @rubocop:disable Metrics/ClassLength
+      # rubocop:disable Metrics/ClassLength
       class ParameterGenerator
         DateUtil = Recediff::Util::DateUtil
 
@@ -41,7 +41,9 @@ module Recediff
             prefecture:        parameterized_prefecture,
             hospital:          parameterized_hospital,
             type:              Parameter::Type.from(receipt.type),
-            tokki_jikous:      receipt.tokki_jikous.values.map { | tokki_jikou | Parameter::TokkiJikou.from(tokki_jikou) },
+            tokki_jikous:      receipt.tokki_jikous.values.map do | tokki_jikou |
+              Parameter::TokkiJikou.from(tokki_jikou)
+            end,
             patient:           Parameter::Patient.from(receipt.patient),
             hokens:            convert_applied_hoken_list(receipt.hoken_list),
             shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
@@ -56,7 +58,9 @@ module Recediff
           kouhi_futan_iryous = applied_hoken_list.kouhi_futan_iryous
           Parameter::AppliedHokenList.new(
             iryou_hoken:        iryou_hoken ? Parameter::IryouHoken.from(iryou_hoken) : nil,
-            kouhi_futan_iryous: kouhi_futan_iryous.map { | kouhi_futan_iryou | Parameter::KouhiFutanIryou.from(kouhi_futan_iryou) }
+            kouhi_futan_iryous: kouhi_futan_iryous.map do | kouhi_futan_iryou |
+              Parameter::KouhiFutanIryou.from(kouhi_futan_iryou)
+            end
           )
         end
 
@@ -113,12 +117,12 @@ module Recediff
             )
             # @param grouped_list [Parameter::GroupedShoubyoumeiList]
             # @param shoubyoumeis [<Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Shoubyoumei>]
-          end.sort_by(&sorter).each do | grouped_list, shoubyoumeis |
-            grouped_list.shoubyoumeis = shoubyoumeis
+          end.sort_by(&sorter).each do | grouped_list, shoubyoumei_list |
+            grouped_list.shoubyoumeis = shoubyoumei_list
               .sort_by(&:code)
               .map { | shoubyoumei | Parameter::Shoubyoumei.from(shoubyoumei) }
-              # .group_by.with_index { | _, index | index / 5 } # 文字数の上限判定ロジックが必要
-              # .values
+            # .group_by.with_index { | _, index | index / 5 } # 文字数の上限判定ロジックが必要
+            # .values
           end.to_h.keys
         end
 
@@ -277,6 +281,7 @@ module Recediff
           hankaku_number.to_s.tr('0-9', '０-９')
         end
       end
+      # rubocop:enable Metrics/ClassLength
     end
   end
 end

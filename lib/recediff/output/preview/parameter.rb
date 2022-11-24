@@ -3,6 +3,7 @@
 module Recediff
   module Output
     module Preview
+      # rubocop:disable Metrics/ModuleLength
       module Parameter
         # 汎用
 
@@ -48,7 +49,6 @@ module Recediff
                 month:  date.month,
                 day:    date.day,
                 text:   Util::DateUtil.to_wareki(date, zenkaku: true)
-
               )
             end
           end
@@ -160,8 +160,8 @@ module Recediff
           keyword_init: true
         ) do
           class << self
-          # @param type [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Type]
-          # @return [self]
+            # @param type [Recediff::Model::ReceiptComputer::DigitalizedReceipt::Receipt::Type]
+            # @return [self]
             def from(type)
               new(
                 tensuu_hyou_type:    TensuuHyouType.from(type.tensuu_hyou_type),
@@ -276,7 +276,7 @@ module Recediff
             is_main
           end
         end
-        Shoubyoumei            = Struct.new(
+        Shoubyoumei = Struct.new(
           :master_shoubyoumei,
           :master_shuushokugos,
           :text,
@@ -293,7 +293,9 @@ module Recediff
             def from(shoubyoumei)
               new(
                 master_shoubyoumei:  MasterShoubyoumei.from(shoubyoumei.master_shoubyoumei),
-                master_shuushokugos: shoubyoumei.master_shuushokugos.map { | shuushokugo | MasterShuushokugo.from(shuushokugo) },
+                master_shuushokugos: shoubyoumei.master_shuushokugos.map do | shuushokugo |
+                  MasterShuushokugo.from(shuushokugo)
+                end,
                 text:                shoubyoumei.to_s,
                 full_text:           '%s%s%s' % [
                   shoubyoumei,
@@ -402,7 +404,7 @@ module Recediff
 
         # 特定器材
 
-        TokuteiKizai   = Struct.new(
+        TokuteiKizai = Struct.new(
           :type,
           :master,
           :product_name,
@@ -430,7 +432,7 @@ module Recediff
           :appended_content,
           keyword_init: true
         )
-        MasterComment  = Struct.new(
+        MasterComment = Struct.new(
           :code,
           :pattern,
           :name,
@@ -455,6 +457,7 @@ module Recediff
           keyword_init: true
         )
       end
+      # rubocop:enable Metrics/ModuleLength
     end
   end
 end

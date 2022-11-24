@@ -108,6 +108,9 @@ Naming/MethodParameterName:
     - id
     - ym
 
+Style/MultilineBlockChain:
+  Enabled: false
+
 # RSpec cops
 
 RSpec/ContextWording:
