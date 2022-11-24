@@ -1,6 +1,6 @@
 {
     "solargraph": {
-        "useBundler": false,
+        "useBundler": true,
         "autoformat": true,
         "diagnostics": true,
         "completion": true,
