@@ -24,7 +24,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Max: 140
   Exclude:
-    - 'lib/recediff/receipt.rb'
+    - 'lib/receiptisan/receipt.rb'
 
 # Offense count: 2
 # Configuration parameters: IgnoredMethods.
@@ -41,15 +41,15 @@ Metrics/MethodLength:
 Metrics/ParameterLists:
   Max: 6
   Exclude:
-    - 'lib/recediff/model/receipt_computer/master.rb'
-    - 'lib/recediff/model/receipt_computer/master/**/*.rb'
+    - 'lib/receiptisan/model/receipt_computer/master.rb'
+    - 'lib/receiptisan/model/receipt_computer/master/**/*.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
   Exclude:
-    - 'lib/recediff/cost.rb'
-    - 'lib/recediff/receipt.rb'
+    - 'lib/receiptisan/cost.rb'
+    - 'lib/receiptisan/receipt.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -57,14 +57,14 @@ Style/GlobalVars:
 # SupportedStyles: implicit, explicit
 Style/RescueStandardError:
   Exclude:
-    - 'lib/recediff/cost.rb'
+    - 'lib/receiptisan/cost.rb'
 
 Layout/SpaceAroundOperators:
   Exclude:
-    - 'lib/recediff/model/uke/enum.rb'
-    - 'lib/recediff/model/receipt_computer/digitalized_receipt/record.rb'
+    - 'lib/receiptisan/model/uke/enum.rb'
+    - 'lib/receiptisan/model/receipt_computer/digitalized_receipt/record.rb'
 
 Layout/ExtraSpacing:
   Exclude:
-    - 'lib/recediff/model/uke/enum.rb'
-    - 'lib/recediff/model/receipt_computer/digitalized_receipt/record.rb'
+    - 'lib/receiptisan/model/uke/enum.rb'
+    - 'lib/receiptisan/model/receipt_computer/digitalized_receipt/record.rb'

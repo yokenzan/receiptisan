@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in recediff.gemspec
+# Specify your gem's dependencies in receiptisan.gemspec
 gemspec
 
 gem 'rake', '~> 13.0'

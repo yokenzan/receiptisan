@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'recediff'
+require 'receiptisan'
 require 'sinatra'
 require 'stringio'
 require 'erb'
@@ -18,13 +18,13 @@ end
 
 post '/summary' do
   uke      = params[:uke]
-  @summary = Recediff::SummaryParser.new.parse_as_receipt_summaries_from_text(uke)
+  @summary = Receiptisan::SummaryParser.new.parse_as_receipt_summaries_from_text(uke)
 
   erb :summary
 end
 
 post '/preview' do
-  @receipts = Recediff::Parser.create.parse_area(params['uke'])
-  @util     = Recediff::StringUtil.new
+  @receipts = Receiptisan::Parser.create.parse_area(params['uke'])
+  @util     = Receiptisan::StringUtil.new
   erb :preview
 end
