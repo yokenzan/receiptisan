@@ -2,7 +2,7 @@
 
 RSpec.describe StdioHelper, type: :helper do
   describe 'helpers must run collectly' do
-    it '$stdout is STDIO or StringIO' do
+    it '$stdout is STDIO or StringIO' do # rubocop:disable RSpec/MultipleExpectations
       expect($stdout).to be STDOUT # rubocop:disable Style/GlobalStdStream
 
       toward_stringio do | stdout |

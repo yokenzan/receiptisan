@@ -51,14 +51,7 @@ module Receiptisan
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
         end
 
-        def determine_previewer(options)
-          case options[:mode]
-          when 'cli'
-            Receiptisan::Previewer.new(options)
-          when 'svg'
-            Receiptisan::Previewer.new(options)
-          end
-        end
+        def determine_previewer(options); end
 
         # @param [String] text_seqs
         # @return [Array<Integer>]
