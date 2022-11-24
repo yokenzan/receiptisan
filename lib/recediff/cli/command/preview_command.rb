@@ -28,13 +28,16 @@ module Recediff
         option :hoken,    type: :boolean, required: false, default: true
         option :disease,  type: :boolean, required: false, default: true
         option :mask,     type: :boolean, required: false, default: false
+        # config for previewer selection
+        option :mode, default: 'cli', values: %w[cli svg], desc: 'preview method'
 
         # @param [String] uke
         # @param [Hash] options
         def call(uke: nil, **options)
           parameter_pattern = determine_parameter_pattern({ uke: uke }.merge(options))
           receipts          = parse_uke(parameter_pattern, uke, options)
-          preview_receipts(receipts, options)
+          @previewer        = determine_previewer(options)
+          preview_receipts(receipts)
         end
 
         private
@@ -46,6 +49,15 @@ module Recediff
           return :uke_all if args[:all]
 
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
+        end
+
+        def determine_previewer(options)
+          case options[:mode]
+          when 'cli'
+            Recediff::Previewer.new(options)
+          when 'svg'
+            Recediff::Previewer.new(options)
+          end
         end
 
         # @param [String] text_seqs
@@ -80,8 +92,8 @@ module Recediff
           end
         end
 
-        def preview_receipts(receipts, options)
-          Recediff::Previewer.new(options).preview(receipts)
+        def preview_receipts(receipts)
+          @previewer.preview(receipts)
         end
       end
     end
