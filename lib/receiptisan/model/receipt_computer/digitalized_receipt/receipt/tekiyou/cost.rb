@@ -41,22 +41,6 @@ module Receiptisan
                 !@comments.empty?
               end
 
-              # # @param day [Integer]
-              # # @return [Integer]
-              # def kaisuu_at(day)
-              #   days[day - 1].to_i
-              # end
-              #
-              # # @param day [Integer]
-              # # @return [Boolean]
-              # def done_at?(day)
-              #   kaisuu_at(day).positive?
-              # end
-              #
-              # def done_at_breakdown; end
-              #
-              # def kaisuu_at_breakdown; end
-
               # 算定点数の記載があるか？
               def tensuu?
                 !tensuu.nil?
@@ -77,10 +61,6 @@ module Receiptisan
                 block_given? ? enum.each(&block) : enum
               end
 
-              # def to_s
-              #   @resource.to_s
-              # end
-
               # @!attribute [r] resource
               #   @return [ShinryouKoui, Iyakuhin, TokuteiKizai] 医療資源
               # @!attribute [r] futan_kubun
@@ -92,10 +72,6 @@ module Receiptisan
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu] 診療識別
               attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
-
-              private
-
-              attr_reader :days
             end
           end
         end
