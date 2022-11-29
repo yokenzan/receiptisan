@@ -34,9 +34,6 @@ module Receiptisan
                 @santei_units.first.futan_kubun
               end
 
-              # @return [void]
-              # def fix; end
-
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu]
               attr_reader :shinryou_shikibetsu
