@@ -111,7 +111,7 @@ module Receiptisan
           #   @return [AuditPayer]
           attr_accessor :audit_payer
 
-          def_delegators :@tekiyou, :each, :map
+          def_delegators :@tekiyou, :each, :map, :[]
           # @!attribute [r] iryou_hoken
           #   @return [IryouHoken, nil]
           # @!attribute [r] kouhi_futan_iryous
