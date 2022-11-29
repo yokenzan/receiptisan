@@ -136,6 +136,7 @@ module Receiptisan
             :shoubyoumeis,
             :tekiyou,
             :ryouyou_no_kyuufu,
+            :tensuu_shuukei,
             keyword_init: true
           )
           Patient = Struct.new(:id, :name, :name_kana, :sex, :birth_date, keyword_init: true) do
@@ -353,6 +354,26 @@ module Receiptisan
             extend CodedItemFactory
           end
 
+          # 点数欄
+
+          # @param section [Symbol] 診療識別または「診療識別 > 手技/薬剤」
+          TensuuShuukei             = Struct.new(:sections, keyword_init: true)
+          TensuuShuukeiSection      = Struct.new(:section, :iryou_hoken, :kouhi_futan_iryous, keyword_init: true)
+          CombinedTensuuShuukeiUnit = Struct.new(
+            :key,
+            :tensuu,
+            :total_kaisuu,
+            :total_tensuu,
+            :units,
+            keyword_init: true
+          )
+          TensuuShuukeiUnit = Struct.new(
+            :tensuu,
+            :total_kaisuu,
+            :total_tensuu,
+            keyword_init: true
+          )
+
           # 摘要欄
 
           Tekiyou                   = Struct.new(:shinryou_shikibetsu_sections, keyword_init: true)
@@ -501,7 +522,8 @@ module Receiptisan
                 hokens:            convert_applied_hoken_list(receipt.hoken_list),
                 shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
                 tekiyou:           convert_tekiyou(receipt),
-                ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list)
+                ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
+                tensuu_shuukei:    convert_tensuu_shuukei(receipt)
               )
             end
 
@@ -712,9 +734,7 @@ module Receiptisan
               )
             end
 
-            def calculate_summary_of(_receipt)
-              'pending'
-            end
+            def convert_tensuu_shuukei(_receipt); end
 
             private
 
