@@ -12,6 +12,11 @@ module Receiptisan
               @mapping = mapping
             end
 
+            # @param hoken_order [HokenOrder]
+            def uses?(hoken_order)
+              mapping & hoken_order.filter_bits == hoken_order.filter_bits
+            end
+
             # @!attribute [r] code
             #   @return [String]
             # @!attribute [r] mapping
@@ -64,6 +69,36 @@ module Receiptisan
               # @return [self, nil]
               def find_by_code(code)
                 @list[code.to_s.intern]
+              end
+            end
+
+            class HokenOrder
+              def initialize(code:, name:, filter_bits:)
+                @code   = code
+                @name   = name
+                @filter_bits = filter_bits
+              end
+
+              attr_reader :code, :name, :filter_bits
+
+              @list = {
+                '0': new(code: :'0', name: '医療保険', filter_bits: 0b10000),
+                '1': new(code: :'1', name: '第一公費', filter_bits: 0b01000),
+                '2': new(code: :'2', name: '第二公費', filter_bits: 0b00100),
+                '3': new(code: :'3', name: '第三公費', filter_bits: 0b00010),
+                '4': new(code: :'4', name: '第四公費', filter_bits: 0b00001),
+              }
+
+              class << self
+                # @param is_kouhi [Boolean]
+                # @return [self, nil]
+                def kouhi_futan_iryou(index)
+                  @list[(index + 1).to_s.intern]
+                end
+
+                def iryou_hoken
+                  @list[:'0']
+                end
               end
             end
           end

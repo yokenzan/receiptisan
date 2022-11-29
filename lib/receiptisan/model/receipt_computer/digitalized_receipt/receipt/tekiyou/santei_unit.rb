@@ -53,6 +53,16 @@ module Receiptisan
               attr_reader :tensuu, :kaisuu
 
               def_delegators :@tekiyou_items, :each, :map
+              def_delegators :first_item, :futan_kubun, :uses?
+
+              private
+
+              # @return [Cost, Comment]
+              def first_item
+                @first_item ||= tekiyou_items.first
+              end
+
+              attr_reader :tekiyou_items
             end
           end
         end

@@ -16,11 +16,6 @@ module Receiptisan
               @kouhi_futan_iryous = []
             end
 
-            # @return [Array<IryouHoken, KouhiFutanIryou>]
-            def to_a
-              [iryou_hoken].concat(@kouhi_futan_iryous).compact
-            end
-
             # @param iryou_hoken [IryouHoken]
             # @return [void]
             def add_iryou_hoken(iryou_hoken)
@@ -33,14 +28,35 @@ module Receiptisan
               @kouhi_futan_iryous << kouhi_futan_iryou
             end
 
+            def each(&block)
+              list = {}
+
+              list[FutanKubun::HokenOrder.iryou_hoken] = iryou_hoken if iryou_hoken
+
+              kouhi_futan_iryous.each_with_index do | kouhi_futan_iryou, index |
+                list[FutanKubun::HokenOrder.kouhi_futan_iryou(index)] = kouhi_futan_iryou
+              end
+
+              enum = list.to_enum(:each)
+
+              block_given? ? enum.each(&block) : enum
+            end
+
+            # @return [Array<FutanKubun::HokenOrder>]
+            def to_hoken_orders
+              orders = []
+              orders << FutanKubun::HokenOrder.iryou_hoken if iryou_hoken
+              kouhi_futan_iryous.each_index { | index | orders << FutanKubun::HokenOrder.kouhi_futan_iryou(index) }
+
+              orders
+            end
+
             # @!attribute [r] iryou_hoken
             #   @return [IryouHoken, nil]
             attr_reader :iryou_hoken
             # @!attribute [r] kouhi_futan_iryous
-            #   @return [Array<KouhiFutanIryou>, nil]
+            #   @return [Array<KouhiFutanIryou>]
             attr_reader :kouhi_futan_iryous
-
-            def_delegators :to_a, :each, :map
           end
         end
       end

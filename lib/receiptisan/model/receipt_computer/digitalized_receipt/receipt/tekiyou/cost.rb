@@ -77,6 +77,8 @@ module Receiptisan
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu] 診療識別
               attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
+
+              def_delegators :futan_kubun, :uses?
             end
           end
         end
