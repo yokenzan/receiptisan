@@ -41,6 +41,11 @@ module Receiptisan
                 @kaisuu = bottom_cost.kaisuu
               end
 
+              # @return [Symbol, nil] returns nil when only costists of comments.
+              def resource_type
+                tekiyou_items.find { | tekiyou_item | !tekiyou_item.comment? }&.resource_type
+              end
+
               # @!attribute [r] tensuu
               #   @return [Integer, nil]
               # @!attribute [r] kaisuu

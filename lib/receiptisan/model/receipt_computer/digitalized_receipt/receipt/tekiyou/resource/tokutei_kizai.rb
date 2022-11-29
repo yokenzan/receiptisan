@@ -26,6 +26,10 @@ module Receiptisan
                   @unit_price   = unit_price
                 end
 
+                def type
+                  :tokutei_kizai
+                end
+
                 # @return [Master::Unit, nil]
                 def unit
                   @unit || master_item.unit

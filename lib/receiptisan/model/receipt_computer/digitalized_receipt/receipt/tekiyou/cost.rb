@@ -11,7 +11,7 @@ module Receiptisan
             class Cost
               extend Forwardable
 
-              # @param resource [ShinryouKoui, Iyakuhin, TokuteiKizai] 医療資源
+              # @param resource [Resource::ShinryouKoui, Resource::Iyakuhin, Resource::TokuteiKizai] 医療資源
               # @param shinryou_shikibetsu [ShinryouShikibetsu] 診療識別
               # @param futan_kubun [FutanKubun] 負担区分
               # @param tensuu [Integer, nil] 算定点数
@@ -53,6 +53,11 @@ module Receiptisan
 
               def comment?
                 false
+              end
+
+              # @return [Symbol] one of :iyakuhin, :shinryou_koui or :tokutei_kizai
+              def resource_type
+                resource.type
               end
 
               def each_comment(&block)

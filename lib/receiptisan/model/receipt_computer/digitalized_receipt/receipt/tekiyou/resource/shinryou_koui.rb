@@ -17,6 +17,10 @@ module Receiptisan
                   @shiyouryou  = shiyouryou
                 end
 
+                def type
+                  :shinryou_koui
+                end
+
                 # @!attribute [r] master_item
                 #   @return [Master::Treatment::ShinryouKoui]
                 # @!attribute [r] shiyouryou
