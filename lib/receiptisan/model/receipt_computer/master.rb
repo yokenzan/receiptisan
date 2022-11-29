@@ -108,7 +108,7 @@ module Receiptisan
             # @param code [String, Symbol]
             # @return [self, nil]
             def find_by_code(code)
-              @units[code.intern]
+              @units[code&.intern]
             end
           end
 
