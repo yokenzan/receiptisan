@@ -22,7 +22,7 @@ module Receiptisan
                     price_type:      Treatment::Iyakuhin::PriceType.find_by_code(
                       values[Treatment::Iyakuhin::Columns::C_金額種別].intern
                     ),
-                    price:           values[Treatment::Iyakuhin::Columns::C_新又は現金額],
+                    price:           values[Treatment::Iyakuhin::Columns::C_新又は現金額]&.to_f,
                     chuusha_youryou: values[Treatment::Iyakuhin::Columns::C_注射容量].to_i.zero? ?
                       nil :
                       values[Treatment::Iyakuhin::Columns::C_注射容量].to_i,

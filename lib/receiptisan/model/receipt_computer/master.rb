@@ -105,10 +105,12 @@ module Receiptisan
           attr_reader :code, :name
 
           class << self
-            # @param code [String, Symbol]
+            # @param code [Integer, String, Symbol]
             # @return [self, nil]
             def find_by_code(code)
-              @units[code&.intern]
+              return if code.nil?
+
+              @units[code.to_s.intern]
             end
           end
 

@@ -22,7 +22,7 @@ module Receiptisan
                     price_type: Treatment::TokuteiKizai::PriceType.find_by_code(
                       values[Treatment::TokuteiKizai::Columns::C_金額種別].intern
                     ),
-                    price:      values[Treatment::TokuteiKizai::Columns::C_新又は現金額],
+                    price:      values[Treatment::TokuteiKizai::Columns::C_新又は現金額]&.to_f,
                     full_name:  values[Treatment::TokuteiKizai::Columns::C_基本漢字名称]
                   )
                 end
