@@ -346,7 +346,7 @@ module Receiptisan
 
           # @param section [Symbol] 診療識別または「診療識別 > 手技/薬剤」
           TensuuShuukei             = Struct.new(:sections, keyword_init: true)
-          TensuuShuukeiSection      = Struct.new(:section, :iryou_hoken, :kouhi_futan_iryous, keyword_init: true)
+          TensuuShuukeiSection      = Struct.new(:section, :hokens, keyword_init: true)
           CombinedTensuuShuukeiUnit = Struct.new(
             :key,
             :tensuu,
