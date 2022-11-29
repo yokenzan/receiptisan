@@ -96,8 +96,7 @@ module Receiptisan
 
             # @return [DigitalizedReceipt]
             def close
-              fix_current_santei_unit
-              fix_current_ichiren_unit
+              fix_current_receipt
 
               digitalized_receipt = @digitalized_receipt
               clear

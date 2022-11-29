@@ -24,21 +24,32 @@ module Receiptisan
               # @param tekiyou_item [Cost, Comment]
               # @return [void]
               def add_tekiyou(tekiyou_item)
-                @tekiyou_items << tekiyou_item
-              end
-
-              # @return [FutanKubun]
-              def futan_kubun
-                @tekiyou_items.first.futan_kubun
+                tekiyou_items << tekiyou_item
               end
 
               # @return [void]
               def fix!
-                bottom_cost = @tekiyou_items.reverse.find(&:tensuu?)
+                bottom_cost = tekiyou_items.reverse.find(&:tensuu?)
                 return unless bottom_cost
 
                 @tensuu = bottom_cost.tensuu
                 @kaisuu = bottom_cost.kaisuu
+              end
+
+              # @return [Symbol, nil] returns nil when only costists of comments.
+              def resource_type
+                tekiyou_items.find { | tekiyou_item | !tekiyou_item.comment? }&.resource_type
+              end
+
+              def each_cost(&block)
+                enum = tekiyou_items.reject(&:comment?).enum_for(:each)
+
+                block_given? ? enum.each(&block) : enum
+              end
+
+              # @return [Integer, nil]
+              def calculate
+                tensuu && kaisuu ? tensuu * kaisuu : nil
               end
 
               # @!attribute [r] tensuu
@@ -48,6 +59,16 @@ module Receiptisan
               attr_reader :tensuu, :kaisuu
 
               def_delegators :@tekiyou_items, :each, :map
+              def_delegators :first_item, :futan_kubun, :uses?
+
+              private
+
+              # @return [Cost, Comment]
+              def first_item
+                @first_item ||= tekiyou_items.first
+              end
+
+              attr_reader :tekiyou_items
             end
           end
         end
