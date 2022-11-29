@@ -271,11 +271,7 @@ module Receiptisan
 
           # 傷病名
 
-          GroupedShoubyoumeiList = Struct.new(:start_date, :tenki, :is_main, :shoubyoumeis, keyword_init: true) do
-            def main?
-              is_main
-            end
-          end
+          GroupedShoubyoumeiList = Struct.new(:start_date, :tenki, :is_main, :shoubyoumeis, keyword_init: true)
           Shoubyoumei = Struct.new(
             :master_shoubyoumei,
             :master_shuushokugos,
@@ -311,7 +307,7 @@ module Receiptisan
               end
             end
 
-            def main?
+            def is_main
               is_main
             end
 
@@ -337,17 +333,9 @@ module Receiptisan
                 new(
                   code:      master_shuushokugo.code.value,
                   name:      master_shuushokugo.name,
-                  is_prefix: master_shuushokugo.prefix?
+                  is_prefix: master_shuushokugo.is_prefix
                 )
               end
-            end
-
-            def prefix?
-              is_prefix
-            end
-
-            def suffix?
-              prefix?.!
             end
           end
           class Tenki < CodedItem
@@ -574,7 +562,7 @@ module Receiptisan
             def convert_shoubyoumeis(shoubyoumeis)
               sorter = proc do | grouped_list, _ |
                 [
-                  grouped_list.main? ? 0 : 1,
+                  grouped_list.is_main ? 0 : 1,
                   grouped_list.start_date.year,
                   grouped_list.start_date.month,
                   grouped_list.start_date.day,
