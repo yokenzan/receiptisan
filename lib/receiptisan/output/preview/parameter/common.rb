@@ -452,6 +452,14 @@ module Receiptisan
             extend CodedItemFactory
           end
 
+          TekiyouText = Struct.new(
+            :product_name,
+            :master_name,
+            :price,
+            :shiyouryou,
+            keyword_init: true
+          )
+
           # 療養の給付欄
 
           RyouyouNoKyuufuList = Struct.new(:iryou_hoken, :kouhi_futan_iryous, keyword_init: true)
@@ -648,7 +656,7 @@ module Receiptisan
               end
             end
 
-            # @param tekiyou_shinryou_koui [DigitalizedReceipt::Receipt::Tekiyou::Cost]
+            # @param tekiyou_shinryou_koui [DigitalizedReceipt::Receipt::Tekiyou::Resource::ShinryouKoui]
             def convert_shinryou_koui(tekiyou_shinryou_koui)
               resource = tekiyou_shinryou_koui.resource
               unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
@@ -666,7 +674,7 @@ module Receiptisan
               )
             end
 
-            # @param tekiyou_iyakuhin [DigitalizedReceipt::Receipt::Tekiyou::Cost]
+            # @param tekiyou_iyakuhin [DigitalizedReceipt::Receipt::Tekiyou::Resource::Iyakuhin]
             def convert_iyakuhin(tekiyou_iyakuhin)
               resource = tekiyou_iyakuhin.resource
               unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
@@ -684,7 +692,7 @@ module Receiptisan
               )
             end
 
-            # @param tekiyou_tokutei_kizai [DigitalizedReceipt::Receipt::Tekiyou::Cost]
+            # @param tekiyou_tokutei_kizai [DigitalizedReceipt::Receipt::Tekiyou::Resource::TokuteiKizai]
             def convert_tokutei_kizai(tekiyou_tokutei_kizai)
               resource = tekiyou_tokutei_kizai.resource
               unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
@@ -699,7 +707,7 @@ module Receiptisan
                   unit:       unit
                 ),
                 product_name: resource.product_name,
-                text:         'pending',
+                text:         resource2text(resource),
                 shiyouryou:   resource.shiyouryou,
                 unit_price:   resource.unit_price,
                 unit:         unit
@@ -722,22 +730,59 @@ module Receiptisan
               )
             end
 
-            def convert_tensuu_shuukei(_receipt); end
+            def convert_tensuu_shuukei(receipt)
+              TensuuShuukeiCalculator.new.calculate(receipt)
+            end
 
             private
 
+            # rubocop:disable Metrics/PerceivedComplexity
+            # rubocop:disable Metrics/CyclomaticComplexity
             def resource2text(resource)
-              return resource.name unless (unit = resource.unit)
+              unless (unit = resource.unit)
+                return TekiyouText.new(
+                  master_name:  resource.name,
+                  product_name: nil,
+                  price:        nil,
+                  shiyouryou:   nil
+                )
+              end
 
-              shiyouryou = resource.shiyouryou.to_i == resource.shiyouryou ?
-                resource.shiyouryou.to_i :
-                resource.shiyouryou
+              unit_price = \
+                case resource.type
+                when :tokutei_kizai
+                  if resource.unit_price.nil?
+                    nil
+                  else
+                    resource.unit_price.to_i == resource.unit_price ?
+                      resource.unit_price.to_i :
+                      resource.unit_price
+                  end
+                when :iyakuhin, :shinryou_koui
+                  nil
+                end
 
-              resource.name + '　%s%s' % [hankaku2zenkaku(shiyouryou), unit.name]
+              shiyouryou = \
+                if resource.shiyouryou.nil?
+                  nil
+                else
+                  resource.shiyouryou.to_i == resource.shiyouryou ?
+                    resource.shiyouryou.to_i :
+                    resource.shiyouryou
+                end
+
+              TekiyouText.new(
+                product_name: resource.type == :tokutei_kizai ? resource.product_name : nil,
+                master_name:  resource.name,
+                price:        unit_price ? '%s円／%s' % [hankaku2zenkaku(unit_price), unit.name] : nil,
+                shiyouryou:   shiyouryou ? hankaku2zenkaku(shiyouryou) + unit.name : nil
+              )
             end
+            # rubocop:enable Metrics/PerceivedComplexity
+            # rubocop:enable Metrics/CyclomaticComplexity
 
             def hankaku2zenkaku(hankaku_number)
-              hankaku_number.to_s.tr('0-9', '０-９')
+              hankaku_number.to_s.tr('0-9.', '０-９．')
             end
           end
         end
