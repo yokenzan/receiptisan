@@ -56,9 +56,11 @@ module Receiptisan
             class << self
               # @param month [::Month]
               def from(month)
+                gengou = WarekiGengou.from(::Date.new(month.year, month.month, month.length))
+
                 new(
-                  gengou: WarekiGengou.from(::Date.new(month.year, month.month, month.length)),
-                  year:   month.year,
+                  gengou: gengou,
+                  year:   month.year - gengou.base_year,
                   month:  month.month,
                   text:   Util::DateUtil.to_wareki(month, zenkaku: true)
                 )
