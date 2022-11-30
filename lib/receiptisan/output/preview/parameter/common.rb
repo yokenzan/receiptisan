@@ -306,14 +306,6 @@ module Receiptisan
                 )
               end
             end
-
-            def is_main
-              is_main
-            end
-
-            def worpro?
-              is_worpro
-            end
           end
           MasterShoubyoumei = Struct.new(:code, :name, keyword_init: true) do
             class << self
