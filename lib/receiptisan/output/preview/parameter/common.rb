@@ -372,9 +372,7 @@ module Receiptisan
           IchirenUnit    = Struct.new(:futan_kubun, :santei_units, keyword_init: true)
           SanteiUnit     = Struct.new(:tensuu, :kaisuu, :items, keyword_init: true)
 
-          # 診療行為
-
-          ShinryouKoui = Struct.new(
+          Cost = Struct.new(
             :type,
             :master,
             :text,
@@ -382,54 +380,65 @@ module Receiptisan
             :unit,
             keyword_init: true
           )
-          MasterShinryouKoui = Struct.new(
-            :code,
-            :name,
-            # :point,
-            # :point_type,
-            :unit,
-            keyword_init: true
-          )
+
+          # 診療行為
+
+          # ShinryouKoui = Struct.new(
+          #   :type,
+          #   :master,
+          #   :text,
+          #   :shiyouryou,
+          #   :unit,
+          #   keyword_init: true
+          # )
+          # MasterShinryouKoui = Struct.new(
+          #   :code,
+          #   :name,
+          #   # :point,
+          #   # :point_type,
+          #   :unit,
+          #   keyword_init: true
+          # )
 
           # 医薬品
 
-          Iyakuhin = Struct.new(
-            :type,
-            :master,
-            :text,
-            :shiyouryou,
-            :unit,
-            keyword_init: true
-          )
-          MasterIyakuhin = Struct.new(
-            :code,
-            :name,
-            # :price,
-            # :price_type,
-            :unit,
-            keyword_init: true
-          )
+          # Iyakuhin = Struct.new(
+          #   :type,
+          #   :master,
+          #   :text,
+          #   :shiyouryou,
+          #   :unit,
+          #   keyword_init: true
+          # )
+          # MasterIyakuhin = Struct.new(
+          #   :code,
+          #   :name,
+          #   # :price,
+          #   # :price_type,
+          #   :unit,
+          #   keyword_init: true
+          # )
 
           # 特定器材
 
-          TokuteiKizai = Struct.new(
-            :type,
-            :master,
-            :product_name,
-            :text,
-            :shiyouryou,
-            :unit_price,
-            :unit,
-            keyword_init: true
-          )
-          MasterTokuteiKizai = Struct.new(
-            :code,
-            :name,
-            :price,
-            :price_type,
-            :unit,
-            keyword_init: true
-          )
+          # TokuteiKizai = Struct.new(
+          #   :type,
+          #   :master,
+          #   :product_name,
+          #   :text,
+          #   :shiyouryou,
+          #   :unit_price,
+          #   :unit,
+          #   keyword_init: true
+          # )
+          # MasterTokuteiKizai = Struct.new(
+          #   :code,
+          #   :name,
+          #   :price,
+          #   :price_type,
+          #   :unit,
+          #   keyword_init: true
+          # )
 
           # コメント
 
@@ -455,7 +464,7 @@ module Receiptisan
           TekiyouText = Struct.new(
             :product_name,
             :master_name,
-            :price,
+            :unit_price,
             :shiyouryou,
             keyword_init: true
           )
@@ -645,74 +654,79 @@ module Receiptisan
               when DigitalizedReceipt::Receipt::Tekiyou::Comment
                 convert_comment(tekiyou_item)
               else
-                case tekiyou_item.resource
-                when DigitalizedReceipt::Receipt::Tekiyou::Resource::ShinryouKoui
-                  convert_shinryou_koui(tekiyou_item)
-                when DigitalizedReceipt::Receipt::Tekiyou::Resource::Iyakuhin
-                  convert_iyakuhin(tekiyou_item)
-                when DigitalizedReceipt::Receipt::Tekiyou::Resource::TokuteiKizai
-                  convert_tokutei_kizai(tekiyou_item)
-                end
+                resource = tekiyou_item.resource
+
+                Common::Cost.new(
+                  type:       resource.type,
+                  master:     {
+                    type: resource.type,
+                    code: resource.code.value,
+                    name: resource.name,
+                  },
+                  text:       resource2text(resource),
+                  unit:       resource.unit&.then { | u | Common::Unit.from(u) },
+                  shiyouryou: resource.shiyouryou
+                )
               end
             end
 
             # @param tekiyou_shinryou_koui [DigitalizedReceipt::Receipt::Tekiyou::Resource::ShinryouKoui]
-            def convert_shinryou_koui(tekiyou_shinryou_koui)
-              resource = tekiyou_shinryou_koui.resource
-              unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
-
-              Common::ShinryouKoui.new(
-                type:       :shinryou_koui,
-                master:     Common::MasterShinryouKoui.new(
-                  code: resource.code.value,
-                  name: resource.name,
-                  unit: unit
-                ),
-                text:       resource2text(resource),
-                shiyouryou: resource.shiyouryou,
-                unit:       unit
-              )
-            end
+            # def convert_shinryou_koui(tekiyou_shinryou_koui)
+            #   resource = tekiyou_shinryou_koui.resource
+            #   unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
+            #
+            #   Common::ShinryouKoui.new(
+            #     type:       :shinryou_koui,
+            #     master:     Common::MasterShinryouKoui.new(
+            #       code: resource.code.value,
+            #       name: resource.name,
+            #       unit: unit
+            #     ),
+            #     text:       resource2text(resource),
+            #     shiyouryou: resource.shiyouryou,
+            #     unit:       unit
+            #   )
+            # end
 
             # @param tekiyou_iyakuhin [DigitalizedReceipt::Receipt::Tekiyou::Resource::Iyakuhin]
-            def convert_iyakuhin(tekiyou_iyakuhin)
-              resource = tekiyou_iyakuhin.resource
-              unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
-
-              Common::Iyakuhin.new(
-                type:       :iyakuhin,
-                master:     Common::MasterIyakuhin.new(
-                  code: resource.code.value,
-                  name: resource.name,
-                  unit: unit
-                ),
-                text:       resource2text(resource),
-                shiyouryou: resource.shiyouryou,
-                unit:       unit
-              )
-            end
+            # def convert_iyakuhin(tekiyou_iyakuhin)
+            #   resource = tekiyou_iyakuhin.resource
+            #   unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
+            #
+            #   Common::Iyakuhin.new(
+            #     type:       :iyakuhin,
+            #     master:     Common::MasterIyakuhin.new(
+            #       code: resource.code.value,
+            #       name: resource.name,
+            #       unit: unit
+            #     ),
+            #     text:       resource2text(resource),
+            #     shiyouryou: resource.shiyouryou,
+            #     unit:       unit
+            #   )
+            # end
 
             # @param tekiyou_tokutei_kizai [DigitalizedReceipt::Receipt::Tekiyou::Resource::TokuteiKizai]
-            def convert_tokutei_kizai(tekiyou_tokutei_kizai)
-              resource = tekiyou_tokutei_kizai.resource
-              unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
-
-              Common::TokuteiKizai.new(
-                type:         :tokutei_kizai,
-                master:       Common::MasterTokuteiKizai.new(
-                  code:       resource.code.value,
-                  name:       resource.name,
-                  price:      resource.unit_price,
-                  price_type: resource.price_type,
-                  unit:       unit
-                ),
-                product_name: resource.product_name,
-                text:         resource2text(resource),
-                shiyouryou:   resource.shiyouryou,
-                unit_price:   resource.unit_price,
-                unit:         unit
-              )
-            end
+            # def convert_tokutei_kizai(tekiyou_tokutei_kizai)
+            #   resource = tekiyou_tokutei_kizai.resource
+            #   unit     = resource.unit ? Common::Unit.from(resource.unit) : nil
+            #
+            #   Common::TokuteiKizai.new(
+            #     type:         :tokutei_kizai,
+            #     master:       Common::MasterTokuteiKizai.new(
+            #       code:       resource.code.value,
+            #       name:       resource.name,
+            #       price:      resource.unit_price,
+            #       price_type: resource.price_type,
+            #       unit:       unit
+            #     ),
+            #     product_name: resource.product_name,
+            #     text:         resource2text(resource),
+            #     shiyouryou:   resource.shiyouryou,
+            #     unit_price:   resource.unit_price,
+            #     unit:         unit
+            #   )
+            # end
 
             # @param tekiyou_comment [DigitalizedReceipt::Receipt::Tekiyou::Comment]
             def convert_comment(tekiyou_comment)
@@ -743,7 +757,7 @@ module Receiptisan
                 return TekiyouText.new(
                   master_name:  resource.name,
                   product_name: nil,
-                  price:        nil,
+                  unit_price:   nil,
                   shiyouryou:   nil
                 )
               end
@@ -774,7 +788,7 @@ module Receiptisan
               TekiyouText.new(
                 product_name: resource.type == :tokutei_kizai ? resource.product_name : nil,
                 master_name:  resource.name,
-                price:        unit_price ? '%s円／%s' % [hankaku2zenkaku(unit_price), unit.name] : nil,
+                unit_price:   unit_price ? '%s円／%s' % [hankaku2zenkaku(unit_price), unit.name] : nil,
                 shiyouryou:   shiyouryou ? hankaku2zenkaku(shiyouryou) + unit.name : nil
               )
             end

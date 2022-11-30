@@ -59,6 +59,8 @@ module Receiptisan
               # @!attribute [r] pattern
               #   @return [Master::Treatment::Comment::Pattern]
               def_delegators :master_item, :code, :name, :pattern
+
+              def_delegators :futan_kubun, :uses?
             end
           end
         end
