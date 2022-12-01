@@ -45,13 +45,11 @@ module Receiptisan
             # @param receipt [DigitalizedReceipt::Receipt]
             # @return [TensuuShuukei]
             def calculate(receipt)
-              hoken_orders = receipt.hoken_list.to_hoken_orders
-
               TensuuShuukei.new(
                 sections: @@section_parameter_attributes.map do | key, _ |
                   TensuuShuukeiSection.new(
                     section: key,
-                    hokens:  hoken_orders.map do | order | # rubocop:disable Style/MapToHash
+                    hokens:  receipt.hoken_list.each_order.map do | order | # rubocop:disable Style/MapToHash
                       [
                         order.code,
                         calculate_section(build_parameter(key, order), receipt),

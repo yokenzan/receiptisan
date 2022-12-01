@@ -12,51 +12,44 @@ module Receiptisan
             extend Forwardable
 
             def initialize
-              @iryou_hoken        = nil
-              @kouhi_futan_iryous = []
+              @hokens_with_order = {}
             end
 
-            # @param iryou_hoken [IryouHoken]
+            # @param hoken_order [FutanKubun::HokenOrder]
+            # @param hoken [Receipt::IryouHoken, Receipt::KouhiFutanIryou]
             # @return [void]
-            def add_iryou_hoken(iryou_hoken)
-              @iryou_hoken = iryou_hoken
+            def add(hoken_order, hoken)
+              @hokens_with_order[hoken_order] = hoken
             end
 
-            # @param kouhi_futan_iryou [KouhiFutanIryou]
-            # @return [void]
-            def add_kouhi_futan_iryou(kouhi_futan_iryou)
-              @kouhi_futan_iryous << kouhi_futan_iryou
+            # @return [Receipt::IryouHoken, nil]
+            def iryou_hoken
+              @hokens_with_order[FutanKubun::HokenOrder.iryou_hoken]
             end
 
-            def each(&block)
-              list = {}
+            # @return [Array<HokenWithOrder>]
+            def kouhi_futan_iryous
+              @hokens_with_order
+                .dup.tap { | hash | hash.delete(FutanKubun::HokenOrder.iryou_hoken) }
+            end
 
-              list[FutanKubun::HokenOrder.iryou_hoken] = iryou_hoken if iryou_hoken
-
-              kouhi_futan_iryous.each_with_index do | kouhi_futan_iryou, index |
-                list[FutanKubun::HokenOrder.kouhi_futan_iryou(index)] = kouhi_futan_iryou
-              end
-
-              enum = list.to_enum(:each)
+            def each_pair(&block)
+              enum = @hokens_with_order.to_enum(:each)
 
               block_given? ? enum.each(&block) : enum
             end
 
-            # @return [Array<FutanKubun::HokenOrder>]
-            def to_hoken_orders
-              orders = []
-              orders << FutanKubun::HokenOrder.iryou_hoken if iryou_hoken
-              kouhi_futan_iryous.each_index { | index | orders << FutanKubun::HokenOrder.kouhi_futan_iryou(index) }
+            def each_hoken(&block)
+              enum = @hokens_with_order.values.to_enum(:each)
 
-              orders
+              block_given? ? enum.each(&block) : enum
             end
 
-            # @!attribute [r] iryou_hoken
-            #   @return [IryouHoken, nil]
-            attr_reader :iryou_hoken
-            # @!attribute [r] kouhi_futan_iryous
-            #   @return [Array<KouhiFutanIryou>]
-            attr_reader :kouhi_futan_iryous
+            def each_order(&block)
+              enum = @hokens_with_order.keys.to_enum(:each)
+
+              block_given? ? enum.each(&block) : enum
+            end
           end
         end
       end

@@ -95,9 +95,6 @@ module Receiptisan
           # @!attribute [r] tokki_jikous
           #   @return [Hash<TokkiJikou]
           attr_reader :tokki_jikous
-          # @!attribute [r] hoken_list
-          #   @return [AppliedHokenList]
-          attr_reader :hoken_list
           # @!attribute [r] shoubyoumeis
           #   @return [Array<Shoubyoumei>]
           attr_reader :shoubyoumeis
@@ -110,17 +107,16 @@ module Receiptisan
           # @!attribute [rw] hospital
           #   @return [AuditPayer]
           attr_accessor :audit_payer
+          # @!attribute [rw] hoken_list
+          #   @return [AppliedHokenList]
+          attr_accessor :hoken_list
 
           def_delegators :@tekiyou, :each, :map, :[]
           # @!attribute [r] iryou_hoken
           #   @return [IryouHoken, nil]
           # @!attribute [r] kouhi_futan_iryous
           #   @return [Array<KouhiFutanIryou>, nil]
-          def_delegators :@hoken_list,
-            :iryou_hoken,
-            :kouhi_futan_iryous,
-            :add_iryou_hoken,
-            :add_kouhi_futan_iryou
+          def_delegators :@hoken_list, :iryou_hoken, :kouhi_futan_iryous
         end
       end
     end

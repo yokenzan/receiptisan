@@ -28,6 +28,8 @@ module Receiptisan
               @current_receipt             = receipt
               @current_receipt.hospital    = @digitalized_receipt.hospital
               @current_shinryou_shikibetsu = nil
+              @current_hoken_list          = Receipt::AppliedHokenList.new
+              @hoken_order_provider.clear
             end
 
             # @return [Month]
@@ -37,7 +39,7 @@ module Receiptisan
 
             # @return [IryouHoken, nil]
             def current_iryou_hoken
-              @current_receipt.iryou_hoken
+              @current_hoken_list.iryou_hoken
             end
 
             # @return [AuditPayer nil]
@@ -47,6 +49,16 @@ module Receiptisan
 
             def nyuuin?
               @current_receipt.nyuuin?
+            end
+
+            # @param iryou_hoken [Receipt::IryouHoken]
+            def add_iryou_hoken(iryou_hoken)
+              @current_hoken_list.add(hoken_order_provider.provide_iryou_hoken, iryou_hoken)
+            end
+
+            # @param kouhi_futan_iryou [Receipt::KouhiFutanIryou]
+            def add_kouhi_futan_iryou(kouhi_futan_iryou)
+              @current_hoken_list.add(hoken_order_provider.provide_kouhi_futan_iryou, kouhi_futan_iryou)
             end
 
             # @param shoujou_shouki [Receipt::ShoujouShouki]
@@ -85,8 +97,10 @@ module Receiptisan
             # @return [void]
             def prepare(uke_file_path = nil)
               @uke_file_path               = uke_file_path
+              @hoken_order_provider        = HokenOrderProvider.new
               @digitalized_receipt         = nil
               @current_receipt             = nil
+              @current_hoken_list          = nil
               @current_shinryou_shikibetsu = nil
               @latest_kyuufu_wariai        = nil
               @latest_teishotoku_kubun     = nil
@@ -115,10 +129,7 @@ module Receiptisan
             attr_writer :latest_kyuufu_wariai
             attr_writer :latest_teishotoku_kubun
 
-            def_delegators :current_receipt,
-              :add_shoubyoumei,
-              :add_iryou_hoken,
-              :add_kouhi_futan_iryou
+            def_delegators :current_receipt, :add_shoubyoumei
 
             private
 
@@ -129,8 +140,11 @@ module Receiptisan
               fix_current_ichiren_unit
 
               @digitalized_receipt.add_receipt(@current_receipt)
+              @current_receipt.hoken_list = @current_hoken_list
               @current_receipt.fix!
+
               @current_receipt = nil
+              @current_hoken_list = nil
             end
 
             def new_ichiren_unit(ichiren_unit)
@@ -158,7 +172,9 @@ module Receiptisan
 
             # @!attribute [r] current_receipt
             #   @return [DigitalizedReceipt::Receipt]
-            attr_reader :current_receipt
+            # @!attribute [r] hoken_order_provider
+            #   @return [HokenOrderProvider]
+            attr_reader :current_receipt, :hoken_order_provider
           end
         end
       end

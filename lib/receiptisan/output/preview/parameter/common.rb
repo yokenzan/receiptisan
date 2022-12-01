@@ -234,6 +234,7 @@ module Receiptisan
           # 保険
 
           AppliedHokenList = Struct.new(:iryou_hoken, :kouhi_futan_iryous, keyword_init: true)
+          HokenWithOrder   = Struct.new(:order, :hoken, keyword_init: true)
           IryouHoken       = Struct.new(
             :hokenja_bangou,
             :kigou,
@@ -532,7 +533,7 @@ module Receiptisan
               kouhi_futan_iryous = applied_hoken_list.kouhi_futan_iryous
               Common::AppliedHokenList.new(
                 iryou_hoken:        iryou_hoken ? Common::IryouHoken.from(iryou_hoken) : nil,
-                kouhi_futan_iryous: kouhi_futan_iryous.map do | kouhi_futan_iryou |
+                kouhi_futan_iryous: kouhi_futan_iryous.values.map do | kouhi_futan_iryou |
                   Common::KouhiFutanIryou.from(kouhi_futan_iryou)
                 end
               )
@@ -554,7 +555,7 @@ module Receiptisan
               end
 
               list.kouhi_futan_iryous = []
-              applied_hoken_list.kouhi_futan_iryous.map do | kouhi_futan_iryou |
+              applied_hoken_list.kouhi_futan_iryous.values.map do | kouhi_futan_iryou |
                 list.kouhi_futan_iryous << Common::RyouyouNoKyuufu.new(
                   goukei_tensuu:                           kouhi_futan_iryou.goukei_tensuu,
                   shinryou_jitsunissuu:                    kouhi_futan_iryou.shinryou_jitsunissuu,

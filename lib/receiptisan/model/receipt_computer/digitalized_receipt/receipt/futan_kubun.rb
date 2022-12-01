@@ -73,6 +73,12 @@ module Receiptisan
             end
 
             class HokenOrder
+              HOKEN_ORDER_IRYOU_HOKEN = :'0'
+              HOKEN_ORDER_KOUHI_1     = :'1'
+              HOKEN_ORDER_KOUHI_2     = :'2'
+              HOKEN_ORDER_KOUHI_3     = :'3'
+              HOKEN_ORDER_KOUHI_4     = :'4'
+
               def initialize(code:, name:, filter_bits:)
                 @code   = code
                 @name   = name
@@ -82,11 +88,11 @@ module Receiptisan
               attr_reader :code, :name, :filter_bits
 
               @list = {
-                '0': new(code: :'0', name: '医療保険', filter_bits: 0b10000),
-                '1': new(code: :'1', name: '第一公費', filter_bits: 0b01000),
-                '2': new(code: :'2', name: '第二公費', filter_bits: 0b00100),
-                '3': new(code: :'3', name: '第三公費', filter_bits: 0b00010),
-                '4': new(code: :'4', name: '第四公費', filter_bits: 0b00001),
+                HOKEN_ORDER_IRYOU_HOKEN => new(code: :'0', name: '医療保険', filter_bits: 0b10000),
+                HOKEN_ORDER_KOUHI_1 => new(code: :'1', name: '第一公費', filter_bits: 0b01000),
+                HOKEN_ORDER_KOUHI_2 => new(code: :'2', name: '第二公費', filter_bits: 0b00100),
+                HOKEN_ORDER_KOUHI_3 => new(code: :'3', name: '第三公費', filter_bits: 0b00010),
+                HOKEN_ORDER_KOUHI_4 => new(code: :'4', name: '第四公費', filter_bits: 0b00001),
               }
 
               class << self
@@ -98,6 +104,10 @@ module Receiptisan
 
                 def iryou_hoken
                   @list[:'0']
+                end
+
+                def find_by_code(code)
+                  @list[code.to_s.intern]
                 end
               end
             end
