@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'stringio'
+require 'logger'
 require 'dry/cli'
 
 module Receiptisan
@@ -13,6 +15,9 @@ module Receiptisan
       # 2. by giving UKE file path and receipt's start row index and end row index
       # 3. by giving stdin
       class PreviewCommand < Dry::CLI::Command
+        include Receiptisan::Model::ReceiptComputer
+        include Receiptisan::Output::Preview
+
         argument :uke, required: false
         # 1. by giving UKE file path and receipt's sequence
         option :seqs,  type: :string,  requried: false
@@ -29,15 +34,15 @@ module Receiptisan
         option :disease,  type: :boolean, required: false, default: true
         option :mask,     type: :boolean, required: false, default: false
         # config for previewer selection
-        option :mode, default: 'cli', values: %w[cli svg], desc: 'preview method'
+        # option :mode, default: 'cli', values: %w[cli svg], desc: 'preview method'
 
         # @param [String] uke
         # @param [Hash] options
         def call(uke: nil, **options)
-          parameter_pattern = determine_parameter_pattern({ uke: uke }.merge(options))
-          receipts          = parse_uke(parameter_pattern, uke, options)
-          @previewer        = determine_previewer(options)
-          preview_receipts(receipts)
+          _parameter_pattern  = determine_parameter_pattern({ uke: uke }.merge(options))
+          @previewer          = determine_previewer
+          digitalized_receipt = parse(uke)
+          preview_receipts(digitalized_receipt)
         end
 
         private
@@ -51,7 +56,9 @@ module Receiptisan
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
         end
 
-        def determine_previewer(options); end
+        def determine_previewer
+          Previewer::SVGPreviewer.new
+        end
 
         # @param [String] text_seqs
         # @return [Array<Integer>]
@@ -63,9 +70,15 @@ module Receiptisan
           end
         end
 
-        def parse_uke(parameter_pattern, uke, options)
-          parser = Receiptisan::Parser.create
+        def parse(uke)
+          parser = DigitalizedReceipt::Parser.new(
+            DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
+            Logger.new(StringIO.new)
+          )
+          parser.parse(uke)
+        end
 
+        def __(parameter_pattern, options)
           case parameter_pattern
           when :uke_all
             parser.parse(uke)
@@ -85,8 +98,8 @@ module Receiptisan
           end
         end
 
-        def preview_receipts(receipts)
-          @previewer.preview(receipts)
+        def preview_receipts(digitalized_receipt)
+          @previewer.preview(Parameter::Common.from_digitalized_receipt(digitalized_receipt))
         end
       end
     end
