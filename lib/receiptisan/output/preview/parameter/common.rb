@@ -328,7 +328,7 @@ module Receiptisan
                 new(
                   code:      master_shuushokugo.code.value,
                   name:      master_shuushokugo.name,
-                  is_prefix: master_shuushokugo.is_prefix
+                  is_prefix: master_shuushokugo.prefix?
                 )
               end
             end
