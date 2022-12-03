@@ -3,6 +3,7 @@
 require_relative 'parser/master_handler'
 require_relative 'parser/receipt_type_builder'
 require_relative 'parser/comment_content_builder'
+require_relative 'parser/hoken_order_provider'
 require_relative 'parser/buffer'
 require_relative 'parser/processor'
 
