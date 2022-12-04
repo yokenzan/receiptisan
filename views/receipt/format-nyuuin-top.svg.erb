@@ -79,10 +79,10 @@ style="display: block;margin-left: auto;margin-right: auto;">
     <!-- 保険 -->
     <% iryou_hoken = receipt.hokens.iryou_hoken %>
     <g clip-path="url(#c0)">
-        <text x="493.5" y="126.6" class="s3">保 </text>
-        <text x="519.4" y="126.6" class="s3">険 </text>
+        <text x="493.5" y="126.6" class="s3">保</text>
+        <text x="519.4" y="126.6" class="s3">険</text>
         <text x="506.5" y="159.6" class="s3">記号・番号</text>
-        <text x="828.9" y="160.2" class="s1">（枝番） </text>
+        <text x="828.9" y="160.2" class="s1">（枝番）</text>
         <% if iryou_hoken %>
         <text x="770" y="132" text-anchor="end" class="sc" style="fill: #f00;"><%= to_zenkaku iryou_hoken.hokenja_bangou %></text>
         <text x="623.8" y="160.4" class="sa" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kigou %></text>

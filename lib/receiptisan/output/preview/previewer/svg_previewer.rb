@@ -7,8 +7,9 @@ module Receiptisan
     module Preview
       module Previewer
         class SVGPreviewer
-          TEMPLATE_NYUUIN_TOP_PATH  = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
-          TEMPLATE_NYUUIN_NEXT_PATH = __dir__ + '/../../../../../views/receipt/format-next.html.erb'
+          TEMPLATE_OUTLINE_PATH    = __dir__ + '/../../../../../views/receipt/outline.html.erb'
+          TEMPLATE_NYUUIN_TOP_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
+          TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
           # @param digitalized_receipt [Parameter::Common::DigitalizedReceipt]
           def preview(digitalized_receipt)
@@ -18,7 +19,7 @@ module Receiptisan
 
             digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
 
-            ERB.new(File.read(__dir__ + '/../../../../../views/receipt/outline.html.erb'), trim_mode: '%>').result(binding)
+            ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
           end
 
           # @param digitalized_receipt [Parameter::Common::Receipt]
@@ -59,7 +60,7 @@ module Receiptisan
             while @tekiyou_line_builder.page_length.positive?
               tekiyou_page_left  = @tekiyou_line_builder.build_per_page
               tekiyou_page_right = @tekiyou_line_builder.build_per_page
-              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_NEXT_PATH), trim_mode: '%>').result(binding)
+              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
             end
           end
 

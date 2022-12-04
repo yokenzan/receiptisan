@@ -2,13 +2,13 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>診療報酬明細書</title>
+    <% seikyuu_ym = digitalized_receipt.seikyuu_ym.wareki %>
+    <title>レセプト | <%= digitalized_receipt.audit_payer.short_name %><%= seikyuu_ym.gengou.alphabet %><%= seikyuu_ym.year %>.<%= seikyuu_ym.month %> | <%= digitalized_receipt.hospital.name %></title>
 </head>
 <body>
     <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
     <% @svg_of_receipts.each do | pages_of_receipt | %>
         <div class="receipt">
-
             <%# 表紙 %>
             <section class="receipt-page-top sheet">
                 <%= pages_of_receipt.first %>
