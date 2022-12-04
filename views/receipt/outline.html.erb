@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>診療報酬明細書</title>
+</head>
+<body>
+    <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
+    <% @svg_of_receipts.each do | pages_of_receipt | %>
+        <div class="receipt">
+
+            <%# 表紙 %>
+            <section class="receipt-page-top sheet">
+                <%= pages_of_receipt.first %>
+            </section>
+
+            <%# 続紙 %>
+            <% pages_of_receipt[1..].each do | page | %>
+                <section class="receipt-page-next sheet">
+                    <%= page %>
+                </section>
+            <% end %>
+        </div>
+    <% end %>
+<style>
+.sheet {
+  page-break-after: always;
+}
+</style>
+</body>
+</html>

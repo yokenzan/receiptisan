@@ -7,49 +7,60 @@ module Receiptisan
     module Preview
       module Previewer
         class SVGPreviewer
-          TEMPLATE_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-new.svg'
+          TEMPLATE_NYUUIN_TOP_PATH  = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
+          TEMPLATE_NYUUIN_NEXT_PATH = __dir__ + '/../../../../../views/receipt/format-next.html.erb'
 
           # @param digitalized_receipt [Parameter::Common::DigitalizedReceipt]
           def preview(digitalized_receipt)
-            preview_receipt(digitalized_receipt.receipts[58])
+            @shoubyou_line_builder = ShoubyouLineBuilder.new
+            @tekiyou_line_builder  = TekiyouLineBuilder.new
+            @svg_of_receipts       = []
+
+            digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
+
+            ERB.new(File.read(__dir__ + '/../../../../../views/receipt/outline.html.erb'), trim_mode: '%>').result(binding)
           end
 
           # @param digitalized_receipt [Parameter::Common::Receipt]
-          def preview_receipt(receipt)
-            shoubyou_line_builder = ShoubyouLineBuilder.new
-            tekiyou_line_builder  = TekiyouLineBuilder.new
-
+          def build_receipt_preview(receipt)
             # 患者傷病名を傷病欄行に変換する
-
-            shoubyou_result = shoubyou_line_builder.build(receipt.shoubyoumeis)
+            shoubyou_result = @shoubyou_line_builder.build(receipt.shoubyoumeis)
+            shoubyou_lines  = shoubyou_result.lines
 
             # 欄外に溢れる傷病名は摘要欄行に変換する
-
-            shoubyou_result.has_more && tekiyou_line_builder.build_shoubyoumei_groups(shoubyou_result)
+            shoubyou_result.has_more && @tekiyou_line_builder.build_shoubyoumei_groups(shoubyou_result)
 
             # 公費欄を溢れる第三公費・第四公費は摘要欄行に変換する
-
             if receipt.hokens.kouhi_futan_iryous.length > 2
               receipt.hokens.kouhi_futan_iryous[2..].each_index do | index |
                 kouhi  = receipt.hokens.kouhi_futan_iryous[2 + index]
                 kyuufu = receipt.ryouyou_no_kyuufu.kouhi_futan_iryous[2 + index]
 
-                tekiyou_line_builder.build_kouhi_futan_iryou(kouhi, kyuufu, index)
+                @tekiyou_line_builder.build_kouhi_futan_iryou(kouhi, kyuufu, index)
               end
             end
 
             # コストを摘要欄行に変換する
-
             receipt.tekiyou.shinryou_shikibetsu_sections.each do | section |
-              tekiyou_line_builder.build_shinryou_shikibetsu_section(
+              @tekiyou_line_builder.build_shinryou_shikibetsu_section(
                 section.shinryou_shikibetsu,
                 section.ichiren_units
               )
             end
 
-            puts tekiyou_line_builder.build
+            # レンダリング
 
-            # puts ERB.new(File.read(TEMPLATE_PATH)).result(binding)
+            @svg_of_receipts << []
+            # 表紙
+            tekiyou_page = @tekiyou_line_builder.build_per_page
+            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_TOP_PATH), trim_mode: '%>').result(binding)
+
+            # 続紙
+            while @tekiyou_line_builder.page_length.positive?
+              tekiyou_page_left  = @tekiyou_line_builder.build_per_page
+              tekiyou_page_right = @tekiyou_line_builder.build_per_page
+              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_NEXT_PATH), trim_mode: '%>').result(binding)
+            end
           end
 
           def to_zenkaku(number)
@@ -199,6 +210,19 @@ module Receiptisan
               end
 
               flush_temp_lines
+            end
+
+            # @return [void]
+            def clear_state
+              @buffer_per_pages   = []
+              @temp_lines         = []
+              @current_line       = nil
+              @current_line_count = 0
+            end
+
+            # @return [Integer]
+            def page_length
+              @buffer_per_pages.length
             end
 
             private
@@ -375,14 +399,6 @@ module Receiptisan
             def current_page
               new_page if @buffer_per_pages.empty?
               @buffer_per_pages.last
-            end
-
-            # @return [void]
-            def clear_state
-              @buffer_per_pages   = []
-              @temp_lines         = []
-              @current_line       = nil
-              @current_line_count = 0
             end
 
             TekiyouLine = Struct.new(
