@@ -25,13 +25,7 @@ module Receiptisan
 
             # 欄外に溢れる傷病名は摘要欄行に変換する
 
-            if shoubyou_result.has_more
-              shoubyou_result.rest.each_with_index do | group, index |
-                tekiyou_line_builder.build_shoubyoumei_group(
-                  group, shoubyou_result.target.length + index
-                )
-              end
-            end
+            shoubyou_result.has_more && tekiyou_line_builder.build_shoubyoumei_groups(shoubyou_result)
 
             # 公費欄を溢れる第三公費・第四公費は摘要欄行に変換する
 
@@ -163,25 +157,12 @@ module Receiptisan
             end
 
             # @return [void]
-            def build_shoubyoumei_group(shoubyoumei_group, group_index)
-              new_current_line_with(generate_rounded_number_mark(group_index))
-
-              shoubyoumei_group.shoubyoumeis.map(&:full_text).each do | shoubyou_name |
-                if [current_line.text, shoubyou_name].reject(&:empty?).join(COMMA).length > @max_line_length
-                  stack_to_temp
-                  new_current_line
-                end
-
-                current_line.text.concat(COMMA) if current_line.text.length > 1
-                current_line.text.concat(shoubyou_name)
+            def build_shoubyoumei_groups(shoubyou_result)
+              shoubyou_result.rest.each_with_index do | group, index |
+                build_shoubyoumei_group(
+                  group, shoubyou_result.target.length + index
+                )
               end
-
-              start_date_and_tenki = [
-                shoubyoumei_group.start_date.wareki.text,
-                shoubyoumei_group.tenki.name,
-              ].join(ZENKAKU_SPACE)
-
-              append_or_new_line(start_date_and_tenki, rjust_if_new_line: true)
 
               flush_temp_lines
             end
@@ -224,6 +205,33 @@ module Receiptisan
             private
 
             attr_reader :current_line, :temp_lines, :buffer
+
+            # @return [void]
+            def build_shoubyoumei_group(shoubyoumei_group, group_index)
+              new_current_line_with(generate_rounded_number_mark(group_index))
+
+              shoubyoumei_group
+                .shoubyoumeis
+                .map { | shoubyou | to_zenkaku shoubyou.full_text }
+                .each do | shoubyou_name |
+                  if [current_line.text, shoubyou_name].reject(&:empty?).join(COMMA).length > @max_line_length
+                    stack_to_temp
+                    new_current_line
+                  end
+
+                  current_line.text.concat(COMMA) if current_line.text.length > 1
+                  current_line.text.concat(shoubyou_name)
+                end
+
+              start_date_and_tenki = [
+                shoubyoumei_group.start_date.wareki.text,
+                shoubyoumei_group.tenki.name,
+              ].join(ZENKAKU_SPACE)
+
+              append_or_new_line(start_date_and_tenki, rjust_if_new_line: true)
+
+              stack_to_temp
+            end
 
             def build_tekiyou_item(item)
               item_text = item.text
