@@ -140,20 +140,19 @@ module Receiptisan
             ASTERISK      = '＊'
             COMMA         = '，'
 
-            def initialize(max_line_length: 27, max_line_count: 36)
-              @max_line_length = max_line_length
-              @max_line_count  = max_line_count
-              @indent_width    = 1
-              @buffer          = []
-              @temp_lines      = []
-              @current_line    = nil
+            def initialize(max_line_length: 27, max_line_count: 36, max_line_count_next: 72)
+              @max_line_length     = max_line_length
+              @max_line_count      = max_line_count
+              @max_line_count_next = max_line_count_next
+              @indent_width        = 1
+              @buffer_per_pages    = []
+              @temp_lines          = []
+              @current_line        = nil
               clear_state
             end
 
-            def build
-              lines = buffer
-              clear_state
-              lines
+            def build_per_page
+              @buffer_per_pages.shift
             end
 
             # @return [void]
@@ -204,7 +203,7 @@ module Receiptisan
 
             private
 
-            attr_reader :current_line, :temp_lines, :buffer
+            attr_reader :current_line, :temp_lines
 
             # @return [void]
             def build_shoubyoumei_group(shoubyoumei_group, group_index)
@@ -346,9 +345,10 @@ module Receiptisan
 
             # @return [void]
             def flush_temp_lines
-              last_line = buffer.last
-              if last_line && last_line.text != '―' * @max_line_length
-                buffer << TekiyouLine.new(
+              bottom_line = current_page.last
+
+              if bottom_line && !bottom_line.separator?
+                current_page << TekiyouLine.new(
                   shinryou_shikibetsu: nil,
                   futan_kubun:         nil,
                   text:                '―' * @max_line_length
@@ -356,15 +356,33 @@ module Receiptisan
               end
 
               stack_to_temp
-              buffer.concat(@temp_lines)
+
+              max_line_count = @buffer_per_pages.length == 1 ? @max_line_count : @max_line_count_next
+              new_page if (current_page + @temp_lines).length > max_line_count
+
+              current_page.concat(@temp_lines)
+
               @temp_lines.clear
             end
 
             # @return [void]
+            def new_page
+              @buffer_per_pages << []
+              @current_line_count = 0
+            end
+
+            # @return [Array<TekiyouLine>]
+            def current_page
+              new_page if @buffer_per_pages.empty?
+              @buffer_per_pages.last
+            end
+
+            # @return [void]
             def clear_state
-              @buffer       = []
-              @temp_lines   = []
-              @current_line = nil
+              @buffer_per_pages   = []
+              @temp_lines         = []
+              @current_line       = nil
+              @current_line_count = 0
             end
 
             TekiyouLine = Struct.new(
@@ -375,6 +393,10 @@ module Receiptisan
             ) do
               def empty?
                 values.compact.empty?
+              end
+
+              def separator?
+                text.squeeze == '―'
               end
 
               def to_s
