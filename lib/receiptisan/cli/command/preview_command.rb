@@ -99,7 +99,7 @@ module Receiptisan
         end
 
         def preview_receipts(digitalized_receipt)
-          @previewer.preview(Parameter::Common.from_digitalized_receipt(digitalized_receipt))
+          puts @previewer.preview(Parameter::Common.from_digitalized_receipt(digitalized_receipt))
         end
       end
     end
