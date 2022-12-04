@@ -134,7 +134,7 @@ module Receiptisan
           end
 
           # 摘要欄行の生成
-          # rubocop:disable Style/ClassLength
+          # rubocop:disable Metrics/ClassLength
           class TekiyouLineBuilder
             ZENKAKU_SPACE = '　'
             ASTERISK      = '＊'
@@ -372,7 +372,7 @@ module Receiptisan
               end
             end
           end
-          # rubocop:enable Style/ClassLength
+          # rubocop:enable Metrics/ClassLength
         end
       end
     end
