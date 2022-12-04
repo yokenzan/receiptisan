@@ -140,7 +140,7 @@ module Receiptisan
             ASTERISK      = '＊'
             COMMA         = '，'
 
-            def initialize(max_line_length: 25, max_line_count: 36)
+            def initialize(max_line_length: 27, max_line_count: 36)
               @max_line_length = max_line_length
               @max_line_count  = max_line_count
               @indent_width    = 1
@@ -247,20 +247,20 @@ module Receiptisan
               # コストの場合の処理
 
               if (product_name = item_text.product_name)
-                slice_to_lines(product_name, break_at_last_line: true)
+                slice_to_lines(to_zenkaku(product_name), break_at_last_line: true)
               end
 
               # 名称, 単価, 使用量, 点数×回数の表記は、字数が許せばなるべく一行で
               # 表現する
 
-              slice_to_lines(item_text.master_name, break_at_last_line: true)
+              slice_to_lines(to_zenkaku(item_text.master_name), break_at_last_line: true)
 
               if (unit_price = item_text.unit_price)
-                append_or_new_line(unit_price)
+                append_or_new_line(to_zenkaku(unit_price))
               end
 
               if (shiyouryou = item_text.shiyouryou)
-                append_or_new_line(shiyouryou)
+                append_or_new_line(to_zenkaku(shiyouryou))
               end
 
               if (kaisuu_and_tensuu = tensuu_text(item))
@@ -341,17 +341,17 @@ module Receiptisan
             end
 
             def to_zenkaku(number)
-              number.to_s.tr('−() A-Za-z0-9.', 'ー（）　Ａ-Ｚａ-ｚ０-９．')
+              number.to_s.tr('−() A-Za-z0-9.', '―（）　Ａ-Ｚａ-ｚ０-９．')
             end
 
             # @return [void]
             def flush_temp_lines
               last_line = buffer.last
-              if last_line && last_line.text != '－' * @max_line_length
+              if last_line && last_line.text != '―' * @max_line_length
                 buffer << TekiyouLine.new(
                   shinryou_shikibetsu: nil,
                   futan_kubun:         nil,
-                  text:                '－' * @max_line_length
+                  text:                '―' * @max_line_length
                 )
               end
 
