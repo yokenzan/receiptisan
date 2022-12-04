@@ -374,7 +374,7 @@ module Receiptisan
             :shiyouryou,
             :unit,
             :tensuu,
-            :kaisuu, 
+            :kaisuu,
             keyword_init: true
           )
 
