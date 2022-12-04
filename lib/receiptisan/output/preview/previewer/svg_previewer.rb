@@ -64,7 +64,7 @@ module Receiptisan
 
           # 傷病名欄行の生成
           class ShoubyouLineBuilder
-            def initialize(max_line_length: 78, max_line_count: 5)
+            def initialize(max_line_length: 32, max_line_count: 5)
               @max_line_length = max_line_length
               @max_line_count  = max_line_count
               @delimitor       = '，'
@@ -105,17 +105,19 @@ module Receiptisan
               return if @current_line_count > @max_line_count
 
               names_for_lines.map.with_index do | names, index |
+                number = generate_rounded_number_mark(group_index)
+
                 ShoubyouLine.new(
                   name:       names,
-                  start_date: index.zero? ? group.start_date.wareki.text : nil,
-                  tenki:      index.zero? ? group.tenki.name             : nil
+                  start_date: index.zero? ? number + group.start_date.wareki.text : nil,
+                  tenki:      index.zero? ? number + group.tenki.name             : nil
                 )
               end
             end
 
             def build_name_lines(group, group_index)
               group.shoubyoumeis
-                .map(&:full_text)
+                .map { | shoubyou | to_zenkaku shoubyou.full_text }
                 .each_with_object([generate_rounded_number_mark(group_index)]) do | name, names_for_lines |
                   names_for_lines << '' + '　' if (names_for_lines.last + name).length > @max_line_length
                   names_for_lines.last.concat(names_for_lines.last.length == 1 ? '' : @delimitor, name)
@@ -125,6 +127,10 @@ module Receiptisan
             # マル付数字の文字を生成する
             def generate_rounded_number_mark(index)
               (0x2460 + index).chr('UTF-8') # ①
+            end
+
+            def to_zenkaku(number)
+              number.to_s.tr('−() A-Za-z0-9.', '―（）　Ａ-Ｚａ-ｚ０-９．')
             end
 
             attr_writer :max_line_length, :max_line_count, :delimitor
