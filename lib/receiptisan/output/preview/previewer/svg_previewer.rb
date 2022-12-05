@@ -125,7 +125,11 @@ module Receiptisan
               group.shoubyoumeis
                 .map { | shoubyou | to_zenkaku shoubyou.full_text }
                 .each_with_object([generate_rounded_number_mark(group_index)]) do | name, names_for_lines |
-                  names_for_lines << '' + '　' if (names_for_lines.last + name).length > @max_line_length
+                  if [names_for_lines.last, name].join(@delimitor).length > @max_line_length
+                    names_for_lines.last << @delimitor
+                    names_for_lines << '' + '　'
+                  end
+                  # names_for_lines.last.length == 1 は 行の中身が「①」など番号だけの状態かを判定している
                   names_for_lines.last.concat(names_for_lines.last.length == 1 ? '' : @delimitor, name)
                 end
             end
@@ -239,6 +243,7 @@ module Receiptisan
                 .map { | shoubyou | to_zenkaku shoubyou.full_text }
                 .each do | shoubyou_name |
                   if [current_line.text, shoubyou_name].reject(&:empty?).join(COMMA).length > @max_line_length
+                    current_line.text << COMMA
                     stack_to_temp
                     new_current_line
                   end
