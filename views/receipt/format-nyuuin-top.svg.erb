@@ -42,7 +42,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="164.5" y="89.8" class="s3 weight-bold" style="fill: #f00;">（医科<%= receipt.nyuugai == :nyuuin ? '入院' : '入院外' %>）</text>
 
         <!-- 患者番号 -->
-        <text x="69.3" y="62.8" class="s8" style="fill: #f00;"><%= to_zenkaku receipt.patient.id %></text>
+        <text x="69.3" y="62.8" class="s8" style="fill: #f00;"><%= receipt.patient.id %></text>
 
         <text x="246.7" y="90.9" class="s2" style="fill: #f00;"><%= to_zenkaku receipt.audit_payer.code %><%= receipt.audit_payer.short_name %></text>
         <%
@@ -87,12 +87,12 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="770" y="132" text-anchor="end" class="sc" style="fill: #f00;"><%= to_zenkaku iryou_hoken.hokenja_bangou %></text>
         <text x="623.8" y="160.4" class="sa" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kigou %></text>
         <text x="623.8" y="179.2" class="sa" style="fill: #f00;"><%= to_zenkaku iryou_hoken.bangou %></text>
-        <text x="828.9" y="179.2" class="s1" style="fill: #f00;"><%= to_zenkaku iryou_hoken.edaban %></text>
+        <text x="840" y="179.2" class="s1" style="fill: #f00;"><%= to_zenkaku iryou_hoken.edaban %></text>
         <text x="39" y="311.7" class="s3">職務上の事由</text>
         <% end %>
         <% if iryou_hoken&.kyuufu_wariai %>
         <text x="771.6" y="130" class="sa">給付割合</text>
-        <text x="849.5" y="130" class="sb" style="fill: #f00;"><%= iryou_hoken.kyuufu_wariai / 10 %></text>
+        <text x="849.5" y="130" class="sb" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kyuufu_wariai / 10 %></text>
         <% end %>
     </g>
 
