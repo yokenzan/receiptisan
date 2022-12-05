@@ -169,8 +169,8 @@ fill="#FFFFFF" stroke="none"/>
 
     <!-- 保険 -->
     <g clip-path="url(#c0)">
-        <text x="502.1" y="95.8" class="s2_2">保　険</text>
-        <text x="515.1" y="113.6" dx="0,.2,.2,.2,.2" class="s2_2">記号・番号</text>
+        <text x="502.1" y="95.8"  class="s2_2">保　険</text>
+        <text x="515.1" y="113.6" class="s2_2">記号・番号</text>
         <!-- 保険 -->
         <% if iryou_hoken = receipt.hokens.iryou_hoken %>
             <%
@@ -178,7 +178,7 @@ fill="#FFFFFF" stroke="none"/>
                 shift_width            = 29
             %>
             <% iryou_hoken.hokenja_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="95.3" class="s6_2" style="fill: #f00;"><%= to_zenkaku digit %></text>
+                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="95.3" class="s7_2" style="fill: #f00;"><%= to_zenkaku digit %></text>
             <% end %>
             <text x="623.1" y="113.7" class="s4_2" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kigou %></text>
             <text x="623.1" y="128.3" class="s4_2" style="fill: #f00;"><%= to_zenkaku iryou_hoken.bangou %></text>
