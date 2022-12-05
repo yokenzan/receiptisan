@@ -172,9 +172,9 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="643.9" y="400.4" class="s6">帰 </text>
 
         <%
-          SHOUBYOUMEI_FIRST_LINE_Y = 335.5
-          SHOUBYOUMEI_LINE_HEIGHT  = 20
-          shoubyou_line_y = proc { | line_index | SHOUBYOUMEI_FIRST_LINE_Y + SHOUBYOUMEI_LINE_HEIGHT * line_index }
+          shoubyoumei_first_line_y = 335.5
+          shoubyoumei_line_height  = 20
+          shoubyou_line_y = proc { | line_index | shoubyoumei_first_line_y + shoubyoumei_line_height * line_index }
         %>
         <% shoubyou_lines.each_with_index do | shoubyou_line, line_index | %>
             <!-- 病名 -->
