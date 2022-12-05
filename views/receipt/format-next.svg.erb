@@ -220,145 +220,22 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <g clip-path="url(#c0)">
-        <text x="101.9" y="183.4" class="s8_2">ロキソニン錠６０ｍｇ　</text>
-        <text x="255.1" y="183.4" class="s9_2">1</text>
-        <text x="262.1" y="183.4" class="s8_2">錠 </text>
-        <text x="411.6" y="183.4" class="s9_2">1 x </text>
-        <text x="446.5" y="183.4" class="s9_2">8 </text>
-        <text x="88" y="201.7" class="s8_2">＊発熱・疼痛時 </text>
-        <text x="80.6" y="220" class="s8_2">カロナール錠２００　２００ｍｇ　</text>
-        <text x="303.5" y="220" class="s9_2">1</text>
-        <text x="310.5" y="220" class="s8_2">錠 </text>
-        <text x="411.6" y="238.4" class="s9_2">1 x </text>
-        <text x="446.4" y="238.4" class="s9_2">7 </text>
+        <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
+            <% tekiyou_y = 183 + 15 * tekiyou_index %>
+            <!-- 診療識別 -->
+            <text x="40" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.shinryou_shikibetsu %></text>
+            <!-- 負担区分 -->
+            <text x="67" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.futan_kubun %></text>
+            <!-- 項目、点数、回数 -->
+            <text x="80" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.text %></text>
+        <% end %>
     </g>
 
-    <path d="M80.6,253H454.5" class="g7_2"/>
+    <text x="498.5" y="187" class="s8_2">１を算定しない理由（処方料）；うんたらかんたらあぐれ </text>
+    <text x="498.5" y="205.4" class="s8_2">っしぶ </text>
+    <!-- <path d="M498.5,220H872.4" class="g7_2"/> -->
 
-    <g clip-path="url(#c0)">
-        <text x="88" y="271.4" class="s8_2">＊処方料（その他） </text>
-        <text x="404.7" y="271.4" class="s9_2">42 x </text>
-        <text x="446.4" y="271.4" class="s9_2">2 </text>
-        <text x="80.6" y="289.7" class="s8_2">特定疾患処方管理加算２（処方料） </text>
-        <text x="404.7" y="308" class="s9_2">66 x </text>
-        <text x="446.4" y="308" class="s9_2">1 </text>
-    </g>
-
-    <path d="M80.6,322.7H454.5" class="g7_2"/>
-
-    <g clip-path="url(#c0)">
-        <text x="88" y="341" class="s8_2">＊静脈内注射 </text>
-        <text x="404.7" y="341" class="s9_2">34 x </text>
-        <text x="446.4" y="341" class="s9_2">1 </text>
-        <text x="80.6" y="359.4" class="s8_2">ソルデム１輸液　５００ｍＬ　</text>
-        <text x="275.6" y="359.4" class="s9_2">1</text>
-        <text x="282.6" y="359.4" class="s8_2">袋 </text>
-        <text x="80.6" y="377.7" class="s8_2">ハイカリックＮＣ−Ｈ輸液　７００ｍＬ　</text>
-        <text x="338.3" y="377.7" class="s9_2">1</text>
-        <text x="345.3" y="377.7" class="s8_2">袋 </text>
-        <text x="404.7" y="396" class="s9_2">56 x </text>
-        <text x="446.4" y="396" class="s9_2">1 </text>
-    </g>
-
-    <path d="M80.6,410.7H454.5" class="g7_2"/>
-
-    <g clip-path="url(#c0)">
-        <text x="80.6" y="429" class="s8_2">創傷処置（１００ｃｍ２以上５００ｃｍ２未満） </text>
-        <text x="404.7" y="447.4" class="s9_2">60 x </text>
-        <text x="446.4" y="447.4" class="s9_2">1 </text>
-        <text x="80.6" y="465.7" class="s8_2">キシロカイン注射液「１％」エピレナミン（１：１００， </text>
-        <text x="80.6" y="484" class="s8_2">０００）含有　</text>
-        <text x="178.1" y="484" class="s9_2">10</text>
-        <text x="192.1" y="484" class="s8_2">ｍＬＶ </text>
-        <text x="404.7" y="502.4" class="s9_2">10 x </text>
-        <text x="446.4" y="502.4" class="s9_2">1 </text>
-        <text x="101.9" y="520.7" class="s8_2">カルトスタット </text>
-        <text x="404.7" y="520.7" class="s9_2">15 x </text>
-        <text x="446.4" y="520.7" class="s9_2">1 </text>
-        <text x="80.6" y="539" class="s8_2">（皮膚欠損用創傷被覆材（皮下組織に至る創傷用・標準型 </text>
-        <text x="80.6" y="557.4" class="s8_2">）　</text>
-        <text x="108.5" y="557.4" class="s9_2">15</text>
-        <text x="122.4" y="557.4" class="s8_2">ｃｍ２） </text>
-    </g>
-
-    <path d="M80.6,572.1H454.5" class="g7_2"/>
-
-    <g clip-path="url(#c0)">
-        <text x="88" y="590.4" class="s8_2">＊経皮的動脈血酸素飽和度測定 </text>
-        <text x="404.7" y="590.4" class="s9_2">35 x </text>
-        <text x="446.5" y="590.4" class="s9_2">1 </text>
-        <text x="88" y="608.7" class="s8_2">＊生化学的検査（１）判断料 </text>
-        <text x="397.7" y="608.7" class="s9_2">144 x </text>
-        <text x="446.5" y="608.7" class="s9_2">1 </text>
-        <text x="88" y="627.1" class="s8_2">＊生化学的検査（２）判断料 </text>
-        <text x="397.7" y="627.1" class="s9_2">144 x </text>
-        <text x="446.5" y="627.1" class="s9_2">1 </text>
-        <text x="88" y="645.4" class="s8_2">＊Ｂ−Ｖ </text>
-        <text x="404.7" y="645.4" class="s9_2">37 x </text>
-        <text x="446.4" y="645.4" class="s9_2">1 </text>
-        <text x="88" y="663.7" class="s8_2">＊ＢＵＮ </text>
-        <text x="101.9" y="682.1" class="s8_2">グルコース </text>
-        <text x="101.9" y="700.4" class="s8_2">γ−ＧＴ </text>
-        <text x="101.9" y="718.7" class="s8_2">ナトリウム及びクロール </text>
-        <text x="101.9" y="737.1" class="s8_2">カリウム </text>
-        <text x="404.7" y="737.1" class="s9_2">93 x </text>
-        <text x="446.4" y="737.1" class="s9_2">1 </text>
-        <text x="88" y="755.4" class="s8_2">＊アミラーゼアイソザイム </text>
-        <text x="404.7" y="755.4" class="s9_2">48 x </text>
-        <text x="446.5" y="755.4" class="s9_2">1 </text>
-        <text x="88" y="773.7" class="s8_2">＊ＧＨ </text>
-        <text x="101.9" y="792.1" class="s8_2">ＣＰＲ </text>
-        <text x="397.7" y="792.1" class="s9_2">216 x </text>
-        <text x="446.4" y="792.1" class="s9_2">1 </text>
-        <text x="80.6" y="810.4" class="s8_2">ＳＡＲＳ−ＣｏＶ−２・インフルエンザウイルス抗原同時 </text>
-        <text x="80.6" y="828.7" class="s8_2">検出（定性） </text>
-        <text x="397.7" y="847.1" class="s9_2">420 x </text>
-        <text x="446.4" y="847.1" class="s9_2">1 </text>
-        <text x="80.6" y="865.4" class="s8_2">ＳＡＲＳ−ＣｏＶ−２・ＲＳウイルス核酸同時検出（検査 </text>
-        <text x="80.6" y="883.7" class="s8_2">委託以外） </text>
-        <text x="397.7" y="902.1" class="s9_2">700 x </text>
-        <text x="446.4" y="902.1" class="s9_2">1 </text>
-        <text x="88" y="920.4" class="s8_2">＊免疫学的検査判断料 </text>
-        <text x="397.7" y="920.4" class="s9_2">144 x </text>
-        <text x="446.5" y="920.4" class="s9_2">1 </text>
-        <text x="88" y="938.8" class="s8_2">＊微生物学的検査判断料 </text>
-        <text x="397.7" y="938.8" class="s9_2">150 x </text>
-        <text x="446.5" y="938.8" class="s9_2">1 </text>
-        <text x="88" y="957.1" class="s8_2">＊ＣＣＲ４タンパク </text>
-        <text x="383.8" y="957.1" class="s9_2">10000 x </text>
-        <text x="446.4" y="957.1" class="s9_2">5 </text>
-        <text x="88" y="975.4" class="s8_2">＊ＣＣＲ４タンパク </text>
-        <text x="383.8" y="975.4" class="s9_2">10000 x </text>
-        <text x="446.4" y="975.4" class="s9_2">1 </text>
-        <text x="80.6" y="993.8" class="s8_2">ＣＣＲ４タンパク理由及び医学的根拠（免疫染色（免疫抗 </text>
-        <text x="80.6" y="1012.1" class="s8_2">体法）病理組織標本作製）；そんなものはない。ただわが </text>
-        <text x="80.6" y="1030.4" class="s8_2">道をゆかんのみ。なにを恐れようか </text>
-        <text x="498.5" y="187" class="s8_2">１を算定しない理由（処方料）；うんたらかんたらあぐれ </text>
-        <text x="498.5" y="205.4" class="s8_2">っしぶ </text>
-    </g>
-    <path d="M498.5,220H872.4" class="g7_2"/>
-
-    <g clip-path="url(#c0)">
-        <text x="67.4" y="201.7" class="s9_2">G </text>
-        <text x="40.3" y="271.4" dx="0,0,0,6.2" class="s9_2">25 G </text>
-        <text x="68.2" y="289.7" class="s9_2">G </text>
-        <text x="40.3" y="341" dx="0,0,0,6.2" class="s9_2">32 P </text>
-        <text x="40.3" y="429" dx="0,0,0,7" class="s9_2">40 G </text>
-        <text x="40.3" y="590.4" dx="0,0,0,6.2" class="s9_2">60 G </text>
-        <text x="67.4" y="608.7" class="s9_2">G</text>
-        <text x="67.4" y="627.1" class="s9_2">G</text>
-        <text x="67.4" y="645.4" class="s9_2">G</text>
-        <text x="67.4" y="663.7" class="s9_2">G</text>
-        <text x="67.4" y="755.4" class="s9_2">G</text>
-        <text x="67.4" y="773.7" class="s9_2">G</text>
-        <text x="68.2" y="810.4" class="s9_2">N</text>
-        <text x="68.2" y="865.4" class="s9_2">N</text>
-        <text x="67.4" y="920.4" class="s9_2">G</text>
-        <text x="67.4" y="938.8" class="s9_2">G</text>
-        <text x="67.4" y="957.1" class="s9_2">Q</text>
-        <text x="67.4" y="975.4" class="s9_2">Q</text>
-        <text x="458.2" y="187" dx="0,0,0,7" class="s9_2">99 G</text>
-    </g>
+    <text x="458.2" y="187" dx="0,0,0,7" class="s9_2">99 G</text>
 </g>
 
 <style type="text/css" ><![CDATA[
