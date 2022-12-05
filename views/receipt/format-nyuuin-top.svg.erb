@@ -199,16 +199,25 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="804.1" y="393.9" class="s6">日 </text>
         <text x="804.1" y="415.6" class="s6">数 </text>
 
+        <!-- 保険 -->
         <text x="821.4" y="337.6" class="s6">保</text>
-        <text x="857" y="338.7" text-anchor="end" class="s8">31</text>
+        <% if iryou_hoken = receipt.ryouyou_no_kyuufu.iryou_hoken %>
+          <text x="857" y="338.7" text-anchor="end" class="s8" style="fill: #00f;"><%= iryou_hoken.shinryou_jitsunissuu %></text>
+        <% end %>
         <text x="859.8" y="336.6" class="s3">日</text>
 
+        <!-- 公費 -->
+        <% kouhi_futan_iryous = receipt.ryouyou_no_kyuufu.kouhi_futan_iryous %>
         <text x="821.4" y="372.3" class="s5">①</text>
-        <text x="857" y="373.3" text-anchor="end" class="s8">31</text>
+        <% if kouhi_1st = kouhi_futan_iryous[0] %>
+          <text x="857" y="373.3" text-anchor="end" class="s8" style="fill: #00f;"><%= kouhi_1st.shinryou_jitsunissuu %></text>
+        <% end %>
         <text x="859.2" y="371.2" class="s3">日</text>
 
         <text x="821.4" y="406.9" class="s5">②</text>
-        <text x="857" y="408" text-anchor="end" class="s8">99</text>
+        <% if kouhi_2nd = kouhi_futan_iryous[1] %>
+          <text x="857" y="408" text-anchor="end" class="s8" style="fill: #00f;"><%= kouhi_2nd.shinryou_jitsunissuu %></text>
+        <% end %>
         <text x="859.2" y="405.8" class="s3">日</text>
     </g>
 
@@ -224,17 +233,25 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="253.2" y="1075.7" class="s6">※ 決　定　点</text>
         <text x="359.3" y="1075.7" class="s6">負担金額　円</text>
 
-        <text x="49.2" y="1086.5" class="s4">保 </text>
-        <text x="49.2" y="1106.4" class="s4">険 </text>
-        <text x="179.6" y="1119" class="sb">46,545 </text>
+        <text x="49.2" y="1086.5" class="s4">保</text>
+        <text x="49.2" y="1106.4" class="s4">険</text>
+        <% if iryou_hoken = receipt.ryouyou_no_kyuufu.iryou_hoken %>
+          <text x="240" y="1115" text-anchor="end" class="sb" style="fill: #00f;"><%= iryou_hoken.goukei_tensuu %></text>
+          <text x="439" y="1115" text-anchor="end" class="sb" style="fill: #00f;"><%= iryou_hoken.ichibu_futankin %></text>
+        <% end %>
 
+        <% kouhi_futan_iryous = receipt.ryouyou_no_kyuufu.kouhi_futan_iryous %>
         <text x="48.7" y="1144.9" class="s5">①</text>
-        <text x="179.6" y="1149.3" class="sb">32,993 </text>
-        <text x="432.9" y="1149.3" class="sb">0 </text>
+        <% if kouhi_1st = kouhi_futan_iryous[0] %>
+          <text x="240" y="1152" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_1st.goukei_tensuu %></text>
+          <text x="439" y="1152" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_1st.ichibu_futankin %></text>
+        <% end %>
 
         <text x="48.7" y="1179.6" class="s5">②</text>
-        <text x="190.5" y="1186.1" class="sb">1,044 </text>
-        <text x="432.9" y="1186.1" class="sb">0 </text>
+        <% if kouhi_2nd = kouhi_futan_iryous[1] %>
+          <text x="240" y="1188" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_2nd.goukei_tensuu %></text>
+          <text x="439" y="1188" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_2nd.ichibu_futankin %></text>
+        <% end %>
 
         <!-- 食事 -->
         <text x="447.4" y="1102.7" class="s4">食</text>
@@ -252,19 +269,26 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <text x="460.4" y="1085.4" class="s4">保</text>
         <text x="460.4" y="1105.3" class="s4">険</text>
-        <text x="495.7" y="1119" class="s9">93</text>
-        <text x="599.5" y="1119" class="sb">61,070</text>
-        <text x="807.3" y="1119" class="sb">42,780</text>
+        <% if iryou_hoken = receipt.ryouyou_no_kyuufu.iryou_hoken %>
+          <text x="495.7" y="1119" text-anchor="end" class="s9" style="fill: #00f;"><%= iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu %></text>
+          <text x="599.5" y="1119" text-anchor="end" class="sb" style="fill: #00f;"><%= iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
+          <text x="807.3" y="1119" text-anchor="end" class="sb">🚧</text>
+        <% end %>
 
+        <% kouhi_futan_iryous = receipt.ryouyou_no_kyuufu.kouhi_futan_iryous %>
         <text x="459.9" y="1143.9" class="s5">①</text>
-        <text x="495.7" y="1147.1" class="s9">63</text>
-        <text x="599.5" y="1149.3" class="sb">41,370</text>
-        <text x="807.3" y="1149.3" class="sb">28,980</text>
+        <% if kouhi_1st = kouhi_futan_iryous[0] %>
+          <text x="495.7" y="1147.1" text-anchor="end" class="s9" style="fill: #00f;"><%= kouhi_1st.shokuji_seikatsu_ryouyou_kaisuu %></text>
+          <text x="599.5" y="1149.3" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_1st.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
+          <text x="807.3" y="1149.3" text-anchor="end" class="sb">28,980</text>
+        <% end %>
 
         <text x="459.9" y="1180.7" class="s5">②</text>
-        <text x="504.3" y="1183.9" class="s9">0</text>
-        <text x="653.6" y="1186.1" class="sb">0</text>
-        <text x="861.4" y="1186.1" class="sb">0</text>
+        <% if kouhi_2nd = kouhi_futan_iryous[1] %>
+          <text x="504.3" y="1183.9" text-anchor="end" class="s9" style="fill: #00f;"><%= kouhi_2nd.shokuji_seikatsu_ryouyou_kaisuu %></text>
+          <text x="653.6" y="1186.1" text-anchor="end" class="sb" style="fill: #00f;"><%= kouhi_2nd.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
+          <text x="861.4" y="1186.1" text-anchor="end" class="sb">🚧</text>
+        <% end %>
 
     </g>
 
