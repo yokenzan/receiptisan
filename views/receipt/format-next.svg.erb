@@ -151,6 +151,7 @@ fill="#FFFFFF" stroke="none"/>
         <text x="458.2" y="78.5" class="s4_2" style="fill: #f00;"><%= to_zenkaku receipt.prefecture.code %></text>
         <text x="490"   y="79" class="s2_2">医コ</text>
         <text x="520.5" y="78.5" class="s4_2" style="fill: #f00;"><%= to_zenkaku receipt.hospital.code %></text>
+        <text x="870"   y="60"   class="s4_2" text-anchor="end" style="fill: #f00;"><%= receipt.id %></text>
 
         <!-- レセプト種別 -->
         <text x="680.7" y="78.5" class="s4_2" style="fill: #f00;"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>

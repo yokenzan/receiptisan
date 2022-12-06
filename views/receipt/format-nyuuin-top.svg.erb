@@ -38,8 +38,9 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <!-- 綴紐を通す穴を明ける目印のマル -->
         <path fill-rule="evenodd" d="M56.2,54.1c0,10.2,-14.6,10.2,-14.6,0c0,-10.2,14.6,-10.2,14.6,0" class="g5"/>
-        <text x="49.8" y="90.9" class="s2 weight-bold">診療報酬明細書</text>
+        <text x="49.8"  y="90.9" class="s2 weight-bold">診療報酬明細書</text>
         <text x="164.5" y="89.8" class="s3 weight-bold" style="fill: #f00;">（医科<%= receipt.nyuugai == :nyuuin ? '入院' : '入院外' %>）</text>
+        <text x="870"   y="70"   class="s3" text-anchor="end" style="fill: #f00;"><%= receipt.id %></text>
 
         <!-- 患者番号 -->
         <text x="69.3" y="62.8" class="s8" style="fill: #f00;"><%= receipt.patient.id %></text>
@@ -48,7 +49,6 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <%
           # 診療年月
           shinryou_nengetsu = receipt.shinryou_ym.wareki
-
         %>
         <text x="296.6" y="89.7" class="s3 weight-bold" style="fill: #f00;"><%= shinryou_nengetsu.gengou.name %></text>
         <text x="346"   y="90.9" class="s9" text-anchor="end" style="fill: #f00;"><%= to_zenkaku shinryou_nengetsu.year %></text>
