@@ -63,12 +63,12 @@ module Receiptisan
                 santei_unit.items.each_with_index do | item, item_index |
                   new_current_line(
                     shinryou_shikibetsu: [ichiren_index, santei_index, item_index].all?(&:zero?) ?
-                    shinryou_shikibetsu.code :
-                    nil,
+                      shinryou_shikibetsu.code :
+                      nil,
                     futan_kubun:         item_index.zero? ? ichiren_unit.futan_kubun : nil,
                     requires_asterisk:   item_index.zero?
                   )
-                build_tekiyou_item(item)
+                  build_tekiyou_item(item)
                 end
               end
             end
@@ -126,7 +126,7 @@ module Receiptisan
             # コメントの場合の処理
 
             if item.type == :comment
-              slice_to_lines(item_text, break_at_last_line: true)
+              slice_to_lines(item_text)
               # コメントの場合の処理はここでおしまい
               return
             end
