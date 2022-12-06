@@ -118,12 +118,14 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
 
     <!-- 患者 -->
-    <% patient = receipt.patient %>>
+    <% patient = receipt.patient %>
     <g clip-path="url(#c0)">
         <text x="41.1" y="256.5" class="s3">氏 </text>
         <text x="41.1" y="282.5" class="s3">名 </text>
-        <text x="75.8" y="261.9" class="s2" style="fill: #f00;"><%= patient.name %></text>
-        <text x="77.9" y="246.7" class="s3" style="fill: #f00;"><%= patient.name_kana %></text>
+        <text x="75.8" y="263" class="<% if patient.name.length > 16 %>sh<% else %>s2<% end %>" style="fill: #f00;"><%= patient.name %></text>
+        <g transform="translate(77.9,246.7),scale(<%= '%3.1f' % [28.0 / [patient.name_kana.length, 28].max] %>,1),translate(-77.9,-246.7)">
+        <text x="77.9" y="246.7" class="s4" style="fill: #f00;"><%= patient.name_kana %></text>
+        </g>
         <text x="142.8" y="246.7" class="s3"></text>
         <text x="92" y="294.4" class="s2" style="fill: #f00;"><%= to_zenkaku patient.sex.code %></text>
         <text x="114" y="294.4" class="s2" style="fill: #f00;"><%= patient.sex.short_name %></text>

@@ -179,7 +179,7 @@ fill="#FFFFFF" stroke="none"/>
                 shift_width            = 29
             %>
             <% iryou_hoken.hokenja_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="95.3" class="s7_2" style="fill: #f00;"><%= to_zenkaku digit %></text>
+                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="97" class="s7_2" style="fill: #f00;"><%= to_zenkaku digit %></text>
             <% end %>
             <text x="623.1" y="113.7" class="s4_2" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kigou %></text>
             <text x="623.1" y="128.3" class="s4_2" style="fill: #f00;"><%= to_zenkaku iryou_hoken.bangou %></text>
@@ -191,7 +191,7 @@ fill="#FFFFFF" stroke="none"/>
         <% kouhi_futan_iryous = receipt.hokens.kouhi_futan_iryous %>
         <%
             futansha_start_x  = 81
-            jukyuusha_start_x = 300
+            jukyuusha_start_x = 302
             shift_width       = 23
         %>
 
