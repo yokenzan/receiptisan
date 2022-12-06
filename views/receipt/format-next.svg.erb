@@ -220,6 +220,7 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
+    <!-- 左側ページ -->
     <g clip-path="url(#c0)">
         <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
@@ -232,11 +233,18 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
-    <text x="498.5" y="187" class="s8_2">１を算定しない理由（処方料）；うんたらかんたらあぐれ </text>
-    <text x="498.5" y="205.4" class="s8_2">っしぶ </text>
-    <!-- <path d="M498.5,220H872.4" class="g7_2"/> -->
-
-    <text x="458.2" y="187" dx="0,0,0,7" class="s9_2">99 G</text>
+    <!-- 右側ページ -->
+    <g clip-path="url(#c0)">
+        <% tekiyou_page_right&.each_with_index do | tekiyou_line, tekiyou_index | %>
+            <% tekiyou_y = 183 + 15 * tekiyou_index %>
+            <!-- 診療識別 -->
+            <text x="460" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.shinryou_shikibetsu %></text>
+            <!-- 負担区分 -->
+            <text x="487" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.futan_kubun %></text>
+            <!-- 項目、点数、回数 -->
+            <text x="500" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.text %></text>
+        <% end %>
+    </g>
 </g>
 
 <style type="text/css" ><![CDATA[

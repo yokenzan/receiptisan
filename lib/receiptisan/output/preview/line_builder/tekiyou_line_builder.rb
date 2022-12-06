@@ -71,6 +71,12 @@ module Receiptisan
                   build_tekiyou_item(item)
                 end
               end
+              # 一連行為単位ごとに変換データをページオブジェクトにフラッシュしていくが、
+              # 仕切り線は診療識別セクションの仕切りとして引くものなので、基本的には
+              # never_separator: true を渡してフラッシュ時の仕切り線の挿入を抑制する
+              #
+              # 診療識別最初の一連行為単位の場合のみ、仕切り線を挿入してもらうようにする
+              flush_temp_lines(never_separator: ichiren_index.positive?)
             end
 
             flush_temp_lines
@@ -224,10 +230,10 @@ module Receiptisan
           end
 
           # @return [void]
-          def flush_temp_lines
+          def flush_temp_lines(never_separator: false)
             bottom_line = current_page.last
 
-            if bottom_line && !bottom_line.separator?
+            if never_separator == false && bottom_line && !bottom_line.separator?
               current_page.add(TekiyouLine.new(
                 shinryou_shikibetsu: nil,
                 futan_kubun:         nil,
