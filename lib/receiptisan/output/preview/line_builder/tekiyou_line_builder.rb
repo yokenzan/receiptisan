@@ -241,7 +241,7 @@ module Receiptisan
 
             return '' if tensuu.nil? || kaisuu.nil?
 
-            '%d x %2d' % [tensuu, kaisuu]
+            '%d×%2d' % [tensuu, kaisuu]
           end
 
           # @return [void]
