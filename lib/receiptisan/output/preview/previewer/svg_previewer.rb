@@ -7,6 +7,8 @@ module Receiptisan
     module Preview
       module Previewer
         class SVGPreviewer
+          include Receiptisan::Util::Formatter
+
           LineBuilder              = Receiptisan::Output::Preview::LineBuilder
           TEMPLATE_OUTLINE_PATH    = __dir__ + '/../../../../../views/receipt/outline.html.erb'
           TEMPLATE_NYUUIN_TOP_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
@@ -63,10 +65,6 @@ module Receiptisan
               tekiyou_page_right = @tekiyou_line_builder.build_per_page
               @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
             end
-          end
-
-          def to_zenkaku(number)
-            number.to_s.tr('0-9.', '０-９．')
           end
         end
       end

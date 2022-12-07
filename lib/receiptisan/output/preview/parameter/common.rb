@@ -419,6 +419,8 @@ module Receiptisan
           )
 
           class << self
+            include Receiptisan::Util::Formatter
+
             DateUtil           = Receiptisan::Util::DateUtil
             DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
 
@@ -668,16 +670,12 @@ module Receiptisan
               TekiyouText.new(
                 product_name: resource.type == :tokutei_kizai ? resource.product_name : nil,
                 master_name:  resource.name,
-                unit_price:   unit_price ? '%s円／%s' % [hankaku2zenkaku(unit_price), unit.name] : nil,
-                shiyouryou:   shiyouryou ? hankaku2zenkaku(shiyouryou) + unit.name : nil
+                unit_price:   unit_price ? '%s円／%s' % [to_zenkaku(unit_price), unit.name] : nil,
+                shiyouryou:   shiyouryou ? to_zenkaku(shiyouryou) + unit.name : nil
               )
             end
             # rubocop:enable Metrics/PerceivedComplexity
             # rubocop:enable Metrics/CyclomaticComplexity
-
-            def hankaku2zenkaku(hankaku_number)
-              hankaku_number.to_s.tr('0-9.', '０-９．')
-            end
           end
         end
         # rubocop:enable Metrics/ModuleLength

@@ -6,6 +6,8 @@ module Receiptisan
       module LineBuilder
         # 傷病名欄行の生成
         class ShoubyouLineBuilder
+          include Receiptisan::Util::Formatter
+
           COMMA = '，'
 
           def initialize(max_line_length: 32, max_line_count: 5)
@@ -48,7 +50,7 @@ module Receiptisan
             return if @current_line_count > @max_line_count
 
             names_for_lines.map.with_index do | names, index |
-              number = generate_rounded_number_mark(group_index)
+              number = to_marutsuki_mark(group_index)
 
               ShoubyouLine.new(
                 name:       names,
@@ -60,24 +62,15 @@ module Receiptisan
 
           def build_name_lines(group, group_index)
             group.shoubyoumeis
-              .map { | shoubyou | to_zenkaku shoubyou.full_text }
-              .each_with_object([generate_rounded_number_mark(group_index)]) do | name, names_for_lines |
+              .map(&:full_text)
+              .each_with_object([to_marutsuki_mark(group_index)]) do | name, names_for_lines |
                 if [names_for_lines.last, name].join(COMMA).length > @max_line_length
                   names_for_lines.last << COMMA
                   names_for_lines << '' + '　'
                 end
-                # names_for_lines.last.length == 1 は 行の中身が「①」など番号だけの状態かを判定している
+                # names_for_lines.last.length == 1 は 行の中身が「①」など丸付き番号だけの状態かを判定している
                 names_for_lines.last.concat(names_for_lines.last.length == 1 ? '' : COMMA, name)
               end
-          end
-
-          # マル付数字の文字を生成する
-          def generate_rounded_number_mark(index)
-            (0x2460 + index).chr('UTF-8') # ①
-          end
-
-          def to_zenkaku(number)
-            number.to_s.tr('−() A-Za-z0-9.', '―（）　Ａ-Ｚａ-ｚ０-９．')
           end
 
           attr_writer :max_line_length, :max_line_count, :delimitor

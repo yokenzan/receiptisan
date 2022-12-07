@@ -11,20 +11,16 @@ module Receiptisan
           # コメントの文字データを適切なオブジェクトにするビルダー
           class CommentContentBuilder
             include Master::Treatment::Comment::AppendedContent
+            Formatter = Receiptisan::Util::Formatter
 
-            # 全角数字を半角数字に変換する
-            #
-            # @param number_format [String]
-            # @return [String]
-            @@to_half_number = proc { | number_format | number_format.tr('０-９', '0-9') }
-            @@patterns       = {
+            @@patterns = {
               '10': proc { | appended_value | FreeFormat.new(appended_value) },
               '20': proc {},
               '30': proc { | appended_value | FreeFormat.new(appended_value) },
               '31': proc do | shinryou_koui_code, handler |
                 ShinryouKouiFormat.new(
                   handler.find_by_code(
-                    Master::Treatment::ShinryouKoui::Code.of(@@to_half_number.call(shinryou_koui_code))
+                    Master::Treatment::ShinryouKoui::Code.of(Formatter.to_hankaku(shinryou_koui_code))
                   )
                 )
               end,
@@ -49,7 +45,7 @@ module Receiptisan
                 )
               end,
               '90': proc do | code_of_shuushokugos, _handler, sy_processor |
-                shuushokugos = sy_processor.process_shuushokugos(@@to_half_number.call(code_of_shuushokugos))
+                shuushokugos = sy_processor.process_shuushokugos(Formatter.to_hankaku(code_of_shuushokugos))
                 ShuushokugoFormat.new(*shuushokugos)
               end,
             }

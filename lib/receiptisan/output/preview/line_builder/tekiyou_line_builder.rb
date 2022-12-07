@@ -9,6 +9,8 @@ module Receiptisan
         # 摘要欄行の生成
         # rubocop:disable Metrics/ClassLength
         class TekiyouLineBuilder
+          include Receiptisan::Util::Formatter
+
           ZENKAKU_SPACE = '　'
           ASTERISK      = '＊'
           COMMA         = '，'
@@ -45,13 +47,13 @@ module Receiptisan
             new_current_line_with('第三公費') # TODO
             stack_to_temp
 
-            new_current_line_with('負担者番号　%s' % to_zenkaku(kouhi.futansha_bangou))
+            new_current_line_with('負担者番号　%s' % kouhi.futansha_bangou)
             stack_to_temp
 
-            new_current_line_with('受給者番号　%s' % to_zenkaku(kouhi.jukyuusha_bangou))
+            new_current_line_with('受給者番号　%s' % kouhi.jukyuusha_bangou)
             stack_to_temp
 
-            new_current_line_with('実日数　　　%s日' % to_zenkaku(kyuufu.shinryou_jitsunissuu))
+            new_current_line_with('実日数　　　%s日' % kyuufu.shinryou_jitsunissuu)
             stack_to_temp
 
             flush_temp_lines
@@ -104,7 +106,7 @@ module Receiptisan
 
             shoubyoumei_group
               .shoubyoumeis
-              .map { | shoubyou | to_zenkaku shoubyou.full_text }
+              .map(&:full_text)
               .each do | shoubyou_name |
                 if [current_line.text, shoubyou_name].reject(&:empty?).join(COMMA).length > @max_line_length
                   current_line.text << COMMA
@@ -140,20 +142,20 @@ module Receiptisan
             # コストの場合の処理
 
             if (product_name = item_text.product_name)
-              slice_to_lines(to_zenkaku(product_name), break_at_last_line: true)
+              slice_to_lines(product_name, break_at_last_line: true)
             end
 
             # 名称, 単価, 使用量, 点数×回数の表記は、字数が許せばなるべく一行で
             # 表現する
 
-            slice_to_lines(to_zenkaku(item_text.master_name), break_at_last_line: true)
+            slice_to_lines(item_text.master_name, break_at_last_line: true)
 
             if (unit_price = item_text.unit_price)
-              append_or_new_line(to_zenkaku(unit_price))
+              append_or_new_line(unit_price)
             end
 
             if (shiyouryou = item_text.shiyouryou)
-              append_or_new_line(to_zenkaku(shiyouryou))
+              append_or_new_line(shiyouryou)
             end
 
             if (kaisuu_and_tensuu = tensuu_text(item))
@@ -226,7 +228,7 @@ module Receiptisan
 
             return '' if tensuu.nil? || kaisuu.nil?
 
-            to_zenkaku('%d x %2d' % [tensuu, kaisuu])
+            '%d x %2d' % [tensuu, kaisuu]
           end
 
           # @return [void]
@@ -265,10 +267,6 @@ module Receiptisan
 
           def generate_rounded_number_mark(index)
             (0x2460 + index).chr('UTF-8')
-          end
-
-          def to_zenkaku(number)
-            number.to_s.tr('−() A-Za-z0-9.', '―（）　Ａ-Ｚａ-ｚ０-９．')
           end
 
           # 摘要欄のページ

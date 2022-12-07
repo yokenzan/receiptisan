@@ -37,6 +37,8 @@ module Receiptisan
         }
 
         class << self
+          Formatter = Receiptisan::Util::Formatter
+
           # @return [Gengou, nil]
           def find_by_alphabet(alphabet)
             @gengous.values.find { | gengou | gengou.alphabet == alphabet }
@@ -54,7 +56,7 @@ module Receiptisan
         # @return [Date]
         # @raise ArgumentError
         def parse_date(date_text)
-          text = date_text.tr('０-９', '0-9')
+          text = Formatter.to_hankaku date_text
           case text.length
           when 7
             parse_wareki_date(text)
@@ -69,7 +71,7 @@ module Receiptisan
         # @return [Date]
         # @raise ArgumentError
         def parse_year_month(year_month_text)
-          text = year_month_text.tr('０-９', '0-9')
+          text = Formatter.to_hankaku year_month_text
           case text.length
           when 5
             parse_wareki_month(text)
@@ -101,7 +103,7 @@ module Receiptisan
           ]
 
           text.gsub!(/0([0-9])/, '　\1')
-          (zenkaku ? text.tr('0-9', '０-９') : text).tap { | ret | ret[-3..] = '' if is_month }
+          (zenkaku ? Formatter.to_zenkaku(text) : text).tap { | ret | ret[-3..] = '' if is_month }
         end
 
         private
