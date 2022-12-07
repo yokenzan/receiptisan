@@ -44,17 +44,30 @@ module Receiptisan
           end
 
           def build_kouhi_futan_iryou(kouhi, kyuufu, _index)
-            new_current_line_with('第三公費') # TODO
+            new_current_line_with('＜第三公費＞') # TODO
             stack_to_temp
 
-            new_current_line_with('負担者番号　%s' % kouhi.futansha_bangou)
+            format = '%-9s　%s%s'
+
+            new_current_line_with(format % ['負担者番号', kouhi.futansha_bangou, ''])
             stack_to_temp
 
-            new_current_line_with('受給者番号　%s' % kouhi.jukyuusha_bangou)
+            new_current_line_with(format % ['受給者番号', kouhi.jukyuusha_bangou, ''])
             stack_to_temp
 
-            new_current_line_with('実日数　　　%s日' % kyuufu.shinryou_jitsunissuu)
+            new_current_line_with(format % ['実日数', kyuufu.shinryou_jitsunissuu, '日'])
             stack_to_temp
+
+            new_current_line_with(format % ['合計点数', to_currency(kyuufu.goukei_tensuu), '点'])
+            stack_to_temp
+
+            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '点'])
+            stack_to_temp
+
+            if kyuufu.kyuufu_taishou_ichibu_futankin
+              new_current_line_with(format % ['給付対象一部負担金', to_currency(kyuufu.kyuufu_taishou_ichibu_futankin), '点'])
+              stack_to_temp
+            end
 
             flush_temp_lines
           end
