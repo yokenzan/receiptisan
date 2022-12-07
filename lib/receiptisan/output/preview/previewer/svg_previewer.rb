@@ -25,12 +25,45 @@ module Receiptisan
             ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
           end
 
+          private
+
           # @param digitalized_receipt [Parameter::Common::Receipt]
           def build_receipt_preview(receipt)
-            # 患者傷病名を傷病欄行に変換する
-            shoubyou_result = @shoubyou_line_builder.build(receipt.shoubyoumeis)
+            # 傷病欄行
+
+            shoubyou_result = build_shoubyou_lines(receipt)
             shoubyou_lines  = shoubyou_result.lines
 
+            # 摘要欄行
+
+            build_tekiyou_lines(shoubyou_result, receipt)
+
+            # レンダリング
+
+            @svg_of_receipts << []
+            # 表紙
+            tekiyou_page = @tekiyou_line_builder.next_page
+            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_TOP_PATH), trim_mode: '%>').result(binding)
+
+            # 続紙
+            while @tekiyou_line_builder.page_length.positive?
+              tekiyou_page_left  = @tekiyou_line_builder.next_page
+              tekiyou_page_right = @tekiyou_line_builder.next_page
+              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
+            end
+          end
+
+          # 患者傷病名を傷病欄行に変換する
+          #
+          # @param digitalized_receipt [Parameter::Common::Receipt]
+          # @return [ShoubyouLineBuilder::Result]
+          def build_shoubyou_lines(receipt)
+            @shoubyou_line_builder.build(receipt.shoubyoumeis)
+          end
+
+          # @param digitalized_receipt [Parameter::Common::Receipt]
+          # @return [void]
+          def build_tekiyou_lines(shoubyou_result, receipt)
             # 欄外に溢れる傷病名は摘要欄行に変換する
             shoubyou_result.has_more && @tekiyou_line_builder.build_shoubyoumei_groups(shoubyou_result)
 
@@ -50,20 +83,6 @@ module Receiptisan
                 section.shinryou_shikibetsu,
                 section.ichiren_units
               )
-            end
-
-            # レンダリング
-
-            @svg_of_receipts << []
-            # 表紙
-            tekiyou_page = @tekiyou_line_builder.build_per_page
-            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_TOP_PATH), trim_mode: '%>').result(binding)
-
-            # 続紙
-            while @tekiyou_line_builder.page_length.positive?
-              tekiyou_page_left  = @tekiyou_line_builder.build_per_page
-              tekiyou_page_right = @tekiyou_line_builder.build_per_page
-              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
             end
           end
         end
