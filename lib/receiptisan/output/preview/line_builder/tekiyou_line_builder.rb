@@ -28,7 +28,7 @@ module Receiptisan
           end
 
           # @return [TekiyouPage, nil]
-          def build_per_page
+          def next_page
             @buffer_per_pages.shift
           end
 
@@ -115,7 +115,7 @@ module Receiptisan
 
           # @return [void]
           def build_shoubyoumei_group(shoubyoumei_group, group_index)
-            new_current_line_with(generate_rounded_number_mark(group_index))
+            new_current_line_with(to_marutsuki_mark(group_index))
 
             shoubyoumei_group
               .shoubyoumeis
@@ -276,10 +276,6 @@ module Receiptisan
           def current_page
             new_page if @buffer_per_pages.empty?
             @buffer_per_pages.last
-          end
-
-          def generate_rounded_number_mark(index)
-            (0x2460 + index).chr('UTF-8')
           end
 
           # 摘要欄のページ
