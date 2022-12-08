@@ -30,17 +30,20 @@ module Receiptisan
             end
             # rubocop:enable Layout/HashAlignment
 
+            # @return [void]
             def clear
               @audit_payer        = nil
               @combined_type_code = nil
             end
 
+            # @return [ReceiptType]
             def build_with(combined_type_code)
               @combined_type_code = combined_type_code
 
               build
             end
 
+            # @return [ReceiptType]
             def build
               raise StandardError unless @combined_type_code
 
