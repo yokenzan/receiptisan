@@ -33,27 +33,27 @@ module Receiptisan
                 .dup.tap { | hash | hash.delete(FutanKubun::HokenOrder.iryou_hoken) }
             end
 
-            def each_pair(&block)
             # 主保険のHokenOrder
             def main_order
               @hokens_with_order.keys.first
             end
 
+            def each_pair(&)
               enum = @hokens_with_order.to_enum(:each)
 
-              block_given? ? enum.each(&block) : enum
+              block_given? ? enum.each(&) : enum
             end
 
-            def each_hoken(&block)
+            def each_hoken(&)
               enum = @hokens_with_order.values.to_enum(:each)
 
-              block_given? ? enum.each(&block) : enum
+              block_given? ? enum.each(&) : enum
             end
 
-            def each_order(&block)
+            def each_order(&)
               enum = @hokens_with_order.keys.to_enum(:each)
 
-              block_given? ? enum.each(&block) : enum
+              block_given? ? enum.each(&) : enum
             end
           end
         end
