@@ -16,7 +16,7 @@ module Receiptisan
           COMMA         = '，'
           SEPARATOR     = '―'
 
-          def initialize(max_line_length: 27, max_line_count: 36, max_line_count_next: 72)
+          def initialize(max_line_length: 27, max_line_count: 36, max_line_count_next: 71)
             @max_line_length     = max_line_length
             @max_line_count      = max_line_count
             @max_line_count_next = max_line_count_next
