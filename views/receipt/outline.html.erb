@@ -9,22 +9,27 @@
     <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
     <% @svg_of_receipts.each do | pages_of_receipt | %>
         <div class="receipt">
-            <%# 表紙 %>
-            <section class="receipt-page-top sheet">
-                <%= pages_of_receipt.first %>
-            </section>
+            <div class="side-by-side">
+                <%# 表紙 %>
+                <section class="receipt-page-top sheet">
+                    <%= pages_of_receipt.first %>
+                </section>
 
-            <%# 続紙 %>
-            <% pages_of_receipt[1..].each do | page | %>
+                <%# 続紙 %>
+                <% pages_of_receipt[1..].each_with_index do | page, index | %>
+                <% break if page.empty? %>
+                <% if index.odd? %><div class="side-by-side"><% end %>
                 <section class="receipt-page-next sheet">
                     <%= page %>
                 </section>
-            <% end %>
+                <% if index.even? %></div><% end %><%# side-by-side %>
+                <% end %>
         </div>
     <% end %>
 <style>
 .sheet {
-  page-break-after: always;
+    display: inline-block;
+    page-break-after: always;
 }
 text {
     white-space: pre;
