@@ -34,6 +34,11 @@ module Receiptisan
             end
 
             def each_pair(&block)
+            # 主保険のHokenOrder
+            def main_order
+              @hokens_with_order.keys.first
+            end
+
               enum = @hokens_with_order.to_enum(:each)
 
               block_given? ? enum.each(&block) : enum

@@ -46,16 +46,19 @@ module Receiptisan
             # @return [TensuuShuukei]
             def calculate(receipt)
               TensuuShuukei.new(
-                sections: @@section_parameter_attributes.map do | key, _ |
-                  TensuuShuukeiSection.new(
-                    section: key,
-                    hokens:  receipt.hoken_list.each_order.map do | order | # rubocop:disable Style/MapToHash
-                      [
-                        order.code,
-                        calculate_section(build_parameter(key, order), receipt),
-                      ]
-                    end.to_h
-                  )
+                sections: @@section_parameter_attributes.to_h do | key, _ |
+                  [
+                    key,
+                    TensuuShuukeiSection.new(
+                      section: key,
+                      hokens:  receipt.hoken_list.each_order.to_h do | order |
+                        [
+                          order.code,
+                          calculate_section(build_parameter(key, order), receipt),
+                        ]
+                      end
+                    ),
+                  ]
                 end
               )
             end
@@ -101,10 +104,10 @@ module Receiptisan
 
             def combine_units
               CombinedTensuuShuukeiUnit.new(
-                tensuu:       (tensuu = @shuukei_entries.map(&:tensuu).uniq.length == 1) ? tensuu : nil,
-                total_kaisuu: @shuukei_entries.map(&:total_kaisuu).sum,
-                total_tensuu: @shuukei_entries.map(&:total_tensuu).sum,
-                units:        @shuukei_entries
+                tensuu:       @shuukei_entries.map(&:tensuu).then { | ary | ary.uniq.length == 1 ? ary.first : nil },
+                total_kaisuu: @shuukei_entries.map(&:total_kaisuu).sum.then { | sum | sum.zero? ? nil : sum },
+                total_tensuu: @shuukei_entries.map(&:total_tensuu).sum.then { | sum | sum.zero? ? nil : sum },
+                units:        @shuukei_entries.sort_by(&:tensuu).reverse
               )
             end
 

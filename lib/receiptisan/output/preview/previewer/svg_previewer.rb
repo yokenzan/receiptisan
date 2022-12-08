@@ -10,11 +10,13 @@ module Receiptisan
           include Receiptisan::Util::Formatter
 
           LineBuilder              = Receiptisan::Output::Preview::LineBuilder
+          HokenOrder               = Model::ReceiptComputer::DigitalizedReceipt::Receipt::FutanKubun::HokenOrder
           TEMPLATE_OUTLINE_PATH    = __dir__ + '/../../../../../views/receipt/outline.html.erb'
           TEMPLATE_NYUUIN_TOP_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
           # @param digitalized_receipt [Parameter::Common::DigitalizedReceipt]
+          # @return [String]
           def preview(digitalized_receipt)
             @shoubyou_line_builder = LineBuilder::ShoubyouLineBuilder.new
             @tekiyou_line_builder  = LineBuilder::TekiyouLineBuilder.new
@@ -84,6 +86,16 @@ module Receiptisan
                 section.ichiren_units
               )
             end
+          end
+
+          # @return [HokenOrder]
+          def iryou_hoken_order
+            HokenOrder.iryou_hoken
+          end
+
+          # @return [HokenOrder]
+          def kouhi_1st_order
+            HokenOrder.kouhi_futan_iryou(0)
           end
         end
       end
