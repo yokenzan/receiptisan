@@ -73,8 +73,6 @@ module Receiptisan
               end
           end
 
-          attr_writer :max_line_length, :max_line_count, :delimitor
-
           ShoubyouLine = Struct.new(:name, :start_date, :tenki, keyword_init: true)
           Result       = Struct.new(:target, :lines, :has_more, :rest, keyword_init: true)
         end

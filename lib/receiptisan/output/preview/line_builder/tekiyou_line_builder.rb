@@ -269,7 +269,6 @@ module Receiptisan
           # @return [void]
           def new_page
             @buffer_per_pages << TekiyouPage.new
-            @current_line_count = 0
           end
 
           # @return [TekiyouPage]
