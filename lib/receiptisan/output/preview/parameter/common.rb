@@ -139,6 +139,7 @@ module Receiptisan
             :tekiyou,
             :ryouyou_no_kyuufu,
             :tensuu_shuukei,
+            :nyuuin_date,
             keyword_init: true
           )
           Patient = Struct.new(:id, :name, :name_kana, :sex, :birth_date, keyword_init: true) do
@@ -465,7 +466,8 @@ module Receiptisan
                 shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
                 tekiyou:           convert_tekiyou(receipt),
                 ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
-                tensuu_shuukei:    convert_tensuu_shuukei(receipt)
+                tensuu_shuukei:    convert_tensuu_shuukei(receipt),
+                nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil
               )
             end
 

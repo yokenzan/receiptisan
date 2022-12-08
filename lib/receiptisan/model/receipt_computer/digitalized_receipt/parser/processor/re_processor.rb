@@ -54,6 +54,7 @@ module Receiptisan
                   id:          values[RE::C_レセプト番号].to_i,
                   shinryou_ym: DateUtil.parse_year_month(values[RE::C_診療年月]),
                   type:        @receipt_type_builder.build_with(values[RE::C_レセプト種別]),
+                  nyuuin_date: Date.parse(values[RE::C_入院年月日]),
                   patient:     Patient.new(
                     id:         values[RE::C_カルテ番号等],
                     name:       values[RE::C_氏名],

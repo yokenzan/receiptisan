@@ -29,7 +29,7 @@ module Receiptisan
           # @param patient [Patient]
           # @param type [Type]
           # @param hospital [Hospital]
-          def initialize(id:, shinryou_ym:, patient:, type:)
+          def initialize(id:, shinryou_ym:, patient:, type:, nyuuin_date:)
             @id                 = id
             @shinryou_ym        = shinryou_ym
             @patient            = patient
@@ -41,6 +41,7 @@ module Receiptisan
             @hoken_list         = AppliedHokenList.new
             @shoubyoumeis       = []
             @shoujou_shoukis    = []
+            @nyuuin_date        = nyuuin_date
           end
 
           # @param tokki_jikou [TokkiJikou]
@@ -98,6 +99,9 @@ module Receiptisan
           # @!attribute [r] shoubyoumeis
           #   @return [Array<Shoubyoumei>]
           attr_reader :shoubyoumeis
+          # @!attribute [r] nyuuin_date
+          #   @return [Date, nil]
+          attr_reader :nyuuin_date
           # @!attribute [r] shoujou_shoukis
           #   @return [Array<ShoujouShouki>]
           attr_reader :shoujou_shoukis
