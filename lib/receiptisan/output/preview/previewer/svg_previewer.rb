@@ -51,6 +51,9 @@ module Receiptisan
             while @tekiyou_line_builder.page_length.positive?
               tekiyou_page_left  = @tekiyou_line_builder.next_page
               tekiyou_page_right = @tekiyou_line_builder.next_page
+              # 空のページがつくられていることがあるので、空か判定している
+              break if tekiyou_page_left.empty?
+
               @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
             end
           end
