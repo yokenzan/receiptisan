@@ -72,7 +72,7 @@ module Receiptisan
             end
 
           master[code.value] ||
-            raise(StandardError, "#{code.name} #{code.value} is not found")
+            raise(MasterItemNotFoundError, "#{code.name} #{code.value} is not found")
         end
 
         # @!attribute [r] shinryou_koui
@@ -88,6 +88,9 @@ module Receiptisan
         # @!attribute [r] shuushokugo
         #   @return [Hash<String, Diagnosis::Shuushokugo>]
         attr_reader :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
+
+        class MasterItemNotFoundError < StandardError
+        end
 
         # 単位コード
         class Unit

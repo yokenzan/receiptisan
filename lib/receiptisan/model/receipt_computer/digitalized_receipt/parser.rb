@@ -30,9 +30,9 @@ module Receiptisan
               'KO' => Processor::KOProcessor.new,
               'SY' => sy_processor,
               'SJ' => Processor::SJProcessor.new,
-              'SI' => Processor::SIProcessor.new(@handler),
-              'IY' => Processor::IYProcessor.new(@handler),
-              'TO' => Processor::TOProcessor.new(@handler),
+              'SI' => Processor::SIProcessor.new(logger, @handler),
+              'IY' => Processor::IYProcessor.new(logger, @handler),
+              'TO' => Processor::TOProcessor.new(logger, @handler),
             }
             @comment_content_builder = Parser::CommentContentBuilder.new(@handler, sy_processor)
           end
@@ -61,7 +61,8 @@ module Receiptisan
           # @return [void]
           # rubocop:disable Metrics/CyclomaticComplexity
           def parse_line(values, line_index)
-            @current_processor = @processors[record_type = values.first]
+            @current_line_index = line_index
+            @current_processor  = @processors[record_type = values.first]
 
             case record_type
             when 'IR' then process_ir(values)
@@ -83,13 +84,7 @@ module Receiptisan
               record_type
             end
           rescue StandardError => e
-            # ブロックをつかっていないのはスタックトレースも表示するため
-            @logger.error 'Exception occurred while parsing %s:%d:%s' % [
-              buffer.uke_file_path,
-              line_index + 1,
-              values.join(','),
-            ]
-            @logger.error e
+            report_error(e, values)
           end
           # rubocop:enable Metrics/CyclomaticComplexity
 
@@ -148,12 +143,28 @@ module Receiptisan
           end
 
           def process_co(values)
-            master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(values[Record::CO::C_レセ電コード]))
-            comment        = Comment.new(
+            master_comment = handler.find_by_code(
+              code = Master::Treatment::Comment::Code.of(values[Record::CO::C_レセ電コード])
+            )
+            shinryou_shikibetsu = Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別])
+            futan_kubun = Receipt::FutanKubun.find_by_code(values[Record::CO::C_負担区分])
+
+            comment = Comment.new(
               master_item:         master_comment,
               appended_content:    @comment_content_builder.build(master_comment.pattern, values[Record::CO::C_文字データ]),
-              shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[Record::CO::C_診療識別]),
-              futan_kubun:         Receipt::FutanKubun.find_by_code(values[Record::CO::C_負担区分])
+              shinryou_shikibetsu: shinryou_shikibetsu,
+              futan_kubun:         futan_kubun
+            )
+
+            buffer.add_tekiyou(comment)
+          rescue Master::MasterItemNotFoundError => e
+            report_error(e, values)
+
+            comment = Comment.dummy(
+              code:                code,
+              appended_content:    @comment_content_builder.build(_pattern = nil, values[Record::CO::C_文字データ]),
+              shinryou_shikibetsu: shinryou_shikibetsu,
+              futan_kubun:         futan_kubun
             )
 
             buffer.add_tekiyou(comment)
@@ -178,13 +189,24 @@ module Receiptisan
             values[comment_range].each_slice(2) do | code, appended_value |
               next if code.nil?
 
-              master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
-              comment        = Comment.new(
-                master_item:         master_comment,
-                appended_content:    @comment_content_builder.build(master_comment.pattern, appended_value),
-                shinryou_shikibetsu: cost.shinryou_shikibetsu,
-                futan_kubun:         cost.futan_kubun
-              )
+              begin
+                master_comment = handler.find_by_code(Master::Treatment::Comment::Code.of(code))
+                comment        = Comment.new(
+                  master_item:         master_comment,
+                  appended_content:    @comment_content_builder.build(master_comment.pattern, appended_value),
+                  shinryou_shikibetsu: cost.shinryou_shikibetsu,
+                  futan_kubun:         cost.futan_kubun
+                )
+              rescue Master::MasterItemNotFoundError => e
+                report_error(e, values)
+
+                comment = Comment.dummy(
+                  code:                code,
+                  appended_content:    @comment_content_builder.build(_pattern = nil, appended_value),
+                  shinryou_shikibetsu: cost.shinryou_shikibetsu,
+                  futan_kubun:         cost.futan_kubun
+                )
+              end
 
               cost.add_comment(comment)
             end
@@ -195,11 +217,21 @@ module Receiptisan
           # @return [void]
           def ignore; end
 
+          def report_error(e, values)
+            # ブロックをつかっていないのはスタックトレースも表示するため
+            logger.error 'Exception occurred while parsing %s:%d:%s' % [
+              buffer.uke_file_path,
+              @current_line_index + 1,
+              values.join(','),
+            ]
+            logger.error e
+          end
+
           # @!attribute [r] buffer
           #   @return [Buffer]
           # @!attribute [r] handler
           #   @return [MasterHandler]
-          attr_reader :buffer, :handler, :current_processor
+          attr_reader :buffer, :handler, :current_processor, :logger
         end
       end
     end

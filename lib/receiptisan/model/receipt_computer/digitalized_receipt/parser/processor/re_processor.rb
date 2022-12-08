@@ -49,12 +49,13 @@ module Receiptisan
 
                 @kyuufu_wariai    = values[RE::C_給付割合]&.to_i
                 @teishotoku_kubun = values[RE::C_一部負担金・食事療養費・生活療養費標準負担額区分]&.to_i
+                type              = @receipt_type_builder.build_with(values[RE::C_レセプト種別])
 
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,
                   shinryou_ym: DateUtil.parse_year_month(values[RE::C_診療年月]),
-                  type:        @receipt_type_builder.build_with(values[RE::C_レセプト種別]),
-                  nyuuin_date: Date.parse(values[RE::C_入院年月日]),
+                  type:        type,
+                  nyuuin_date: type.nyuuin? ? Date.parse(values[RE::C_入院年月日]) : nil,
                   patient:     Patient.new(
                     id:         values[RE::C_カルテ番号等],
                     name:       values[RE::C_氏名],

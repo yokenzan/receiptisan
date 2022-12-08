@@ -57,7 +57,7 @@ module Receiptisan
 
             # @param pattern [Master::Treatment::Comment::Pattern]
             def build(pattern, appended_value)
-              @@patterns[pattern.code].call(appended_value, @handler, @sy_processor)
+              @@patterns[pattern&.code || :'10'].call(appended_value, @handler, @sy_processor)
             end
           end
         end

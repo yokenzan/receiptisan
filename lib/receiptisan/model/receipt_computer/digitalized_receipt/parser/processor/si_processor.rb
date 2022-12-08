@@ -12,8 +12,9 @@ module Receiptisan
               MasterShinryouKoui = Master::Treatment::ShinryouKoui
 
               # @param handler [MasterHandler]
-              def initialize(handler)
+              def initialize(logger, handler)
                 @handler = handler
+                @logger  = logger
               end
 
               # @param values [Array<String, nil>] SI行
@@ -22,16 +23,18 @@ module Receiptisan
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 
                 ShinryouKoui.new(
-                  master_item: handler.find_by_code(
-                    MasterShinryouKoui::Code.of(values[SI::C_レセ電コード])
-                  ),
-                  shiyouryou:  values[SI::C_数量データ]&.to_i
+                  master_item: handler.find_by_code(code = MasterShinryouKoui::Code.of(values[SI::C_レセ電コード])),
+                  shiyouryou:  shiyouryou = values[SI::C_数量データ]&.to_i
                 )
+              rescue Master::MasterItemNotFoundError => e
+                logger.error e
+
+                ShinryouKoui.dummy(code: code, shiyouryou: shiyouryou)
               end
 
               private
 
-              attr_reader :handler
+              attr_reader :handler, :logger
             end
           end
         end

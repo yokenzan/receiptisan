@@ -11,6 +11,7 @@ module Receiptisan
             # コメント
             class Comment
               extend Forwardable
+              Formatter = Receiptisan::Util::Formatter
 
               # @param item [Master::Treatment::Comment]
               # @param appended_content [Object, nil] コメント文
@@ -61,6 +62,34 @@ module Receiptisan
               def_delegators :master_item, :code, :name, :pattern
 
               def_delegators :futan_kubun, :uses?
+
+              class << self
+                # @return [self]
+                def dummy(code:, appended_content:, shinryou_shikibetsu:, futan_kubun:)
+                  new(
+                    master_item:         DummyMasterComment.new(code),
+                    appended_content:    appended_content,
+                    shinryou_shikibetsu: shinryou_shikibetsu,
+                    futan_kubun:         futan_kubun
+                  )
+                end
+              end
+
+              # マスタに医薬品コードが見つからなかった医薬品
+              DummyMasterComment = Struct.new(:code) do
+                # @return [String]
+                def name
+                  Formatter.to_zenkaku '【不明なコメント：%s】' % code.value
+                end
+
+                def format(appended_content)
+                  [name, appended_content].join('；').squeeze('；')
+                end
+
+                def pattern
+                  nil
+                end
+              end
             end
           end
         end
