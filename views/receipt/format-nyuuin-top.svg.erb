@@ -39,35 +39,35 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <!-- 綴紐を通す穴を明ける目印のマル -->
         <path fill-rule="evenodd" d="M56.2,54.1c0,10.2,-14.6,10.2,-14.6,0c0,-10.2,14.6,-10.2,14.6,0" class="g5"/>
         <text x="49.8"  y="90.9" class="s2 weight-bold">診療報酬明細書</text>
-        <text x="164.5" y="89.8" class="s3 weight-bold" style="fill: #f00;">（医科<%= receipt.nyuugai == :nyuuin ? '入院' : '入院外' %>）</text>
-        <text x="870"   y="70"   class="s3" text-anchor="end" style="fill: #f00;"><%= receipt.id %></text>
+        <text x="164.5" y="89.8" class="s3 weight-bold" style="fill: #00f;">（医科<%= receipt.nyuugai == :nyuuin ? '入院' : '入院外' %>）</text>
+        <text x="870"   y="70"   class="s3" text-anchor="end" style="fill: #00f;"><%= receipt.id %></text>
 
         <!-- 患者番号 -->
-        <text x="69.3" y="62.8" class="s8" style="fill: #f00;"><%= receipt.patient.id %></text>
+        <text x="69.3" y="62.8" class="s8" style="fill: #00f;"><%= receipt.patient.id %></text>
 
-        <text x="246.7" y="90.9" class="s2" style="fill: #f00;"><%= to_zenkaku receipt.audit_payer.code %><%= receipt.audit_payer.short_name %></text>
+        <text x="246.7" y="90.9" class="s2" style="fill: #00f;"><%= to_zenkaku receipt.audit_payer.code %><%= receipt.audit_payer.short_name %></text>
         <%
           # 診療年月
           shinryou_nengetsu = receipt.shinryou_ym.wareki
         %>
-        <text x="296.6" y="89.7" class="s3 weight-bold" style="fill: #f00;"><%= shinryou_nengetsu.gengou.name %></text>
-        <text x="346"   y="90.9" class="s9" text-anchor="end" style="fill: #f00;"><%= to_zenkaku shinryou_nengetsu.year %></text>
+        <text x="296.6" y="89.7" class="s3 weight-bold" style="fill: #00f;"><%= shinryou_nengetsu.gengou.name %></text>
+        <text x="346"   y="90.9" class="s9" text-anchor="end" style="fill: #00f;"><%= to_zenkaku shinryou_nengetsu.year %></text>
         <text x="352.8" y="89.8" class="s3 weight-bold">年</text>
-        <text x="395"   y="90.9" class="s9" dx="0,-5" text-anchor="end" style="fill: #f00;"><%= to_zenkaku shinryou_nengetsu.month %></text>
+        <text x="395"   y="90.9" class="s9" dx="0,-5" text-anchor="end" style="fill: #00f;"><%= to_zenkaku shinryou_nengetsu.month %></text>
         <text x="393.9" y="89.8" class="s3 weight-bold">月分</text>
         <text x="428.5" y="89.8" class="s3 weight-bold">県番</text>
-        <text x="485"   y="90.9" class="s9" dx="0,-5" text-anchor="end" style="fill: #f00;"><%= to_zenkaku receipt.prefecture.code %></text>
+        <text x="485"   y="90.9" class="s9" dx="0,-5" text-anchor="end" style="fill: #00f;"><%= to_zenkaku receipt.prefecture.code %></text>
         <text x="489.1" y="89.8" class="s3 weight-bold">医コ</text>
-        <text x="515.1" y="89.8" class="sa" style="fill: #f00;"><%= to_zenkaku receipt.hospital.code %></text>
+        <text x="515.1" y="89.8" class="sa" style="fill: #00f;"><%= to_zenkaku receipt.hospital.code %></text>
 
-        <text x="680" y="97.4" class="s3" style="fill: #f00;"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
-        <text x="724" y="97.4" class="s3" style="fill: #f00;"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
-        <text x="765" y="97.4" class="s3" style="fill: #f00;"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
-        <text x="810" y="97.4" class="s3" style="fill: #f00;"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
+        <text x="680" y="97.4" class="s3" style="fill: #00f;"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
+        <text x="724" y="97.4" class="s3" style="fill: #00f;"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
+        <text x="765" y="97.4" class="s3" style="fill: #00f;"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
+        <text x="810" y="97.4" class="s3" style="fill: #00f;"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
 
         <text x="377.7" y="229.8" class="s3">特記事項</text>
         <% receipt.tokki_jikous.each_with_index do | tokki_jikou, index | %>
-          <text x="360" y="<%= 246 + index * 16 %>" class="s3" style="fill: #f00;"><%= to_zenkaku tokki_jikou.code %><%= tokki_jikou.name %></text>
+          <text x="360" y="<%= 246 + index * 16 %>" class="s3" style="fill: #00f;"><%= to_zenkaku tokki_jikou.code %><%= tokki_jikou.name %></text>
         <% end %>
 
         <!-- 病床区分 -->
@@ -84,15 +84,15 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="506.5" y="159.6" class="s3">記号・番号</text>
         <text x="828.9" y="160.2" class="s1">（枝番）</text>
         <% if iryou_hoken %>
-        <text x="770" y="132" text-anchor="end" class="sc" style="fill: #f00;"><%= to_zenkaku iryou_hoken.hokenja_bangou %></text>
-        <text x="623.8" y="160.4" class="sa" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kigou %></text>
-        <text x="623.8" y="179.2" class="sa" style="fill: #f00;"><%= to_zenkaku iryou_hoken.bangou %></text>
-        <text x="840" y="179.2" class="s1" style="fill: #f00;"><%= to_zenkaku iryou_hoken.edaban %></text>
+        <text x="770" y="132" text-anchor="end" class="sc" style="fill: #00f;"><%= to_zenkaku iryou_hoken.hokenja_bangou %></text>
+        <text x="623.8" y="160.4" class="sa" style="fill: #00f;"><%= to_zenkaku iryou_hoken.kigou %></text>
+        <text x="623.8" y="179.2" class="sa" style="fill: #00f;"><%= to_zenkaku iryou_hoken.bangou %></text>
+        <text x="840" y="179.2" class="s1" style="fill: #00f;"><%= to_zenkaku iryou_hoken.edaban %></text>
         <text x="39" y="311.7" class="s3">職務上の事由</text>
         <% end %>
         <% if iryou_hoken&.kyuufu_wariai %>
         <text x="771.6" y="130" class="sa">給付割合</text>
-        <text x="849.5" y="130" class="sb" style="fill: #f00;"><%= to_zenkaku iryou_hoken.kyuufu_wariai / 10 %></text>
+        <text x="849.5" y="130" class="sb" style="fill: #00f;"><%= to_zenkaku iryou_hoken.kyuufu_wariai / 10 %></text>
         <% end %>
     </g>
 
@@ -104,14 +104,14 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="36.8" y="160.2" class="s3">公負①</text>
         <text x="253.2" y="160.2" class="s3">公受①</text>
         <% if kouhi_1st = kouhi_futan_iryous[0] %>
-        <text x="78" y="162.3" class="sb" style="fill: #f00;"><%= to_zenkaku kouhi_1st.futansha_bangou %></text>
-        <text x="295" y="162.3" class="sb" style="fill: #f00;"><%= to_zenkaku kouhi_1st.jukyuusha_bangou %></text>
+        <text x="78" y="162.3" class="sb" style="fill: #00f;"><%= to_zenkaku kouhi_1st.futansha_bangou %></text>
+        <text x="295" y="162.3" class="sb" style="fill: #00f;"><%= to_zenkaku kouhi_1st.jukyuusha_bangou %></text>
         <% end %>
         <text x="36.8" y="194.8" class="s3">公負②</text>
         <text x="253.2" y="194.8" class="s3">公受②</text>
         <% if kouhi_2nd = kouhi_futan_iryous[1] %>
-        <text x="78" y="197" class="sb" style="fill: #f00;"><%= to_zenkaku kouhi_2nd.futansha_bangou %></text>
-        <text x="295" y="197" class="sb" style="fill: #f00;"><%= to_zenkaku kouhi_2nd.jukyuusha_bangou %></text>
+        <text x="78" y="197" class="sb" style="fill: #00f;"><%= to_zenkaku kouhi_2nd.futansha_bangou %></text>
+        <text x="295" y="197" class="sb" style="fill: #00f;"><%= to_zenkaku kouhi_2nd.jukyuusha_bangou %></text>
         <% end %>
     </g>
 
@@ -122,15 +122,15 @@ style="display: block;margin-left: auto;margin-right: auto;">
     <g clip-path="url(#c0)">
         <text x="41.1" y="256.5" class="s3">氏 </text>
         <text x="41.1" y="282.5" class="s3">名 </text>
-        <text x="75.8" y="263" class="<% if patient.name.length > 16 %>sh<% else %>s2<% end %>" style="fill: #f00;"><%= patient.name %></text>
+        <text x="75.8" y="263" class="<% if patient.name.length > 16 %>sh<% else %>s2<% end %>" style="fill: #00f;"><%= patient.name %></text>
         <g transform="translate(77.9,246.7),scale(<%= '%3.1f' % [28.0 / [patient.name_kana.length, 28].max] %>,1),translate(-77.9,-246.7)">
-        <text x="77.9" y="246.7" class="s4" style="fill: #f00;"><%= patient.name_kana %></text>
+        <text x="77.9" y="246.7" class="s4" style="fill: #00f;"><%= patient.name_kana %></text>
         </g>
         <text x="142.8" y="246.7" class="s3"></text>
-        <text x="92" y="294.4" class="s2" style="fill: #f00;"><%= to_zenkaku patient.sex.code %></text>
-        <text x="114" y="294.4" class="s2" style="fill: #f00;"><%= patient.sex.short_name %></text>
+        <text x="92" y="294.4" class="s2" style="fill: #00f;"><%= to_zenkaku patient.sex.code %></text>
+        <text x="114" y="294.4" class="s2" style="fill: #00f;"><%= patient.sex.short_name %></text>
         <% wareki_birth_date = patient.birth_date.wareki %>
-        <text x="139.6" y="294.4" class="s2" style="fill: #f00;"><%= to_zenkaku wareki_birth_date.gengou.code %><%= wareki_birth_date.gengou.short_name %><%= to_zenkaku wareki_birth_date.year.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.month.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.day.to_s.rjust(2) %></text>
+        <text x="139.6" y="294.4" class="s2" style="fill: #00f;"><%= to_zenkaku wareki_birth_date.gengou.code %><%= wareki_birth_date.gengou.short_name %><%= to_zenkaku wareki_birth_date.year.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.month.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.day.to_s.rjust(2) %></text>
         <text x="330.1" y="294.4" class="s3">生</text>
     </g>
 
@@ -142,9 +142,9 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="458.8" y="268.4" class="s3">の所在</text>
         <text x="458.8" y="281.4" class="s3">地及び</text>
         <text x="458.8" y="294.4" class="s3">名　称</text>
-        <text x="504.3" y="298.7" class="sd" style="fill: #f00;"><%= hospital.tel %></text>
-        <text x="502.1" y="270.5" class="se" style="fill: #f00;"><%= hospital.name %></text>
-        <text x="502.1" y="240.2" class="sf" style="fill: #f00;"><%= hospital.address %></text>
+        <text x="504.3" y="298.7" class="sd" style="fill: #00f;"><%= hospital.tel %></text>
+        <text x="502.1" y="270.5" class="se" style="fill: #00f;"><%= hospital.name %></text>
+        <text x="502.1" y="240.2" class="sf" style="fill: #00f;"><%= hospital.address %></text>
 
         <text x="506.5" y="311.7" class="s3">診療科 </text>
         <!-- <text x="549.7" y="311.7" class="s3">（０１内科） </text> -->
@@ -180,15 +180,15 @@ style="display: block;margin-left: auto;margin-right: auto;">
         %>
         <% shoubyou_lines.each_with_index do | shoubyou_line, line_index | %>
             <!-- 病名 -->
-            <text x="62.8" y="<%= shoubyou_line_y.call(line_index) %>" class="s3" style="fill: #f00;"><%= to_zenkaku shoubyou_line.name %></text>
+            <text x="62.8" y="<%= shoubyou_line_y.call(line_index) %>" class="s3" style="fill: #00f;"><%= to_zenkaku shoubyou_line.name %></text>
             <!-- 診療開始日 -->
-            <text x="500" y="<%= shoubyou_line_y.call(line_index) %>" letter-spacing="-2" class="s3" style="fill: #f00;"><%= to_zenkaku shoubyou_line.start_date %></text>
+            <text x="500" y="<%= shoubyou_line_y.call(line_index) %>" letter-spacing="-2" class="s3" style="fill: #00f;"><%= to_zenkaku shoubyou_line.start_date %></text>
             <!-- 転帰 -->
-            <text x="661" y="<%= shoubyou_line_y.call(line_index) %>" class="s3" style="fill: #f00;"><%= to_zenkaku shoubyou_line.tenki %></text>
+            <text x="661" y="<%= shoubyou_line_y.call(line_index) %>" class="s3" style="fill: #00f;"><%= to_zenkaku shoubyou_line.tenki %></text>
         <% end %>
 
         <% if shoubyou_result.has_more %>
-            <text x="400" y="<%= shoubyou_line_y.call(4) %>" class="s3" style="fill: #f00;">以下、摘要欄</text>
+            <text x="400" y="<%= shoubyou_line_y.call(4) %>" class="s3" style="fill: #00f;">以下、摘要欄</text>
         <% end %>
     </g>
 
