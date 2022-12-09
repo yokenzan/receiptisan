@@ -11,7 +11,7 @@ module Receiptisan
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
-        class Parser
+        class Parser # rubocop:disable Style/ClassLength
           ReceiptType   = DigitalizedReceipt::Receipt::Type
           Comment       = Receipt::Tekiyou::Comment
           FILE_ENCODING = 'Shift_JIS'
@@ -78,10 +78,8 @@ module Receiptisan
             when 'IY' then process_iy(values)
             when 'TO' then process_to(values)
             when 'CO' then process_co(values)
-            when 'GO', 'JD', 'MF', nil
+            else # when 'GO', 'JD', 'MF', nil
               ignore
-            else
-              record_type
             end
           rescue StandardError => e
             report_error(e, values)
@@ -160,9 +158,9 @@ module Receiptisan
           rescue Master::MasterItemNotFoundError => e
             report_error(e, values)
 
-            comment = Comment.dummy(
+            comment = dummy_comment(
               code:                code,
-              appended_content:    @comment_content_builder.build(_pattern = nil, values[Record::CO::C_文字データ]),
+              appended_value:      values[Record::CO::C_文字データ],
               shinryou_shikibetsu: shinryou_shikibetsu,
               futan_kubun:         futan_kubun
             )
@@ -200,9 +198,9 @@ module Receiptisan
               rescue Master::MasterItemNotFoundError => e
                 report_error(e, values)
 
-                comment = Comment.dummy(
+                comment = dummy_comment(
                   code:                code,
-                  appended_content:    @comment_content_builder.build(_pattern = nil, appended_value),
+                  appended_value:      appended_value,
                   shinryou_shikibetsu: cost.shinryou_shikibetsu,
                   futan_kubun:         cost.futan_kubun
                 )
@@ -212,6 +210,15 @@ module Receiptisan
             end
 
             buffer.add_tekiyou(cost)
+          end
+
+          def dummy_comment(code:, appended_value:, shinryou_shikibetsu:, futan_kubun:)
+            Comment.dummy(
+              code:                code,
+              appended_content:    @comment_content_builder.build(_pattern = nil, appended_value),
+              shinryou_shikibetsu: shinryou_shikibetsu,
+              futan_kubun:         futan_kubun
+            )
           end
 
           # @return [void]
@@ -224,6 +231,7 @@ module Receiptisan
               @current_line_index + 1,
               values.join(','),
             ]
+            logger.error 'RECEIPT ID:%d' % buffer.current_receipt.id if buffer.current_receipt
             logger.error e
           end
 

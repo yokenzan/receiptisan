@@ -30,15 +30,15 @@ module Receiptisan
                   unit_price:   unit_price   = values[TO::C_単価]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
-               logger.error e
+                logger.error e
 
-               TokuteiKizai.dummy(
-                 code:         code,
-                 shiyouryou:   shiyouryou,
-                 product_name: product_name,
-                 unit:         unit,
-                 unit_price:   unit_price
-               )
+                TokuteiKizai.dummy(
+                  code:         code,
+                  shiyouryou:   shiyouryou,
+                  product_name: product_name,
+                  unit:         unit,
+                  unit_price:   unit_price
+                )
               end
 
               private

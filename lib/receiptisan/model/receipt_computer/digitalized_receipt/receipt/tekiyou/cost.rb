@@ -60,10 +60,10 @@ module Receiptisan
                 resource.type
               end
 
-              def each_comment(&block)
+              def each_comment(&)
                 enum = @comments.enum_for(:each)
 
-                block_given? ? enum.each(&block) : enum
+                block_given? ? enum.each(&) : enum
               end
 
               # @!attribute [r] resource
