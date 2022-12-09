@@ -6,175 +6,180 @@
     <title>レセプト | <%= digitalized_receipt.audit_payer.short_name %><%= seikyuu_ym.gengou.alphabet %><%= seikyuu_ym.year %>.<%= seikyuu_ym.month %> | <%= digitalized_receipt.hospital.name %></title>
 </head>
 <body>
-    <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
-    <% @svg_of_receipts.each do | pages_of_receipt | %>
-        <div class="receipt">
-            <div class="side-by-side">
-                <%# 表紙 %>
-                <section class="receipt-page-top sheet">
-                    <%= pages_of_receipt.first %>
-                </section>
+    <div id="digitalized-receipt">
+        <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
+        <% @svg_of_receipts.each do | pages_of_receipt | %>
+            <div class="receipt">
+                <div class="side-by-side">
+                    <%# 表紙 %>
+                    <div class="receipt-page-top sheet">
+                        <%= pages_of_receipt.first %>
+                    </div>
 
-                <%# 続紙 %>
-                <% pages_of_receipt[1..].each_with_index do | page, index | %>
-                <% break if page.empty? %>
-                <% if index.odd? %><div class="side-by-side"><% end %>
-                <section class="receipt-page-next sheet">
-                    <%= page %>
-                </section>
-                <% if index.even? %></div><% end %><%# side-by-side %>
-                <% end %>
-        </div>
-    <% end %>
-<style>
-.sheet {
-    display: inline-block;
-    page-break-after: always;
-}
-text {
-    white-space: pre;
-}
-path, image { pointer-events: none; }
+                    <% if pages_of_receipt.length == 1 %>
+                        </div><%# side-by-side %>
+                    <% else %>
+                        <%# 続紙 %>
+                        <% pages_of_receipt[1..].reject(&:empty?).each_with_index do | page, index | %>
+                            <% if index.odd? %><div class="side-by-side"><% end %>
+                            <div class="receipt-page-next sheet">
+                                <%= page %>
+                            </div>
+                        <% if index.even? %></div><% end %><%# side-by-side %>
+                        <% end %>
+                    <% end %>
+            </div><%# receipt %>
+        <% end %>
+    </div><%# digitalized-receipt %>
+    <style>
+    .sheet {
+        display: inline-block;
+        page-break-after: always;
+    }
+    text {
+        white-space: pre;
+    }
+    path, image { pointer-events: none; }
 
-.weight-bold {
-    font-weight: bold;
-}
+    .weight-bold {
+        font-weight: bold;
+    }
 
-.s1{
-font-size: 12.17px;
-font-family: Mincho;
-fill: #000;
-}
-.s2{
-font-size: 17.29px;
-font-family: Mincho;
-fill: #000;
-}
-.s3{
-font-size: 12.98px;
-font-family: Mincho;
-fill: #000;
-}
-.s4{
-font-size: 9.93px;
-font-family: Mincho;
-fill: #000;
-}
-.s5{
-font-size: 10.99px;
-font-family: Mincho;
-fill: #000;
-}
-.s6{
-font-size: 10.82px;
-font-family: Mincho;
-fill: #000;
-}
-.s7{
-font-size: 12.98px;
-font-family: Mincho;
-fill: #000;
-}
-.s8{
-font-size: 19.44px;
-font-family: Mincho;
-fill: #000;
-}
-.s9{
-font-size: 17.29px;
-font-family: Mincho;
-fill: #000;
-text-transform: full-width;
-}
-.sa{
-font-size: 15.13px;
-font-family: Mincho;
-fill: #000;
-}
-.sb{
-font-size: 21.64px;
-font-family: Mincho;
-fill: #000;
-}
-.sc{
-font-size: 25.96px;
-font-family: Mincho;
-fill: #000;
-}
-.sd{
-font-size: 15.13px;
-font-family: Mincho;
-fill: #000;
-}
-.se{
-font-size: 16.44px;
-font-family: Mincho;
-fill: #000;
-}
-.sf{
-font-size: 14.71px;
-font-family: Mincho;
-fill: #000;
-}
-.sg{
-font-size: 11.58px;
-font-family: Mincho;
-fill: #000;
-}
-.sh{
-font-size: 14.25px;
-font-family: Mincho;
-fill: #000;
-}
-.si{
-font-size: 14.25px;
-font-family: Mincho;
-fill: #000;
-}
-
-.g0{
-fill: #FFF;
-}
-/* 最もよく使われている実線 */
-.g1{
-fill: none;
-stroke: #000;
-stroke-width: 0.274;
-stroke-miterlimit: 10;
-}
-/* 摘要欄で診療識別と項目名の仕切りに使われている破線 */
-.g2{
-fill: none;
-stroke: #000;
-stroke-width: 0.274;
-stroke-miterlimit: 10;
-stroke-dasharray: 2,2;
-}
-.g3{
-fill: none;
-stroke: #000;
-stroke-width: 1.731;
-stroke-miterlimit: 10;
-}
-.g4{
-fill: none;
-stroke: #000;
-stroke-width: 2.597;
-stroke-miterlimit: 10;
-}
-.g5{
-fill: #FFF;
-stroke: #000;
-stroke-width: 0.274;
-stroke-miterlimit: 10;
-}
-
-
-@font-face {
+    .s1{
+    font-size: 12.17px;
     font-family: Mincho;
-    src: local("BIZ UD明朝 Medium");
-}
+    fill: #000;
+    }
+    .s2{
+    font-size: 17.29px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s3{
+    font-size: 12.98px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s4{
+    font-size: 9.93px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s5{
+    font-size: 10.99px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s6{
+    font-size: 10.82px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s7{
+    font-size: 12.98px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s8{
+    font-size: 19.44px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .s9{
+    font-size: 17.29px;
+    font-family: Mincho;
+    fill: #000;
+    text-transform: full-width;
+    }
+    .sa{
+    font-size: 15.13px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sb{
+    font-size: 21.64px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sc{
+    font-size: 25.96px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sd{
+    font-size: 15.13px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .se{
+    font-size: 16.44px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sf{
+    font-size: 14.71px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sg{
+    font-size: 11.58px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .sh{
+    font-size: 14.25px;
+    font-family: Mincho;
+    fill: #000;
+    }
+    .si{
+    font-size: 14.25px;
+    font-family: Mincho;
+    fill: #000;
+    }
 
-</style>
+    .g0{
+    fill: #FFF;
+    }
+    /* 最もよく使われている実線 */
+    .g1{
+    fill: none;
+    stroke: #000;
+    stroke-width: 0.274;
+    stroke-miterlimit: 10;
+    }
+    /* 摘要欄で診療識別と項目名の仕切りに使われている破線 */
+    .g2{
+    fill: none;
+    stroke: #000;
+    stroke-width: 0.274;
+    stroke-miterlimit: 10;
+    stroke-dasharray: 2,2;
+    }
+    .g3{
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.731;
+    stroke-miterlimit: 10;
+    }
+    .g4{
+    fill: none;
+    stroke: #000;
+    stroke-width: 2.597;
+    stroke-miterlimit: 10;
+    }
+    .g5{
+    fill: #FFF;
+    stroke: #000;
+    stroke-width: 0.274;
+    stroke-miterlimit: 10;
+    }
+
+
+    @font-face {
+        font-family: Mincho;
+        src: local("BIZ UD明朝 Medium");
+    }
+
+    </style>
 </body>
 </html>
