@@ -103,6 +103,7 @@ Style/AccessorGrouping:
 
 Naming/MethodParameterName:
   AllowedNames:
+    - e
     - fg
     - bg
     - id

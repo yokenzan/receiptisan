@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
 require 'logger'
 require 'dry/cli'
 
@@ -73,7 +72,7 @@ module Receiptisan
         def parse(uke)
           parser = DigitalizedReceipt::Parser.new(
             DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
-            Logger.new(StringIO.new)
+            Logger.new($stderr)
           )
           parser.parse(uke)
         end
