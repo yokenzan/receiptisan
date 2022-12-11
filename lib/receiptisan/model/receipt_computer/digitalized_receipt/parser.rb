@@ -70,7 +70,7 @@ module Receiptisan
           # @return [void]
           # rubocop:disable Metrics/CyclomaticComplexity
           def parse_line(values)
-            @current_processor  = @processors[record_type = values.first]
+            @current_processor = @processors[record_type = values.first]
 
             case record_type
             when 'IR' then process_ir(values)
@@ -103,7 +103,9 @@ module Receiptisan
           # @param values [Array<String, nil>]
           # @return [void]
           def process_re(values)
-            buffer.new_receipt(receipt = current_processor.process(values, buffer.current_audit_payer, context: context))
+            buffer.new_receipt(
+              receipt = current_processor.process(values, buffer.current_audit_payer, context: context)
+            )
             buffer.latest_kyuufu_wariai    = current_processor.kyuufu_wariai
             buffer.latest_teishotoku_kubun = current_processor.teishotoku_kubun
 
@@ -114,7 +116,9 @@ module Receiptisan
           # @return [void]
           def process_ho(values)
             buffer.add_iryou_hoken(
-              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun, context: context)
+              current_processor.process(
+                values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun, context: context
+              )
             )
           end
 
