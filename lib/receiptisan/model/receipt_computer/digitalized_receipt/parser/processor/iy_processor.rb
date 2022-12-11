@@ -7,6 +7,8 @@ module Receiptisan
         class Parser
           module Processor
             class IYProcessor
+              include Context::ErrorContextReportable
+
               IY             = DigitalizedReceipt::Record::IY
               Iyakuhin       = Receipt::Tekiyou::Resource::Iyakuhin
               MasterIyakuhin = Master::Treatment::Iyakuhin
@@ -19,7 +21,7 @@ module Receiptisan
 
               # @param values [Array<String, nil>] IY行
               # @return [Receipt::Tekiyou::Resource::Iyakuhin]
-              def process(values)
+              def process(values, context:)
                 raise StandardError, 'line isnt IY record' unless values.first == 'IY'
 
                 Iyakuhin.new(
@@ -27,9 +29,11 @@ module Receiptisan
                   shiyouryou:  shiyouryou = values[Record::IY::C_使用量]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
-                logger.error e
+                report_error(e, context)
 
                 Iyakuhin.dummy(code: code, shiyouryou: shiyouryou)
+              rescue StandardError => e
+                report_error(e, context)
               end
 
               private

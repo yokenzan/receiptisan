@@ -10,8 +10,8 @@ module Receiptisan
           class Buffer
             extend Forwardable
 
-            def initialize(uke_file_path = nil)
-              prepare(uke_file_path)
+            def initialize
+              prepare
             end
 
             # @param digitalized_receipt [DigitalizedReceipt]
@@ -95,8 +95,7 @@ module Receiptisan
             end
 
             # @return [void]
-            def prepare(uke_file_path = nil)
-              @uke_file_path               = uke_file_path
+            def prepare
               @hoken_order_provider        = HokenOrderProvider.new
               @digitalized_receipt         = nil
               @current_receipt             = nil
@@ -125,7 +124,6 @@ module Receiptisan
               @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }
             end
 
-            attr_reader :uke_file_path
             attr_writer :latest_kyuufu_wariai
             attr_writer :latest_teishotoku_kubun
 

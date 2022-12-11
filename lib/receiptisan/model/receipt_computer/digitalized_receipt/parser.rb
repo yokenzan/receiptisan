@@ -4,6 +4,7 @@ require_relative 'parser/master_handler'
 require_relative 'parser/receipt_type_builder'
 require_relative 'parser/comment_content_builder'
 require_relative 'parser/hoken_order_provider'
+require_relative 'parser/context'
 require_relative 'parser/buffer'
 require_relative 'parser/processor'
 
@@ -12,6 +13,8 @@ module Receiptisan
     module ReceiptComputer
       class DigitalizedReceipt
         class Parser # rubocop:disable Style/ClassLength
+          include Parser::Context::ErrorContextReportable
+
           ReceiptType   = DigitalizedReceipt::Receipt::Type
           Comment       = Receipt::Tekiyou::Comment
           FILE_ENCODING = 'Shift_JIS'
@@ -21,6 +24,7 @@ module Receiptisan
             @handler                 = handler
             @logger                  = logger
             @buffer                  = Parser::Buffer.new
+            @context                 = Parser::Context.new
             @current_processor       = nil
             sy_processor             = Processor::SYProcessor.new(@handler)
             @processors              = {
@@ -40,12 +44,17 @@ module Receiptisan
           # @param path_of_uke [String]
           # @return [DigitalizedReceipt]
           def parse(path_of_uke)
-            buffer.prepare(path_of_uke)
+            context.prepare(path_of_uke)
+            buffer.prepare
 
             File.open(path_of_uke, "r:#{FILE_ENCODING}:UTF-8") do | f |
-              f.each_line(chomp: true).with_index { | line, index | parse_line(line2values(line), index) }
+              f.each_line(chomp: true) do | line |
+                context.update_current_line(line)
+                parse_line(line2values(line))
+              end
             end
 
+            context.clear
             buffer.close
           end
 
@@ -60,8 +69,7 @@ module Receiptisan
           # @param values [Array<String, nil>]
           # @return [void]
           # rubocop:disable Metrics/CyclomaticComplexity
-          def parse_line(values, line_index)
-            @current_line_index = line_index
+          def parse_line(values)
             @current_processor  = @processors[record_type = values.first]
 
             case record_type
@@ -82,36 +90,38 @@ module Receiptisan
               ignore
             end
           rescue StandardError => e
-            report_error(e, values)
+            report_error(e, context)
           end
           # rubocop:enable Metrics/CyclomaticComplexity
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ir(values)
-            buffer.new_digitalized_receipt(current_processor.process(values))
+            buffer.new_digitalized_receipt(current_processor.process(values, context: context))
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_re(values)
-            buffer.new_receipt(current_processor.process(values, buffer.current_audit_payer))
+            buffer.new_receipt(receipt = current_processor.process(values, buffer.current_audit_payer, context: context))
             buffer.latest_kyuufu_wariai    = current_processor.kyuufu_wariai
             buffer.latest_teishotoku_kubun = current_processor.teishotoku_kubun
+
+            context.current_receipt_id     = receipt.id
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
             buffer.add_iryou_hoken(
-              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
+              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun, context: context)
             )
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ko(values)
-            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values))
+            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values, context: context))
           end
 
           # SN行を読込む
@@ -125,19 +135,19 @@ module Receiptisan
           end
 
           def process_sy(values)
-            buffer.add_shoubyoumei(current_processor.process(values))
+            buffer.add_shoubyoumei(current_processor.process(values, context: context))
           end
 
           def process_si(values)
-            wrap_as_cost(current_processor.process(values), Record::SI, values)
+            wrap_as_cost(current_processor.process(values, context: context), Record::SI, values)
           end
 
           def process_iy(values)
-            wrap_as_cost(current_processor.process(values), Record::IY, values)
+            wrap_as_cost(current_processor.process(values, context: context), Record::IY, values)
           end
 
           def process_to(values)
-            wrap_as_cost(current_processor.process(values), Record::TO, values)
+            wrap_as_cost(current_processor.process(values, context: context), Record::TO, values)
           end
 
           def process_co(values)
@@ -156,7 +166,7 @@ module Receiptisan
 
             buffer.add_tekiyou(comment)
           rescue Master::MasterItemNotFoundError => e
-            report_error(e, values)
+            report_error(e, context)
 
             comment = dummy_comment(
               code:                code,
@@ -169,7 +179,7 @@ module Receiptisan
           end
 
           def process_sj(values)
-            buffer.add_shoujou_shouki(current_processor.process(values))
+            buffer.add_shoujou_shouki(current_processor.process(values, context: context))
           end
 
           def wrap_as_cost(resource, column_definition, values)
@@ -196,7 +206,7 @@ module Receiptisan
                   futan_kubun:         cost.futan_kubun
                 )
               rescue Master::MasterItemNotFoundError => e
-                report_error(e, values)
+                report_error(e, context)
 
                 comment = dummy_comment(
                   code:                code,
@@ -224,22 +234,11 @@ module Receiptisan
           # @return [void]
           def ignore; end
 
-          def report_error(e, values)
-            # ブロックをつかっていないのはスタックトレースも表示するため
-            logger.error 'Exception occurred while parsing %s:%d:%s' % [
-              buffer.uke_file_path,
-              @current_line_index + 1,
-              values.join(','),
-            ]
-            logger.error 'RECEIPT ID:%d' % buffer.current_receipt.id if buffer.current_receipt
-            logger.error e
-          end
-
           # @!attribute [r] buffer
           #   @return [Buffer]
           # @!attribute [r] handler
           #   @return [MasterHandler]
-          attr_reader :buffer, :handler, :current_processor, :logger
+          attr_reader :buffer, :handler, :current_processor, :logger, :context
         end
       end
     end

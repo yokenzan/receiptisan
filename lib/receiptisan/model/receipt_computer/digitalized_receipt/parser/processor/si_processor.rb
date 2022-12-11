@@ -7,6 +7,8 @@ module Receiptisan
         class Parser
           module Processor
             class SIProcessor
+              include Context::ErrorContextReportable
+
               SI                 = DigitalizedReceipt::Record::SI
               ShinryouKoui       = Receipt::Tekiyou::Resource::ShinryouKoui
               MasterShinryouKoui = Master::Treatment::ShinryouKoui
@@ -19,7 +21,7 @@ module Receiptisan
 
               # @param values [Array<String, nil>] SI行
               # @return [Receipt::Tekiyou::Resource::ShinryouKoui]
-              def process(values)
+              def process(values, context:)
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 
                 ShinryouKoui.new(
@@ -27,9 +29,11 @@ module Receiptisan
                   shiyouryou:  shiyouryou = values[SI::C_数量データ]&.to_i
                 )
               rescue Master::MasterItemNotFoundError => e
-                logger.error e
+                report_error(e, context)
 
                 ShinryouKoui.dummy(code: code, shiyouryou: shiyouryou)
+              rescue StandardError => e
+                report_error(e, context)
               end
 
               private

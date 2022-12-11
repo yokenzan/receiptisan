@@ -7,6 +7,8 @@ module Receiptisan
         class Parser
           module Processor
             class TOProcessor
+              include Context::ErrorContextReportable
+
               TO                 = DigitalizedReceipt::Record::TO
               TokuteiKizai       = Receipt::Tekiyou::Resource::TokuteiKizai
               MasterTokuteiKizai = Master::Treatment::TokuteiKizai
@@ -19,7 +21,7 @@ module Receiptisan
 
               # @param values [Array<String, nil>] TO行
               # @return [Receipt::Tekiyou::Resource::TokuteiKizai]
-              def process(values)
+              def process(values, context:)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
                 TokuteiKizai.new(
@@ -30,7 +32,7 @@ module Receiptisan
                   unit_price:   unit_price   = values[TO::C_単価]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
-                logger.error e
+                report_error(e, context)
 
                 TokuteiKizai.dummy(
                   code:         code,
@@ -39,6 +41,8 @@ module Receiptisan
                   unit:         unit,
                   unit_price:   unit_price
                 )
+              rescue StandardError => e
+                report_error(e, context)
               end
 
               private

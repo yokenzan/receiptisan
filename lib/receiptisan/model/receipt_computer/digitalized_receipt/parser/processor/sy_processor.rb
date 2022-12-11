@@ -9,6 +9,8 @@ module Receiptisan
         class Parser
           module Processor
             class SYProcessor
+              include Context::ErrorContextReportable
+
               SY                = DigitalizedReceipt::Record::SY
               Shoubyoumei       = DigitalizedReceipt::Receipt::Shoubyoumei
               MasterShoubyoumei = Master::Diagnosis::Shoubyoumei
@@ -20,7 +22,7 @@ module Receiptisan
               end
 
               # @param values [Array<String, nil>] SY行
-              def process(values)
+              def process(values, context:)
                 raise StandardError, 'line isnt SY record' unless values.first == 'SY'
 
                 process_new_shoubyoumei(values).tap do | shoubyoumei |
@@ -28,6 +30,8 @@ module Receiptisan
                     shoubyoumei.add_shuushokugo(shuushokugo)
                   end
                 end
+              rescue StandardError => e
+                report_error(e, context)
               end
 
               # @param values [Array<String, nil>]
