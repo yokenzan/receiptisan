@@ -3,7 +3,6 @@
 require 'pathname'
 require 'receiptisan'
 
-
 RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::IyakuhinLoader do
   Version  = Receiptisan::Model::ReceiptComputer::Master::Version
   Iyakuhin = Receiptisan::Model::ReceiptComputer::Master::Treatment::Iyakuhin
