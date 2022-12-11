@@ -3,12 +3,11 @@
 require 'pathname'
 require 'receiptisan'
 
-ShinryouKouiLoader = Receiptisan::Model::ReceiptComputer::Master::Loader::ShinryouKouiLoader
-Version            = Receiptisan::Model::ReceiptComputer::Master::Version
-ShinryouKoui       = Receiptisan::Model::ReceiptComputer::Master::Treatment::ShinryouKoui
-Unit               = Receiptisan::Model::ReceiptComputer::Master::Unit
+RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::ShinryouKouiLoader do
+  Version      = Receiptisan::Model::ReceiptComputer::Master::Version
+  ShinryouKoui = Receiptisan::Model::ReceiptComputer::Master::Treatment::ShinryouKoui
+  Unit         = Receiptisan::Model::ReceiptComputer::Master::Unit
 
-RSpec.describe ShinryouKouiLoader do
   describe '#load' do
     let(:result) { described_class.new.load(Version::V2022_R04, Pathname('../../../../../../resource/csv/master/2022').join('s_ALL00000000.csv').expand_path(__dir__)) }
     let(:result_v2020) { described_class.new.load(Version::V2020_R02, Pathname('../../../../../../resource/csv/master').join('2020/s_ALL00000000.csv').expand_path(__dir__)) }

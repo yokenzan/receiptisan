@@ -3,12 +3,12 @@
 require 'pathname'
 require 'receiptisan'
 
-IyakuhinLoader = Receiptisan::Model::ReceiptComputer::Master::Loader::IyakuhinLoader
-Version        = Receiptisan::Model::ReceiptComputer::Master::Version
-Iyakuhin       = Receiptisan::Model::ReceiptComputer::Master::Treatment::Iyakuhin
-Unit           = Receiptisan::Model::ReceiptComputer::Master::Unit
 
-RSpec.describe IyakuhinLoader do
+RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::IyakuhinLoader do
+  Version  = Receiptisan::Model::ReceiptComputer::Master::Version
+  Iyakuhin = Receiptisan::Model::ReceiptComputer::Master::Treatment::Iyakuhin
+  Unit     = Receiptisan::Model::ReceiptComputer::Master::Unit
+
   let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
