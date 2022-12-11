@@ -118,3 +118,11 @@ RSpec/ContextWording:
   Enabled: false
 RSpec/NestedGroups:
   Max: 4
+RSpec/LeakyConstantDeclaration:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*.rb'
+Lint/ConstantDefinitionInBlock:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*.rb'
