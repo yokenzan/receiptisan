@@ -9,14 +9,12 @@ module Receiptisan
         class Parser
           module Processor
             class IRProcessor
-              include Context::ErrorContextReportable
-
               IR       = Record::IR
               DateUtil = Receiptisan::Util::DateUtil
 
               # @param values [Array<String, nil>] IR行
               # @return [DigitalizedReceipt]
-              def process(values, context:)
+              def process(values)
                 raise StandardError, 'line isnt IR record' unless values.first == 'IR'
 
                 hospital = Hospital.new(
@@ -30,8 +28,6 @@ module Receiptisan
                   audit_payer: AuditPayer.find_by_code(values[IR::C_審査支払機関].to_i),
                   hospital:    hospital
                 )
-              rescue StandardError => e
-                report_error(e, context)
               end
             end
           end

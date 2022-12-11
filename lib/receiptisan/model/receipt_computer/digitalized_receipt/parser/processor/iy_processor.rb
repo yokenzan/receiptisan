@@ -14,14 +14,15 @@ module Receiptisan
               MasterIyakuhin = Master::Treatment::Iyakuhin
 
               # @param handler [MasterHandler]
-              def initialize(logger, handler)
+              def initialize(logger:, context:, handler:)
                 @handler = handler
                 @logger  = logger
+                @context = context
               end
 
               # @param values [Array<String, nil>] IY行
               # @return [Receipt::Tekiyou::Resource::Iyakuhin]
-              def process(values, context:)
+              def process(values)
                 raise StandardError, 'line isnt IY record' unless values.first == 'IY'
 
                 Iyakuhin.new(
@@ -29,16 +30,16 @@ module Receiptisan
                   shiyouryou:  shiyouryou = values[Record::IY::C_使用量]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
-                report_error(e, context)
+                report_error(e)
 
                 Iyakuhin.dummy(code: code, shiyouryou: shiyouryou)
               rescue StandardError => e
-                report_error(e, context)
+                report_error(e)
               end
 
               private
 
-              attr_reader :handler, :logger
+              attr_reader :handler, :logger, :context
             end
           end
         end

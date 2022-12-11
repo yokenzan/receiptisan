@@ -14,14 +14,15 @@ module Receiptisan
               MasterTokuteiKizai = Master::Treatment::TokuteiKizai
 
               # @param handler [MasterHandler]
-              def initialize(logger, handler)
+              def initialize(logger:, context:, handler:)
                 @handler = handler
                 @logger  = logger
+                @context = context
               end
 
               # @param values [Array<String, nil>] TO行
               # @return [Receipt::Tekiyou::Resource::TokuteiKizai]
-              def process(values, context:)
+              def process(values)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
                 TokuteiKizai.new(
@@ -42,12 +43,12 @@ module Receiptisan
                   unit_price:   unit_price
                 )
               rescue StandardError => e
-                report_error(e, context)
+                report_error(e)
               end
 
               private
 
-              attr_reader :handler, :logger
+              attr_reader :handler, :logger, :context
             end
           end
         end

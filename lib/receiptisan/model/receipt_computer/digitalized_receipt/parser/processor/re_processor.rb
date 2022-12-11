@@ -9,8 +9,6 @@ module Receiptisan
         class Parser
           module Processor
             class REProcessor
-              include Context::ErrorContextReportable
-
               RE          = Record::RE
               DateUtil    = Receiptisan::Util::DateUtil
               ReceiptType = DigitalizedReceipt::Receipt::Type
@@ -25,15 +23,13 @@ module Receiptisan
               # @param values [Array<String, nil>]
               # @param audit_payer [DigitalizedReceipt::AuditPayer, nil]
               # @return [Receipt]
-              def process(values, audit_payer, context:)
+              def process(values, audit_payer)
                 raise StandardError, 'line isnt RE record' unless values.first == 'RE'
 
                 @kyuufu_wariai    = nil
                 @teishotoku_kubun = nil
 
                 process_new_receipt(values, audit_payer).tap { | receipt | process_tokki_jikous(receipt, values) }
-              rescue StandardError => e
-                report_error(e, context)
               end
 
               def kyuufu_wariai

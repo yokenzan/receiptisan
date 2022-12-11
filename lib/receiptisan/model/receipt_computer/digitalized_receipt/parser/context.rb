@@ -44,7 +44,7 @@ module Receiptisan
             module ErrorContextReportable
               # @param e [Exception]
               # @return [void]
-              def report_error(e, context)
+              def report_error(e)
                 # ブロックをつかっていないのはスタックトレースも表示するため
                 logger.error 'Exception occurred while parsing %s:%d:%s' % [
                   context.uke_file_path,
@@ -53,6 +53,14 @@ module Receiptisan
                 ]
                 logger.error 'RECEIPT ID:%d' % context.current_receipt_id if context.current_receipt_id
                 logger.error e
+              end
+
+              def logger
+                raise NotImplementedError, 'should override #logger'
+              end
+
+              def context
+                raise NotImplementedError, 'should override #context'
               end
             end
           end

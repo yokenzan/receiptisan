@@ -17,12 +17,14 @@ module Receiptisan
               MasterShuushokugo = Master::Diagnosis::Shuushokugo
 
               # @param handler [MasterHandler]
-              def initialize(handler)
+              def initialize(logger:, context:, handler:)
                 @handler = handler
+                @logger  = logger
+                @context = context
               end
 
               # @param values [Array<String, nil>] SY行
-              def process(values, context:)
+              def process(values)
                 raise StandardError, 'line isnt SY record' unless values.first == 'SY'
 
                 process_new_shoubyoumei(values).tap do | shoubyoumei |
@@ -31,7 +33,7 @@ module Receiptisan
                   end
                 end
               rescue StandardError => e
-                report_error(e, context)
+                report_error(e)
               end
 
               # @param values [Array<String, nil>]
@@ -63,7 +65,7 @@ module Receiptisan
                 handler.find_by_code(MasterShuushokugo::Code.of(value_of_code))
               end
 
-              attr_reader :handler
+              attr_reader :handler, :logger, :context
             end
           end
         end

@@ -9,14 +9,12 @@ module Receiptisan
         class Parser
           module Processor
             class KOProcessor
-              include Context::ErrorContextReportable
-
               KO = Record::KO
 
               # @param is_nyuuin [Boolean]
               # @param values [Array<String, nil>]
               # @return [IryouHoken]
-              def process(is_nyuuin, values, context:)
+              def process(is_nyuuin, values)
                 raise StandardError, 'line isnt KO record' unless values.first == 'KO'
 
                 DigitalizedReceipt::Receipt::KouhiFutanIryou.new(
@@ -33,8 +31,6 @@ module Receiptisan
                     shokuji_seikatsu_ryouyou_goukei_kingaku: values[KO::C_食事療養・生活療養_合計金額].to_i
                   )
                 )
-              rescue StandardError => e
-                report_error(e, context)
               end
             end
           end

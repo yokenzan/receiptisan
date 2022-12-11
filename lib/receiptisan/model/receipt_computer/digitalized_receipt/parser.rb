@@ -26,7 +26,7 @@ module Receiptisan
             @buffer                  = Parser::Buffer.new
             @context                 = Parser::Context.new
             @current_processor       = nil
-            sy_processor             = Processor::SYProcessor.new(@handler)
+            sy_processor             = Processor::SYProcessor.new(context: context, logger: logger, handler: @handler)
             @processors              = {
               'IR' => Processor::IRProcessor.new,
               'RE' => Processor::REProcessor.new,
@@ -34,9 +34,9 @@ module Receiptisan
               'KO' => Processor::KOProcessor.new,
               'SY' => sy_processor,
               'SJ' => Processor::SJProcessor.new,
-              'SI' => Processor::SIProcessor.new(logger, @handler),
-              'IY' => Processor::IYProcessor.new(logger, @handler),
-              'TO' => Processor::TOProcessor.new(logger, @handler),
+              'SI' => Processor::SIProcessor.new(context: context, logger: logger, handler: @handler),
+              'IY' => Processor::IYProcessor.new(context: context, logger: logger, handler: @handler),
+              'TO' => Processor::TOProcessor.new(context: context, logger: logger, handler: @handler),
             }
             @comment_content_builder = Parser::CommentContentBuilder.new(@handler, sy_processor)
           end
@@ -90,21 +90,21 @@ module Receiptisan
               ignore
             end
           rescue StandardError => e
-            report_error(e, context)
+            report_error(e)
           end
           # rubocop:enable Metrics/CyclomaticComplexity
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ir(values)
-            buffer.new_digitalized_receipt(current_processor.process(values, context: context))
+            buffer.new_digitalized_receipt(current_processor.process(values))
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_re(values)
             buffer.new_receipt(
-              receipt = current_processor.process(values, buffer.current_audit_payer, context: context)
+              receipt = current_processor.process(values, buffer.current_audit_payer)
             )
             buffer.latest_kyuufu_wariai    = current_processor.kyuufu_wariai
             buffer.latest_teishotoku_kubun = current_processor.teishotoku_kubun
@@ -116,16 +116,14 @@ module Receiptisan
           # @return [void]
           def process_ho(values)
             buffer.add_iryou_hoken(
-              current_processor.process(
-                values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun, context: context
-              )
+              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
             )
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ko(values)
-            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values, context: context))
+            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values))
           end
 
           # SN行を読込む
@@ -139,19 +137,19 @@ module Receiptisan
           end
 
           def process_sy(values)
-            buffer.add_shoubyoumei(current_processor.process(values, context: context))
+            buffer.add_shoubyoumei(current_processor.process(values))
           end
 
           def process_si(values)
-            wrap_as_cost(current_processor.process(values, context: context), Record::SI, values)
+            wrap_as_cost(current_processor.process(values), Record::SI, values)
           end
 
           def process_iy(values)
-            wrap_as_cost(current_processor.process(values, context: context), Record::IY, values)
+            wrap_as_cost(current_processor.process(values), Record::IY, values)
           end
 
           def process_to(values)
-            wrap_as_cost(current_processor.process(values, context: context), Record::TO, values)
+            wrap_as_cost(current_processor.process(values), Record::TO, values)
           end
 
           def process_co(values)
@@ -170,7 +168,7 @@ module Receiptisan
 
             buffer.add_tekiyou(comment)
           rescue Master::MasterItemNotFoundError => e
-            report_error(e, context)
+            report_error(e)
 
             comment = dummy_comment(
               code:                code,
@@ -183,7 +181,7 @@ module Receiptisan
           end
 
           def process_sj(values)
-            buffer.add_shoujou_shouki(current_processor.process(values, context: context))
+            buffer.add_shoujou_shouki(current_processor.process(values))
           end
 
           def wrap_as_cost(resource, column_definition, values)
@@ -210,7 +208,7 @@ module Receiptisan
                   futan_kubun:         cost.futan_kubun
                 )
               rescue Master::MasterItemNotFoundError => e
-                report_error(e, context)
+                report_error(e)
 
                 comment = dummy_comment(
                   code:                code,
