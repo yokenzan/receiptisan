@@ -15,7 +15,8 @@ module Receiptisan
       # 3. by giving stdin
       class PreviewCommand < Dry::CLI::Command
         include Receiptisan::Model::ReceiptComputer
-        include Receiptisan::Output::Preview
+
+        Preview = Receiptisan::Output::Preview
 
         argument :uke, required: false
         # 1. by giving UKE file path and receipt's sequence
@@ -56,7 +57,7 @@ module Receiptisan
         end
 
         def determine_previewer
-          Previewer::SVGPreviewer.new
+          Preview::Previewer::SVGPreviewer.new
         end
 
         # @param [String] text_seqs
@@ -98,7 +99,7 @@ module Receiptisan
         end
 
         def preview_receipts(digitalized_receipt)
-          puts @previewer.preview(Parameter::Common.from_digitalized_receipt(digitalized_receipt))
+          puts @previewer.preview(Preview::Parameter::Generator.create.convert_digitalized_receipt(digitalized_receipt))
         end
       end
     end
