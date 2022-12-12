@@ -1,0 +1,97 @@
+tags:
+  # 点数欄 - 97食事・生活
+
+  # 食事・基準
+  - name: shokuji-ryouyou-kijun
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197000110 # 入院時食事療養（１）（１食につき）（２以外の食事療養）
+      - 197003110 # 入院時食事療養（１）（１食につき）（流動食のみを提供）
+      - 197000710 # 入院時食事療養（２）（１食につき）（２以外の食事療養）
+      - 197003210 # 入院時食事療養（２）（１食につき）（流動食のみを提供）
+  # 食事・特別
+  - name: shokuji-ryouyou-tokubetsu
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197000470 # 特別食加算（食事療養）
+      - 197001570 # 特別食加算（生活療養）
+  # 食事・食堂
+  - name: shokuji-ryouyou-shokudou
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197000570 # 食堂加算（食事療養）
+  # 食事・環境
+  - name: seikatsu-ryouyou-kankyou
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197001410 # 入院時生活療養（１）環境療養
+      - 197001810 # 入院時生活療養（２）環境療養
+  # 基準(生)
+  - name: seikatsu-ryouyou-kijun
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197001310 # 入院時生活療養（１）食事療養（ロ以外の食事の提供たる療養）
+      - 197001710 # 入院時生活療養（２）食事療養
+      - 197003510 # 入院時生活療養（１）食事療養（流動食のみを提供）
+  # 特別(生)
+  - name: seikatsu-ryouyou-tokubetsu
+    display: ~
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197001670 # 食堂加算（生活療養）
+
+  # 食事療養費 ローマ数字
+  #
+  # (22) 「食事・生活」欄について
+  #
+  # ア 「基準」の項には、入院時食事療養費に係る食事療養について算定した項目について次の略号を用いて記載すること。ただし、複数の食事療養を算定し、「基準」の項に複数の略号を記載することが困難な場合は、「摘要」欄への記載でも差し支えないこと。
+  # Ⅰ（入院時食事療養Ⅰ(1)）、Ⅱ（入院時食事療養Ⅱ(1)）、Ⅲ（入院時食事療養Ⅰ(2)）、Ⅳ（入院時食事療養Ⅱ(2)）
+
+  - name: shokuji-kijun-category-i
+    display: Ⅰ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197003110 # 入院時食事療養（１）（１食につき）（流動食のみを提供）
+  - name: shokuji-kijun-category-ii
+    display: Ⅱ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197000710 # 入院時食事療養（２）（１食につき）（２以外の食事療養）
+  - name: shokuji-kijun-category-iii
+    display: Ⅲ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197003110 # 入院時食事療養（１）（１食につき）（流動食のみを提供）
+  - name: shokuji-kijun-category-iv
+    display: Ⅳ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197003210 # 入院時食事療養（２）（１食につき）（流動食のみを提供）
+
+  # 生活療養費 ローマ数字
+  #
+  # (22) 「食事・生活」欄について
+  #
+  # オ 「基準（生）」の項には、入院時生活療養費に係る生活療養について算定した項目を次の略号を用いて記載すること。ただし、複数の生活療養を算定し、「基準（生）」の項に複数の略号を記載することが困難な場合は、「摘要」欄への記載でも差し支えないこと。
+  # Ⅰ（入院時生活療養Ⅰ(1)イ）、Ⅱ（入院時生活療養Ⅱ）、Ⅲ（入院時生活療養Ⅰ(1)ロ）
+
+  - name: seikatsu-kijun-category-i
+    display: Ⅰ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197001310 # 入院時生活療養（１）食事療養（ロ以外の食事の提供たる療養）
+  - name: seikatsu-kijun-category-ii
+    display: Ⅱ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197001710 # 入院時生活療養（２）食事療養
+  - name: seikatsu-kijun-category-iii
+    display: Ⅲ
+    shinryou_shikibetsu: ['97']
+    code:
+      - 197003510 # 入院時生活療養（１）食事療養（流動食のみを提供）
