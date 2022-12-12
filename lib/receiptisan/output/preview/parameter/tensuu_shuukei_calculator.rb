@@ -12,39 +12,53 @@ module Receiptisan
 
             # 入院
             @@section_parameter_attributes = {
-              '11':         { shinryou_shikibetsu: %w[11],    target: {} },
-              '13':         { shinryou_shikibetsu: %w[13],    target: {} },
-              '14':         { shinryou_shikibetsu: %w[14],    target: {} },
-              '21':         { shinryou_shikibetsu: %w[21],    target: {} },
-              '22':         { shinryou_shikibetsu: %w[22],    target: {} },
-              '23':         { shinryou_shikibetsu: %w[23],    target: {} },
-              '24':         { shinryou_shikibetsu: %w[24],    target: {} },
-              '26':         { shinryou_shikibetsu: %w[26],    target: {} },
-              '27':         { shinryou_shikibetsu: %w[27],    target: {} },
-              '31':         { shinryou_shikibetsu: %w[31],    target: {} },
-              '32':         { shinryou_shikibetsu: %w[32],    target: {} },
-              '33':         { shinryou_shikibetsu: %w[33],    target: {} },
-              '40':         { shinryou_shikibetsu: %w[40],    target: {} },
-              '40_shugi':   { shinryou_shikibetsu: %w[40],    target: { resource: %i[shinryou_koui] } },
-              '40_yakuzai': { shinryou_shikibetsu: %w[40],    target: { resource: %i[iyakuhin tokutei_kizai] } },
-              '5x':         { shinryou_shikibetsu: %w[50 54], target: {} },
-              '5x_shugi':   { shinryou_shikibetsu: %w[50 54], target: { resource: %i[shinryou_koui] } },
-              '5x_yakuzai': { shinryou_shikibetsu: %w[50 54], target: { resource: %i[iyakuhin tokutei_kizai] } },
-              '60':         { shinryou_shikibetsu: %w[60],    target: {} },
-              '60_shugi':   { shinryou_shikibetsu: %w[60],    target: { resource: %i[shinryou_koui] } },
-              '60_yakuzai': { shinryou_shikibetsu: %w[60],    target: { resource: %i[iyakuhin tokutei_kizai] } },
-              '70':         { shinryou_shikibetsu: %w[70],    target: {} },
-              '70_shugi':   { shinryou_shikibetsu: %w[70],    target: { resource: %i[shinryou_koui] } },
-              '70_yakuzai': { shinryou_shikibetsu: %w[70],    target: { resource: %i[iyakuhin tokutei_kizai] } },
-              '80_shugi':   { shinryou_shikibetsu: %w[80],    target: { resource: %i[shinryou_koui] } },
-              '80_yakuzai': { shinryou_shikibetsu: %w[80],    target: { resource: %i[iyakuhin tokutei_kizai] } },
-              '90':         { shinryou_shikibetsu: %w[90],    target: {} },
-              '92':         { shinryou_shikibetsu: %w[92],    target: {} },
+              '11':                            { shinryou_shikibetsu: %w[11],    target: {} },
+              '13':                            { shinryou_shikibetsu: %w[13],    target: {} },
+              '14':                            { shinryou_shikibetsu: %w[14],    target: {} },
+              '21':                            { shinryou_shikibetsu: %w[21],    target: {} },
+              '22':                            { shinryou_shikibetsu: %w[22],    target: {} },
+              '23':                            { shinryou_shikibetsu: %w[23],    target: {} },
+              '24':                            { shinryou_shikibetsu: %w[24],    target: {} },
+              '26':                            { shinryou_shikibetsu: %w[26],    target: {} },
+              '27':                            { shinryou_shikibetsu: %w[27],    target: {} },
+              '31':                            { shinryou_shikibetsu: %w[31],    target: {} },
+              '32':                            { shinryou_shikibetsu: %w[32],    target: {} },
+              '33':                            { shinryou_shikibetsu: %w[33],    target: {} },
+              '40':                            { shinryou_shikibetsu: %w[40],    target: {} },
+              '40_shugi':                      { shinryou_shikibetsu: %w[40],    target: { resource: %i[shinryou_koui] } },
+              '40_yakuzai':                    { shinryou_shikibetsu: %w[40],    target: { resource: %i[iyakuhin tokutei_kizai] } },
+              '5x':                            { shinryou_shikibetsu: %w[50 54], target: {} },
+              '5x_shugi':                      { shinryou_shikibetsu: %w[50 54], target: { resource: %i[shinryou_koui] } },
+              '5x_yakuzai':                    { shinryou_shikibetsu: %w[50 54], target: { resource: %i[iyakuhin tokutei_kizai] } },
+              '60':                            { shinryou_shikibetsu: %w[60],    target: {} },
+              '60_shugi':                      { shinryou_shikibetsu: %w[60],    target: { resource: %i[shinryou_koui] } },
+              '60_yakuzai':                    { shinryou_shikibetsu: %w[60],    target: { resource: %i[iyakuhin tokutei_kizai] } },
+              '70':                            { shinryou_shikibetsu: %w[70],    target: {} },
+              '70_shugi':                      { shinryou_shikibetsu: %w[70],    target: { resource: %i[shinryou_koui] } },
+              '70_yakuzai':                    { shinryou_shikibetsu: %w[70],    target: { resource: %i[iyakuhin tokutei_kizai] } },
+              '80_shugi':                      { shinryou_shikibetsu: %w[80],    target: { resource: %i[shinryou_koui] } },
+              '80_yakuzai':                    { shinryou_shikibetsu: %w[80],    target: { resource: %i[iyakuhin tokutei_kizai] } },
+              '90':                            { shinryou_shikibetsu: %w[90],    target: {} },
+              '92':                            { shinryou_shikibetsu: %w[92],    target: {} },
+              '97_shokuji-ryouyou-kijun':      { target: { tag: :'shokuji-ryouyou-kijun' } },
+              '97_shokuji-ryouyou-tokubetsu':  { target: { tag: :'shokuji-ryouyou-tokubetsu' } },
+              '97_shokuji-ryouyou-shokudou':   { target: { tag: :'shokuji-ryouyou-shokudou' } },
+              '97_seikatsu-ryouyou-kankyou':   { target: { tag: :'seikatsu-ryouyou-kankyou' } },
+              '97_seikatsu-ryouyou-kijun':     { target: { tag: :'seikatsu-ryouyou-kijun' } },
+              '97_seikatsu-ryouyou-tokubetsu': { target: { tag: :'seikatsu-ryouyou-tokubetsu' } },
             }
+
+            def initialize
+              @tag_loader  = TagLoader.new
+              @loaded_tags = {}
+              @current_tag = nil
+            end
 
             # @param receipt [DigitalizedReceipt::Receipt]
             # @return [TensuuShuukei]
             def calculate(receipt)
+              prepare_tag(receipt.shinryou_ym)
+
               TensuuShuukei.new(
                 sections: @@section_parameter_attributes.to_h do | key, _ |
                   [
@@ -65,6 +79,12 @@ module Receiptisan
 
             private
 
+            def prepare_tag(year_month)
+              version                 = Receiptisan::Model::ReceiptComputer::Master::Version.resolve_by_ym(year_month)
+              @current_tag            = tag_loader.load(version)
+              @loaded_tags[version] ||= current_tag
+            end
+
             def build_parameter(key, order)
               attributes = @@section_parameter_attributes[key]
 
@@ -78,8 +98,13 @@ module Receiptisan
                 parameter.target << TargetFilter::ResourceTypeTargetFilter.new(*resources)
               end
 
-              if (lists = attributes[:target][:list])
-                lists.each { | list | parameter.target << TargetFilter::ListTargetFilter.build(list) }
+              if (tag_name = attributes[:target][:tag])
+                # @param tag [TagLoader::Tag]
+                tag = current_tag[tag_name]
+
+                parameter.target << TargetFilter::TagTargetFilter.new(tag)
+
+                parameter.shinryou_shikibetsu = tag.shinryou_shikibetsu if tag.shinryou_shikibetsu
               end
 
               parameter.target << TargetFilter::HokenOrderTargetFilter.new(order)
@@ -142,6 +167,12 @@ module Receiptisan
               )
             end
 
+            # @!attributes [r] current_tag
+            #   @return [TagLoader::Tag, nil]
+            # @!attributes [r] tag_loader
+            #   @return [TagLoader]
+            attr_reader :current_tag, :tag_loader
+
             # 集計対象とする算定単位の絞込条件
             module TargetFilter
               class HokenOrderTargetFilter
@@ -166,15 +197,15 @@ module Receiptisan
                 end
               end
 
-              # unused
-              class ListTargetFilter
-                def initialize(*master_codes)
-                  @master_codes = master_codes
+              class TagTargetFilter
+                # @param tag [TagLoader::Tag]
+                def initialize(tag)
+                  @tag = tag
                 end
 
                 # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
                 def target?(santei_unit)
-                  santei_unit.each_cost.any? { | cost | @master_codes.include?(cost.resource.code.value) }
+                  santei_unit.each_cost.any? { | cost | @tag.code.include?(cost.resource.code.value) }
                 end
               end
             end
