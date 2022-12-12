@@ -84,16 +84,14 @@ module Receiptisan
               '97_seikatsu-ryouyou-tokubetsu': { target: { tag: :'seikatsu-ryouyou-tokubetsu' } },
             }
 
-            def initialize
-              @tag_loader  = TagLoader.new
-              @loaded_tags = {}
-              @current_tag = nil
+            def initialize(handler)
+              @tag_handler = handler
             end
 
             # @param receipt [DigitalizedReceipt::Receipt]
             # @return [TensuuShuukei]
             def calculate(receipt)
-              prepare_tag(receipt.shinryou_ym)
+              tag_handler.prepare(receipt.shinryou_ym)
 
               TensuuShuukei.new(
                 sections: @@section_parameter_attributes.to_h do | key, _ |
@@ -115,12 +113,6 @@ module Receiptisan
 
             private
 
-            def prepare_tag(year_month)
-              version                 = Receiptisan::Model::ReceiptComputer::Master::Version.resolve_by_ym(year_month)
-              @current_tag            = tag_loader.load(version)
-              @loaded_tags[version] ||= current_tag
-            end
-
             def build_parameter(key, order)
               attributes = @@section_parameter_attributes[key]
 
@@ -136,7 +128,7 @@ module Receiptisan
 
               if (tag_name = attributes[:target][:tag])
                 # @param tag [TagLoader::Tag]
-                tag = current_tag[tag_name]
+                tag = tag_handler.find_by_name(tag_name)
 
                 parameter.target << TargetFilter::TagTargetFilter.new(tag)
 
@@ -203,11 +195,9 @@ module Receiptisan
               )
             end
 
-            # @!attributes [r] current_tag
-            #   @return [TagLoader::Tag, nil]
-            # @!attributes [r] tag_loader
-            #   @return [TagLoader]
-            attr_reader :current_tag, :tag_loader
+            # @!attribute [r] tag_handler
+            #   @return [Tag::Handler]
+            attr_reader :tag_handler
 
             # 集計対象とする算定単位の絞込条件
             module TargetFilter

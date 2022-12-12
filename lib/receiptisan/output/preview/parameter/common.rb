@@ -629,7 +629,7 @@ module Receiptisan
             end
 
             def convert_tensuu_shuukei(receipt)
-              TensuuShuukeiCalculator.new.calculate(receipt)
+              TensuuShuukeiCalculator.new(Tag::Handler.new(Tag::Loader.new)).calculate(receipt)
             end
 
             private
