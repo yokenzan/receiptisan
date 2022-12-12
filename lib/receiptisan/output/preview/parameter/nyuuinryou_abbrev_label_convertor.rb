@@ -23,9 +23,17 @@ module Receiptisan
             return [] unless receipt.nyuuin?
 
             abbrev_handler.prepare(receipt.shinryou_ym)
-            @abbrevs = Set.new
+            abbrevs = Set.new
 
-            shinryou_koui_codes = SHINRYOU_SHIKIBETSUS.map do | shinryou_shikibetsu_code |
+            receipt2shinryou_koui_codes(receipt).each { | code | abbrevs.merge(abbrev_handler.find_by_code(code)) }
+
+            abbrevs.sort_by(&:code).map(&:label)
+          end
+
+          private
+
+          def receipt2shinryou_koui_codes(receipt)
+            SHINRYOU_SHIKIBETSUS.map do | shinryou_shikibetsu_code |
               (receipt[shinryou_shikibetsu_code] || []).map do | ichiren_unit |
                 ichiren_unit.each.map do | santei_unit |
                   santei_unit.each_cost
@@ -34,10 +42,6 @@ module Receiptisan
                 end
               end
             end.flatten.compact
-
-            shinryou_koui_codes.each { | code | @abbrevs.merge(abbrev_handler.find_by_code(code)) }
-
-            @abbrevs.sort_by(&:code).map(&:label)
           end
 
           # @!attribute [r] abbrev_handler
