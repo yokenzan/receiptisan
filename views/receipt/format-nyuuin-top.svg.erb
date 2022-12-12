@@ -613,7 +613,9 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="62.8" y="857.1" class="s3">病</text>
 
         <!-- 入院料・加算の略号 -->
-        <text x="62.8" y="875.5" class="s3">地一般１</text>
+        <% receipt.nyuuinryou_abbrev_labels.each_with_index do | abbrev, index | %>
+          <text x="62.8" y="<%= 875.5 + index * 15.0 %>" class="s3" style="fill: #00f;"><%= abbrev %></text>
+        <% end %>
 
         <text x="155.8" y="857.1" class="s7">90</text>
         <text x="171" y="858.2" class="s3">入院基本料・加算</text>
