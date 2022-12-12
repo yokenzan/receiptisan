@@ -4,8 +4,8 @@ require 'month'
 require 'forwardable'
 
 module Receiptisan
-  module Output
-    module Preview
+  module Model
+    module ReceiptComputer
       module Tag
         class Handler
           extend Forwardable

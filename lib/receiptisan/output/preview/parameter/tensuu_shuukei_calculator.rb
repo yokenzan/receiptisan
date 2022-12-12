@@ -85,6 +85,7 @@ module Receiptisan
             '97_seikatsu-ryouyou-tokubetsu': { target: { tag: :'seikatsu-ryouyou-tokubetsu' } },
           }
 
+          # @param handler [Receiptisan::Model::ReceiptComputer::Tag::Handler]
           def initialize(handler)
             @tag_handler = handler
           end

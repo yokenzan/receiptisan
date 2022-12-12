@@ -8,9 +8,10 @@ module Receiptisan
         class Generator
           include Receiptisan::Util::Formatter
 
+          Common             = Receiptisan::Output::Preview::Parameter::Common
           DateUtil           = Receiptisan::Util::DateUtil
           DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
-          Common             = Receiptisan::Output::Preview::Parameter::Common
+          Tag                = Receiptisan::Model::ReceiptComputer::Tag
 
           class << self
             # @return [self]

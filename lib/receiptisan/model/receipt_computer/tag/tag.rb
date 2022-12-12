@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Receiptisan
-  module Output
-    module Preview
+  module Model
+    module ReceiptComputer
       module Tag
         # @!attribute [r] name タグの識別キー
         #   @return [String]

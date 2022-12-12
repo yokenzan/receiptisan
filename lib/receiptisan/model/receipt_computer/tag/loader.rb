@@ -4,8 +4,8 @@ require 'pathname'
 require 'yaml'
 
 module Receiptisan
-  module Output
-    module Preview
+  module Model
+    module ReceiptComputer
       module Tag
         class Loader
           CONFIG_DIR = __dir__ + '/../../../../../config'
