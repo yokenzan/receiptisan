@@ -162,7 +162,7 @@ module Receiptisan
               tensuu:       @shuukei_entries.map(&:tensuu).then { | ary | ary.uniq.length == 1 ? ary.first : nil },
               total_kaisuu: @shuukei_entries.map(&:total_kaisuu).sum.then { | sum | sum.zero? ? nil : sum },
               total_tensuu: @shuukei_entries.map(&:total_tensuu).sum.then { | sum | sum.zero? ? nil : sum },
-              units:        @shuukei_entries.sort_by(&:tensuu).reverse
+              units:        @shuukei_entries.sort_by(&:total_tensuu).reverse
             )
           end
 
