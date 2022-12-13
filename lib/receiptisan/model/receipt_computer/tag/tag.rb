@@ -4,7 +4,7 @@ module Receiptisan
   module Model
     module ReceiptComputer
       module Tag
-        # @!attribute [r] name タグの識別キー
+        # @!attribute [r] key タグの識別キー
         #   @return [String]
         # @!attribute [r] label 表示名
         #   @return [String, nil]
@@ -12,12 +12,12 @@ module Receiptisan
         #   @return [Array<String>]
         # @!attribute [r] code 診療行為・医薬品・特定器材のレセ電コードの配列
         #   @return [Array<Symbol>]
-        Tag = Struct.new(:name, :label, :shinryou_shikibetsu, :code, keyword_init: true) do
+        Tag = Struct.new(:key, :label, :shinryou_shikibetsu, :code, keyword_init: true) do
           class << self
             # @return [self]
             def from(definition)
               new(
-                name:                definition['name'].intern,
+                key:                 definition['key'].intern,
                 label:               definition['label'],
                 shinryou_shikibetsu: definition['shinryou_shikibetsu'],
                 code:                definition['code'].map { | code | code.to_s.intern }

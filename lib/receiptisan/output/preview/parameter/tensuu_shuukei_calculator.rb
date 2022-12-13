@@ -128,9 +128,9 @@ module Receiptisan
               parameter.target << TargetFilter::ResourceTypeTargetFilter.new(*resources)
             end
 
-            if (tag_name = attributes[:target][:tag])
+            if (tag_key = attributes[:target][:tag])
               # @param tag [TagLoader::Tag]
-              tag = tag_handler.find_by_name(tag_name)
+              tag = tag_handler.find_by_key(tag_key)
 
               parameter.target << TargetFilter::TagTargetFilter.new(tag)
 
@@ -162,7 +162,7 @@ module Receiptisan
               tensuu:       @shuukei_entries.map(&:tensuu).then { | ary | ary.uniq.length == 1 ? ary.first : nil },
               total_kaisuu: @shuukei_entries.map(&:total_kaisuu).sum.then { | sum | sum.zero? ? nil : sum },
               total_tensuu: @shuukei_entries.map(&:total_tensuu).sum.then { | sum | sum.zero? ? nil : sum },
-              units:        @shuukei_entries.sort_by(&:tensuu).reverse
+              units:        @shuukei_entries.sort_by(&:total_tensuu).reverse
             )
           end
 

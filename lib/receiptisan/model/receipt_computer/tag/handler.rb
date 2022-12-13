@@ -27,10 +27,10 @@ module Receiptisan
           end
 
           # @!parse
-          #   # @param tag_name [String]
+          #   # @param tag_key [String, Symbol]
           #   # @return [Tag, nil]
-          #   def find_by_name(tag_name); end
-          def_delegators :@current_master, :find_by_name
+          #   def find_by_key(tag_key); end
+          def_delegators :@current_master, :find_by_key
 
           private
 
