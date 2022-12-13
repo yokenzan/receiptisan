@@ -24,6 +24,7 @@ module Receiptisan
             @tag_handler               = tag_handler
             @tensuu_shuukei_calculator = TensuuShuukeiCalculator.new(tag_handler)
             @byoushou_type_detector    = ByoushouTypeDetector.new(tag_handler)
+            @kijun_mark_detector       = KijunMarkDetector.new(tag_handler)
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -60,9 +61,7 @@ module Receiptisan
               prefecture:        parameterized_prefecture,
               hospital:          parameterized_hospital,
               type:              Common::Type.from(receipt.type),
-              tokki_jikous:      receipt.tokki_jikous.values.map do | tokki_jikou |
-                Common::TokkiJikou.from(tokki_jikou)
-              end,
+              tokki_jikous:      receipt.tokki_jikous.values.map { | tj | Common::TokkiJikou.from(tj) },
               patient:           Common::Patient.from(receipt.patient),
               hokens:            convert_applied_hoken_list(receipt.hoken_list),
               shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
@@ -70,7 +69,8 @@ module Receiptisan
               ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
               tensuu_shuukei:    convert_tensuu_shuukei(receipt),
               nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
-              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil
+              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
+              kijun_marks:       receipt.nyuuin? ? convert_kijun_marks(receipt)           : nil
             )
           end
 
@@ -241,16 +241,8 @@ module Receiptisan
             byoushou_type_detector.detect(receipt)
           end
 
-          def convert_shokuji_seikatsu_kijun_mark(receipt)
-            # tag_loader = TagLoader.new
-            # tag_defs   = tag_loader.load(
-            #   Receiptisan::Model::ReceiptComputer::Master::Version.resolve_by_ym(receipt.shinryou_ym)
-            # )
-            # tags = tag_defs.map { | tag_def | TagLoader::Tag.from(tag_def) }
-            # tags['seikatsu-kijun-category-i']
-            # tags['shokuji-kijun-category-i']
-            #
-            # ShokujiSeikatsuKijunMark.new()
+          def convert_kijun_marks(receipt)
+            kijun_mark_detector.detect(receipt)
           end
 
           private
@@ -300,7 +292,7 @@ module Receiptisan
           # rubocop:enable Metrics/PerceivedComplexity
           # rubocop:enable Metrics/CyclomaticComplexity
 
-          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector
+          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector, :kijun_mark_detector
         end
         # rubocop:enable Metrics/ClassLength
       end
