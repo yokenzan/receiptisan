@@ -140,6 +140,7 @@ module Receiptisan
             :ryouyou_no_kyuufu,
             :tensuu_shuukei,
             :nyuuin_date,
+            :byoushou_types,
             keyword_init: true
           )
           Patient = Struct.new(:id, :name, :name_kana, :sex, :birth_date, keyword_init: true) do

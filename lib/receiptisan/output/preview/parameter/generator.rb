@@ -23,6 +23,7 @@ module Receiptisan
           def initialize(tag_handler:)
             @tag_handler               = tag_handler
             @tensuu_shuukei_calculator = TensuuShuukeiCalculator.new(tag_handler)
+            @byoushou_type_detector    = ByoushouTypeDetector.new(tag_handler)
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -68,7 +69,8 @@ module Receiptisan
               tekiyou:           convert_tekiyou(receipt),
               ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
               tensuu_shuukei:    convert_tensuu_shuukei(receipt),
-              nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil
+              nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
+              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)       : nil
             )
           end
 
@@ -229,8 +231,14 @@ module Receiptisan
             )
           end
 
+          # @return [Common::TensuuShuukei]
           def convert_tensuu_shuukei(receipt)
             tensuu_shuukei_calculator.calculate(receipt)
+          end
+
+          # @return [Array<String>]
+          def convert_byoushou_types(receipt)
+            byoushou_type_detector.detect(receipt)
           end
 
           def convert_shokuji_seikatsu_kijun_mark(receipt)
@@ -292,7 +300,7 @@ module Receiptisan
           # rubocop:enable Metrics/PerceivedComplexity
           # rubocop:enable Metrics/CyclomaticComplexity
 
-          attr_reader :tag_handler, :tensuu_shuukei_calculator
+          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector
         end
         # rubocop:enable Metrics/ClassLength
       end
