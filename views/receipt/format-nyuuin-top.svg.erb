@@ -275,7 +275,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <% if iryou_hoken = receipt.ryouyou_no_kyuufu.iryou_hoken %>
           <text x="510" y="1119" text-anchor="end" class="s9" style="fill: #00f;"><%= iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu %></text>
           <text x="660" y="1119" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
-          <text x="870" y="1119" text-anchor="end" class="s9">🚧</text>
+          <text x="870" y="1119" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency iryou_hoken.shokuji_seikatsu_ryouyou_hyoujun_futangaku %></text>
         <% end %>
 
         <% kouhi_futan_iryous = receipt.ryouyou_no_kyuufu.kouhi_futan_iryous %>
@@ -283,14 +283,14 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <% if kouhi_1st = kouhi_futan_iryous[0] %>
           <text x="510" y="1155" text-anchor="end" class="s9" style="fill: #00f;"><%= kouhi_1st.shokuji_seikatsu_ryouyou_kaisuu %></text>
           <text x="660" y="1155" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency kouhi_1st.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
-          <text x="870" y="1155" text-anchor="end" class="s9">🚧</text>
+          <text x="870" y="1155" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency kouhi_1st.shokuji_seikatsu_ryouyou_hyoujun_futangaku %></text>
         <% end %>
 
         <text x="459.9" y="1180.7" class="s5">②</text>
         <% if kouhi_2nd = kouhi_futan_iryous[1] %>
           <text x="510" y="1192" text-anchor="end" class="s9" style="fill: #00f;"><%= kouhi_2nd.shokuji_seikatsu_ryouyou_kaisuu %></text>
           <text x="660" y="1192" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency kouhi_2nd.shokuji_seikatsu_ryouyou_goukei_kingaku %></text>
-          <text x="870" y="1192" text-anchor="end" class="s9">🚧</text>
+          <text x="870" y="1192" text-anchor="end" class="s9" style="fill: #00f;"><%= to_currency kouhi_2nd.shokuji_seikatsu_ryouyou_hyoujun_futangaku %></text>
         <% end %>
 
     </g>

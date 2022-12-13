@@ -421,6 +421,7 @@ module Receiptisan
             :kyuufu_taishou_ichibu_futankin,
             :shokuji_seikatsu_ryouyou_kaisuu,
             :shokuji_seikatsu_ryouyou_goukei_kingaku,
+            :shokuji_seikatsu_ryouyou_hyoujun_futangaku,
             keyword_init: true
           )
         end
