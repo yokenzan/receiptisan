@@ -72,7 +72,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <!-- 病床区分 -->
         <text x="34.6" y="229.4" class="s3">区分 </text>
-        <text x="75.8" y="229.4" class="s3">🚧🚧🚧🚧🚧</text>
+        <text x="75.8" y="229.4" class="s3" style="fill: #00f;"><%= to_zenkaku receipt.byoushou_types.join(' ') %></text>
     </g>
 
 
@@ -126,12 +126,11 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <g transform="translate(77.9,246.7),scale(<%= '%3.1f' % [28.0 / [patient.name_kana.length, 28].max] %>,1),translate(-77.9,-246.7)">
         <text x="77.9" y="246.7" class="s4" style="fill: #00f;"><%= patient.name_kana %></text>
         </g>
-        <text x="142.8" y="246.7" class="s3"></text>
-        <text x="92" y="294.4" class="s2" style="fill: #00f;"><%= to_zenkaku patient.sex.code %></text>
-        <text x="114" y="294.4" class="s2" style="fill: #00f;"><%= patient.sex.short_name %></text>
+        <text x="102" y="294.4" class="s3" style="fill: #00f;"><%= to_zenkaku patient.sex.code %></text>
+        <text x="114" y="294.4" class="s3" style="fill: #00f;"><%= patient.sex.short_name %></text>
         <% wareki_birth_date = patient.birth_date.wareki %>
-        <text x="139.6" y="294.4" class="s2" style="fill: #00f;"><%= to_zenkaku wareki_birth_date.gengou.code %><%= wareki_birth_date.gengou.short_name %><%= to_zenkaku wareki_birth_date.year.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.month.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.day.to_s.rjust(2) %></text>
-        <text x="330.1" y="294.4" class="s3">生</text>
+        <text x="169.6" y="294.4" class="s3" style="fill: #00f;"><%= to_zenkaku wareki_birth_date.gengou.code %><%= wareki_birth_date.gengou.short_name %><%= to_zenkaku wareki_birth_date.year.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.month.to_s.rjust(2) %>．<%= to_zenkaku wareki_birth_date.day.to_s.rjust(2) %></text>
+        <text x="320.1" y="294.4" class="s3">生</text>
     </g>
 
     <!-- 医療機関 -->
@@ -599,11 +598,11 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <!-- 起算日 -->
         <text x="66" y="838.7" class="s3">入院年月日</text>
-        <text x="189.2" y="838.4" class="s3">令和 </text>
         <text x="241.3" y="838.7" class="s3">年</text>
         <text x="280.3" y="838.7" class="s3">月</text>
         <text x="319.2" y="838.7" class="s3">日</text>
         <% if (nyuuin_date = receipt.nyuuin_date&.wareki) %>
+          <text x="189.2" y="838.4" class="s3" style="fill: #00f;"><%= nyuuin_date.gengou.name %></text>
           <text x="239" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.year  %></text>
           <text x="277" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.month %></text>
           <text x="316" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.day   %></text>
