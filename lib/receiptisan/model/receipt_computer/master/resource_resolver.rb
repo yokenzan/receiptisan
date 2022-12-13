@@ -18,19 +18,23 @@ module Receiptisan
             csv_files      = pathname.children
             detected_paths = {}
             csv_prefixes   = {
-              shinryou_koui: 's',
-              iyakuhin:      'y',
-              tokutei_kizai: 't',
-              comment:       'c',
-              shoubyoumei:   'b',
-              shuushokugo:   'z',
+              shinryou_koui: %w[s k],
+              iyakuhin:      %w[y],
+              tokutei_kizai: %w[t],
+              comment:       %w[c],
+              shoubyoumei:   %w[b],
+              shuushokugo:   %w[z],
             }
 
-            csv_prefixes.each do | key, value |
-              detected_paths["#{key}_csv_path".intern] = csv_files.delete_at(
+            csv_prefixes.each do | key, prefixes |
+              detected_paths["#{key}_csv_path".intern] = []
+              prefixes.each do | prefix |
                 # @param csv [Pathname]
-                csv_files.find_index { | csv | csv.basename.to_path.start_with?(value) }
-              )
+                found_index = csv_files.find_index { | csv | csv.basename.to_path.start_with?(prefix) }
+                next if found_index.nil?
+
+                detected_paths["#{key}_csv_path".intern] << csv_files.delete_at(found_index)
+              end
             end
 
             detected_paths

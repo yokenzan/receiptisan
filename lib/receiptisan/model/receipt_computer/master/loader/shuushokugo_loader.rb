@@ -8,11 +8,11 @@ module Receiptisan
           class ShuushokugoLoader
             include LoaderTrait
 
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Diagnosis::Shuushokugo>]
-            def load(csv_path)
+            def load(csv_paths)
               {}.tap do | hash |
-                foreach(csv_path) do | values |
+                foreach(csv_paths) do | values |
                   code             = Diagnosis::Shuushokugo::Code.of(values[Diagnosis::Shuushokugo::Columns::C_コード])
                   hash[code.value] = Diagnosis::Shuushokugo.new(
                     code:      code,

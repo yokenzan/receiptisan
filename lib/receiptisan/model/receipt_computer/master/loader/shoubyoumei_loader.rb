@@ -8,11 +8,11 @@ module Receiptisan
           class ShoubyoumeiLoader
             include LoaderTrait
 
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Diagnosis::Shoubyoumei>]
-            def load(csv_path)
+            def load(csv_paths)
               {}.tap do | hash |
-                foreach(csv_path) do | values |
+                foreach(csv_paths) do | values |
                   code             = Diagnosis::Shoubyoumei::Code.of(values[Diagnosis::Shoubyoumei::Columns::C_コード])
                   hash[code.value] = Diagnosis::Shoubyoumei.new(
                     code:      code,

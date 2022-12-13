@@ -8,9 +8,9 @@ module Receiptisan
           class CommentLoader
             include LoaderTrait
 
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Treatment::Comment>]
-            def load(csv_path)
+            def load(csv_paths)
               embed_position_columns = [
                 Treatment::Comment::Columns::C_レセプト編集情報_1_カラム位置,
                 Treatment::Comment::Columns::C_レセプト編集情報_1_桁数,
@@ -22,7 +22,7 @@ module Receiptisan
                 Treatment::Comment::Columns::C_レセプト編集情報_4_桁数,
               ]
               {}.tap do | hash |
-                foreach(csv_path) do | values |
+                foreach(csv_paths) do | values |
                   embed_positions = embed_position_columns.each_slice(2).map do | column_start, column_length |
                     start  = values[column_start].to_i
                     length = values[column_length].to_i

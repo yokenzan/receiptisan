@@ -8,11 +8,11 @@ module Receiptisan
           class IyakuhinLoader
             include LoaderTrait
 
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Treatment::Iyakuhin>]
-            def load(csv_path)
+            def load(csv_paths)
               {}.tap do | hash |
-                foreach(csv_path) do | values |
+                foreach(csv_paths) do | values |
                   code             = Treatment::Iyakuhin::Code.of(values[Treatment::Iyakuhin::Columns::C_コード])
                   hash[code.value] = Treatment::Iyakuhin.new(
                     code:            code,

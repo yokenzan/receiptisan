@@ -14,13 +14,15 @@ module Receiptisan
 
             # simple copy of `CSV.foreach()`
             #
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [void]
             # @yieldparam [Array<String, NilClass>] values
             # @yieldreturn [void]
-            def foreach(csv_path)
-              File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
-                f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }
+            def foreach(csv_paths)
+              csv_paths.each do | csv_path |
+                File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
+                  f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }
+                end
               end
             end
 

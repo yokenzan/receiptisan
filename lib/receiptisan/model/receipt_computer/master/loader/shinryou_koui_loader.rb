@@ -9,15 +9,15 @@ module Receiptisan
             include LoaderTrait
 
             # @param version [Version]
-            # @param csv_path [String]
+            # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Treatment::ShinryouKoui>]
-            def load(version, csv_path)
+            def load(version, csv_paths)
               {}.tap do | hash |
                 unless (columns = Treatment::ShinryouKoui::Columns.resolve_columns_by(version))
                   raise ShinryouKouiSchemaNotFoundError, "#{version} ShinryouKoui Master schema not found"
                 end
 
-                foreach(csv_path) do | values |
+                foreach(csv_paths) do | values |
                   code             = Treatment::ShinryouKoui::Code.of(values[columns::C_コード])
                   hash[code.value] = Treatment::ShinryouKoui.new(
                     code:       code,
