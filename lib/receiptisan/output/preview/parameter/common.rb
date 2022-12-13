@@ -140,6 +140,7 @@ module Receiptisan
             :ryouyou_no_kyuufu,
             :tensuu_shuukei,
             :nyuuin_date,
+            :nyuuinryou_abbrev_labels,
             :byoushou_types,
             :kijun_marks,
             keyword_init: true

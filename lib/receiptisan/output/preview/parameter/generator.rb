@@ -12,19 +12,25 @@ module Receiptisan
           DateUtil           = Receiptisan::Util::DateUtil
           DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
           Tag                = Receiptisan::Model::ReceiptComputer::Tag
+          Abbrev             = Receiptisan::Model::ReceiptComputer::Abbrev
 
           class << self
             # @return [self]
             def create
-              new(tag_handler: Tag::Handler.new(Tag::Loader.new))
+              new(
+                tag_handler:    Tag::Handler.new(Tag::Loader.new),
+                abbrev_handler: Abbrev::Handler.new(Abbrev::Loader.new)
+              )
             end
           end
 
-          def initialize(tag_handler:)
-            @tag_handler               = tag_handler
-            @tensuu_shuukei_calculator = TensuuShuukeiCalculator.new(tag_handler)
-            @byoushou_type_detector    = ByoushouTypeDetector.new(tag_handler)
-            @kijun_mark_detector       = KijunMarkDetector.new(tag_handler)
+          def initialize(tag_handler:, abbrev_handler:)
+            @tag_handler                       = tag_handler
+            @abbrev_handler                    = abbrev_handler
+            @tensuu_shuukei_calculator         = TensuuShuukeiCalculator.new(tag_handler)
+            @nyuuinryou_abbrev_label_convertor = NyuuinryouAbbrevLabelConvertor.new(abbrev_handler)
+            @byoushou_type_detector            = ByoushouTypeDetector.new(tag_handler)
+            @kijun_mark_detector               = KijunMarkDetector.new(tag_handler)
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -54,23 +60,24 @@ module Receiptisan
           # @return [Common::Receipt]
           def convert_receipt(receipt, parameterized_audit_payer, parameterized_hospital, parameterized_prefecture)
             Common::Receipt.new(
-              id:                receipt.id,
-              shinryou_ym:       Common::Month.from(receipt.shinryou_ym),
-              nyuugai:           receipt.nyuuin? ? :nyuuin : :gairai,
-              audit_payer:       parameterized_audit_payer,
-              prefecture:        parameterized_prefecture,
-              hospital:          parameterized_hospital,
-              type:              Common::Type.from(receipt.type),
-              tokki_jikous:      receipt.tokki_jikous.values.map { | tj | Common::TokkiJikou.from(tj) },
-              patient:           Common::Patient.from(receipt.patient),
-              hokens:            convert_applied_hoken_list(receipt.hoken_list),
-              shoubyoumeis:      convert_shoubyoumeis(receipt.shoubyoumeis),
-              tekiyou:           convert_tekiyou(receipt),
-              ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
-              tensuu_shuukei:    convert_tensuu_shuukei(receipt),
-              nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
-              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
-              kijun_marks:       receipt.nyuuin? ? convert_kijun_marks(receipt)           : nil
+              id:                       receipt.id,
+              shinryou_ym:              Common::Month.from(receipt.shinryou_ym),
+              nyuugai:                  receipt.nyuuin? ? :nyuuin : :gairai,
+              audit_payer:              parameterized_audit_payer,
+              prefecture:               parameterized_prefecture,
+              hospital:                 parameterized_hospital,
+              type:                     Common::Type.from(receipt.type),
+              tokki_jikous:             receipt.tokki_jikous.values.map { | tj | Common::TokkiJikou.from(tj) },
+              patient:                  Common::Patient.from(receipt.patient),
+              hokens:                   convert_applied_hoken_list(receipt.hoken_list),
+              shoubyoumeis:             convert_shoubyoumeis(receipt.shoubyoumeis),
+              tekiyou:                  convert_tekiyou(receipt),
+              ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt.hoken_list),
+              tensuu_shuukei:           convert_tensuu_shuukei(receipt),
+              nyuuin_date:              receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
+              byoushou_types:           receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
+              kijun_marks:              receipt.nyuuin? ? convert_kijun_marks(receipt)           : nil,
+              nyuuinryou_abbrev_labels: convert_nyuuinryou_abbrev_labels(receipt)
             )
           end
 
@@ -236,6 +243,10 @@ module Receiptisan
             tensuu_shuukei_calculator.calculate(receipt)
           end
 
+          def convert_nyuuinryou_abbrev_labels(receipt)
+            nyuuinryou_abbrev_label_convertor.convert(receipt)
+          end
+
           # @return [Array<String>]
           def convert_byoushou_types(receipt)
             byoushou_type_detector.detect(receipt)
@@ -292,7 +303,10 @@ module Receiptisan
           # rubocop:enable Metrics/PerceivedComplexity
           # rubocop:enable Metrics/CyclomaticComplexity
 
-          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector, :kijun_mark_detector
+          attr_reader :tensuu_shuukei_calculator,
+            :byoushou_type_detector,
+            :kijun_mark_detector,
+            :nyuuinryou_abbrev_label_convertor
         end
         # rubocop:enable Metrics/ClassLength
       end
