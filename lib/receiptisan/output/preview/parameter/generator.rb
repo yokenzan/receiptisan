@@ -303,7 +303,10 @@ module Receiptisan
           # rubocop:enable Metrics/PerceivedComplexity
           # rubocop:enable Metrics/CyclomaticComplexity
 
-          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector, :kijun_mark_detector, :nyuuinryou_abbrev_label_convertor
+          attr_reader :tensuu_shuukei_calculator,
+            :byoushou_type_detector,
+            :kijun_mark_detector,
+            :nyuuinryou_abbrev_label_convertor
         end
         # rubocop:enable Metrics/ClassLength
       end
