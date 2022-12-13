@@ -20,6 +20,8 @@ module Receiptisan
               end
             end
 
+            # @param receipt [Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
+            # @return [Enumnerator]
             def each_santei_unit(receipt, *shinryou_shikibetsu_codes)
               Enumerator.new do | y |
                 receipt.each do | shinryou_shikibetsu_code, section |
