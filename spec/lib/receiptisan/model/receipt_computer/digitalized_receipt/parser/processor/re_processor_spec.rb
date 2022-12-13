@@ -56,7 +56,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       end
 
       specify '09施の特記事項をもっていること' do
-        expect(target.tokki_jikous).to include('09'=> Receipt::TokkiJikou.find_by_code('09'))
+        expect(target.tokki_jikous).to include('09' => Receipt::TokkiJikou.find_by_code('09'))
       end
 
       specify '29区エの特記事項をもっていること' do

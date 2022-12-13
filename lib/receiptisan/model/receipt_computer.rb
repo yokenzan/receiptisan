@@ -3,3 +3,4 @@
 require_relative 'receipt_computer/master'
 require_relative 'receipt_computer/digitalized_receipt'
 require_relative 'receipt_computer/tag'
+require_relative 'receipt_computer/util'
