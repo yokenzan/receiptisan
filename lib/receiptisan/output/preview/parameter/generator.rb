@@ -70,7 +70,7 @@ module Receiptisan
               ryouyou_no_kyuufu: convert_ryouyou_no_kyuufu(receipt.hoken_list),
               tensuu_shuukei:    convert_tensuu_shuukei(receipt),
               nyuuin_date:       receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
-              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)       : nil
+              byoushou_types:    receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil
             )
           end
 
