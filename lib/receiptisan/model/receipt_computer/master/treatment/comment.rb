@@ -191,7 +191,7 @@ module Receiptisan
                 end
 
                 def to_s
-                  Util::DateUtil.to_wareki(@date, zenkaku: true)
+                  Receiptisan::Util::DateUtil.to_wareki(@date, zenkaku: true)
                 end
               end
 

@@ -29,6 +29,7 @@ module Receiptisan
             @abbrev_handler                    = abbrev_handler
             @tensuu_shuukei_calculator         = TensuuShuukeiCalculator.new(tag_handler)
             @nyuuinryou_abbrev_label_convertor = NyuuinryouAbbrevLabelConvertor.new(abbrev_handler)
+            @byoushou_type_detector            = ByoushouTypeDetector.new(tag_handler)
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -73,6 +74,7 @@ module Receiptisan
               ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt.hoken_list),
               tensuu_shuukei:           convert_tensuu_shuukei(receipt),
               nyuuin_date:              receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
+              byoushou_types:           receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
               nyuuinryou_abbrev_labels: convert_nyuuinryou_abbrev_labels(receipt)
             )
           end
@@ -234,12 +236,18 @@ module Receiptisan
             )
           end
 
+          # @return [Common::TensuuShuukei]
           def convert_tensuu_shuukei(receipt)
             tensuu_shuukei_calculator.calculate(receipt)
           end
 
           def convert_nyuuinryou_abbrev_labels(receipt)
             nyuuinryou_abbrev_label_convertor.convert(receipt)
+          end
+
+          # @return [Array<String>]
+          def convert_byoushou_types(receipt)
+            byoushou_type_detector.detect(receipt)
           end
 
           # def convert_shokuji_seikatsu_kijun_mark(receipt)
@@ -296,7 +304,7 @@ module Receiptisan
           # rubocop:enable Metrics/PerceivedComplexity
           # rubocop:enable Metrics/CyclomaticComplexity
 
-          attr_reader :tag_handler, :tensuu_shuukei_calculator, :nyuuinryou_abbrev_label_convertor
+          attr_reader :tensuu_shuukei_calculator, :byoushou_type_detector, :nyuuinryou_abbrev_label_convertor
         end
         # rubocop:enable Metrics/ClassLength
       end

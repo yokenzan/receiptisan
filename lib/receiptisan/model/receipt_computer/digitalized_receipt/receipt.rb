@@ -94,7 +94,7 @@ module Receiptisan
           #   @return [Type]
           attr_reader :type
           # @!attribute [r] tokki_jikous
-          #   @return [Hash<TokkiJikou]
+          #   @return [Hash<String, TokkiJikou]
           attr_reader :tokki_jikous
           # @!attribute [r] shoubyoumeis
           #   @return [Array<Shoubyoumei>]

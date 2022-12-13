@@ -13,7 +13,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
   let(:audit_payer) { DigitalizedReceipt::AuditPayer.find_by_code(DigitalizedReceipt::AuditPayer::PAYER_CODE_KOKUHO) }
   let(:target) do
     processor.process(
-      'RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,29,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク　モウイッカイ　グレートブ,'
+      'RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,0929,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク,'
         .split(',')
         .map { | s | s.empty? ? nil : s },
       audit_payer
@@ -51,6 +51,18 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
         expect(target.type.hoken_multiple_type).to eq Receipt::Type::HokenMultipleType.find_by_code(4)
       end
 
+      specify '特記事項を2つもっていること' do
+        expect(target.tokki_jikous.length).to eq 2
+      end
+
+      specify '09施の特記事項をもっていること' do
+        expect(target.tokki_jikous).to include('09' => Receipt::TokkiJikou.find_by_code('09'))
+      end
+
+      specify '29区エの特記事項をもっていること' do
+        expect(target.tokki_jikous).to include('29' => Receipt::TokkiJikou.find_by_code('29'))
+      end
+
       specify '患者年齢種別が高入一であること' do
         expect(target.type.patient_age_type).to eq Receipt::Type::PatientAgeType.find_by_code(7)
       end
@@ -67,8 +79,8 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
         expect(target.patient.name).to eq 'グレートブリテン及北アイルランド連合王国'
       end
 
-      specify '患者カナ氏名が『グレートブリテンオヨビキタアイルランドレンゴウオウコク　モウイッカイ　グレートブ』であること' do
-        expect(target.patient.name_kana).to eq 'グレートブリテンオヨビキタアイルランドレンゴウオウコク　モウイッカイ　グレートブ'
+      specify '患者カナ氏名が『グレートブリテンオヨビキタアイルランドレンゴウオウコク』であること' do
+        expect(target.patient.name_kana).to eq 'グレートブリテンオヨビキタアイルランドレンゴウオウコク'
       end
 
       specify '患者性別が女性であること' do
