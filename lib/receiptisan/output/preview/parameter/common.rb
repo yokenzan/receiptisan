@@ -141,6 +141,7 @@ module Receiptisan
             :tensuu_shuukei,
             :nyuuin_date,
             :byoushou_types,
+            :kijun_marks,
             keyword_init: true
           )
           Patient = Struct.new(:id, :name, :name_kana, :sex, :birth_date, keyword_init: true) do
@@ -359,7 +360,7 @@ module Receiptisan
           )
           # 点数欄「97食事・生活」の「基準」および「基準(生)」に埋め込む、
           # 算定食事・生活療養費のローマ数字による略号
-          ShokujiSeikatsuKijunMark = Struct.new(:shokuji, :seikatsu, keyword_init: true)
+          ShokujiSeikatsuKijunMarks = Struct.new(:shokuji, :seikatsu, keyword_init: true)
 
           # 摘要欄
 

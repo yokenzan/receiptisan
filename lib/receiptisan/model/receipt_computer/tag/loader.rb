@@ -19,7 +19,7 @@ module Receiptisan
 
             Master.new(
               version: version,
-              tags:    hash['tags'].to_h { | tag_def | [tag_def['name'].intern, Tag.from(tag_def)] }
+              tags:    hash['tags'].to_h { | tag_def | [tag_def['key'].intern, Tag.from(tag_def)] }
             )
           end
 

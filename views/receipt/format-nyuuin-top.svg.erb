@@ -666,7 +666,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="453.4" y="1038.9" class="s6">・</text>
         <text x="448" y="1056.2" class="s6">生活</text>
 
-        <text x="501" y="1004.3" class="s3">１ </text> <!-- 食事 きじゅん1 -->
+        <text x="501" y="1004.3" class="s3" text-anchor="center" style="fill: #00f;"><%= receipt.kijun_marks.shokuji.join %></text> 
 
         <% shuhoken = receipt.tensuu_shuukei.sections[:'97_shokuji-ryouyou-kijun'].hokens[receipt.hokens.main.code] %>
         <text x="474" y="1004.3" class="s3">基準</text>
@@ -702,6 +702,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <% shuhoken = receipt.tensuu_shuukei.sections[:'97_seikatsu-ryouyou-kijun'].hokens[receipt.hokens.main.code] %>
         <text x="668.8" y="1022.7" class="s3">基準（生）</text>
+        <text x="728"   y="1022.7" class="s3" text-anchor="center" style="fill: #00f;"><%= receipt.kijun_marks.seikatsu.join %></text> 
         <text x="799.6" y="1022.7" class="sd" text-anchor="end" style="fill: #00f;"><%= to_currency shuhoken.tensuu %></text>
         <text x="800.8" y="1022.7" class="s3">円</text>
         <text x="813.8" y="1022.7" class="s7">×</text>

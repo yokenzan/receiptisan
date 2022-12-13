@@ -5,10 +5,18 @@ module Receiptisan
     module Preview
       module Parameter
         # 病床区分欄
+        #
+        # > [診療報酬請求書等の記載要領](https://www.mhlw.go.jp/content/12404000/000984055.pdf#page=12)
+        # >
+        # > (10) 「区分」欄について
+        # >
+        # > 当該患者が入院している病院又は病棟の種類に応じ、該当する文字を○で囲むこと。また、月の途中において病棟を移った場合は、そのすべてに○を付すこと。
+        # > なお、電子計算機の場合は、コードと名称又は次の略称を記載することとしても差し支えないこと。
+        # > ０１精神（精神病棟）、０２結核（結核病棟）、０７療養（療養病棟）
         class ByoushouTypeDetector
           EnumeratorGenerator = Receiptisan::Model::ReceiptComputer::Util::ReceiptEnumeratorGenerator
           DigitalizedReceipt  = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
-          TAG_NAMES           = %w[byoushou-type-ryouyou].freeze
+          TAG_KEYS            = %w[byoushou-type-ryouyou].freeze
 
           # @param tag_handler [Receiptisan::Model::ReceiptComputer::Tag::Handler]
           def initialize(tag_handler)
@@ -38,7 +46,7 @@ module Receiptisan
           # @param year_month [Month]
           def initialize_tags(year_month)
             tag_handler.prepare(year_month)
-            @tags = TAG_NAMES.map { | tag_name | tag_handler.find_by_name(tag_name) }
+            @tags = TAG_KEYS.map { | tag_key | tag_handler.find_by_key(tag_key) }
           end
 
           private
