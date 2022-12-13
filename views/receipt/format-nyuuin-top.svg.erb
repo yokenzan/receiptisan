@@ -599,11 +599,11 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
         <!-- 起算日 -->
         <text x="66" y="838.7" class="s3">入院年月日</text>
-        <text x="189.2" y="838.4" class="s3">令和 </text>
         <text x="241.3" y="838.7" class="s3">年</text>
         <text x="280.3" y="838.7" class="s3">月</text>
         <text x="319.2" y="838.7" class="s3">日</text>
         <% if (nyuuin_date = receipt.nyuuin_date&.wareki) %>
+          <text x="189.2" y="838.4" class="s3" style="fill: #00f;"><%= nyuuin_date.gengou.name %></text>
           <text x="239" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.year  %></text>
           <text x="277" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.month %></text>
           <text x="316" y="838.7" class="sd" text-anchor="end" style="fill: #00f;"><%= nyuuin_date.day   %></text>
