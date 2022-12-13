@@ -109,6 +109,12 @@ module Receiptisan
                 def find_by_code(code)
                   @list[code.to_s.intern]
                 end
+
+                def each_hoken_order
+                  return @list.enum_for(:each) unless block_given?
+
+                  @list.each { | key, value | yield key, value }
+                end
               end
             end
           end

@@ -19,6 +19,18 @@ module Receiptisan
                 end
               end
             end
+
+            def each_santei_unit(receipt, *shinryou_shikibetsu_codes)
+              Enumerator.new do | y |
+                receipt.each do | shinryou_shikibetsu_code, section |
+                  is_empty = shinryou_shikibetsu_codes.empty?
+                  includes = shinryou_shikibetsu_codes.include?(shinryou_shikibetsu_code)
+                  next if !is_empty && !includes
+
+                  section.each { | ichiren | ichiren.each { | santei | y << santei } }
+                end
+              end
+            end
           end
         end
       end

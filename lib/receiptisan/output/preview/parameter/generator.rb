@@ -26,11 +26,13 @@ module Receiptisan
 
           def initialize(tag_handler:, abbrev_handler:)
             @tag_handler                       = tag_handler
-            @abbrev_handler                    = abbrev_handler
             @tensuu_shuukei_calculator         = TensuuShuukeiCalculator.new(tag_handler)
-            @nyuuinryou_abbrev_label_convertor = NyuuinryouAbbrevLabelConvertor.new(abbrev_handler)
             @byoushou_type_detector            = ByoushouTypeDetector.new(tag_handler)
             @kijun_mark_detector               = KijunMarkDetector.new(tag_handler)
+            @hyoujun_futangaku_calculator      = HyoujunFutangakuCalculator.new(tag_handler)
+
+            @abbrev_handler                    = abbrev_handler
+            @nyuuinryou_abbrev_label_convertor = NyuuinryouAbbrevLabelConvertor.new(abbrev_handler)
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -72,7 +74,7 @@ module Receiptisan
               hokens:                   convert_applied_hoken_list(receipt.hoken_list),
               shoubyoumeis:             convert_shoubyoumeis(receipt.shoubyoumeis),
               tekiyou:                  convert_tekiyou(receipt),
-              ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt.hoken_list),
+              ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt),
               tensuu_shuukei:           convert_tensuu_shuukei(receipt),
               nyuuin_date:              receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
               byoushou_types:           receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
@@ -94,34 +96,41 @@ module Receiptisan
             )
           end
 
-          # @param applied_hoken_list [DigitalizedReceipt::Receipt::AppliedHokenList]
-          def convert_ryouyou_no_kyuufu(applied_hoken_list)
-            list = Common::RyouyouNoKyuufuList.new
+          # TODO HokenOrderをちゃんと使う
+          #
+          # @param receipt [DigitalizedReceipt::Receipt]
+          def convert_ryouyou_no_kyuufu(receipt)
+
+            applied_hoken_list = receipt.hoken_list
+            ryouyou_no_kyuufu  = Common::RyouyouNoKyuufuList.new
+            hyoujun_futangakus = hyoujun_futangaku_calculator.calculate(receipt)
 
             if (iryou_hoken = applied_hoken_list.iryou_hoken)
-              list.iryou_hoken = Common::RyouyouNoKyuufu.new(
-                goukei_tensuu:                           iryou_hoken.goukei_tensuu,
-                shinryou_jitsunissuu:                    iryou_hoken.shinryou_jitsunissuu,
-                ichibu_futankin:                         iryou_hoken.ichibu_futankin,
-                kyuufu_taishou_ichibu_futankin:          iryou_hoken.kyuufu_taishou_ichibu_futankin,
-                shokuji_seikatsu_ryouyou_kaisuu:         iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu,
-                shokuji_seikatsu_ryouyou_goukei_kingaku: iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku
+              ryouyou_no_kyuufu.iryou_hoken = Common::RyouyouNoKyuufu.new(
+                goukei_tensuu:                              iryou_hoken.goukei_tensuu,
+                shinryou_jitsunissuu:                       iryou_hoken.shinryou_jitsunissuu,
+                ichibu_futankin:                            iryou_hoken.ichibu_futankin,
+                kyuufu_taishou_ichibu_futankin:             iryou_hoken.kyuufu_taishou_ichibu_futankin,
+                shokuji_seikatsu_ryouyou_kaisuu:            iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu,
+                shokuji_seikatsu_ryouyou_goukei_kingaku:    iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku,
+                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[DigitalizedReceipt::Receipt::FutanKubun::HokenOrder::HOKEN_ORDER_IRYOU_HOKEN]
               )
             end
 
-            list.kouhi_futan_iryous = []
-            applied_hoken_list.kouhi_futan_iryous.values.map do | kouhi_futan_iryou |
-              list.kouhi_futan_iryous << Common::RyouyouNoKyuufu.new(
-                goukei_tensuu:                           kouhi_futan_iryou.goukei_tensuu,
-                shinryou_jitsunissuu:                    kouhi_futan_iryou.shinryou_jitsunissuu,
-                ichibu_futankin:                         kouhi_futan_iryou.ichibu_futankin,
-                kyuufu_taishou_ichibu_futankin:          kouhi_futan_iryou.kyuufu_taishou_ichibu_futankin,
-                shokuji_seikatsu_ryouyou_kaisuu:         kouhi_futan_iryou.shokuji_seikatsu_ryouyou_kaisuu,
-                shokuji_seikatsu_ryouyou_goukei_kingaku: kouhi_futan_iryou.shokuji_seikatsu_ryouyou_goukei_kingaku
+            ryouyou_no_kyuufu.kouhi_futan_iryous = []
+            applied_hoken_list.kouhi_futan_iryous.values.map.with_index do | kouhi_futan_iryou, index |
+              ryouyou_no_kyuufu.kouhi_futan_iryous << Common::RyouyouNoKyuufu.new(
+                goukei_tensuu:                              kouhi_futan_iryou.goukei_tensuu,
+                shinryou_jitsunissuu:                       kouhi_futan_iryou.shinryou_jitsunissuu,
+                ichibu_futankin:                            kouhi_futan_iryou.ichibu_futankin,
+                kyuufu_taishou_ichibu_futankin:             kouhi_futan_iryou.kyuufu_taishou_ichibu_futankin,
+                shokuji_seikatsu_ryouyou_kaisuu:            kouhi_futan_iryou.shokuji_seikatsu_ryouyou_kaisuu,
+                shokuji_seikatsu_ryouyou_goukei_kingaku:    kouhi_futan_iryou.shokuji_seikatsu_ryouyou_goukei_kingaku,
+                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[DigitalizedReceipt::Receipt::FutanKubun::HokenOrder.kouhi_futan_iryou(index).code]
               )
             end
 
-            list
+            ryouyou_no_kyuufu
           end
 
           # @param shoubyoumeis [Array<DigitalizedReceipt::Receipt::Shoubyoumei>]
@@ -306,7 +315,8 @@ module Receiptisan
           attr_reader :tensuu_shuukei_calculator,
             :byoushou_type_detector,
             :kijun_mark_detector,
-            :nyuuinryou_abbrev_label_convertor
+            :nyuuinryou_abbrev_label_convertor,
+            :hyoujun_futangaku_calculator
         end
         # rubocop:enable Metrics/ClassLength
       end
