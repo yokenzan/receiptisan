@@ -11,6 +11,7 @@ module Receiptisan
           Common             = Receiptisan::Output::Preview::Parameter::Common
           DateUtil           = Receiptisan::Util::DateUtil
           DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
+          HokenOrder         = DigitalizedReceipt::Receipt::FutanKubun::HokenOrder
           Tag                = Receiptisan::Model::ReceiptComputer::Tag
           Abbrev             = Receiptisan::Model::ReceiptComputer::Abbrev
 
@@ -96,11 +97,10 @@ module Receiptisan
             )
           end
 
-          # TODO HokenOrderをちゃんと使う
+          # TODO: HokenOrderをちゃんと使う
           #
           # @param receipt [DigitalizedReceipt::Receipt]
           def convert_ryouyou_no_kyuufu(receipt)
-
             applied_hoken_list = receipt.hoken_list
             ryouyou_no_kyuufu  = Common::RyouyouNoKyuufuList.new
             hyoujun_futangakus = hyoujun_futangaku_calculator.calculate(receipt)
@@ -113,7 +113,7 @@ module Receiptisan
                 kyuufu_taishou_ichibu_futankin:             iryou_hoken.kyuufu_taishou_ichibu_futankin,
                 shokuji_seikatsu_ryouyou_kaisuu:            iryou_hoken.shokuji_seikatsu_ryouyou_kaisuu,
                 shokuji_seikatsu_ryouyou_goukei_kingaku:    iryou_hoken.shokuji_seikatsu_ryouyou_goukei_kingaku,
-                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[DigitalizedReceipt::Receipt::FutanKubun::HokenOrder::HOKEN_ORDER_IRYOU_HOKEN]
+                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[HokenOrder::HOKEN_ORDER_IRYOU_HOKEN]
               )
             end
 
@@ -126,7 +126,7 @@ module Receiptisan
                 kyuufu_taishou_ichibu_futankin:             kouhi_futan_iryou.kyuufu_taishou_ichibu_futankin,
                 shokuji_seikatsu_ryouyou_kaisuu:            kouhi_futan_iryou.shokuji_seikatsu_ryouyou_kaisuu,
                 shokuji_seikatsu_ryouyou_goukei_kingaku:    kouhi_futan_iryou.shokuji_seikatsu_ryouyou_goukei_kingaku,
-                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[DigitalizedReceipt::Receipt::FutanKubun::HokenOrder.kouhi_futan_iryou(index).code]
+                shokuji_seikatsu_ryouyou_hyoujun_futangaku: hyoujun_futangakus[HokenOrder.kouhi_futan_iryou(index).code]
               )
             end
 

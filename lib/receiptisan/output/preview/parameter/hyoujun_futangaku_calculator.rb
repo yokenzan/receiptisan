@@ -57,4 +57,3 @@ module Receiptisan
     end
   end
 end
-

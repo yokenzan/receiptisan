@@ -110,10 +110,10 @@ module Receiptisan
                   @list[code.to_s.intern]
                 end
 
-                def each_hoken_order
+                def each_hoken_order(&block)
                   return @list.enum_for(:each) unless block_given?
 
-                  @list.each { | key, value | yield key, value }
+                  @list.each(&block)
                 end
               end
             end
