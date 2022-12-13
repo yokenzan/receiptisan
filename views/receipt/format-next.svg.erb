@@ -113,6 +113,7 @@ fill="#FFFFFF" stroke="none"/>
     <g clip-path="url(#c0)">
         <text x="502.1" y="95.8"  class="s2_2">保　険</text>
         <text x="515.1" y="113.6" class="s2_2">記号・番号</text>
+        <text x="785"   y="113.7" class="s4">（枝番）</text>
         <!-- 保険 -->
         <% if iryou_hoken = receipt.hokens.iryou_hoken %>
             <%
@@ -124,6 +125,7 @@ fill="#FFFFFF" stroke="none"/>
             <% end %>
             <text x="623.1" y="113.7" class="s4_2" style="fill: #00f;"><%= to_zenkaku iryou_hoken.kigou %></text>
             <text x="623.1" y="128.3" class="s4_2" style="fill: #00f;"><%= to_zenkaku iryou_hoken.bangou %></text>
+            <text x="795"   y="128.3" class="s4"   style="fill: #00f;"><%= to_zenkaku iryou_hoken.edaban %></text>
         <% end %>
     </g>
 
