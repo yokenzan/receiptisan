@@ -34,13 +34,13 @@ module Receiptisan
         option :disease,  type: :boolean, required: false, default: true
         option :mask,     type: :boolean, required: false, default: false
         # config for previewer selection
-        # option :mode, default: 'cli', values: %w[cli svg], desc: 'preview method'
+        option :format, default: 'cli', values: %w[cli svg yaml json], desc: 'preview format'
 
         # @param [String] uke
         # @param [Hash] options
         def call(uke: nil, **options)
           _parameter_pattern  = determine_parameter_pattern({ uke: uke }.merge(options))
-          @previewer          = determine_previewer
+          @previewer          = determine_previewer(options[:format])
           digitalized_receipt = parse(uke)
           preview_receipts(digitalized_receipt)
         end
@@ -56,8 +56,18 @@ module Receiptisan
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
         end
 
-        def determine_previewer
-          Preview::Previewer::SVGPreviewer.new
+        # @return [#preview]
+        def determine_previewer(format)
+          case format.downcase
+          when 'svg'
+            Preview::Previewer::SVGPreviewer.new
+          when 'json'
+            Preview::Previewer::JSONPreviewer.new
+          when 'yaml'
+            Preview::Previewer::YAMLPreviewer.new
+          else
+            raise ArgumentError, "unsupported preview format specified : '#{format}'"
+          end
         end
 
         # @param [String] text_seqs
