@@ -8,7 +8,7 @@ module Receiptisan
           class << self
             # @param receipt [Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
             # @return [Enumnerator]
-            def cost_enum_from(receipt, *shinryou_shikibetsu_codes)
+            def each_cost_for(receipt, *shinryou_shikibetsu_codes)
               Enumerator.new do | y |
                 receipt.each do | shinryou_shikibetsu_code, section |
                   is_empty = shinryou_shikibetsu_codes.empty?

@@ -32,7 +32,7 @@ module Receiptisan
             # @param tag [Receiptisan::Model::ReceiptComputer::Tag::Tag]
             @tags.each do | tag |
               # @param cost [DigitalizedReceipt::Receipt::Tekiyou::Cost]
-              EnumeratorGenerator.cost_enum_from(receipt, *tag.shinryou_shikibetsu).map do | cost |
+              EnumeratorGenerator.each_cost_for(receipt, *tag.shinryou_shikibetsu).map do | cost |
                 next unless tag.code.include?(cost.resource.code.value)
 
                 byoushou_type_labels << tag.label
