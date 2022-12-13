@@ -47,11 +47,6 @@ module Receiptisan
             tags.each do | tag |
               # @param cost [DigitalizedReceipt::Receipt::Tekiyou::Cost]
               EnumeratorGenerator.cost_enum_from(receipt, *tag.shinryou_shikibetsu).map do | cost |
-                warn '-----------'
-                warn cost.resource.code.value.inspect
-                warn cost.resource.name.inspect
-                warn tag.code.inspect
-                warn tag.label.inspect
                 next unless tag.code.include?(cost.resource.code.value)
 
                 (tag.key.to_s.include?('shokuji') ? kijun_marks.shokuji : kijun_marks.seikatsu) << tag.label
