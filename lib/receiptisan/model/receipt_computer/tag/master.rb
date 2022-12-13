@@ -12,10 +12,10 @@ module Receiptisan
             @tags    = tags
           end
 
-          # @param tag_name [String]
+          # @param tag_key [String, Symbol]
           # @return [Tag, nil]
-          def find_by_name(tag_name)
-            @tags[tag_name.to_s.intern]
+          def find_by_key(tag_key)
+            @tags[tag_key.to_s.intern]
           end
 
           # @!attribute [r] version

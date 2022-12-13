@@ -128,9 +128,9 @@ module Receiptisan
               parameter.target << TargetFilter::ResourceTypeTargetFilter.new(*resources)
             end
 
-            if (tag_name = attributes[:target][:tag])
+            if (tag_key = attributes[:target][:tag])
               # @param tag [TagLoader::Tag]
-              tag = tag_handler.find_by_name(tag_name)
+              tag = tag_handler.find_by_key(tag_key)
 
               parameter.target << TargetFilter::TagTargetFilter.new(tag)
 

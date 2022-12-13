@@ -8,7 +8,7 @@ module Receiptisan
         class ByoushouTypeDetector
           EnumeratorGenerator = Receiptisan::Model::ReceiptComputer::Util::ReceiptEnumeratorGenerator
           DigitalizedReceipt  = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
-          TAG_NAMES           = %w[byoushou-type-ryouyou].freeze
+          TAG_KEYS            = %w[byoushou-type-ryouyou].freeze
 
           # @param tag_handler [Receiptisan::Model::ReceiptComputer::Tag::Handler]
           def initialize(tag_handler)
@@ -38,7 +38,7 @@ module Receiptisan
           # @param year_month [Month]
           def initialize_tags(year_month)
             tag_handler.prepare(year_month)
-            @tags = TAG_NAMES.map { | tag_name | tag_handler.find_by_name(tag_name) }
+            @tags = TAG_KEYS.map { | tag_key | tag_handler.find_by_key(tag_key) }
           end
 
           private
