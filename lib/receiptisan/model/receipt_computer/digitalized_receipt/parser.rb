@@ -12,7 +12,7 @@ module Receiptisan
   module Model
     module ReceiptComputer
       class DigitalizedReceipt
-        class Parser # rubocop:disable Style/ClassLength
+        class Parser # rubocop:disable MEtrics/ClassLength
           include Parser::Context::ErrorContextReportable
 
           ReceiptType   = DigitalizedReceipt::Receipt::Type
