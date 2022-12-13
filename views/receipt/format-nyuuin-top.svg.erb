@@ -637,6 +637,20 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="155.8" y="967.5" class="s7">92</text>
         <text x="171" y="968.5" class="s3">特定入院料・その他 </text>
 
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'92']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+          start_y     = 985.8
+        %>
+        <% shuhoken.units.take(5).each_with_index do | unit, index | %>
+          <text x="277.1" y="<%= start_y + 18.4 * index %>" class="sd" text-anchor="end" style="fill: #00f;"><%= to_currency unit.total_kaisuu %></text>
+          <text x="279.2" y="<%= start_y + 18.4 * index %>" class="s3">日</text>
+          <text x="366"   y="<%= start_y + 18.4 * index %>" class="sd" text-anchor="end" style="fill: #00f;"><%= to_currency iryou_hoken&.units&.at(index)&.total_tensuu %></text><!-- 点数 -->
+          <text x="443.7" y="<%= start_y + 18.4 * index %>" class="sd" text-anchor="end" style="fill: #00f;"><%= to_currency kouhi_1st&.units&.at(index)&.total_tensuu   %></text><!-- 公費分点数 -->
+        <% end %>
+
         <text x="448" y="985.9" class="s3">※高額療養費</text>
         <text x="651.5" y="985.9" class="s3">円</text>
 
