@@ -42,6 +42,7 @@ module Receiptisan
             @shoubyoumeis       = []
             @shoujou_shoukis    = []
             @nyuuin_date        = nyuuin_date
+            @byoushou_types     = []
           end
 
           # @param tokki_jikou [TokkiJikou]
@@ -66,6 +67,12 @@ module Receiptisan
           # @return [void]
           def add_shoujou_shouki(shoujou_shouki)
             @shoujou_shoukis << shoujou_shouki
+          end
+
+          # @param byoushou_type [ByoushouType]
+          # @return [void]
+          def add_byoushou_type(byoushou_type)
+            @byoushou_types << byoushou_type
           end
 
           def nyuuin?
@@ -102,6 +109,9 @@ module Receiptisan
           # @!attribute [r] nyuuin_date
           #   @return [Date, nil]
           attr_reader :nyuuin_date
+          # @!attribute [r] byoushou_type
+          #   @return [Array<ByoushouType>]
+          attr_reader :byoushou_types
           # @!attribute [r] shoujou_shoukis
           #   @return [Array<ShoujouShouki>]
           attr_reader :shoujou_shoukis

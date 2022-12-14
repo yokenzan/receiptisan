@@ -29,7 +29,10 @@ module Receiptisan
                 @kyuufu_wariai    = nil
                 @teishotoku_kubun = nil
 
-                process_new_receipt(values, audit_payer).tap { | receipt | process_tokki_jikous(receipt, values) }
+                process_new_receipt(values, audit_payer).tap do | receipt |
+                  process_tokki_jikous(receipt, values)
+                  process_byoushou_types(receipt, values)
+                end
               end
 
               def kyuufu_wariai
@@ -73,6 +76,15 @@ module Receiptisan
               def process_tokki_jikous(receipt, values)
                 values[RE::C_レセプト特記事項].to_s.scan(/\d\d/).each do | code |
                   receipt.add_tokki_jikou(Receipt::TokkiJikou.find_by_code(code))
+                end
+              end
+
+              # @param receipt [Receipt]
+              # @param values [Array<String, nil>]
+              # @return [void]
+              def process_byoushou_types(receipt, values)
+                values[RE::C_病棟区分].to_s.scan(/\d\d/).each do | code |
+                  receipt.add_byoushou_type(DigitalizedReceipt::ByoushouType.find_by_code(code))
                 end
               end
             end

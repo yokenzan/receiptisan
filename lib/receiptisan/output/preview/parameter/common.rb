@@ -207,6 +207,20 @@ module Receiptisan
             extend CodedItemFactory
           end
 
+          class ByoushouType < CodedItemWithShortName
+            class << self
+              # @param byoushou_type [Model::ReceiptComputer::DigitalizedReceipt::ByoushouType]
+              # @return [self]
+              def from(byoushou_type)
+                new(
+                  code:       byoushou_type.code,
+                  name:       byoushou_type.name,
+                  short_name: byoushou_type.short_name
+                )
+              end
+            end
+          end
+
           class Prefecture < CodedItemWithShortName
             class << self
               # @param prefecture [Model::ReceiptComputer::DigitalizedReceipt::Prefecture]

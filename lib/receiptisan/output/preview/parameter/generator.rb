@@ -28,7 +28,6 @@ module Receiptisan
           def initialize(tag_handler:, abbrev_handler:)
             @tag_handler                       = tag_handler
             @tensuu_shuukei_calculator         = TensuuShuukeiCalculator.new(tag_handler)
-            @byoushou_type_detector            = ByoushouTypeDetector.new(tag_handler)
             @kijun_mark_detector               = KijunMarkDetector.new(tag_handler)
             @hyoujun_futangaku_calculator      = HyoujunFutangakuCalculator.new(tag_handler)
 
@@ -256,9 +255,9 @@ module Receiptisan
             nyuuinryou_abbrev_label_convertor.convert(receipt)
           end
 
-          # @return [Array<String>]
+          # @return [Array<Common::ByoushouType>]
           def convert_byoushou_types(receipt)
-            byoushou_type_detector.detect(receipt)
+            receipt.byoushou_types.map { | byoushou_type | Common::ByoushouType.from(byoushou_type) }
           end
 
           def convert_kijun_marks(receipt)
@@ -313,7 +312,6 @@ module Receiptisan
           # rubocop:enable Metrics/CyclomaticComplexity
 
           attr_reader :tensuu_shuukei_calculator,
-            :byoushou_type_detector,
             :kijun_mark_detector,
             :nyuuinryou_abbrev_label_convertor,
             :hyoujun_futangaku_calculator

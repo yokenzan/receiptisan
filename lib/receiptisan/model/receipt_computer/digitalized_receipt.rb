@@ -3,6 +3,7 @@
 require 'forwardable'
 require_relative 'digitalized_receipt/prefecture'
 require_relative 'digitalized_receipt/audit_payer'
+require_relative 'digitalized_receipt/byoushou_type'
 require_relative 'digitalized_receipt/hospital'
 require_relative 'digitalized_receipt/sex'
 require_relative 'digitalized_receipt/receipt'
