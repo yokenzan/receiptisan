@@ -91,6 +91,15 @@ module Receiptisan
             end
           end
 
+          # 低所得区分をレセプトに出力するか？
+          #
+          # @param digitalized_receipt [Parameter::Common::Receipt]
+          def should_print_teishotoku_type?(receipt)
+            return false unless receipt.hokens.iryou_hoken&.teishotoku_type
+
+            %i[kouki_ippan kourei_ippan].include?(receipt.classification)
+          end
+
           # @return [HokenOrder]
           def iryou_hoken_order
             HokenOrder.iryou_hoken

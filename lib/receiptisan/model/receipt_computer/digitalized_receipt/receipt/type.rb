@@ -22,6 +22,30 @@ module Receiptisan
               @patient_age_type.nyuuin?
             end
 
+            # TODO: 処理を他に移す、適切なかたちにEnum化する
+            # @return [Symbol]
+            def classification
+              # 公費
+              return :kouhi if main_hoken_type.kouhi?
+
+              case # rubocop:disable Style/EmptyCaseCondition
+              when patient_age_type.mishuugakuji?
+                # 未就学児
+                :mishuugakuji
+              when patient_age_type.kourei_ippan?
+                # 高齢受給者一般・低所得
+                # 後期高齢者一般・低所得
+                main_hoken_type.kouki? ? :kouki_ippan : :kourei_ippan
+              when patient_age_type.kourei_geneki?
+                # 高齢受給者現役並み
+                # 後期高齢者現役並み
+                main_hoken_type.kouki? ? :kouki_geneki : :kourei_geneki
+              else
+                # 一般
+                :ippan
+              end
+            end
+
             # @!attribute [r] tensuu_hyou_type
             #   @return [TensuuHyouType] 点数表種別
             # @!attribute [r] main_hoken_type
@@ -64,6 +88,14 @@ module Receiptisan
               def initialize(code:, name:)
                 @code = code
                 @name = name
+              end
+
+              def kouki?
+                name == '後期'
+              end
+
+              def kouhi?
+                name == '公費'
               end
 
               # @!attribute [r] code
@@ -112,6 +144,22 @@ module Receiptisan
 
               def nyuuin?
                 code.odd?
+              end
+
+              def ippan?
+                name.include?('本') || name.include?('家')
+              end
+
+              def mishuugakuji?
+                name.include?('六')
+              end
+
+              def kourei_ippan?
+                name.include?('一')
+              end
+
+              def kourei_geneki?
+                name.include?('７')
               end
 
               # @!attribute [r] code

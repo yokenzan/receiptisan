@@ -135,6 +135,7 @@ module Receiptisan
             :patient,
             :tokki_jikous,
             :hokens,
+            :classification,
             :shoubyoumeis,
             :tekiyou,
             :ryouyou_no_kyuufu,
@@ -259,7 +260,7 @@ module Receiptisan
             :bangou,
             :edaban,
             :kyuufu_wariai,
-            :teishotoku_kubun,
+            :teishotoku_type,
             keyword_init: true
           ) do
             class << self
@@ -267,12 +268,14 @@ module Receiptisan
               # @return [self]
               def from(iryou_hoken)
                 new(
-                  hokenja_bangou:   iryou_hoken.hokenja_bangou,
-                  kigou:            iryou_hoken.kigou,
-                  bangou:           iryou_hoken.bangou,
-                  edaban:           iryou_hoken.edaban,
-                  kyuufu_wariai:    iryou_hoken.kyuufu_wariai,
-                  teishotoku_kubun: iryou_hoken.teishotoku_kubun
+                  hokenja_bangou:  iryou_hoken.hokenja_bangou,
+                  kigou:           iryou_hoken.kigou,
+                  bangou:          iryou_hoken.bangou,
+                  edaban:          iryou_hoken.edaban,
+                  kyuufu_wariai:   iryou_hoken.kyuufu_wariai,
+                  teishotoku_type: iryou_hoken.teishotoku_type&.then do | teishotoku_type |
+                    TeishotokuType.from(teishotoku_type)
+                  end
                 )
               end
             end
@@ -285,6 +288,18 @@ module Receiptisan
                 new(
                   futansha_bangou:  kouhi_futan_iryou.futansha_bangou,
                   jukyuusha_bangou: kouhi_futan_iryou.jukyuusha_bangou
+                )
+              end
+            end
+          end
+          class TeishotokuType < CodedItemWithShortName
+            class << self
+              # @param teishotoku_type [Model::ReceiptComputer::DigitalizedReceipt::Receipt::TeishotokuType]
+              def from(teishotoku_type)
+                new(
+                  code:       teishotoku_type.code,
+                  name:       teishotoku_type.name,
+                  short_name: teishotoku_type.short_name
                 )
               end
             end

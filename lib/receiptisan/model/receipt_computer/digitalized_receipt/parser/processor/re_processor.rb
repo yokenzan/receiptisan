@@ -26,8 +26,8 @@ module Receiptisan
               def process(values, audit_payer)
                 raise StandardError, 'line isnt RE record' unless values.first == 'RE'
 
-                @kyuufu_wariai    = nil
-                @teishotoku_kubun = nil
+                @kyuufu_wariai   = nil
+                @teishotoku_type = nil
 
                 process_new_receipt(values, audit_payer).tap do | receipt |
                   process_tokki_jikous(receipt, values)
@@ -39,8 +39,8 @@ module Receiptisan
                 @kyuufu_wariai.tap { @kyuufu_wariai = nil }
               end
 
-              def teishotoku_kubun
-                @teishotoku_kubun.tap { @teishotoku_kubun = nil }
+              def teishotoku_type
+                @teishotoku_type.tap { @teishotoku_type = nil }
               end
 
               private
@@ -51,9 +51,11 @@ module Receiptisan
               def process_new_receipt(values, audit_payer)
                 @receipt_type_builder.audit_payer = audit_payer
 
-                @kyuufu_wariai    = values[RE::C_給付割合]&.to_i
-                @teishotoku_kubun = values[RE::C_一部負担金・食事療養費・生活療養費標準負担額区分]&.to_i
-                type              = @receipt_type_builder.build_with(values[RE::C_レセプト種別])
+                type             = @receipt_type_builder.build_with(values[RE::C_レセプト種別])
+                @kyuufu_wariai   = values[RE::C_給付割合]&.to_i
+                @teishotoku_type = Receipt::TeishotokuType.find_by_code(
+                  values[RE::C_一部負担金・食事療養費・生活療養費標準負担額区分]
+                )
 
                 Receipt.new(
                   id:          values[RE::C_レセプト番号].to_i,

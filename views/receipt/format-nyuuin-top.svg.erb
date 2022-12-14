@@ -718,6 +718,11 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="813.8" y="1041.1" class="s7">×</text>
         <text x="858"   y="1041.1" class="sd" text-anchor="end" style="fill: #00f;"><%= to_currency shuhoken.total_kaisuu %></text>
         <text x="859.2" y="1041.1" class="s3">回</text>
+
+
+        <% if should_print_teishotoku_type?(receipt) %>
+            <text x="668.8" y="1060" class="s3" style="fill: #00f;"><%= receipt.hokens.iryou_hoken.teishotoku_type.short_name %></text>
+        <% end %>
     </g>
 
 

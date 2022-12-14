@@ -102,7 +102,7 @@ module Receiptisan
               @current_hoken_list          = nil
               @current_shinryou_shikibetsu = nil
               @latest_kyuufu_wariai        = nil
-              @latest_teishotoku_kubun     = nil
+              @latest_teishotoku_type      = nil
               @previous_was_comment_item   = false
               @can_fix_current_santei_unit = false
             end
@@ -120,12 +120,12 @@ module Receiptisan
               @latest_kyuufu_wariai.tap { @latest_kyuufu_wariai = nil }
             end
 
-            def latest_teishotoku_kubun
-              @latest_teishotoku_kubun.tap { @latest_teishotoku_kubun = nil }
+            def latest_teishotoku_type
+              @latest_teishotoku_type.tap { @latest_teishotoku_type = nil }
             end
 
             attr_writer :latest_kyuufu_wariai
-            attr_writer :latest_teishotoku_kubun
+            attr_writer :latest_teishotoku_type
 
             def_delegators :current_receipt, :add_shoubyoumei
 

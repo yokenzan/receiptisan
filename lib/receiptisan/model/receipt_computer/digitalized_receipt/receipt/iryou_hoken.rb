@@ -17,7 +17,7 @@ module Receiptisan
               kigou:,
               bangou:,
               kyuufu_wariai:,
-              teishotoku_kubun:,
+              teishotoku_type:,
               gemmen_kubun:,
               nissuu_kyuufu:
             )
@@ -25,7 +25,7 @@ module Receiptisan
               @kigou            = kigou
               @bangou           = bangou
               @nissuu_kyuufu    = nissuu_kyuufu
-              @teishotoku_kubun = teishotoku_kubun
+              @teishotoku_type  = teishotoku_type
               @gemmen_kubun     = gemmen_kubun
               @kyuufu_wariai    = kyuufu_wariai
               @edaban           = nil
@@ -50,9 +50,9 @@ module Receiptisan
             # @!attribute [r] kyuufu_wariai
             #   @return [Integer, nil]
             attr_reader :kyuufu_wariai
-            # @!attribute [r] teishotoku_kubun
+            # @!attribute [r] teishotoku_type
             #   @return [Integer, nil]
-            attr_reader :teishotoku_kubun
+            attr_reader :teishotoku_type
             # @!attribute [r] gemmen_kubun
             #   @return [Integer]
             attr_reader :gemmen_kubun

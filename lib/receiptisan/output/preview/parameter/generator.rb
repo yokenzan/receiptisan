@@ -72,13 +72,14 @@ module Receiptisan
               tokki_jikous:             receipt.tokki_jikous.values.map { | tj | Common::TokkiJikou.from(tj) },
               patient:                  Common::Patient.from(receipt.patient),
               hokens:                   convert_applied_hoken_list(receipt.hoken_list),
+              classification:           receipt.type.classification,
               shoubyoumeis:             convert_shoubyoumeis(receipt.shoubyoumeis),
               tekiyou:                  convert_tekiyou(receipt),
               ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt),
               tensuu_shuukei:           convert_tensuu_shuukei(receipt),
               nyuuin_date:              receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
-              byoushou_types:           receipt.nyuuin? ? convert_byoushou_types(receipt)        : nil,
               kijun_marks:              receipt.nyuuin? ? convert_kijun_marks(receipt)           : nil,
+              byoushou_types:           convert_byoushou_types(receipt),
               nyuuinryou_abbrev_labels: convert_nyuuinryou_abbrev_labels(receipt)
             )
           end

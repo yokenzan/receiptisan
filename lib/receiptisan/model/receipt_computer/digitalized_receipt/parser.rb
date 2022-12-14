@@ -106,17 +106,17 @@ module Receiptisan
             buffer.new_receipt(
               receipt = current_processor.process(values, buffer.current_audit_payer)
             )
-            buffer.latest_kyuufu_wariai    = current_processor.kyuufu_wariai
-            buffer.latest_teishotoku_kubun = current_processor.teishotoku_kubun
+            buffer.latest_kyuufu_wariai   = current_processor.kyuufu_wariai
+            buffer.latest_teishotoku_type = current_processor.teishotoku_type
 
-            context.current_receipt_id     = receipt.id
+            context.current_receipt_id    = receipt.id
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
             buffer.add_iryou_hoken(
-              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_kubun)
+              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_type)
             )
           end
 
