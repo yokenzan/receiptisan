@@ -13,7 +13,7 @@ RSpec.describe ShuushokugoLoader do
 
   describe '#load' do
     let(:loader) { described_class.new }
-    let(:result) { loader.load(Pathname(csv_dir).join('z_ALL00000000.csv').expand_path(__dir__)) }
+    let(:result) { loader.load([Pathname(csv_dir).join('z_ALL00000000.csv').expand_path(__dir__)]) }
 
     specify '読込結果はHashで返す' do
       expect(result).to be_instance_of Hash

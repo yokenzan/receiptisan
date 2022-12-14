@@ -9,9 +9,9 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::ShinryouKoui
   Unit         = Receiptisan::Model::ReceiptComputer::Master::Unit
 
   describe '#load' do
-    let(:result) { described_class.new.load(Version::V2022_R04, Pathname('../../../../../../resource/csv/master/2022').join('s_ALL00000000.csv').expand_path(__dir__)) }
-    let(:result_v2020) { described_class.new.load(Version::V2020_R02, Pathname('../../../../../../resource/csv/master').join('2020/s_ALL00000000.csv').expand_path(__dir__)) }
-    let(:result_v2022) { described_class.new.load(Version::V2022_R04, Pathname('../../../../../../resource/csv/master').join('2022/s_ALL00000000.csv').expand_path(__dir__)) }
+    let(:result) { described_class.new.load(Version::V2022_R04, [Pathname('../../../../../../resource/csv/master/2022').join('s_ALL00000000.csv').expand_path(__dir__)]) }
+    let(:result_v2020) { described_class.new.load(Version::V2020_R02, [Pathname('../../../../../../resource/csv/master').join('2020/s_ALL00000000.csv').expand_path(__dir__)]) }
+    let(:result_v2022) { described_class.new.load(Version::V2022_R04, [Pathname('../../../../../../resource/csv/master').join('2022/s_ALL00000000.csv').expand_path(__dir__)]) }
 
     specify '読込結果はHashで返す' do
       expect(result).to be_instance_of Hash
