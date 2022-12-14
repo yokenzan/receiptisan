@@ -258,6 +258,7 @@ module Receiptisan
 
             stack_to_temp
 
+            # フラッシュ先が表紙か続紙かを pages.length で判定している
             max_line_count = @buffer_per_pages.length == 1 ? @max_line_count : @max_line_count_next
             new_page if (current_page + @temp_lines).length > max_line_count
 
