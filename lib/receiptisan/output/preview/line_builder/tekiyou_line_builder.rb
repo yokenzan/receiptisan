@@ -154,8 +154,11 @@ module Receiptisan
 
             # コストの場合の処理
 
+            # 特定器材の製品名
+            # 名称との間に必ず改行をはさむ
             if (product_name = item_text.product_name)
-              slice_to_lines(product_name, break_at_last_line: true)
+              slice_to_lines(product_name)
+              new_current_line
             end
 
             # 名称, 単価, 使用量, 点数×回数の表記は、字数が許せばなるべく一行で
