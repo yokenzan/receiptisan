@@ -21,7 +21,7 @@ module Receiptisan
               end
 
               # @param values [Array<String, nil>] SI行
-              # @return [Receipt::Tekiyou::Resource::ShinryouKoui]
+              # @return [Receipt::Tekiyou::Resource::ShinryouKoui, nil]
               def process(values)
                 raise StandardError, 'line isnt SI record' unless values.first == 'SI'
 

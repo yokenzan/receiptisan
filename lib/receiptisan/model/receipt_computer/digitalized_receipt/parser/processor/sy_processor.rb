@@ -37,14 +37,14 @@ module Receiptisan
               end
 
               # @param values [Array<String, nil>]
-              # @return [DigitalizedReceipt::Receipt::Shoubyoumei]
+              # @return [DigitalizedReceipt::Receipt::Shoubyoumei, nil]
               def process_new_shoubyoumei(values)
                 Shoubyoumei.new(
                   master_shoubyoumei: handler.find_by_code(
                     MasterShoubyoumei::Code.of(values[SY::C_傷病名コード])
                   ),
                   worpro_name:        values[SY::C_傷病名称],
-                  is_main:            values[SY::C_主傷病].to_i == 1,
+                  is_main:            values[SY::C_主傷病].to_i.nonzero?,
                   start_date:         Date.parse(values[SY::C_診療開始日]),
                   tenki:              Shoubyoumei::Tenki.find_by_code(values[SY::C_転帰区分]),
                   comment:            values[SY::C_補足コメント]

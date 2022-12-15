@@ -115,15 +115,19 @@ module Receiptisan
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ho(values)
-            buffer.add_iryou_hoken(
-              current_processor.process(values, buffer.latest_kyuufu_wariai, buffer.latest_teishotoku_type)
-            )
+            current_processor.process(
+              values,
+              buffer.latest_kyuufu_wariai,
+              buffer.latest_teishotoku_type
+            )&.then { | iryou_hoken | buffer.add_iryou_hoken(iryou_hoken) }
           end
 
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ko(values)
-            buffer.add_kouhi_futan_iryou(current_processor.process(buffer.nyuuin?, values))
+            current_processor
+              .process(buffer.nyuuin?, values)
+              &.then { | kouhi_futan_iryou | buffer.add_kouhi_futan_iryou(kouhi_futan_iryou) }
           end
 
           # SN行を読込む
@@ -137,19 +141,19 @@ module Receiptisan
           end
 
           def process_sy(values)
-            buffer.add_shoubyoumei(current_processor.process(values))
+            current_processor.process(values)&.then { | shoubyoumei | buffer.add_shoubyoumei(shoubyoumei) }
           end
 
           def process_si(values)
-            wrap_as_cost(current_processor.process(values), Record::SI, values)
+            current_processor.process(values)&.then { | resource | wrap_as_cost(resource, Record::SI, values) }
           end
 
           def process_iy(values)
-            wrap_as_cost(current_processor.process(values), Record::IY, values)
+            current_processor.process(values)&.then { | resource | wrap_as_cost(resource, Record::IY, values) }
           end
 
           def process_to(values)
-            wrap_as_cost(current_processor.process(values), Record::TO, values)
+            current_processor.process(values)&.then { | resource | wrap_as_cost(resource, Record::TO, values) }
           end
 
           def process_co(values)

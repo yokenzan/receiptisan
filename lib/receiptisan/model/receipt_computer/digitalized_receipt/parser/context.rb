@@ -43,7 +43,7 @@ module Receiptisan
 
             module ErrorContextReportable
               # @param e [Exception]
-              # @return [void]
+              # @return [nil]
               def report_error(e)
                 # ブロックをつかっていないのはスタックトレースも表示するため
                 logger.error 'Exception occurred while parsing %s:%d:%s' % [
@@ -53,6 +53,8 @@ module Receiptisan
                 ]
                 logger.error 'RECEIPT ID:%d' % context.current_receipt_id if context.current_receipt_id
                 logger.error e
+
+                nil
               end
 
               def logger

@@ -21,7 +21,7 @@ module Receiptisan
               end
 
               # @param values [Array<String, nil>] IY行
-              # @return [Receipt::Tekiyou::Resource::Iyakuhin]
+              # @return [Receipt::Tekiyou::Resource::Iyakuhin, nil]
               def process(values)
                 raise StandardError, 'line isnt IY record' unless values.first == 'IY'
 
