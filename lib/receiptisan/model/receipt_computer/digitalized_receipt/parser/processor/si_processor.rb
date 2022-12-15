@@ -27,12 +27,12 @@ module Receiptisan
 
                 ShinryouKoui.new(
                   master_item: handler.find_by_code(code = MasterShinryouKoui::Code.of(values[SI::C_レセ電コード])),
-                  shiyouryou:  shiyouryou = values[SI::C_数量データ]&.to_i
+                  shiyouryou:  values[SI::C_数量データ]&.to_i
                 )
               rescue Master::MasterItemNotFoundError => e
                 report_error(e)
 
-                ShinryouKoui.dummy(code: code, shiyouryou: shiyouryou)
+                ShinryouKoui.dummy(code: code, shiyouryou: values[SI::C_数量データ]&.to_i)
               end
 
               private

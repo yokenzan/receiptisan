@@ -27,12 +27,12 @@ module Receiptisan
 
                 Iyakuhin.new(
                   master_item: handler.find_by_code(code = MasterIyakuhin::Code.of(values[IY::C_レセ電コード])),
-                  shiyouryou:  shiyouryou = values[Record::IY::C_使用量]&.to_f
+                  shiyouryou:  values[Record::IY::C_使用量]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
                 report_error(e)
 
-                Iyakuhin.dummy(code: code, shiyouryou: shiyouryou)
+                Iyakuhin.dummy(code: code, shiyouryou: values[Record::IY::C_使用量]&.to_f)
               end
 
               private
