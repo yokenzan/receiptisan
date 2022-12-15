@@ -20,6 +20,9 @@ module Receiptisan
       # @param zero_based_index [Integer]
       # @return [String]
       def to_marutsuki_mark(zero_based_index)
+        # 用意されている文字はマル50まで
+        raise ArgumentError, 'given index is out of range (0~49)' if zero_based_index >= 50
+
         (MARU_ICHI_CODEPOINT + zero_based_index).chr('UTF-8')
       end
 

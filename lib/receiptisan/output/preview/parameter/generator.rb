@@ -269,6 +269,7 @@ module Receiptisan
 
           # rubocop:disable Metrics/PerceivedComplexity
           # rubocop:disable Metrics/CyclomaticComplexity
+          # @return [Common::TekiyouText]
           def resource2text(resource)
             unless (unit = resource.unit)
               return Common::TekiyouText.new(
