@@ -21,7 +21,7 @@ module Receiptisan
               end
 
               # @param values [Array<String, nil>] TO行
-              # @return [Receipt::Tekiyou::Resource::TokuteiKizai, nil]
+              # @return [Receipt::Tekiyou::Resource::TokuteiKizai]
               def process(values)
                 raise StandardError, 'line isnt TO record' unless values.first == 'TO'
 
@@ -42,8 +42,6 @@ module Receiptisan
                   unit:         unit,
                   unit_price:   unit_price
                 )
-              rescue StandardError => e
-                report_error(e)
               end
 
               private
