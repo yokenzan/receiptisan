@@ -10,6 +10,7 @@ module Receiptisan
           class Shoubyoumei
             include Receiptisan::Model::ReceiptComputer
             extend Forwardable
+            Formatter = Receiptisan::Util::Formatter
 
             WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::Diagnosis::Shoubyoumei::Code.of('0000999')
 
@@ -24,7 +25,7 @@ module Receiptisan
             end
 
             def to_s
-              return worpro_name if worpro?
+              return @worpro_name if worpro?
 
               # @param shuushokugo [Master::Diagnosis::Shuushokugo]
               master_shuushokugos.inject(@master_shoubyoumei.name) do | shoubyoumei_name, shuushokugo |
@@ -48,15 +49,48 @@ module Receiptisan
             end
 
             # @!attribute [r] master_shoubyoumei
-            #   @return [Master::Diagnosis::Shoubyoumei]
+            #   @return [Master::Diagnosis::Shoubyoumei, DummyMasterShoubyoumei]
             attr_reader :master_shoubyoumei
             # @!attribute [r] master_shuushokugos
-            #   @return [Array<Master::Diagnosis::Shuushokugo>]
+            #   @return [Array<Master::Diagnosis::Shuushokugo, DummyMasterShuushokugo>]
             attr_reader :master_shuushokugos
-            attr_reader :worpro_name
             attr_reader :start_date
             attr_reader :tenki
             attr_reader :comment
+
+            class << self
+              # @return [self]
+              def dummy(code:, worpro_name:, is_main:, start_date:, tenki:, comment:)
+                new(
+                  master_shoubyoumei: DummyMasterShoubyoumei.new(code),
+                  worpro_name:        worpro_name,
+                  is_main:            is_main,
+                  start_date:         start_date,
+                  tenki:              tenki,
+                  comment:            comment
+                )
+              end
+
+              def dummy_master_shuushokugo(code:)
+                DummyMasterShuushokugo.new(code)
+              end
+            end
+
+            # マスタにレセ電コードが見つからなかった傷病名
+            DummyMasterShoubyoumei = Struct.new(:code) do
+              # @return [String]
+              def name
+                Formatter.to_zenkaku '【不明な傷病名：%s】' % code.value
+              end
+            end
+
+            # マスタにレセ電コードが見つからなかった修飾語
+            DummyMasterShuushokugo = Struct.new(:code) do
+              # @return [String]
+              def name
+                Formatter.to_zenkaku '【不明な修飾語：%s】' % code.value
+              end
+            end
 
             def_delegators :master_shoubyoumei, :code
 
