@@ -37,9 +37,9 @@ module Receiptisan
               unless pattern.requires_embdding?
                 return \
                   case pattern.code
-                  when :'10'
+                  when Pattern::APPEND_FREE
                     appended_content
-                  when :'20'
+                  when Pattern::NO_APPEND
                     name
                   else
                     [name, appended_content].join('；').squeeze('；')
@@ -98,6 +98,19 @@ module Receiptisan
             #
             # テキスト生成のロジックは持たない
             class Pattern
+              FREE                   = :'10'
+              NO_APPEND              = :'20'
+              APPEND_FREE            = :'30'
+              APPEND_SHINRYOU_KOUI   = :'31'
+              APPEND_DIGITS          = :'40'
+              APPEND_NUMBER          = :'42'
+              APPEND_WAREKI          = :'50'
+              APPEND_HOUR_MINUTE     = :'51'
+              APPEND_MINUTE          = :'52'
+              APPEND_DAY_HOUR_MINUTE = :'53'
+              APPEND_WAREKI_NUMBER   = :'80'
+              APPEND_SHUUSHOKUGOS    = :'90'
+
               # @param code [Symbol]
               # @paaram requires_embdding [Boolean]
               def initialize(code, requires_embdding)
@@ -113,20 +126,22 @@ module Receiptisan
               #   @return [Symbol]
               attr_reader :code
 
+              # rubocop:disable Layout/HashAlignment
               @patterns = {
-                '10': new(:'10', false),
-                '20': new(:'20', false),
-                '30': new(:'30', false),
-                '31': new(:'31', false),
-                '40': new(:'40', true),
-                '42': new(:'42', false),
-                '50': new(:'50', false),
-                '51': new(:'51', false),
-                '52': new(:'52', false),
-                '53': new(:'53', false),
-                '80': new(:'80', false),
-                '90': new(:'90', false),
-              }
+                FREE                   => new(FREE, false),
+                NO_APPEND              => new(NO_APPEND, false),
+                APPEND_FREE            => new(APPEND_FREE, false),
+                APPEND_SHINRYOU_KOUI   => new(APPEND_SHINRYOU_KOUI, false),
+                APPEND_DIGITS          => new(APPEND_DIGITS,          true),
+                APPEND_NUMBER          => new(APPEND_NUMBER,          false),
+                APPEND_WAREKI          => new(APPEND_WAREKI,          false),
+                APPEND_HOUR_MINUTE     => new(APPEND_HOUR_MINUTE, false),
+                APPEND_MINUTE          => new(APPEND_MINUTE, false),
+                APPEND_DAY_HOUR_MINUTE => new(APPEND_DAY_HOUR_MINUTE, false),
+                APPEND_WAREKI_NUMBER   => new(APPEND_WAREKI_NUMBER, false),
+                APPEND_SHUUSHOKUGOS    => new(APPEND_SHUUSHOKUGOS, false),
+              } 
+              # rubocop:enable Layout/HashAlignment
 
               class << self
                 # @code [String, Integer, Symbol]

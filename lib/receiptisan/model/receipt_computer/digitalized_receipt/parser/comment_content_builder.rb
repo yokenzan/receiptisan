@@ -12,39 +12,45 @@ module Receiptisan
           class CommentContentBuilder
             include Master::Treatment::Comment::AppendedContent
             Formatter = Receiptisan::Util::Formatter
+            Pattern   = Master::Treatment::Comment::Pattern
+            DateUtil  = Receiptisan::Util::DateUtil
 
             @@patterns = {
-              '10': proc { | appended_value | FreeFormat.new(appended_value) },
-              '20': proc {},
-              '30': proc { | appended_value | FreeFormat.new(appended_value) },
-              '31': proc do | shinryou_koui_code, handler |
+              Pattern::APPEND_FREE => proc { | appended_value | FreeFormat.new(appended_value) },
+              Pattern::NO_APPEND => proc {},
+              Pattern::APPEND_FREE => proc { | appended_value | FreeFormat.new(appended_value) },
+              Pattern::APPEND_SHINRYOU_KOUI => proc do | shinryou_koui_code, handler |
                 ShinryouKouiFormat.new(
                   handler.find_by_code(
                     Master::Treatment::ShinryouKoui::Code.of(Formatter.to_hankaku(shinryou_koui_code))
                   )
                 )
               end,
-              '40': proc { | number | NumberFormat.new(number) },
-              '42': proc { | number | NumberFormat.new(number) },
-              '50': proc do | wareki_date |
-                WarekiDateFormat.new(wareki_date, Receiptisan::Util::DateUtil.parse_date(wareki_date))
+              Pattern::APPEND_DIGITS => proc { | number | NumberFormat.new(number) },
+              Pattern::APPEND_NUMBER => proc { | number | NumberFormat.new(number) },
+              Pattern::APPEND_WAREKI => proc do | wareki_date |
+                WarekiDateFormat.new(wareki_date, DateUtil.parse_date(wareki_date))
+              rescue Date::Error
+                FreeFormat.new(DateUtil.to_wareki(DateUtil.parse_year_month(wareki_date[0..-3])))
               end,
-              '51': proc { | hour_minute | HourMinuteFormat.new(hour_minute[0, 2], hour_minute[2, 2]) },
-              '52': proc { | minute | MinuteFormat.new(minute) },
-              '53': proc do | day_hour_minute |
+              Pattern::APPEND_HOUR_MINUTE => proc do | hour_minute |
+                HourMinuteFormat.new(hour_minute[0, 2], hour_minute[2, 2])
+              end,
+              Pattern::APPEND_MINUTE => proc { | minute | MinuteFormat.new(minute) },
+              Pattern::APPEND_DAY_HOUR_MINUTE => proc do | day_hour_minute |
                 DayHourMinuteFormat.new(
                   _day    = day_hour_minute[0, 2],
                   _hour   = day_hour_minute[2, 2],
                   _minute = day_hour_minute[4, 2]
                 )
               end,
-              '80': proc do | wareki_and_number |
+              Pattern::APPEND_WAREKI_NUMBER => proc do | wareki_and_number |
                 WarekiDateAndNumberFormat.new(
-                  @@patterns[:'40'].call(wareki_and_number[0, 7]),
-                  @@patterns[:'42'].call(wareki_and_number[-8..])
+                  @@patterns[Pattern::APPEND_DIGITS].call(wareki_and_number[0, 7]),
+                  @@patterns[Pattern::APPEND_NUMBER].call(wareki_and_number[-8..])
                 )
               end,
-              '90': proc do | code_of_shuushokugos, _handler, sy_processor |
+              Pattern::APPEND_SHUUSHOKUGOS => proc do | code_of_shuushokugos, _handler, sy_processor |
                 shuushokugos = sy_processor.process_shuushokugos(Formatter.to_hankaku(code_of_shuushokugos))
                 ShuushokugoFormat.new(*shuushokugos)
               end,
@@ -57,7 +63,7 @@ module Receiptisan
 
             # @param pattern [Master::Treatment::Comment::Pattern]
             def build(pattern, appended_value)
-              @@patterns[pattern&.code || :'10'].call(appended_value, @handler, @sy_processor)
+              @@patterns[pattern&.code || Pattern::FREE].call(appended_value, @handler, @sy_processor)
             end
           end
         end
