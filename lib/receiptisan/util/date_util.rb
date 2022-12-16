@@ -63,7 +63,7 @@ module Receiptisan
           when 8
             parse_seireki_date(text)
           else
-            throw ArgumentError, 'cant parse as date: ' << text.to_s
+            raise ArgumentError, 'cant parse as date: ' << text.to_s
           end
         end
 
@@ -78,7 +78,7 @@ module Receiptisan
           when 6
             parse_seireki_month(text)
           else
-            throw ArgumentError, 'cant parse as date: ' << text.to_s
+            raise ArgumentError, 'cant parse as date: ' + text.to_s
           end
         end
 
@@ -89,7 +89,7 @@ module Receiptisan
         # @param date_or_month [Date, Month]
         def to_wareki(date_or_month, zenkaku: false)
           is_month = date_or_month.instance_of?(Month)
-          date = is_month ?
+          date     = is_month ?
             Date.new(date_or_month.year, date_or_month.month, date_or_month.length) :
             date_or_month
 
