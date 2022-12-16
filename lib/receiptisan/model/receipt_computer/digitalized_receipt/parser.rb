@@ -17,7 +17,7 @@ module Receiptisan
 
           ReceiptType   = DigitalizedReceipt::Receipt::Type
           Comment       = Receipt::Tekiyou::Comment
-          FILE_ENCODING = 'Shift_JIS'
+          FILE_ENCODING = 'Windows-31J'
 
           # @param handler [MasterHandler]
           def initialize(handler, logger)
