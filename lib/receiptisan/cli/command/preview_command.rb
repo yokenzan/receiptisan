@@ -18,7 +18,8 @@ module Receiptisan
 
         Preview = Receiptisan::Output::Preview
 
-        argument :uke, required: false
+        argument :uke_file_paths, required: false, type: :array, desc: 'paths of UKE files to preview'
+
         # 1. by giving UKE file path and receipt's sequence
         option :seqs,  type: :string,  requried: false
         option :all,   type: :boolean, requried: false
@@ -33,16 +34,21 @@ module Receiptisan
         option :hoken,    type: :boolean, required: false, default: true
         option :disease,  type: :boolean, required: false, default: true
         option :mask,     type: :boolean, required: false, default: false
-        # config for previewer selection
+        # config for preview format
         option :format, default: 'cli', values: %w[cli svg yaml json], desc: 'preview format'
 
-        # @param [String] uke
+        # @param [Array<String>] uke
         # @param [Hash] options
-        def call(uke: nil, **options)
-          _parameter_pattern  = determine_parameter_pattern({ uke: uke }.merge(options))
-          @previewer          = determine_previewer(options[:format])
-          digitalized_receipt = parse(uke)
-          preview_receipts(digitalized_receipt)
+        def call(uke_file_paths: [], **options)
+          abort 'no files given.' if uke_file_paths.empty?
+
+          determine_previewer(options[:format])
+
+          digitalized_receipt_parameters = uke_file_paths.each_with_object([]) do | uke_file_path, carry |
+            carry << build_preview_parameter(parse(uke_file_path))
+          end
+
+          show_preview(*digitalized_receipt_parameters)
         end
 
         private
@@ -56,18 +62,18 @@ module Receiptisan
           args.key?(:seqs) ? :uke_and_seq : :uke_and_range
         end
 
-        # @return [#preview]
         def determine_previewer(format)
-          case format.downcase
-          when 'svg'
-            Preview::Previewer::SVGPreviewer.new
-          when 'json'
-            Preview::Previewer::JSONPreviewer.new
-          when 'yaml'
-            Preview::Previewer::YAMLPreviewer.new
-          else
-            raise ArgumentError, "unsupported preview format specified : '#{format}'"
-          end
+          @previewer = \
+            case format.downcase
+            when 'svg'
+              Preview::Previewer::SVGPreviewer.new
+            when 'json'
+              Preview::Previewer::JSONPreviewer.new
+            when 'yaml'
+              Preview::Previewer::YAMLPreviewer.new
+            end
+
+          @previewer or raise ArgumentError, "unsupported preview format specified : '#{format}'"
         end
 
         # @param [String] text_seqs
@@ -108,8 +114,14 @@ module Receiptisan
           end
         end
 
-        def preview_receipts(digitalized_receipt)
-          puts @previewer.preview(Preview::Parameter::Generator.create.convert_digitalized_receipt(digitalized_receipt))
+        # @param digitalized_receipt [Array<Model::ReceiptComputer::DigitalizedReceipt>]
+        def build_preview_parameter(digitalized_receipt)
+          Preview::Parameter::Generator.create.convert_digitalized_receipt(digitalized_receipt)
+        end
+
+        # @param digitalized_receipt [Model::ReceiptComputer::DigitalizedReceipt]
+        def show_preview(*digitalized_receipts)
+          puts @previewer.preview(*digitalized_receipts)
         end
       end
     end

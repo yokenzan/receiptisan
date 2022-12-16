@@ -140,7 +140,7 @@ module Receiptisan
                 APPEND_DAY_HOUR_MINUTE => new(APPEND_DAY_HOUR_MINUTE, false),
                 APPEND_WAREKI_NUMBER   => new(APPEND_WAREKI_NUMBER, false),
                 APPEND_SHUUSHOKUGOS    => new(APPEND_SHUUSHOKUGOS, false),
-              } 
+              }
               # rubocop:enable Layout/HashAlignment
 
               class << self

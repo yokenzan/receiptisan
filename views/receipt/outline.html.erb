@@ -2,8 +2,13 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <% seikyuu_ym = digitalized_receipt.seikyuu_ym.wareki %>
-    <title>レセプト | <%= digitalized_receipt.audit_payer.short_name %><%= seikyuu_ym.gengou.alphabet %><%= seikyuu_ym.year %>.<%= seikyuu_ym.month %> | <%= digitalized_receipt.hospital.name %></title>
+    <% if digitalized_receipts.length == 1 %>
+        <% digitalized_receipt = digitalized_receipts.first%>
+        <% seikyuu_ym          = digitalized_receipt.seikyuu_ym.wareki %>
+        <title>レセプトプレビュー | <%= digitalized_receipt.audit_payer.short_name %><%= seikyuu_ym.gengou.alphabet %><%= seikyuu_ym.year %>.<%= seikyuu_ym.month %> | <%= digitalized_receipt.hospital.name %></title>
+    <% else %>
+        <title>レセプトプレビュー</title>
+    <% end %>
 </head>
 <body>
     <div id="digitalized-receipt">

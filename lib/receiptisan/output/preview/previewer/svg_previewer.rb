@@ -15,14 +15,16 @@ module Receiptisan
           TEMPLATE_NYUUIN_TOP_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
-          # @param digitalized_receipt [Parameter::Common::DigitalizedReceipt]
+          # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @return [String]
-          def preview(digitalized_receipt)
+          def preview(*digitalized_receipts)
             @shoubyou_line_builder = LineBuilder::ShoubyouLineBuilder.new
             @tekiyou_line_builder  = LineBuilder::TekiyouLineBuilder.new
             @svg_of_receipts       = []
 
-            digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
+            digitalized_receipts.each do | digitalized_receipt |
+              digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
+            end
 
             ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
           end
