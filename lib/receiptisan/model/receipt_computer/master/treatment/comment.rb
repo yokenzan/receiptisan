@@ -42,7 +42,7 @@ module Receiptisan
                   when Pattern::NO_APPEND
                     name
                   else
-                    [name, appended_content].join('；').squeeze('；')
+                    [name, appended_content].map(&:to_s).reject(&:empty?).join('；').squeeze('；')
                   end.to_s
               end
 
