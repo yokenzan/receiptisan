@@ -123,9 +123,13 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="41.1" y="256.5" class="s3">氏 </text>
         <text x="41.1" y="282.5" class="s3">名 </text>
         <text x="75.8" y="263" class="<% if patient.name.length > 16 %>sh<% else %>s2<% end %>" style="fill: #00f;"><%= patient.name %></text>
-        <g transform="translate(77.9,246.7),scale(<%= '%3.1f' % [28.0 / [patient.name_kana.length, 28].max] %>,1),translate(-77.9,-246.7)">
-        <text x="77.9" y="246.7" class="s4" style="fill: #00f;"><%= patient.name_kana %></text>
-        </g>
+
+        <% if (name_kana = patient.name_kana) %>
+            <g transform="translate(77.9,246.7),scale(<%= '%3.1f' % [28.0 / [name_kana.length, 28].max] %>,1),translate(-77.9,-246.7)">
+                <text x="77.9" y="246.7" class="s4" style="fill: #00f;"><%= name_kana %></text>
+            </g>
+        <% end %>
+
         <text x="102" y="294.4" class="s3" style="fill: #00f;"><%= to_zenkaku patient.sex.code %></text>
         <text x="114" y="294.4" class="s3" style="fill: #00f;"><%= patient.sex.short_name %></text>
         <% wareki_birth_date = patient.birth_date.wareki %>

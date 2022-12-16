@@ -9,10 +9,10 @@ module Receiptisan
         class JSONPreviewer
           using Receiptisan::Util::RecursivelyHashConvertable
 
-          # @param digitalized_receipt [Parameter::Common::DigitalizedReceipt]
+          # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @return [String]
-          def preview(digitalized_receipt)
-            JSON.dump(digitalized_receipt.to_hash_recursively)
+          def preview(*digitalized_receipts)
+            JSON.dump(digitalized_receipts.to_hash_recursively)
           end
         end
       end
