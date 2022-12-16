@@ -16,7 +16,7 @@ module Receiptisan
             DateUtil  = Receiptisan::Util::DateUtil
 
             @@patterns = {
-              Pattern::APPEND_FREE => proc { | appended_value | FreeFormat.new(appended_value) },
+              Pattern::FREE => proc { | appended_value | FreeFormat.new(appended_value) },
               Pattern::NO_APPEND => proc {},
               Pattern::APPEND_FREE => proc { | appended_value | FreeFormat.new(appended_value) },
               Pattern::APPEND_SHINRYOU_KOUI => proc do | shinryou_koui_code, handler |
