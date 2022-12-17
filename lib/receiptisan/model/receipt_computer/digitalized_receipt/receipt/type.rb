@@ -58,6 +58,8 @@ module Receiptisan
 
             # 点数表種別
             class TensuuHyouType
+              TYPE_IKA = :'1'
+
               def initialize(code:, name:)
                 @code = code
                 @name = name
@@ -70,7 +72,7 @@ module Receiptisan
               attr_reader :code, :name
 
               @types = {
-                '1': new(code: 1, name: '医科'),
+                TYPE_IKA => new(code: TYPE_IKA.to_s.to_i, name: '医科'),
               }
               @types.each(&:freeze).freeze
 
@@ -107,6 +109,11 @@ module Receiptisan
 
             # 保険併用種別
             class HokenMultipleType
+              TYPE_TANDOKU  = :'1'
+              TYPE_2_HEIYOU = :'2'
+              TYPE_3_HEIYOU = :'3'
+              TYPE_4_HEIYOU = :'4'
+
               def initialize(code:, name:)
                 @code = code
                 @name = name
@@ -119,10 +126,10 @@ module Receiptisan
               attr_reader :code, :name
 
               @types = {
-                '1': new(code: 1, name: '単独'),
-                '2': new(code: 2, name: '２併'),
-                '3': new(code: 3, name: '３併'),
-                '4': new(code: 4, name: '４併'),
+                TYPE_TANDOKU => new(code: TYPE_TANDOKU.to_s.to_i, name: '単独'),
+                TYPE_2_HEIYOU => new(code: TYPE_2_HEIYOU.to_s.to_i, name: '２併'),
+                TYPE_3_HEIYOU => new(code: TYPE_3_HEIYOU.to_s.to_i, name: '３併'),
+                TYPE_4_HEIYOU => new(code: TYPE_4_HEIYOU.to_s.to_i, name: '４併'),
               }
               @types.each(&:freeze).freeze
 

@@ -16,6 +16,10 @@ module Receiptisan
         # > なお、電子計算機の場合は、コードと名称又は次の略称を記載することとしても差し支えないこと。
         # > ０１精神（精神病棟）、０２結核（結核病棟）、０７療養（療養病棟）
         class ByoushouType
+          BYOUSHOU_TYPE_SEISHIN = :'01'
+          BYOUSHOU_TYPE_KEKKAKU = :'02'
+          BYOUSHOU_TYPE_RYOUYOU = :'07'
+
           def initialize(code:, name:, short_name:)
             @code       = code
             @name       = name
@@ -31,9 +35,9 @@ module Receiptisan
           attr_reader :code, :name, :short_name
 
           @list = {
-            '01': new(code: :'01', name: '精神病棟', short_name: '精神'),
-            '02': new(code: :'02', name: '結核病棟', short_name: '結核'),
-            '07': new(code: :'07', name: '療養病棟', short_name: '療養'),
+            BYOUSHOU_TYPE_SEISHIN => new(code: BYOUSHOU_TYPE_SEISHIN, name: '精神病棟', short_name: '精神'),
+            BYOUSHOU_TYPE_KEKKAKU => new(code: BYOUSHOU_TYPE_KEKKAKU, name: '結核病棟', short_name: '結核'),
+            BYOUSHOU_TYPE_RYOUYOU => new(code: BYOUSHOU_TYPE_RYOUYOU, name: '療養病棟', short_name: '療養'),
           }
           @list.each(&:freeze).freeze
 

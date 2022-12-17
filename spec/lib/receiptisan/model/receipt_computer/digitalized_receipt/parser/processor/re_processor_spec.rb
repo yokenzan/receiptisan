@@ -13,7 +13,9 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
   let(:audit_payer) { DigitalizedReceipt::AuditPayer.find_by_code(DigitalizedReceipt::AuditPayer::PAYER_CODE_KOKUHO) }
   let(:target) do
     processor.process(
-      'RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,0929,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク,'
+      <<~RE
+        RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,0929,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク,
+      RE
         .split(',')
         .map { | s | s.empty? ? nil : s },
       audit_payer
@@ -39,7 +41,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       end
 
       specify '点数表種別が医科であること' do
-        expect(target.type.tensuu_hyou_type).to eq Receipt::Type::TensuuHyouType.find_by_code(1)
+        expect(target.type.tensuu_hyou_type).to eq Receipt::Type::TensuuHyouType.find_by_code(Receipt::Type::TensuuHyouType::TYPE_IKA)
       end
 
       specify '主保険種別が後期であること' do # rubocop:disable RSpec/MultipleExpectations
@@ -48,7 +50,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       end
 
       specify '保険併用種別が４併であること' do
-        expect(target.type.hoken_multiple_type).to eq Receipt::Type::HokenMultipleType.find_by_code(4)
+        expect(target.type.hoken_multiple_type).to eq Receipt::Type::HokenMultipleType.find_by_code(Receipt::Type::HokenMultipleType::TYPE_4_HEIYOU)
       end
 
       specify '特記事項を2つもっていること' do
@@ -65,6 +67,10 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
 
       specify '患者年齢種別が高入一であること' do
         expect(target.type.patient_age_type).to eq Receipt::Type::PatientAgeType.find_by_code(7)
+      end
+
+      specify '病床区分として療養病棟だけであること' do
+        expect(target.byoushou_types).to contain_exactly(DigitalizedReceipt::ByoushouType.find_by_code(DigitalizedReceipt::ByoushouType::BYOUSHOU_TYPE_RYOUYOU))
       end
 
       specify '患者を取得できること' do
@@ -84,11 +90,19 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       end
 
       specify '患者性別が女性であること' do
-        expect(target.patient.sex).to eq DigitalizedReceipt::Sex.find_by_code(2)
+        expect(target.patient.sex).to eq DigitalizedReceipt::Sex.find_by_code(DigitalizedReceipt::Sex::SEX_FEMALE)
       end
 
       specify '患者生年月日が1991年11月21日であること' do
         expect(target.patient.birth_date).to eq Date.new(1991, 11, 21)
+      end
+
+      specify 'processorは読み込んだ低所得区分としてnilを返すこと' do
+        expect(processor.teishotoku_type).to be_nil
+      end
+
+      specify '読み込んだ給付割合としてnilを返すこと' do
+        expect(processor.kyuufu_wariai).to be_nil
       end
     end
 

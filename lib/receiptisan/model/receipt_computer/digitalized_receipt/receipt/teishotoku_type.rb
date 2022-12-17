@@ -9,6 +9,11 @@ module Receiptisan
           #
           # 手引き別表8
           class TeishotokuType
+            TYPE_TEISHOTOKU_2         = :'1'
+            TYPE_TEISHOTOKU_2_CHOUKI  = :'2'
+            TYPE_TEISHOTOKU_1         = :'3'
+            TYPE_TEISHOTOKU_1_ROUFUKU = :'4'
+
             def initialize(code:, name:, short_name:)
               @code       = code
               @name       = name
@@ -24,10 +29,26 @@ module Receiptisan
             attr_reader :code, :name, :short_name
 
             @list = {
-              '1': new(code: :'1', name: '低所得Ⅱ', short_name: 'Ⅱ'),
-              '2': new(code: :'2', name: '低所得Ⅱ', short_name: 'Ⅱ 3月超'),
-              '3': new(code: :'3', name: '低所得Ⅰ', short_name: 'Ⅰ'),
-              '4': new(code: :'4', name: '低所得Ⅰ', short_name: 'Ⅰ'),
+              TYPE_TEISHOTOKU_2 => new(
+                code:       TYPE_TEISHOTOKU_2,
+                name:       '低所得Ⅱ',
+                short_name: 'Ⅱ'
+              ),
+              TYPE_TEISHOTOKU_2_CHOUKI => new(
+                code:       TYPE_TEISHOTOKU_2_CHOUKI,
+                name:       '低所得Ⅱ',
+                short_name: 'Ⅱ 3月超'
+              ),
+              TYPE_TEISHOTOKU_1 => new(
+                code:       TYPE_TEISHOTOKU_1,
+                name:       '低所得Ⅰ',
+                short_name: 'Ⅰ'
+              ),
+              TYPE_TEISHOTOKU_1_ROUFUKU => new(
+                code:       TYPE_TEISHOTOKU_1_ROUFUKU,
+                name:       '低所得Ⅰ',
+                short_name: 'Ⅰ'
+              ),
             }
             @list.each(&:freeze).freeze
 

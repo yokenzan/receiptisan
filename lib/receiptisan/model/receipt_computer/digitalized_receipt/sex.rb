@@ -6,6 +6,9 @@ module Receiptisan
       class DigitalizedReceipt
         # 性別(男女区分)
         class Sex
+          SEX_MALE   = :'1'
+          SEX_FEMALE = :'2'
+
           def initialize(code:, name:, short_name:)
             @code       = code
             @name       = name
@@ -21,8 +24,8 @@ module Receiptisan
           attr_reader :code, :name, :short_name
 
           @sexes = {
-            '1': new(code: 1, name: '男性', short_name: '男'),
-            '2': new(code: 2, name: '女性', short_name: '女'),
+            SEX_MALE => new(code: SEX_MALE.to_s.to_i, name: '男性', short_name: '男'),
+            SEX_FEMALE => new(code: SEX_FEMALE.to_s.to_i, name: '女性', short_name: '女'),
           }
 
           class << self
