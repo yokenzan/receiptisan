@@ -200,13 +200,15 @@ module Receiptisan
               #
               # パターン50
               class WarekiDateFormat
+                using Receiptisan::Util::WarekiExtension
+
                 def initialize(wareki, date)
                   @value = wareki
                   @date  = date
                 end
 
                 def to_s
-                  Receiptisan::Util::DateUtil.to_wareki(@date, zenkaku: true)
+                  @date.to_wareki(zenkaku: true)
                 end
               end
 

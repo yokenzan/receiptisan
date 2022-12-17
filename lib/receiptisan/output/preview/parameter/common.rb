@@ -6,6 +6,8 @@ module Receiptisan
       module Parameter
         # rubocop:disable Metrics/ModuleLength
         module Common
+          using Receiptisan::Util::WarekiExtension
+
           CodedItem              = Struct.new(:code, :name, keyword_init: true)
           CodedItemWithShortName = Struct.new(:code, :name, :short_name, keyword_init: true)
 
@@ -47,7 +49,7 @@ module Receiptisan
                   year:   jisx0301[1, 2].to_i,
                   month:  date.month,
                   day:    date.day,
-                  text:   Util::DateUtil.to_wareki(date, zenkaku: true)
+                  text:   date.to_wareki(zenkaku: true)
                 )
               end
             end
@@ -62,7 +64,7 @@ module Receiptisan
                   gengou: gengou,
                   year:   month.year - gengou.base_year,
                   month:  month.month,
-                  text:   Util::DateUtil.to_wareki(month, zenkaku: true)
+                  text:   month.to_wareki(zenkaku: true)
                 )
               end
             end

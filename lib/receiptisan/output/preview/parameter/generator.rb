@@ -9,7 +9,6 @@ module Receiptisan
           include Receiptisan::Util::Formatter
 
           Common             = Receiptisan::Output::Preview::Parameter::Common
-          DateUtil           = Receiptisan::Util::DateUtil
           DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
           HokenOrder         = DigitalizedReceipt::Receipt::FutanKubun::HokenOrder
           Tag                = Receiptisan::Model::ReceiptComputer::Tag

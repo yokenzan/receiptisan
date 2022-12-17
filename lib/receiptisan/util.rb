@@ -2,6 +2,7 @@
 
 require_relative 'util/formatter'
 require_relative 'util/date_util'
+require_relative 'util/wareki_extension'
 require_relative 'util/recursively_hash_convertable'
 
 module Receiptisan

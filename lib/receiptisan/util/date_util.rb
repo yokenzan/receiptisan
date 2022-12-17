@@ -68,7 +68,7 @@ module Receiptisan
         end
 
         # @param text [String]
-        # @return [Date]
+        # @return [Date, Month]
         # @raise ArgumentError
         def parse_year_month(year_month_text)
           text = Formatter.to_hankaku year_month_text

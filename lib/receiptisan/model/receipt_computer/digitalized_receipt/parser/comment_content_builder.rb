@@ -11,6 +11,8 @@ module Receiptisan
           # コメントの文字データを適切なオブジェクトにするビルダー
           class CommentContentBuilder
             include Master::Treatment::Comment::AppendedContent
+            using Receiptisan::Util::WarekiExtension
+
             Formatter = Receiptisan::Util::Formatter
             Pattern   = Master::Treatment::Comment::Pattern
             DateUtil  = Receiptisan::Util::DateUtil
@@ -31,7 +33,7 @@ module Receiptisan
               Pattern::APPEND_WAREKI => proc do | wareki_date |
                 WarekiDateFormat.new(wareki_date, DateUtil.parse_date(wareki_date))
               rescue Date::Error
-                FreeFormat.new(DateUtil.to_wareki(DateUtil.parse_year_month(wareki_date[0..-3])))
+                FreeFormat.new(DateUtil.parse_year_month(wareki_date[0..-3]).to_wareki)
               end,
               Pattern::APPEND_HOUR_MINUTE => proc do | hour_minute |
                 HourMinuteFormat.new(hour_minute[0, 2], hour_minute[2, 2])

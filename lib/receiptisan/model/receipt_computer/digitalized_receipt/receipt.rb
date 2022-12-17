@@ -80,10 +80,6 @@ module Receiptisan
             @type.nyuuin?
           end
 
-          def to_s
-            @tekiyou.values.flatten.map(&:to_s).join("\n")
-          end
-
           # @return [void]
           def fix!
             @tekiyou = @tekiyou.sort_by { | shinryou_shikibetsu, _ | shinryou_shikibetsu.to_s.to_i }.to_h
