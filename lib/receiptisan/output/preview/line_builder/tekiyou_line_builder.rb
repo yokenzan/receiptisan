@@ -212,8 +212,8 @@ module Receiptisan
 
             current_line.text.concat(
               rjust_if_new_line ?
-              text.rjust(max_line_length - current_line.text.length, ZENKAKU_SPACE) :
-              ZENKAKU_SPACE + text
+                text.rjust(max_line_length - current_line.text.length, ZENKAKU_SPACE) :
+                ZENKAKU_SPACE + text
             )
           end
 
