@@ -13,9 +13,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
   let(:audit_payer) { DigitalizedReceipt::AuditPayer.find_by_code(DigitalizedReceipt::AuditPayer::PAYER_CODE_KOKUHO) }
   let(:target) do
     processor.process(
-      <<~RE
-        RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,0929,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク,
-      RE
+      'RE,80,1347,202207,グレートブリテン及北アイルランド連合王国,2,19911121,,20190913,07,,0929,,7368,,,,,,,,,,,,,,,,,,,,,,,グレートブリテンオヨビキタアイルランドレンゴウオウコク,'
         .split(',')
         .map { | s | s.empty? ? nil : s },
       audit_payer
@@ -73,6 +71,10 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
         expect(target.byoushou_types).to contain_exactly(DigitalizedReceipt::ByoushouType.find_by_code(DigitalizedReceipt::ByoushouType::BYOUSHOU_TYPE_RYOUYOU))
       end
 
+      specify '入院日が2019年9月13日であること' do
+        expect(target.nyuuin_date).to eq Date.new(2019, 9, 13)
+      end
+
       specify '患者を取得できること' do
         expect(target.patient).to be_instance_of Receipt::Patient
       end
@@ -103,6 +105,19 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
 
       specify '読み込んだ給付割合としてnilを返すこと' do
         expect(processor.kyuufu_wariai).to be_nil
+      end
+    end
+
+    context '読込む行が給付割合をもつREレコードである場合' do
+      specify '一度目は給付割合として7割を返し、二度目以降はnilを返す' do
+        processor.process(
+          'RE,1,1131,202205,一般　病棟,2,19621124,70,20220405,,,,,00004,,,,,,,,,,,,,,,,,,,,,,,イッパンビョウトウ,'
+            .split(',')
+            .map { | s | s.empty? ? nil : s },
+          audit_payer
+        )
+
+        expect(5.times.map { processor.kyuufu_wariai }).to eq [70, nil, nil, nil, nil]
       end
     end
 

@@ -130,3 +130,5 @@ RSpec/VerifiedDoubles:
   Enabled: true
   Exclude:
     - 'spec/lib/receiptisan/model/receipt_computer/digitalized_receipt/parser/processor/si_processor_spec.rb'
+RSpec/ExampleLength:
+  Max: 10
