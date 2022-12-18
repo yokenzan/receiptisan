@@ -26,8 +26,11 @@ module Receiptisan
             # @param tag [Receiptisan::Model::ReceiptComputer::Tag::Tag]
             @tags.each do | tag |
               # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
-              EnumeratorGenerator.each_santei_unit(receipt, *tag.shinryou_shikibetsu).map do | santei_unit |
-                next unless santei_unit.resource_type == :shinryou_koui
+              EnumeratorGenerator.each_santei_unit(
+                receipt:                   receipt,
+                shinryou_shikibetsu_codes: tag.shinryou_shikibetsu,
+                resource_types:            [:shinryou_koui]
+              ).map do | santei_unit |
                 # @param cost [DigitalizedReceipt::Receipt::Tekiyou::Cost]
                 next unless santei_unit.each_cost.any? { | cost | tag.code.include?(cost.resource.code.value) }
 

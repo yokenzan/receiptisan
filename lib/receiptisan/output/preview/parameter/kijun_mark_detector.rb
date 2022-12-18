@@ -36,7 +36,7 @@ module Receiptisan
           end
 
           # @param receipt [DigitalizedReceipt::Receipt]
-          # @return [Hash<Symbol, Array<String>]
+          # @return [Hash<Symbol, Array<String>>]
           def detect(receipt)
             tag_handler.prepare(receipt.shinryou_ym)
 
@@ -46,7 +46,11 @@ module Receiptisan
             # @param tag [Receiptisan::Model::ReceiptComputer::Tag::Tag]
             tags.each do | tag |
               # @param cost [DigitalizedReceipt::Receipt::Tekiyou::Cost]
-              EnumeratorGenerator.each_cost_for(receipt, *tag.shinryou_shikibetsu).map do | cost |
+              EnumeratorGenerator.each_cost_for(
+                receipt:                   receipt,
+                shinryou_shikibetsu_codes: tag.shinryou_shikibetsu,
+                resource_types:            [:shinryou_koui]
+              ).map do | cost |
                 next unless tag.code.include?(cost.resource.code.value)
 
                 (tag.key.to_s.include?('shokuji') ? kijun_marks.shokuji : kijun_marks.seikatsu) << tag.label

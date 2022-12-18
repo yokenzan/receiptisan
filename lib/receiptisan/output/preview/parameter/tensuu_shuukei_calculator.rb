@@ -8,8 +8,9 @@ module Receiptisan
         class TensuuShuukeiCalculator # rubocop:disable Metrics/ClassLength
           include Receiptisan::Output::Preview::Parameter::Common
 
-          DigitalizedReceipt   = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
-          Parameter            = Struct.new(:shinryou_shikibetsu, :target, :grouping, keyword_init: true)
+          EnumeratorGenerator = Receiptisan::Model::ReceiptComputer::Util::ReceiptEnumeratorGenerator
+          DigitalizedReceipt  = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
+          Parameter           = Struct.new(:shinryou_shikibetsu, :target, :grouping, keyword_init: true)
 
           # 入院 TODO
           @@section_parameter_attributes = {
@@ -147,12 +148,9 @@ module Receiptisan
             @shuukei_entries = []
             @parameter       = parameter
 
-            @parameter.shinryou_shikibetsu.each do | shinryou_shikibetsu |
-              # @param ichiren [DigitalizedReceipt::Receipt::Tekiyou::IchirenUnit]
-              (receipt[shinryou_shikibetsu] || []).each do | ichiren |
-                ichiren.each { | santei_unit | each_santei_unit(santei_unit) }
-              end
-            end
+            EnumeratorGenerator
+              .each_santei_unit(receipt: receipt, shinryou_shikibetsu_codes: @parameter.shinryou_shikibetsu)
+              .each { | santei_unit | each_santei_unit(santei_unit) }
 
             combine_units
           end
