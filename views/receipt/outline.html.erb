@@ -11,7 +11,7 @@
     <% end %>
 </head>
 <body>
-    <div id="digitalized-receipt">
+    <div id="receipts">
         <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
         <% @svg_of_receipts.each do | pages_of_receipt | %>
             <div class="receipt">
@@ -19,7 +19,7 @@
                     <%# 表紙 %>
                     <div class="receipt-page-top sheet">
                         <%= pages_of_receipt.first %>
-                    </div>
+                        </div><%# sheet %>
 
                     <% if pages_of_receipt.length == 1 %>
                         </div><%# side-by-side %>
@@ -29,13 +29,14 @@
                             <% if index.odd? %><div class="side-by-side"><% end %>
                             <div class="receipt-page-next sheet">
                                 <%= page %>
-                            </div>
+                            </div><%# sheet %>
                         <% if index.even? %></div><% end %><%# side-by-side %>
                         <% end %>
+                        <% if pages_of_receipt[1..].reject(&:empty?).length.even? %></div><% end %><%# side-by-side %>
                     <% end %>
             </div><%# receipt %>
         <% end %>
-    </div><%# digitalized-receipt %>
+    </div><%# receipts %>
     <style>
     @media screen {
         /* https://qiita.com/cognitom/items/d39d5f19054c8c8fd592 */
