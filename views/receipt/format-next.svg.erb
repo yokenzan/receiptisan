@@ -78,35 +78,35 @@ fill="#FFFFFF" stroke="none"/>
 
         <text x="50"  y="79" class="s1_2">診療報酬明細書</text>
 
-        <text x="252.9" y="79.2" class="s5_2" style="fill: #00f;"><%= to_zenkaku receipt.audit_payer.code %><%= receipt.audit_payer.short_name %></text>
+        <text x="252.9" y="79.2" class="s5_2 output-content"><%= to_zenkaku receipt.audit_payer.code %><%= receipt.audit_payer.short_name %></text>
         <%
           # 診療年月
           shinryou_nengetsu = receipt.shinryou_ym.wareki
         %>
-        <text x="299.8" y="79" class="s4_2" style="fill: #00f;"><%= shinryou_nengetsu.gengou.name %></text>
-        <text x="326.2" y="79" class="s4_2" style="fill: #00f;"><%= to_zenkaku shinryou_nengetsu.year %></text>
+        <text x="299.8" y="79" class="s4_2 output-content"><%= shinryou_nengetsu.gengou.name %></text>
+        <text x="326.2" y="79" class="s4_2 output-content"><%= to_zenkaku shinryou_nengetsu.year %></text>
         <text x="352"   y="79" class="s2_2">年</text>
-        <text x="370.2" y="79" class="s4_2" style="fill: #00f;"><%= to_zenkaku shinryou_nengetsu.month %></text>
+        <text x="370.2" y="79" class="s4_2 output-content"><%= to_zenkaku shinryou_nengetsu.month %></text>
         <text x="393"   y="79" class="s2_2">月分</text>
         <text x="430"   y="79" class="s2_2">県番</text>
-        <text x="458.2" y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.prefecture.code %></text>
+        <text x="458.2" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.prefecture.code %></text>
         <text x="490"   y="79" class="s2_2">医コ</text>
-        <text x="520.5" y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.hospital.code %></text>
-        <text x="870"   y="60"   class="s4_2" text-anchor="end" style="fill: #00f;"><%= receipt.id %></text>
+        <text x="520.5" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.hospital.code %></text>
+        <text x="870"   y="60"   class="s4_2 output-content" text-anchor="end"><%= receipt.id %></text>
 
         <!-- レセプト種別 -->
-        <text x="680.7" y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
-        <text x="722.1" y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
-        <text x="763"   y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
-        <text x="812"   y="78.5" class="s4_2" style="fill: #00f;"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
+        <text x="680.7" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
+        <text x="722.1" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
+        <text x="763"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
+        <text x="812"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
     </g>
 
     <!-- 患者氏名・患者番号 -->
     <g clip-path="url(#c0)">
         <% patient = receipt.patient %>
         <text x="39" y="147.2" dx="0,.2" class="s2_2">氏名</text>
-        <text x="66" y="60" class="s4_2" style="fill: #00f;"><%= receipt.patient.id %></text>
-        <text x="73.3" y="148.1" class="s4_2" style="fill: #00f;"><%= patient.name %></text>
+        <text x="66" y="60" class="s4_2 output-content"><%= receipt.patient.id %></text>
+        <text x="73.3" y="148.1" class="s4_2 output-content"><%= patient.name %></text>
     </g>
 
     <!-- 保険 -->
@@ -121,11 +121,11 @@ fill="#FFFFFF" stroke="none"/>
                 shift_width            = 29
             %>
             <% iryou_hoken.hokenja_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="97" class="s7_2" style="fill: #00f;"><%= to_zenkaku digit %></text>
+                <text x="<%= hokenja_bangou_start_x + index * shift_width %>" y="97" class="s7_2 output-content"><%= to_zenkaku digit %></text>
             <% end %>
-            <text x="623.1" y="113.7" class="s4_2" style="fill: #00f;"><%= to_zenkaku iryou_hoken.kigou %></text>
-            <text x="623.1" y="128.3" class="s4_2" style="fill: #00f;"><%= to_zenkaku iryou_hoken.bangou %></text>
-            <text x="795"   y="128.3" class="s4"   style="fill: #00f;"><%= to_zenkaku iryou_hoken.edaban %></text>
+            <text x="623.1" y="113.7" class="s4_2 output-content"><%= to_zenkaku iryou_hoken.kigou %></text>
+            <text x="623.1" y="128.3" class="s4_2 output-content"><%= to_zenkaku iryou_hoken.bangou %></text>
+            <text x="795"   y="128.3" class="s4 output-content" ><%= to_zenkaku iryou_hoken.edaban %></text>
         <% end %>
     </g>
 
@@ -143,10 +143,10 @@ fill="#FFFFFF" stroke="none"/>
         <text x="259.7" y="112.6" class="s2_2">公受①</text>
         <% if kouhi_1st = kouhi_futan_iryous[0] %>
             <% kouhi_1st.futansha_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= futansha_start_x + index * shift_width %>" y="115" class="s7_2" style="fill: #00f;"><%= to_zenkaku digit %></text>
+                <text x="<%= futansha_start_x + index * shift_width %>" y="115" class="s7_2 output-content"><%= to_zenkaku digit %></text>
             <% end %>
             <% kouhi_1st.jukyuusha_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= jukyuusha_start_x + index * shift_width %>" y="115" class="s7_2" style="fill: #00f;"><%= to_zenkaku digit %></text>
+                <text x="<%= jukyuusha_start_x + index * shift_width %>" y="115" class="s7_2 output-content"><%= to_zenkaku digit %></text>
             <% end %>
         <% end %>
 
@@ -155,10 +155,10 @@ fill="#FFFFFF" stroke="none"/>
         <text x="259.7" y="129.9" class="s2_2">公受②</text>
         <% if kouhi_2nd = kouhi_futan_iryous[1] %>
             <% kouhi_2nd.futansha_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= futansha_start_x + index * shift_width %>" y="132" class="s7_2" style="fill: #00f;"><%= to_zenkaku digit %></text>
+                <text x="<%= futansha_start_x + index * shift_width %>" y="132" class="s7_2 output-content"><%= to_zenkaku digit %></text>
             <% end %>
             <% kouhi_2nd.jukyuusha_bangou.each_char.with_index do | digit, index | %>
-                <text x="<%= jukyuusha_start_x + index * shift_width %>" y="132" class="s7_2" style="fill: #00f;"><%= to_zenkaku digit %></text>
+                <text x="<%= jukyuusha_start_x + index * shift_width %>" y="132" class="s7_2 output-content"><%= to_zenkaku digit %></text>
             <% end %>
         <% end %>
     </g>
@@ -168,11 +168,11 @@ fill="#FFFFFF" stroke="none"/>
         <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
             <!-- 診療識別 -->
-            <text x="40" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.shinryou_shikibetsu %></text>
+            <text x="40" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
             <!-- 負担区分 -->
-            <text x="67" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.futan_kubun %></text>
+            <text x="67" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
             <!-- 項目、点数、回数 -->
-            <text x="78" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= to_zenkaku tekiyou_line.text %></text>
+            <text x="78" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>
 
@@ -181,11 +181,11 @@ fill="#FFFFFF" stroke="none"/>
         <% tekiyou_page_right&.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
             <!-- 診療識別 -->
-            <text x="460" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.shinryou_shikibetsu %></text>
+            <text x="460" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
             <!-- 負担区分 -->
-            <text x="487" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= tekiyou_line.futan_kubun %></text>
+            <text x="487" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
             <!-- 項目、点数、回数 -->
-            <text x="497" y="<%= tekiyou_y %>" class="s8_2" style="fill: #00f;"><%= to_zenkaku tekiyou_line.text %></text>
+            <text x="497" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>
 </g>
