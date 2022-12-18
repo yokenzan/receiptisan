@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'receiptisan'
+require_relative '../lib/receiptisan'
 
 Receiptisan::Cli::Application.new.run
