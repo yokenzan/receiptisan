@@ -12,28 +12,39 @@
 </head>
 <body>
     <div id="receipts">
-        <%# @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt] %>
         <% @svg_of_receipts.each do | pages_of_receipt | %>
-            <div class="receipt">
-                <div class="side-by-side">
+            <%# TODO: 空のページが含まれている場合があるので暫定的に省いている %>
+            <% pages_of_receipt.reject!(&:empty?) %>
+
+            <div class="receipt"><%# レセプト1件 %>
+                <div class="side-by-side"><%# 見開き2ページ %>
+                    <%# ページ番号 %>
+                    <% page_number = 1 %>
+
                     <%# 表紙 %>
                     <div class="receipt-page-top sheet">
-                        <%= pages_of_receipt.first %>
+                        <%= pages_of_receipt.shift %>
+                    </div><%# sheet %>
+
+                    <% if pages_of_receipt.empty? %>
+                        </div><%# side-by-side %>
+                        </div><%# receipt %>
+                        <% next %><%# 次のレセプトへ %>
+                    <% end %>
+
+                    <%# 続紙 %>
+                    <% while (current_page = pages_of_receipt.shift) %>
+                        <% page_number += 1 %>
+                        <% if page_number.odd? %><div class="side-by-side"><% end %>
+
+                        <div class="receipt-page-next sheet">
+                            <%= current_page %>
                         </div><%# sheet %>
 
-                    <% if pages_of_receipt.length == 1 %>
-                        </div><%# side-by-side %>
-                    <% else %>
-                        <%# 続紙 %>
-                        <% pages_of_receipt[1..].reject(&:empty?).each_with_index do | page, index | %>
-                            <% if index.odd? %><div class="side-by-side"><% end %>
-                            <div class="receipt-page-next sheet">
-                                <%= page %>
-                            </div><%# sheet %>
-                        <% if index.even? %></div><% end %><%# side-by-side %>
-                        <% end %>
-                        <% if pages_of_receipt[1..].reject(&:empty?).length.even? %></div><% end %><%# side-by-side %>
+                        <% if page_number.even? %></div><% end %><%# side-by-side %>
                     <% end %>
+
+                    <% if page_number.odd? %></div><% end %><%# side-by-side %>
             </div><%# receipt %>
         <% end %>
     </div><%# receipts %>
