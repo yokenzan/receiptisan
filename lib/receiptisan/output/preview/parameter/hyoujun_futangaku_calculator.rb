@@ -21,7 +21,7 @@ module Receiptisan
           def calculate(receipt)
             initialize_tags(receipt.shinryou_ym)
 
-            hoken_orders = HokenOrder.each_hoken_order.to_h { | hoken_order_code, _ | [hoken_order_code, 0] }
+            hoken_orders = HokenOrder.each_hoken_order.to_h { | hoken_order_code, _ | [hoken_order_code, 0] } # rubocop:disable Style/HashTransformValues
 
             # @param tag [Receiptisan::Model::ReceiptComputer::Tag::Tag]
             @tags.each do | tag |
