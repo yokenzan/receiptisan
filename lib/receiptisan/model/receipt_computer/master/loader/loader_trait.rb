@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'nkf'
 
 module Receiptisan
@@ -9,6 +10,8 @@ module Receiptisan
         class Loader
           # 各マスターファイルのローダーで使う共通関数の詰合わせ
           module LoaderTrait
+            extend Forwardable
+
             # マスターファイルの文字コード
             MASTER_CSV_ENCODING = 'Shift_JIS'
 
@@ -26,13 +29,10 @@ module Receiptisan
               end
             end
 
-            # 半角カナ→全角カナに変換する
-            #
-            # @param hankaku [String]
-            # @return [String]
-            def convert_katakana(hankaku)
-              NKF.nkf('-wWX', hankaku)
-            end
+            def_delegators Receiptisan::Util::Formatter,
+              :convert_katakana,
+              :convert_unit,
+              :convert_kakkotsuki_mark
           end
         end
       end

@@ -16,7 +16,9 @@ module Receiptisan
                   code             = Treatment::TokuteiKizai::Code.of(values[Treatment::TokuteiKizai::Columns::C_コード])
                   hash[code.value] = Treatment::TokuteiKizai.new(
                     code:       code,
-                    name:       values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_漢字名称],
+                    name:       convert_kakkotsuki_mark(
+                      convert_unit(values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_漢字名称])
+                    ),
                     name_kana:  convert_katakana(values[Treatment::TokuteiKizai::Columns::C_特定器材名・規格名_カナ名称]),
                     unit:       Unit.find_by_code(values[Treatment::TokuteiKizai::Columns::C_単位_コード]),
                     price_type: Treatment::TokuteiKizai::PriceType.find_by_code(

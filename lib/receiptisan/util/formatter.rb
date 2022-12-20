@@ -3,9 +3,12 @@
 module Receiptisan
   module Util
     module Formatter
-      MARU_ICHI_CODEPOINT = 0x2460 # ①のコードポイント
-      HANKAKU_CHARS       = '−() A-Za-z0-9.'
-      ZENKAKU_CHARS       = '―（）　Ａ-Ｚａ-ｚ０-９．'
+      MARU_ICHI_CODEPOINT    = 0x2460 # ①～⑳のコードポイント
+      MARU_ICHI_CODEPOINT_21 = 0x3251 # ㉑以降のコードポイント
+      MARU_ICHI_CODEPOINT_36 = 0x32b1 # ㊱以降のコードポイント
+      KAKKO_ICHI_CODEPOINT   = 0x2474 # ⑴のコードポイント
+      HANKAKU_CHARS          = '−() A-Za-z0-9.'
+      ZENKAKU_CHARS          = '―（）　Ａ-Ｚａ-ｚ０-９．'
 
       # カンマ区切り表記にする
       # @param integer [Integer, nil] nilの場合は空文字列を返します
@@ -21,9 +24,29 @@ module Receiptisan
       # @return [String]
       def to_marutsuki_mark(zero_based_index)
         # 用意されている文字はマル50まで
-        raise ArgumentError, 'given index is out of range (0~49)' if zero_based_index >= 50
+        zero_based_index >= 50 or raise ArgumentError, "given index is out of range (0~49): '#{zero_based_index}'"
 
-        (MARU_ICHI_CODEPOINT + zero_based_index).chr('UTF-8')
+        codepoint = \
+          case # rubocop:disable Style/EmptyCaseCondition
+          when zero_based_index < 20
+            MARU_ICHI_CODEPOINT + zero_based_index
+          when zero_based_index < 35
+            MARU_ICHI_CODEPOINT_21 + zero_based_index - 20
+          else
+            MARU_ICHI_CODEPOINT_36 + zero_based_index - 35
+          end
+
+        codepoint.chr('UTF-8')
+      end
+
+      # カッコ付数字の文字を生成する
+      # @param zero_based_index [Integer]
+      # @return [String]
+      def to_kakkotsuki_mark(zero_based_index)
+        # 用意されている文字はカッコ20まで
+        zero_based_index > 19 or raise ArgumentError, "given index is out of range (0~19): '#{zero_based_index}'"
+
+        (KAKKO_ICHI_CODEPOINT + zero_based_index).chr('UTF-8')
       end
 
       # @param value [String, Symbol, Integer, nil] nilの場合は空文字列を返します
@@ -40,6 +63,32 @@ module Receiptisan
         return '' if value.nil?
 
         value.to_s.tr(ZENKAKU_CHARS, HANKAKU_CHARS)
+      end
+
+      # 半角カナ→全角カナに変換する
+      #
+      # @param hankaku [String]
+      # @return [String]
+      def convert_katakana(hankaku)
+        NKF.nkf('-wWX', hankaku)
+      end
+
+      def convert_kakkotsuki_mark(string)
+        string.gsub(/（([０-９]{1,2})）/) { | m | to_kakkotsuki_mark(to_hankaku(m).to_i) }
+      end
+
+      def convert_unit(string)
+        string
+          .gsub('ｍＬＶ', '㎖Ｖ')
+          .gsub('ｍＬ', '㎖')
+          .gsub(/(?<=[０-９])Ｌ\b/, 'ℓ')
+          .gsub('ｍｇ', '㎎')
+          .gsub('ｋｇ', '㎏')
+          .gsub('μｇ', '㎍')
+          .gsub('ｃｃ', '㏄')
+          .gsub('ｃｍ２', '㎠')
+          .gsub('ｃｍ', '㎝')
+          .gsub('ｎｍ', '㎚')
       end
     end
   end

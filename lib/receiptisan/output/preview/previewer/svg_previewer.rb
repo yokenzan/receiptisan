@@ -112,6 +112,13 @@ module Receiptisan
           def kouhi_1st_order
             HokenOrder.kouhi_futan_iryou(0)
           end
+
+          # @override
+          def to_zenkaku(value)
+            Receiptisan::Util::Formatter
+              .to_zenkaku(value)
+              .gsub(LineBuilder::TekiyouLineBuilder::ZENKAKU_SPACE, '&emsp;')
+          end
         end
       end
     end
