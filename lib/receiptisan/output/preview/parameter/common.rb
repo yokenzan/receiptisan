@@ -421,7 +421,26 @@ module Receiptisan
             :text,
             :appended_content,
             keyword_init: true
-          )
+          ) do
+            class << self
+              # @param tekiyou_comment [Model::ReceiptComputer::DigitalizedReceipt::Receipt::Tekiyou::Comment]
+              # @return [self]
+              def from(tekiyou_comment)
+                new(
+                  type:             :comment,
+                  master:           MasterComment.new(
+                    code:    tekiyou_comment.code.value,
+                    name:    tekiyou_comment.name,
+                    pattern: tekiyou_comment.pattern.code
+                  ),
+                  text:             tekiyou_comment.format,
+                  appended_content: tekiyou_comment.appended_content&.then do | content |
+                    AppendedContent.new(text: content.to_s)
+                  end
+                )
+              end
+            end
+          end
           MasterComment = Struct.new(
             :code,
             :pattern,

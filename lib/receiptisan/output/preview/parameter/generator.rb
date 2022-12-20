@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'generator/shoubyoumei_group_convertor'
+require_relative 'generator/tekiyou_convertor'
+require_relative 'generator/convertor_provider'
+
 module Receiptisan
   module Output
     module Preview
@@ -32,6 +36,8 @@ module Receiptisan
 
             @abbrev_handler                    = abbrev_handler
             @nyuuinryou_abbrev_label_convertor = NyuuinryouAbbrevLabelConvertor.new(abbrev_handler)
+            @shoubyoumei_group_convertor       = Generator::ShoubyoumeiGroupConvertor.new
+            @tekiyou_convertor                 = ConvertorProvider.provide
           end
 
           # @param digitalized_receipt [DigitalizedReceipt]
@@ -49,7 +55,12 @@ module Receiptisan
               receipts:    []
             ).tap do | parameterized_digitalized_receipt |
               parameterized_digitalized_receipt.receipts = digitalized_receipt.map do | receipt |
-                convert_receipt(receipt, parameterized_audit_payer, parameterized_hospital, parameterized_prefecture)
+                convert_receipt(
+                  receipt:                   receipt,
+                  parameterized_audit_payer: parameterized_audit_payer,
+                  parameterized_hospital:    parameterized_hospital,
+                  parameterized_prefecture:  parameterized_prefecture
+                )
               end
             end
           end
@@ -59,7 +70,12 @@ module Receiptisan
           # @param parameterized_hospital [Common::Hospital]
           # @param parameterized_prefecture [Common::Prefecture]
           # @return [Common::Receipt]
-          def convert_receipt(receipt, parameterized_audit_payer, parameterized_hospital, parameterized_prefecture)
+          def convert_receipt(
+            receipt:,
+            parameterized_audit_payer:,
+            parameterized_hospital:,
+            parameterized_prefecture:
+          )
             Common::Receipt.new(
               id:                       receipt.id,
               shinryou_ym:              Common::Month.from(receipt.shinryou_ym),
@@ -72,8 +88,8 @@ module Receiptisan
               patient:                  Common::Patient.from(receipt.patient),
               hokens:                   convert_applied_hoken_list(receipt.hoken_list),
               classification:           receipt.type.classification,
-              shoubyoumeis:             convert_shoubyoumeis(receipt.shoubyoumeis),
-              tekiyou:                  convert_tekiyou(receipt),
+              shoubyoumeis:             @shoubyoumei_group_convertor.convert(receipt.shoubyoumeis),
+              tekiyou:                  @tekiyou_convertor.convert(receipt),
               ryouyou_no_kyuufu:        convert_ryouyou_no_kyuufu(receipt),
               tensuu_shuukei:           convert_tensuu_shuukei(receipt),
               nyuuin_date:              receipt.nyuuin? ? Common::Date.from(receipt.nyuuin_date) : nil,
@@ -132,120 +148,6 @@ module Receiptisan
             ryouyou_no_kyuufu
           end
 
-          # @param shoubyoumeis [Array<DigitalizedReceipt::Receipt::Shoubyoumei>]
-          # @return [Array<Common::GroupedShoubyoumeiList>]
-          def convert_shoubyoumeis(shoubyoumeis)
-            sorter = proc do | grouped_list, _ |
-              [
-                grouped_list.is_main ? 0 : 1,
-                grouped_list.start_date.year,
-                grouped_list.start_date.month,
-                grouped_list.start_date.day,
-                grouped_list.tenki.code,
-              ]
-            end
-
-            # @param shoubyoumei [DigitalizedReceipt::Receipt::Shoubyoumei]
-            shoubyoumeis.group_by do | shoubyoumei |
-              Common::GroupedShoubyoumeiList.new(
-                start_date:   Common::Date.from(shoubyoumei.start_date),
-                tenki:        Common::Tenki.from(shoubyoumei.tenki),
-                is_main:      shoubyoumei.main?,
-                shoubyoumeis: []
-              )
-              # @param grouped_list [Common::GroupedShoubyoumeiList]
-              # @param shoubyoumeis [<DigitalizedReceipt::Receipt::Shoubyoumei>]
-            end.sort_by(&sorter).each do | grouped_list, shoubyoumei_list |
-              grouped_list.shoubyoumeis = shoubyoumei_list
-                .sort_by(&:code)
-                .map { | shoubyoumei | Common::Shoubyoumei.from(shoubyoumei) }
-            end.to_h.keys
-          end
-
-          # @param receipt [DigitalizedReceipt::Receipt]
-          def convert_tekiyou(receipt)
-            Common::Tekiyou.new(
-              shinryou_shikibetsu_sections: receipt.map do | _, ichiren_units |
-                Common::ShinryouShikibetsuSection.new(
-                  shinryou_shikibetsu: Common::ShinryouShikibetsu.from(ichiren_units.first.shinryou_shikibetsu),
-                  ichiren_units:       ichiren_units.map { | ichiren_unit | convert_ichiren_unit(ichiren_unit) }
-                )
-              end.sort_by { | section | section.shinryou_shikibetsu.code }
-            )
-          end
-
-          # @param ichiren_unit [DigitalizedReceipt::Receipt::Tekiyou::IchirenUnit]
-          # @return [Common::IchirenUnit]
-          def convert_ichiren_unit(ichiren_unit)
-            Common::IchirenUnit.new(
-              futan_kubun:  ichiren_unit.futan_kubun.code,
-              santei_units: ichiren_unit.map { | santei_unit | convert_santei_unit(santei_unit) }
-            )
-          end
-
-          # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
-          # @return [Common::SanteiUnit]
-          def convert_santei_unit(santei_unit)
-            parameterized_santei_unit = Common::SanteiUnit.new(
-              tensuu: santei_unit.tensuu,
-              kaisuu: santei_unit.kaisuu,
-              items:  []
-            )
-            santei_unit.each do | tekiyou_item |
-              parameterized_santei_unit.items << convert_tekiyou_item(tekiyou_item)
-              next if tekiyou_item.comment?
-
-              tekiyou_item.each_comment do | comment |
-                parameterized_santei_unit.items << convert_tekiyou_item(comment)
-              end
-            end
-
-            parameterized_santei_unit
-          end
-
-          # @param tekiyou_item [
-          #   DigitalizedReceipt::Receipt::Tekiyou::Cost,
-          #   DigitalizedReceipt::Receipt::Tekiyou::Comment
-          # ]
-          def convert_tekiyou_item(tekiyou_item)
-            case tekiyou_item
-            when DigitalizedReceipt::Receipt::Tekiyou::Comment
-              convert_comment(tekiyou_item)
-            else
-              resource = tekiyou_item.resource
-
-              Common::Cost.new(
-                type:       resource.type,
-                master:     {
-                  type: resource.type,
-                  code: resource.code.value,
-                  name: resource.name,
-                },
-                text:       resource2text(resource),
-                unit:       resource.unit&.then { | u | Common::Unit.from(u) },
-                shiyouryou: resource.shiyouryou,
-                tensuu:     tekiyou_item.tensuu,
-                kaisuu:     tekiyou_item.kaisuu
-              )
-            end
-          end
-
-          # @param tekiyou_comment [DigitalizedReceipt::Receipt::Tekiyou::Comment]
-          def convert_comment(tekiyou_comment)
-            Common::Comment.new(
-              type:             :comment,
-              master:           Common::MasterComment.new(
-                code:    tekiyou_comment.code.value,
-                name:    tekiyou_comment.name,
-                pattern: tekiyou_comment.pattern.code
-              ),
-              text:             tekiyou_comment.format,
-              appended_content: tekiyou_comment.appended_content&.then do | content |
-                Common::AppendedContent.new(text: content.to_s)
-              end
-            )
-          end
-
           # @return [Common::TensuuShuukei]
           def convert_tensuu_shuukei(receipt)
             tensuu_shuukei_calculator.calculate(receipt)
@@ -265,52 +167,6 @@ module Receiptisan
           end
 
           private
-
-          # rubocop:disable Metrics/PerceivedComplexity
-          # rubocop:disable Metrics/CyclomaticComplexity
-          # @return [Common::TekiyouText]
-          def resource2text(resource)
-            unless (unit = resource.unit)
-              return Common::TekiyouText.new(
-                master_name:  resource.name,
-                product_name: nil,
-                unit_price:   nil,
-                shiyouryou:   nil
-              )
-            end
-
-            unit_price = \
-              case resource.type
-              when :tokutei_kizai
-                if resource.unit_price.nil?
-                  nil
-                else
-                  resource.unit_price.to_i == resource.unit_price ?
-                    resource.unit_price.to_i :
-                    resource.unit_price
-                end
-              when :iyakuhin, :shinryou_koui
-                nil
-              end
-
-            shiyouryou = \
-              if resource.shiyouryou.nil?
-                nil
-              else
-                resource.shiyouryou.to_i == resource.shiyouryou ?
-                  resource.shiyouryou.to_i :
-                  resource.shiyouryou
-              end
-
-            Common::TekiyouText.new(
-              product_name: resource.type == :tokutei_kizai ? resource.product_name : nil,
-              master_name:  resource.name,
-              unit_price:   unit_price ? '%s円／%s' % [to_zenkaku(unit_price), unit.name] : nil,
-              shiyouryou:   shiyouryou ? to_zenkaku(shiyouryou) + unit.name : nil
-            )
-          end
-          # rubocop:enable Metrics/PerceivedComplexity
-          # rubocop:enable Metrics/CyclomaticComplexity
 
           attr_reader :tensuu_shuukei_calculator,
             :kijun_mark_detector,
