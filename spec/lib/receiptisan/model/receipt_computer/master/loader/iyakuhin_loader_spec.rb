@@ -75,7 +75,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::IyakuhinLoad
       context '生理食塩液　１．３Ｌ' do
         it_behaves_like '#load_iyakuhin_master_examples',
           _code_by_symbol  = :'620000237',
-          _name            = '生理食塩液　１．３Ｌ',
+          _name            = '生理食塩液　１．３ℓ',
           _name_kana       = 'セイリショクエンエキ',
           _unit            = Unit.find_by_code('20'),
           _chuusha_youryou = 1300,
