@@ -10,8 +10,7 @@ module Receiptisan
       #
       # given arguments and parameters patterns:
       #
-      # 1. by giving UKE file path and receipt's sequence
-      # 2. by giving UKE file path and receipt's start row index and end row index
+      # 1. by giving UKE file paths
       # 3. by giving stdin
       class PreviewCommand < Dry::CLI::Command
         include Receiptisan::Model::ReceiptComputer
@@ -20,47 +19,28 @@ module Receiptisan
 
         argument :uke_file_paths, required: false, type: :array, desc: 'paths of UKE files to preview'
 
-        # 1. by giving UKE file path and receipt's sequence
-        option :seqs,  type: :string,  requried: false
-        option :all,   type: :boolean, requried: false
-        # 2. by giving UKE file path and receipt's start row index and end row index
-        option :from,  type: :integer, requried: false
-        option :to,    type: :integer, requried: false
-        # config for color highlighting
-        option :color,    type: :boolean, requried: false, default: false
-        # config for previewing
-        option :calcunit, type: :boolean, required: false, default: true
-        option :header,   type: :boolean, required: false, default: true
-        option :hoken,    type: :boolean, required: false, default: true
-        option :disease,  type: :boolean, required: false, default: true
-        option :mask,     type: :boolean, required: false, default: false
         # config for preview format
-        option :format, default: 'cli', values: %w[cli svg yaml json], desc: 'preview format'
+        option :format, default: 'svg', values: %w[svg yaml json], desc: 'preview format'
 
         # @param [Array<String>] uke
         # @param [Hash] options
         def call(uke_file_paths: [], **options)
-          abort 'no files given.' if uke_file_paths.empty?
-
           initialize_parser
+          initialize_preview_parameter_generator
           determine_previewer(options[:format])
 
-          digitalized_receipt_parameters = uke_file_paths.each_with_object([]) do | uke_file_path, carry |
-            parse(uke_file_path).map { | digitalized_receipt | carry << build_preview_parameter(digitalized_receipt) }
-          end
-
-          show_preview(*digitalized_receipt_parameters)
+          digitalized_receipts = parse(uke_file_paths)
+          parameters           = to_preview_parameters(digitalized_receipts)
+          show_preview(parameters)
         end
 
         private
 
-        # @param [Hash] args
-        # @return [Symbol]
-        def determine_parameter_pattern(args)
-          return :stdin unless args.fetch(:uke)
-          return :uke_all if args[:all]
-
-          args.key?(:seqs) ? :uke_and_seq : :uke_and_range
+        def initialize_parser
+          @parser = DigitalizedReceipt::Parser.new(
+            DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
+            Logger.new($stderr)
+          )
         end
 
         def determine_previewer(format)
@@ -77,57 +57,30 @@ module Receiptisan
           @previewer or raise ArgumentError, "unsupported preview format specified : '#{format}'"
         end
 
-        # @param [String] text_seqs
-        # @return [Array<Integer>]
-        def parse_seqs(text_seqs)
-          [].tap do | seqs |
-            text_seqs.scan(/(\d+)(-\d+)?,?/) do | f, t |
-              seqs.concat(t.nil? ? [f.to_i] : ((f.to_i)..(t.to_i.abs)).to_a)
-            end
-          end
+        def initialize_preview_parameter_generator
+          @generator = Preview::Parameter::Generator.create
         end
 
-        # @param uke_file_path [String]
+        # @param uke_file_paths [Array<String>]
         # @return Array<Model::ReceiptComputer::DigitalizedReceipt>]
-        def parse(uke_file_path)
-          @parser.parse(uke_file_path)
-        end
-
-        def initialize_parser
-          @parser = DigitalizedReceipt::Parser.new(
-            DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
-            Logger.new($stderr)
-          )
-        end
-
-        def __(parameter_pattern, options)
-          case parameter_pattern
-          when :uke_all
-            parser.parse(uke)
-          when :uke_and_seq
-            seqs = parse_seqs(options.fetch(:seqs))
-            parser.parse(uke, seqs.sort.uniq)
-          when :uke_and_range
-            from = options[:from]
-            to   = options[:to]
-            parser.parse_area(
-              File.readlines(uke)
-                .slice(from && to ? from.to_i..to.to_i : from.to_i..)
-                .join
-            )
-          when :stdin
-            parser.parse_area($stdin.readlines.join)
+        def parse(uke_file_paths)
+          if uke_file_paths.empty?
+            @parser.parse_content($stdin.readlines.join)
+          else
+            uke_file_paths.map { | path | @parser.parse(path) }
           end
         end
 
-        # @param digitalized_receipt [Model::ReceiptComputer::DigitalizedReceipt]
-        def build_preview_parameter(digitalized_receipt)
-          Preview::Parameter::Generator.create.convert_digitalized_receipt(digitalized_receipt)
+        # @return Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
+        def to_preview_parameters(digitalized_receipts)
+          digitalized_receipts.map do | digitalized_receipt |
+            @generator.convert_digitalized_receipt(digitalized_receipt)
+          end
         end
 
-        # @param digitalized_receipt [Model::ReceiptComputer::DigitalizedReceipt]
-        def show_preview(*digitalized_receipts)
-          puts @previewer.preview(*digitalized_receipts)
+        # @param digitalized_receipt_parameters [Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
+        def show_preview(digitalized_receipt_parameters)
+          puts @previewer.preview(*digitalized_receipt_parameters)
         end
       end
     end
