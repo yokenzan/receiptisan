@@ -15,30 +15,30 @@ module Receiptisan
         class Parser # rubocop:disable Metrics/ClassLength
           include Parser::Context::ErrorContextReportable
 
-          ReceiptType   = DigitalizedReceipt::Receipt::Type
-          Comment       = Receipt::Tekiyou::Comment
-          FILE_ENCODING = 'Windows-31J'
+          ReceiptType       = DigitalizedReceipt::Receipt::Type
+          Comment           = Receipt::Tekiyou::Comment
+          FILE_ENCODING     = 'Windows-31J'
+          INTERNAL_ENCODING = 'UTF-8'
 
           # @param handler [MasterHandler]
           def initialize(handler, logger)
-            @handler                 = handler
-            @logger                  = logger
-            @buffer                  = Parser::Buffer.new
-            @context                 = Parser::Context.new
-            @current_processor       = nil
-            sy_processor             = Processor::SYProcessor.new(context: context, logger: logger, handler: @handler)
-            @processors              = {
+            @handler          = handler
+            @logger           = logger
+            @buffer           = Parser::Buffer.new
+            @context          = Parser::Context.new
+            processor_options = { context: context, logger: logger, handler: @handler }
+            @processors       = {
               'IR' => Processor::IRProcessor.new,
               'RE' => Processor::REProcessor.new,
               'HO' => Processor::HOProcessor.new,
               'KO' => Processor::KOProcessor.new,
-              'SY' => sy_processor,
+              'SY' => Processor::SYProcessor.new(**processor_options),
               'SJ' => Processor::SJProcessor.new,
-              'SI' => Processor::SIProcessor.new(context: context, logger: logger, handler: @handler),
-              'IY' => Processor::IYProcessor.new(context: context, logger: logger, handler: @handler),
-              'TO' => Processor::TOProcessor.new(context: context, logger: logger, handler: @handler),
+              'SI' => Processor::SIProcessor.new(**processor_options),
+              'IY' => Processor::IYProcessor.new(**processor_options),
+              'TO' => Processor::TOProcessor.new(**processor_options),
             }
-            @comment_content_builder = Parser::CommentContentBuilder.new(@handler, sy_processor)
+            @comment_content_builder = Parser::CommentContentBuilder.new(@handler, @processors['SY'])
           end
 
           # @param path_of_uke [String]
@@ -47,7 +47,7 @@ module Receiptisan
             context.prepare(path_of_uke)
             buffer.prepare
 
-            File.open(path_of_uke, "r:#{FILE_ENCODING}:UTF-8") do | f |
+            File.open(path_of_uke, "r:#{FILE_ENCODING}:#{INTERNAL_ENCODING}") do | f |
               f.each_line(chomp: true) do | line |
                 context.update_current_line(line)
                 parse_line(line2values(line))

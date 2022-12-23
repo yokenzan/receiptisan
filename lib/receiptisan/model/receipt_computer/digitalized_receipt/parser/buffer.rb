@@ -17,7 +17,9 @@ module Receiptisan
             # @param digitalized_receipt [DigitalizedReceipt]
             # @return [void]
             def new_digitalized_receipt(digitalized_receipt)
-              @digitalized_receipt = digitalized_receipt
+              fix_current_digitalized_receipt
+
+              @current_digitalized_receipt = digitalized_receipt
             end
 
             # @param receipt [DigitalizedReceipt::Receipt]
@@ -26,7 +28,7 @@ module Receiptisan
               fix_current_receipt
 
               @current_receipt             = receipt
-              @current_receipt.hospital    = @digitalized_receipt.hospital
+              @current_receipt.hospital    = @current_digitalized_receipt.hospital
               @current_shinryou_shikibetsu = nil
               @current_hoken_list          = Receipt::AppliedHokenList.new
               @hoken_order_provider.clear
@@ -44,7 +46,7 @@ module Receiptisan
 
             # @return [AuditPayer nil]
             def current_audit_payer
-              @digitalized_receipt.audit_payer
+              @current_digitalized_receipt.audit_payer
             end
 
             def nyuuin?
@@ -73,7 +75,9 @@ module Receiptisan
                 @current_shinryou_shikibetsu = shinryou_shikibetsu
                 fix_current_santei_unit
                 fix_current_ichiren_unit
-                new_ichiren_unit(Receipt::Tekiyou::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu))
+                new_ichiren_unit(
+                  Receipt::Tekiyou::IchirenUnit.new(shinryou_shikibetsu: shinryou_shikibetsu)
+                )
                 new_santei_unit
                 @can_fix_current_santei_unit = false
               end
@@ -97,7 +101,8 @@ module Receiptisan
             # @return [void]
             def prepare
               @hoken_order_provider        = HokenOrderProvider.new
-              @digitalized_receipt         = nil
+              @digitalized_receipts        = []
+              @current_digitalized_receipt = nil
               @current_receipt             = nil
               @current_hoken_list          = nil
               @current_shinryou_shikibetsu = nil
@@ -107,13 +112,14 @@ module Receiptisan
               @can_fix_current_santei_unit = false
             end
 
-            # @return [DigitalizedReceipt]
+            # @return [Array<DigitalizedReceipt>]
             def close
-              fix_current_receipt
+              fix_current_digitalized_receipt
 
-              digitalized_receipt = @digitalized_receipt
+              digitalized_receipts = @digitalized_receipts
               clear
-              digitalized_receipt
+
+              digitalized_receipts
             end
 
             def latest_kyuufu_wariai
@@ -131,13 +137,24 @@ module Receiptisan
 
             private
 
+            # @return [void]
+            def fix_current_digitalized_receipt
+              return unless @current_digitalized_receipt
+
+              fix_current_receipt
+
+              @digitalized_receipts << @current_digitalized_receipt
+
+              @current_digitalized_receipt = nil
+            end
+
             def fix_current_receipt
               return unless @current_receipt
 
               fix_current_santei_unit
               fix_current_ichiren_unit
 
-              @digitalized_receipt.add_receipt(@current_receipt)
+              @current_digitalized_receipt.add_receipt(@current_receipt)
               @current_receipt.hoken_list = @current_hoken_list
               @current_receipt.fix!
 

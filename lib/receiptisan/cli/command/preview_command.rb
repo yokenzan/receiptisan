@@ -42,10 +42,11 @@ module Receiptisan
         def call(uke_file_paths: [], **options)
           abort 'no files given.' if uke_file_paths.empty?
 
+          initialize_parser
           determine_previewer(options[:format])
 
           digitalized_receipt_parameters = uke_file_paths.each_with_object([]) do | uke_file_path, carry |
-            carry << build_preview_parameter(parse(uke_file_path))
+            parse(uke_file_path).map { | digitalized_receipt | carry << build_preview_parameter(digitalized_receipt) }
           end
 
           show_preview(*digitalized_receipt_parameters)
@@ -86,12 +87,17 @@ module Receiptisan
           end
         end
 
-        def parse(uke)
-          parser = DigitalizedReceipt::Parser.new(
+        # @param uke_file_path [String]
+        # @return Array<Model::ReceiptComputer::DigitalizedReceipt>]
+        def parse(uke_file_path)
+          @parser.parse(uke_file_path)
+        end
+
+        def initialize_parser
+          @parser = DigitalizedReceipt::Parser.new(
             DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
             Logger.new($stderr)
           )
-          parser.parse(uke)
         end
 
         def __(parameter_pattern, options)
@@ -114,7 +120,7 @@ module Receiptisan
           end
         end
 
-        # @param digitalized_receipt [Array<Model::ReceiptComputer::DigitalizedReceipt>]
+        # @param digitalized_receipt [Model::ReceiptComputer::DigitalizedReceipt]
         def build_preview_parameter(digitalized_receipt)
           Preview::Parameter::Generator.create.convert_digitalized_receipt(digitalized_receipt)
         end
