@@ -37,7 +37,7 @@ module Receiptisan
                 resource.unit_price&.then do | unit_price |
                   '%s円／%s' % [
                     Formatter.to_zenkaku(unit_price.to_i == unit_price ? unit_price.to_i : unit_price),
-                    resource.unit.name,
+                    resource.unit&.name, # 酸素補正率は単位がない
                   ]
                 end
               end
