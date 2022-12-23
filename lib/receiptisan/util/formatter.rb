@@ -24,7 +24,7 @@ module Receiptisan
       # @return [String]
       def to_marutsuki_mark(zero_based_index)
         # 用意されている文字はマル50まで
-        zero_based_index >= 50 or raise ArgumentError, "given index is out of range (0~49): '#{zero_based_index}'"
+        raise ArgumentError, "given index is out of range (0~49): '#{zero_based_index}'" if zero_based_index >= 50
 
         codepoint = \
           case # rubocop:disable Style/EmptyCaseCondition
@@ -44,7 +44,7 @@ module Receiptisan
       # @return [String]
       def to_kakkotsuki_mark(zero_based_index)
         # 用意されている文字はカッコ20まで
-        zero_based_index > 19 or raise ArgumentError, "given index is out of range (0~19): '#{zero_based_index}'"
+        raise ArgumentError, "given index is out of range (0~19): '#{zero_based_index}'" if zero_based_index >= 20
 
         (KAKKO_ICHI_CODEPOINT + zero_based_index).chr('UTF-8')
       end
