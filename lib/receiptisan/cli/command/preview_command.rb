@@ -6,23 +6,23 @@ require 'dry/cli'
 module Receiptisan
   module Cli
     module Command
-      # Command to preview UKE file
+      # Command to preview RECEIPTC.UKE files
       #
       # given arguments and parameters patterns:
       #
       # 1. by giving UKE file paths
-      # 3. by giving stdin
+      # 2. by giving stdin
       class PreviewCommand < Dry::CLI::Command
         include Receiptisan::Model::ReceiptComputer
 
         Preview = Receiptisan::Output::Preview
 
-        argument :uke_file_paths, required: false, type: :array, desc: 'paths of UKE files to preview'
+        argument :uke_file_paths, required: false, type: :array, desc: 'paths of RECEIPTC.UKE files to preview'
 
         # config for preview format
         option :format, default: 'svg', values: %w[svg yaml json], desc: 'preview format'
 
-        # @param [Array<String>] uke
+        # @param [Array<String>] uke_file_paths
         # @param [Hash] options
         def call(uke_file_paths: [], **options)
           initialize_parser
@@ -62,7 +62,7 @@ module Receiptisan
         end
 
         # @param uke_file_paths [Array<String>]
-        # @return Array<Model::ReceiptComputer::DigitalizedReceipt>]
+        # @return [Array<Model::ReceiptComputer::DigitalizedReceipt>]
         def parse(uke_file_paths)
           if uke_file_paths.empty?
             @parser.parse_content($stdin.readlines.join)
@@ -71,7 +71,7 @@ module Receiptisan
           end
         end
 
-        # @return Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
+        # @return [Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
         def to_preview_parameters(digitalized_receipts)
           digitalized_receipts.map do | digitalized_receipt |
             @generator.convert_digitalized_receipt(digitalized_receipt)
