@@ -55,7 +55,36 @@ module Receiptisan
             end
 
             context.clear
+            buffer.close.first
+          end
+
+          # parse UKE contents via STDIN
+          #
+          # @param content [String]
+          # @return [Array<DigitalizedReceipt>]
+          def parse_content(content)
+            content.encode!(INTERNAL_ENCODING) unless content.encoding == INTERNAL_ENCODING
+
+            context.prepare('<stdin>')
+            buffer.prepare
+
+            content.each_line(chomp: true) do | line |
+              context.update_current_line(line)
+              parse_line(line2values(line))
+            end
+
+            context.clear
             buffer.close
+          rescue ArgumentError => e
+            raise e unless e.message.include?('invalid byte sequence in UTF-8')
+
+            retry_count ||= 0
+            retry_count  += 1
+
+            content.force_encoding(FILE_ENCODING).encode!(INTERNAL_ENCODING, FILE_ENCODING)
+            retry if retry_count < 5
+
+            raise e
           end
 
           private

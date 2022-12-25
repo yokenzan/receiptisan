@@ -8,7 +8,6 @@ module Receiptisan
   module Output
     module Preview
       module Parameter
-        # rubocop:disable Metrics/ClassLength
         class Generator
           include Receiptisan::Util::Formatter
 
@@ -173,7 +172,6 @@ module Receiptisan
             :nyuuinryou_abbrev_label_convertor,
             :hyoujun_futangaku_calculator
         end
-        # rubocop:enable Metrics/ClassLength
       end
     end
   end
