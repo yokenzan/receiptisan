@@ -37,9 +37,3 @@ $ bundle exec ruby exe/receiptisan --preview --format=yaml path/to/RECEIPTC.UKE_
 # JSON(プレビュー出力に使う内部解析データ)
 $ bundle exec ruby exe/receiptisan --preview --format=json path/to/dir/*.UKE | jq -C
 ```
-
-| filetype |          screenshots          |
-|:--------:|:-----------------------------:|
-|   svg    | ![](doc/pic/screenshot_1.png) |
-|   yaml   | ![](doc/pic/screenshot_2.png) |
-|   json   | ![](doc/pic/screenshot_3.png) |
