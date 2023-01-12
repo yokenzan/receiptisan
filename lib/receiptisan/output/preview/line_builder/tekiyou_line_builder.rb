@@ -43,8 +43,9 @@ module Receiptisan
             flush_temp_lines
           end
 
-          def build_kouhi_futan_iryou(kouhi, kyuufu, _index)
-            new_current_line_with('＜第三公費＞') # TODO
+          def build_kouhi_futan_iryou(kouhi, kyuufu, index)
+            number = '三四五六七八九'[index]
+            new_current_line_with('＜第%s公費＞' % number) # TODO
             stack_to_temp
 
             format = '%-9s　%s%s'
