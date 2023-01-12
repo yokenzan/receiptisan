@@ -63,7 +63,7 @@ module Receiptisan
           when 8
             parse_seireki_date(text)
           else
-            raise ArgumentError, 'cant parse as date: ' << text.to_s
+            raise ArgumentError, 'cant parse as date: ' + text.to_s
           end
         end
 
