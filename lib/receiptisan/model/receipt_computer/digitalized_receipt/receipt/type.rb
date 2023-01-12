@@ -113,6 +113,7 @@ module Receiptisan
               TYPE_2_HEIYOU = :'2'
               TYPE_3_HEIYOU = :'3'
               TYPE_4_HEIYOU = :'4'
+              TYPE_5_HEIYOU = :'5'
 
               def initialize(code:, name:)
                 @code = code
@@ -130,6 +131,7 @@ module Receiptisan
                 TYPE_2_HEIYOU => new(code: TYPE_2_HEIYOU.to_s.to_i, name: '２併'),
                 TYPE_3_HEIYOU => new(code: TYPE_3_HEIYOU.to_s.to_i, name: '３併'),
                 TYPE_4_HEIYOU => new(code: TYPE_4_HEIYOU.to_s.to_i, name: '４併'),
+                TYPE_5_HEIYOU => new(code: TYPE_5_HEIYOU.to_s.to_i, name: '５併'),
               }
               @types.each(&:freeze).freeze
 
