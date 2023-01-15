@@ -16,6 +16,7 @@ module Receiptisan
         include Receiptisan::Model::ReceiptComputer
 
         Preview = Receiptisan::Output::Preview
+        Parser  = DigitalizedReceipt::Parser
 
         argument :uke_file_paths, required: false, type: :array, desc: 'paths of RECEIPTC.UKE files to preview'
 
@@ -64,11 +65,11 @@ module Receiptisan
         # @param uke_file_paths [Array<String>]
         # @return [Array<Model::ReceiptComputer::DigitalizedReceipt>]
         def parse(uke_file_paths)
-          if uke_file_paths.empty?
-            @parser.parse_content($stdin.readlines.join)
-          else
-            uke_file_paths.map { | path | @parser.parse(path) }
-          end
+          parse_proc = proc { | io | @parser.parse_from_io(io) }
+
+          (uke_file_paths.empty? ?
+            parse_proc.call($stdin) :
+            uke_file_paths.map { | path | File.open(path, encoding) { | io | parse_proc.call(io) } }).flatten
         end
 
         # @return [Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]

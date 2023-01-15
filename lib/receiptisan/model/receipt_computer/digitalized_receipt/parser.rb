@@ -14,6 +14,7 @@ module Receiptisan
       class DigitalizedReceipt
         class Parser # rubocop:disable Metrics/ClassLength
           include Parser::Context::ErrorContextReportable
+          using Receiptisan::Util::IOWithEncoding
 
           ReceiptType       = DigitalizedReceipt::Receipt::Type
           Comment           = Receipt::Tekiyou::Comment
@@ -41,50 +42,23 @@ module Receiptisan
             @comment_content_builder = Parser::CommentContentBuilder.new(@handler, @processors['SY'])
           end
 
-          # @param path_of_uke [String]
-          # @return [DigitalizedReceipt]
-          def parse(path_of_uke)
-            context.prepare(path_of_uke)
+          # parse UKE contents
+          #
+          # @param io [IO]
+          # @return [Array<DigitalizedReceipt>]
+          def parse_from_io(io)
+            context.prepare(io.inspect)
             buffer.prepare
 
-            File.open(path_of_uke, "r:#{FILE_ENCODING}:#{INTERNAL_ENCODING}") do | f |
-              f.each_line(chomp: true) do | line |
+            io.with_encoding(Parser::FILE_ENCODING, Parser::INTERNAL_ENCODING) do | encodeed_io |
+              encodeed_io.each_line(chomp: true) do | line |
                 context.update_current_line(line)
                 parse_line(line2values(line))
               end
             end
 
             context.clear
-            buffer.close.first
-          end
-
-          # parse UKE contents via STDIN
-          #
-          # @param content [String]
-          # @return [Array<DigitalizedReceipt>]
-          def parse_content(content)
-            content.encode!(INTERNAL_ENCODING) unless content.encoding == INTERNAL_ENCODING
-
-            context.prepare('<stdin>')
-            buffer.prepare
-
-            content.each_line(chomp: true) do | line |
-              context.update_current_line(line)
-              parse_line(line2values(line))
-            end
-
-            context.clear
             buffer.close
-          rescue ArgumentError => e
-            raise e unless e.message.include?('invalid byte sequence in UTF-8')
-
-            retry_count ||= 0
-            retry_count  += 1
-
-            content.force_encoding(FILE_ENCODING).encode!(INTERNAL_ENCODING, FILE_ENCODING)
-            retry if retry_count < 5
-
-            raise e
           end
 
           private
