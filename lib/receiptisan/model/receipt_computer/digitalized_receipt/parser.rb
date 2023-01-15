@@ -46,12 +46,12 @@ module Receiptisan
           #
           # @param io [IO]
           # @return [Array<DigitalizedReceipt>]
-          def parse_from_io(io)
+          def parse(io)
             context.prepare(io.inspect)
             buffer.prepare
 
-            io.with_encoding(Parser::FILE_ENCODING, Parser::INTERNAL_ENCODING) do | encodeed_io |
-              encodeed_io.each_line(chomp: true) do | line |
+            io.with_encoding(Parser::FILE_ENCODING, Parser::INTERNAL_ENCODING) do | encoded_io |
+              encoded_io.each_line(chomp: true) do | line |
                 context.update_current_line(line)
                 parse_line(line2values(line))
               end

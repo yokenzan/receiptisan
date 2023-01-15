@@ -65,7 +65,7 @@ module Receiptisan
         # @param uke_file_paths [Array<String>]
         # @return [Array<Model::ReceiptComputer::DigitalizedReceipt>]
         def parse(uke_file_paths)
-          parse_proc = proc { | io | @parser.parse_from_io(io) }
+          parse_proc = proc { | io | @parser.parse(io) }
 
           (uke_file_paths.empty? ?
             parse_proc.call($stdin) :
