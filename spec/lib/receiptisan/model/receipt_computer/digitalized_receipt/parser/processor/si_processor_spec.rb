@@ -21,7 +21,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       full_name:  '初診料'
     )
   end
-  let(:context) { double(uke_file_path: 'uke_file_path', current_line_number: 999, current_line: 'current_line', current_receipt_id: 99) }
+  let(:context) { double(io_name: 'io_name', current_line_number: 999, current_line: 'current_line', current_receipt_id: 99) }
   let(:handler) do
     double('handler').as_null_object.tap do | dbl |
       allow(dbl).to receive(:find_by_code).with(MasterShinryouKoui::Code.of('111000110')).and_return(shoshinryou)
