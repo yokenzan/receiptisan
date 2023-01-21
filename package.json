@@ -35,7 +35,7 @@
                 {
                     "assets": [
                         "lib/receiptisan/version.rb",
-                        receiptisan-"*.gem"
+                        "receiptisan-*.gem"
                     ]
                 }
             ],
