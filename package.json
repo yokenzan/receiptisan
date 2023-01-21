@@ -33,7 +33,10 @@
             [
                 "@semantic-release/git",
                 {
-                    "assets": false
+                    "assets": [
+                        "lib/receiptisan/version.rb",
+                        receiptisan-"*.gem"
+                    ]
                 }
             ],
             [
