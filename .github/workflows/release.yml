@@ -1,6 +1,7 @@
 # - https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions
 # - https://tianhaozhou.medium.com/ruby-semantic-release-github-actions-efa5db43332a
 # - https://dev.classmethod.jp/articles/github-actions-semantic-release-sample
+
 name: Release
 
 on:
@@ -14,7 +15,6 @@ on:
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -33,7 +33,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEM_HOST_API_KEY: ${{ secrets.GEM_HOST_API_KEY }}
         run: npx semantic-release
-        on:
-
-jobs:
-    runs-on: ubuntu-latest
