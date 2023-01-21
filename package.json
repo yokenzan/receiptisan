@@ -1,0 +1,21 @@
+{
+    "devDependencies": {
+        "semantic-release-rubygem": "^1.2.0"
+    },
+    "release": {
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/github",
+            [
+                "semantic-release-rubygem",
+                {
+                    "gemPublish": false
+                }
+            ]
+        ],
+        "branches": [
+            "master"
+        ]
+    }
+}
