@@ -156,11 +156,13 @@ module Receiptisan
           end
 
           def combine_units
+            entries = @shuukei_entries.reject(&:zero_point?)
+
             CombinedTensuuShuukeiUnit.new(
-              tensuu:       @shuukei_entries.map(&:tensuu).then { | ary | ary.uniq.length == 1 ? ary.first : nil },
-              total_kaisuu: @shuukei_entries.map(&:total_kaisuu).sum.then { | sum | sum.zero? ? nil : sum },
-              total_tensuu: @shuukei_entries.map(&:total_tensuu).sum.then { | sum | sum.zero? ? nil : sum },
-              units:        @shuukei_entries.sort_by(&:total_tensuu).reverse
+              tensuu:       entries.map(&:tensuu).then { | ary | ary.uniq.length == 1 ? ary.first : nil },
+              total_kaisuu: entries.map(&:total_kaisuu).sum.then { | sum | sum.zero? ? nil : sum },
+              total_tensuu: entries.map(&:total_tensuu).sum.then { | sum | sum.zero? ? nil : sum },
+              units:        entries.sort_by(&:total_tensuu).reverse
             )
           end
 
