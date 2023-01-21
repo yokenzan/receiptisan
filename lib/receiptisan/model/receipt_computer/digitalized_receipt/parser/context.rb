@@ -10,9 +10,10 @@ module Receiptisan
               clear
             end
 
+            # @param io_name [String, nil]
             # @return [void]
-            def prepare(uke_file_path)
-              @uke_file_path       = uke_file_path
+            def prepare(io_name)
+              @io_name             = io_name
               @current_line        = nil
               @current_line_number = 0
               @current_receipt_id  = nil
@@ -27,16 +28,16 @@ module Receiptisan
 
             # @return [void]
             def clear
-              prepare(_uke_file_path = nil)
+              prepare(_io_name = nil)
             end
 
             # @!attribute [r] current_line
             #   @return [String, nil]
             # @!attribute [r] current_line_number
             #   @return [Integer]
-            # @!attribute [r] uke_file_path
+            # @!attribute [r] io_name
             #   @return [String, nil]
-            attr_reader :current_line, :current_line_number, :uke_file_path
+            attr_reader :current_line, :current_line_number, :io_name
             # @!attribute [rw] current_receipt_id
             #   @return [Integer, nil]
             attr_accessor :current_receipt_id
@@ -47,7 +48,7 @@ module Receiptisan
               def report_error(e, severity = Logger::WARN)
                 # ブロックをつかっていないのはスタックトレースも表示するため
                 message = 'Exception occurred while parsing %s:%d:%s' % [
-                  context.uke_file_path,
+                  context.io_name,
                   context.current_line_number,
                   context.current_line,
                 ]

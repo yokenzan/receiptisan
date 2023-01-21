@@ -108,6 +108,7 @@ Naming/MethodParameterName:
     - bg
     - id
     - ym
+    - io
 
 Style/MultilineBlockChain:
   Enabled: false
