@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'master/version'
+require_relative 'master/versions'
 require_relative 'master/master_item_code_interface'
 require_relative 'master/treatment'
 require_relative 'master/diagnosis'
