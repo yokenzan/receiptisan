@@ -155,7 +155,7 @@ module Receiptisan
             combine_units
           end
 
-          def combine_units
+          def combine_units # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
             entries = @shuukei_entries.reject(&:zero_point?)
 
             CombinedTensuuShuukeiUnit.new(
