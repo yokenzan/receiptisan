@@ -1,0 +1,35 @@
+# - https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions
+# - https://tianhaozhou.medium.com/ruby-semantic-release-github-actions-efa5db43332a
+# - https://dev.classmethod.jp/articles/github-actions-semantic-release-sample
+
+name: Release
+
+on:
+  workflow_run:
+    workflows:
+      - Ruby
+    types:
+      - completed
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEM_HOST_API_KEY: ${{ secrets.GEM_HOST_API_KEY }}
+        run: npx semantic-release

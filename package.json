@@ -1,0 +1,54 @@
+{
+    "devDependencies": {
+        "@semantic-release/changelog": "^6.0.2",
+        "@semantic-release/git": "^10.0.1",
+        "semantic-release": "^19.0.5",
+        "semantic-release-rubygem": "^1.2.0"
+    },
+    "release": {
+        "plugins": [
+            [
+                "@semantic-release/commit-analyzer",
+                {
+                    "releaseRules": [
+                        {
+                            "type": "docs",
+                            "scope": "README",
+                            "release": "patch"
+                        },
+                        {
+                            "type": "refactor",
+                            "release": "patch"
+                        },
+                        {
+                            "type": "chore",
+                            "release": "patch"
+                        }
+                    ]
+                }
+            ],
+            "@semantic-release/release-notes-generator",
+            [
+                "semantic-release-rubygem",
+                {
+                    "gemPublish": false
+                }
+            ],
+            "@semantic-release/changelog",
+            "@semantic-release/github",
+            [
+                "@semantic-release/git",
+                {
+                    "assets": [
+                        "lib/receiptisan/version.rb",
+                        "CHANGELOG.md"
+                    ],
+                    "message": "release: ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                }
+            ]
+        ],
+        "branches": [
+            "master"
+        ]
+    }
+}

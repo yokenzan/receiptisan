@@ -47,7 +47,8 @@ module Receiptisan
                 resource.shiyouryou&.then do | shiyouryou |
                   '%s%s' % [
                     Formatter.to_zenkaku(shiyouryou.to_i == shiyouryou ? shiyouryou.to_i : shiyouryou),
-                    resource.unit.name,
+                    # dummyのときunitはnilを返す
+                    resource.unit&.name || '',
                   ]
                 end
               end
