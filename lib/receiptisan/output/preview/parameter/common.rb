@@ -389,7 +389,11 @@ module Receiptisan
             :total_kaisuu,
             :total_tensuu,
             keyword_init: true
-          )
+          ) do
+            def zero_point?
+              tensuu.zero?
+            end
+          end
           # 点数欄「97食事・生活」の「基準」および「基準(生)」に埋め込む、
           # 算定食事・生活療養費のローマ数字による略号
           ShokujiSeikatsuKijunMarks = Struct.new(:shokuji, :seikatsu, keyword_init: true)
