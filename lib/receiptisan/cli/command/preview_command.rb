@@ -69,7 +69,7 @@ module Receiptisan
 
           (uke_file_paths.empty? ?
             parse_proc.call($stdin) :
-            uke_file_paths.map { | path | File.open(path, encoding) { | io | parse_proc.call(io) } }).flatten
+            uke_file_paths.map { | path | File.open(path) { | io | parse_proc.call(io) } }).flatten
         end
 
         # @return [Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
