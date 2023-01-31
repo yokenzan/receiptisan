@@ -36,7 +36,7 @@ module Receiptisan
                     pattern:         Treatment::Comment::Pattern.find_by_code(
                       values[Treatment::Comment::Columns::C_パターン]
                     ),
-                    name:            convert_kakkotsuki_mark(
+                    name:            replace_kakkotsuki_mark(
                       convert_unit(convert_unit(values[Treatment::Comment::Columns::C_コメント文_漢字名称]))
                     ),
                     name_kana:       convert_katakana(values[Treatment::Comment::Columns::C_コメント文_カナ名称]),
