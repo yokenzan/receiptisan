@@ -1,3 +1,10 @@
+## [0.2.10](https://github.com/yokenzan/receiptisan/compare/v0.2.9...v0.2.10) (2023-01-31)
+
+
+### Bug Fixes
+
+* **format:** カッコ付き数字の置換処理で常に⑴を返してしまう不具合を修正 ([fa3a4c8](https://github.com/yokenzan/receiptisan/commit/fa3a4c8833452fc9a99f5465af70ab24bfadf592))
+
 ## [0.2.9](https://github.com/yokenzan/receiptisan/compare/v0.2.8...v0.2.9) (2023-01-22)
 
 
