@@ -1,22 +1,23 @@
 # frozen_string_literal: true
 
+require_relative 'formatter/kakkotsuki_formatter'
+
 module Receiptisan
   module Util
     module Formatter
       MARU_ICHI_CODEPOINT    = 0x2460 # ①～⑳のコードポイント
       MARU_ICHI_CODEPOINT_21 = 0x3251 # ㉑以降のコードポイント
       MARU_ICHI_CODEPOINT_36 = 0x32b1 # ㊱以降のコードポイント
-      KAKKO_ICHI_CODEPOINT   = 0x2474 # ⑴のコードポイント
       HANKAKU_CHARS          = '−() A-Za-z0-9.'
       ZENKAKU_CHARS          = '―（）　Ａ-Ｚａ-ｚ０-９．'
 
       # カンマ区切り表記にする
       # @param integer [Integer, nil] nilの場合は空文字列を返します
       # @return [String]
-      def to_currency(integer)
-        return '' if integer.nil?
+      def to_currency(value)
+        return '' unless value.respond_to?(:to_i)
 
-        integer.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\1,')
+        value.to_i.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\1,')
       end
 
       # マル付数字の文字を生成する
@@ -39,14 +40,9 @@ module Receiptisan
         codepoint.chr('UTF-8')
       end
 
-      # カッコ付数字の文字を生成する
-      # @param zero_based_index [Integer]
       # @return [String]
-      def to_kakkotsuki_mark(zero_based_index)
-        # 用意されている文字はカッコ20まで
-        raise ArgumentError, "given index is out of range (0~19): '#{zero_based_index}'" if zero_based_index >= 20
-
-        (KAKKO_ICHI_CODEPOINT + zero_based_index).chr('UTF-8')
+      def replace_kakkotsuki_mark(string)
+        KakkotsukiFormatter.format(string)
       end
 
       # @param value [String, Symbol, Integer, nil] nilの場合は空文字列を返します
@@ -71,10 +67,6 @@ module Receiptisan
       # @return [String]
       def convert_katakana(hankaku)
         NKF.nkf('-wWX', hankaku)
-      end
-
-      def convert_kakkotsuki_mark(string)
-        string.gsub(/（([０-９]{1,2})）/) { | m | to_kakkotsuki_mark(to_hankaku(m).to_i) }
       end
 
       def convert_unit(string)

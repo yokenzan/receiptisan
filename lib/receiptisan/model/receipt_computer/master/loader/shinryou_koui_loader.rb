@@ -21,7 +21,7 @@ module Receiptisan
                   code             = Treatment::ShinryouKoui::Code.of(values[columns::C_コード])
                   hash[code.value] = Treatment::ShinryouKoui.new(
                     code:       code,
-                    name:       convert_kakkotsuki_mark(
+                    name:       replace_kakkotsuki_mark(
                       convert_unit(values[columns::C_省略名称_漢字名称])
                     ),
                     name_kana:  convert_katakana(values[columns::C_省略名称_カナ名称]),

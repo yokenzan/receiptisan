@@ -16,7 +16,7 @@ module Receiptisan
                   code             = Treatment::Iyakuhin::Code.of(values[Treatment::Iyakuhin::Columns::C_コード])
                   hash[code.value] = Treatment::Iyakuhin.new(
                     code:            code,
-                    name:            convert_kakkotsuki_mark(
+                    name:            replace_kakkotsuki_mark(
                       convert_unit(values[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_漢字名称])
                     ),
                     name_kana:       convert_katakana(values[Treatment::Iyakuhin::Columns::C_医薬品名・規格名_カナ名称]),

@@ -32,7 +32,7 @@ module Receiptisan
             def_delegators Receiptisan::Util::Formatter,
               :convert_katakana,
               :convert_unit,
-              :convert_kakkotsuki_mark
+              :replace_kakkotsuki_mark
           end
         end
       end
