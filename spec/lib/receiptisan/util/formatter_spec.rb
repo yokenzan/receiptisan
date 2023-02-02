@@ -7,9 +7,9 @@ RSpec.describe Receiptisan::Util::Formatter do
 
   describe '#to_currency' do
     context 'nil' do
-        specify '空文字列を返すこと' do
-          expect(described_class.to_currency(nil)).to eq ''
-        end
+      specify '空文字列を返すこと' do
+        expect(described_class.to_currency(nil)).to eq ''
+      end
     end
 
     context '正の整数' do
