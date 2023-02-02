@@ -1,3 +1,10 @@
+## [0.2.11](https://github.com/yokenzan/receiptisan/compare/v0.2.10...v0.2.11) (2023-02-02)
+
+
+### Bug Fixes
+
+* **format:** 点数欄に0点が表示されてしまう不具合を修正 ([b1bd9fe](https://github.com/yokenzan/receiptisan/commit/b1bd9fe7d6298c476dc998a297fbb54870ed79eb))
+
 ## [0.2.10](https://github.com/yokenzan/receiptisan/compare/v0.2.9...v0.2.10) (2023-01-31)
 
 
