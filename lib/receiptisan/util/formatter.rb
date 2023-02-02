@@ -15,9 +15,9 @@ module Receiptisan
       # @param integer [Integer, nil] nilの場合は空文字列を返します
       # @return [String]
       def to_currency(value)
-        return '' unless value.respond_to?(:to_i)
+        return '' if value.nil?
 
-        value.to_i.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\1,')
+        value.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\1,')
       end
 
       # マル付数字の文字を生成する
