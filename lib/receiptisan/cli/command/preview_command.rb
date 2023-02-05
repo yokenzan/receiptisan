@@ -17,11 +17,14 @@ module Receiptisan
 
         Preview = Receiptisan::Output::Preview
         Parser  = DigitalizedReceipt::Parser
+        Options = Parser::SupplementalOptions
 
         argument :uke_file_paths, required: false, type: :array, desc: 'paths of RECEIPTC.UKE files to preview'
 
         # config for preview format
         option :format, default: 'svg', values: %w[svg yaml json], desc: 'preview format'
+        # hospitals
+        option :hospitals, type: :json, desc: 'parameters for hospitals(each hospital has location, code, bed_count)'
 
         # @param [Array<String>] uke_file_paths
         # @param [Hash] options
@@ -30,7 +33,7 @@ module Receiptisan
           initialize_preview_parameter_generator
           determine_previewer(options[:format])
 
-          digitalized_receipts = parse(uke_file_paths)
+          digitalized_receipts = parse(uke_file_paths, options)
           parameters           = to_preview_parameters(digitalized_receipts)
           show_preview(parameters)
         end
@@ -64,8 +67,9 @@ module Receiptisan
 
         # @param uke_file_paths [Array<String>]
         # @return [Array<Model::ReceiptComputer::DigitalizedReceipt>]
-        def parse(uke_file_paths)
-          parse_proc = proc { | io | @parser.parse(io) }
+        def parse(uke_file_paths, options)
+          supplemental_options = Options.from(options[:hospitals])
+          parse_proc           = proc { | io | @parser.parse(io, supplemental_options) }
 
           (uke_file_paths.empty? ?
             parse_proc.call($stdin) :

@@ -10,7 +10,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
   end
 
   let(:processor) { described_class.new }
-  let(:target)    { processor.process('IR,2,01,1,9990000,,アイウエオ附属総合病院,202211,00,999-111-2222'.split(',').map { | s | s.empty? ? nil : s }) }
+  let(:target)    { processor.process('IR,2,01,1,9990000,,アイウエオ附属総合病院,202211,00,999-111-2222'.split(',').map { | s | s.empty? ? nil : s }, '東京都千代田区千代田１－１', 519) }
 
   describe '#process' do
     context '読込む行がIRレコードである場合' do
@@ -46,8 +46,12 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
         expect(target.hospital.code).to eq '9990000'
       end
 
-      specify '医療機関の所在地がnilであること' do
-        expect(target.hospital.address).to be_nil
+      specify '医療機関の所在地が東京都千代田区千代田１－１であること' do
+        expect(target.hospital.location).to eq '東京都千代田区千代田１－１'
+      end
+
+      specify '医療機関の病床数が519床であること' do
+        expect(target.hospital.bed_count).to eq 519
       end
     end
 

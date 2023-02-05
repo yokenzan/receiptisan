@@ -6,6 +6,7 @@ require_relative 'parser/comment_content_builder'
 require_relative 'parser/hoken_order_provider'
 require_relative 'parser/context'
 require_relative 'parser/buffer'
+require_relative 'parser/supplemental_options'
 require_relative 'parser/processor'
 
 module Receiptisan
@@ -25,6 +26,7 @@ module Receiptisan
           def initialize(handler, logger)
             @handler          = handler
             @logger           = logger
+            @options          = nil
             @buffer           = Parser::Buffer.new
             @context          = Parser::Context.new
             processor_options = { context: context, logger: logger, handler: @handler }
@@ -46,9 +48,10 @@ module Receiptisan
           #
           # @param io [IO]
           # @return [Array<DigitalizedReceipt>]
-          def parse(io)
+          def parse(io, options)
             context.prepare(io.inspect)
             buffer.prepare
+            @options = options
 
             io.with_encoding(Parser::FILE_ENCODING, Parser::INTERNAL_ENCODING) do | encoded_io |
               encoded_io.each_line(chomp: true) do | line |
@@ -57,6 +60,7 @@ module Receiptisan
               end
             end
 
+            @options = nil
             context.clear
             buffer.close
           end
@@ -100,7 +104,13 @@ module Receiptisan
           # @param values [Array<String, nil>]
           # @return [void]
           def process_ir(values)
-            buffer.new_digitalized_receipt(current_processor.process(values))
+            hospital_option = @options.find_by_code(current_processor.hospital_code(values))
+
+            buffer.new_digitalized_receipt(current_processor.process(
+              values,
+              hospital_option.location,
+              hospital_option.bed_count
+            ))
           end
 
           # @param values [Array<String, nil>]
