@@ -47,7 +47,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
       end
 
       specify '医療機関の所在地がnilであること' do
-        expect(target.hospital.address).to be_nil
+        expect(target.hospital.location).to be_nil
       end
     end
 

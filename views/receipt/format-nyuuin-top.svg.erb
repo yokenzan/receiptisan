@@ -150,7 +150,13 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="458.8" y="294.4" class="s3">名　称</text>
         <text x="504.3" y="298.7" class="sd output-content"><%= hospital.tel %></text>
         <text x="502.1" y="270.5" class="se output-content"><%= hospital.name %></text>
-        <text x="502.1" y="240.2" class="sf output-content"><%= hospital.address %></text>
+        <% if hospital.location.length <= 26 %>
+            <text x="502.1" y="240.2" class="sf output-content"><%= to_zenkaku hospital.location %></text>
+        <% else %>
+            <% hospital.location.each_char.each_slice(30).with_index do | chars, index | %>
+                <text x="502.1" y="<%= 240.2 + 13 * index %>" class="s7 output-content"><%= to_zenkaku chars.join %></text>
+            <% end %>
+        <% end %>
 
         <text x="506.5" y="311.7" class="s3">診療科 </text>
         <!-- <text x="549.7" y="311.7" class="s3">（０１内科） </text> -->
@@ -616,7 +622,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <% end %>
 
         <!-- 病診 -->
-        <text x="62.8" y="857.1" class="s3">病</text>
+        <text x="62.8" y="857.1" class="s3"><% if hospital.is_hospital %>病<% else %>診<% end %></text>
 
         <!-- 入院料・加算の略号 -->
         <% receipt.nyuuinryou_abbrev_labels.each_with_index do | abbrev, index | %>

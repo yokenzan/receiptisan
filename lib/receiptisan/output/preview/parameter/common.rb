@@ -95,16 +95,18 @@ module Receiptisan
             :receipts,
             keyword_init: true
           )
-          Hospital = Struct.new(:code, :name, :tel, :address, keyword_init: true) do
+          Hospital = Struct.new(:code, :name, :tel, :location, :bed_count, :is_hospital, keyword_init: true) do
             class << self
               # @param hospital [Model::ReceiptComputer::DigitalizedReceipt::Hospital]
               # @return [self]
               def from(hospital)
                 new(
-                  code:    hospital.code,
-                  name:    hospital.name,
-                  tel:     hospital.tel,
-                  address: hospital.address
+                  code:        hospital.code,
+                  name:        hospital.name,
+                  tel:         hospital.tel,
+                  location:    hospital.location,
+                  bed_count:   hospital.bed_count,
+                  is_hospital: hospital.hospital?
                 )
               end
             end
