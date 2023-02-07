@@ -11,7 +11,7 @@ module Receiptisan
             class << self
               def from(options)
                 hospitals = options.nil? ? [] : JSON.parse(options).map { | param | HospitalOption.from(param) }
-                hospitals << HospitalOption.new(code: nil, location: nil, bed_count: 0)
+                hospitals << HospitalOption.new(code: nil, location: '', bed_count: 0)
 
                 new(hospitals: hospitals)
               end
