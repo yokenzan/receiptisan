@@ -1,3 +1,10 @@
+## [0.2.13](https://github.com/yokenzan/receiptisan/compare/v0.2.12...v0.2.13) (2023-02-07)
+
+
+### Bug Fixes
+
+* **preview:** 医療機関所在地がない場合にプレビューの生成に失敗する不具合を修正 ([72a154c](https://github.com/yokenzan/receiptisan/commit/72a154cecdd0d75a37e9704eec30227398dd430d))
+
 ## [0.2.12](https://github.com/yokenzan/receiptisan/compare/v0.2.11...v0.2.12) (2023-02-05)
 
 ## [0.2.11](https://github.com/yokenzan/receiptisan/compare/v0.2.10...v0.2.11) (2023-02-02)
