@@ -27,10 +27,14 @@ module Receiptisan
             def to_s
               return @worpro_name if worpro?
 
+              shoubyoumei_builder = ShoubyoumeiNameBuilder.new
+
               # @param shuushokugo [Master::Diagnosis::Shuushokugo]
-              master_shuushokugos.inject(@master_shoubyoumei.name) do | shoubyoumei_name, shuushokugo |
-                shuushokugo.prefix? ? shuushokugo.name + shoubyoumei_name : shoubyoumei_name + shuushokugo.name
+              master_shuushokugos.each_with_object(shoubyoumei_builder) do | shuushokugo, builder |
+                shuushokugo.prefix? ? builder.append_prefix(shuushokugo.name) : builder.append_suffix(shuushokugo.name)
               end
+
+              shoubyoumei_builder.build_with(master_shoubyoumei.name)
             end
 
             # @param [Master::Diagnosis::Shuushokugo] shuushokugo
@@ -121,6 +125,31 @@ module Receiptisan
                 def find_by_code(code)
                   @types[code.to_s.intern]
                 end
+              end
+            end
+
+            class ShoubyoumeiNameBuilder
+              def initialize
+                @prefix = []
+                @suffix = []
+              end
+
+              # @param text [String]
+              # @return [void]
+              def append_prefix(text)
+                @prefix << text
+              end
+
+              # @param text [String]
+              # @return [void]
+              def append_suffix(text)
+                @suffix << text
+              end
+
+              # @param shoubyoumei_name [String]
+              # @return [String]
+              def build_with(shoubyoumei_name)
+                [@prefix, shoubyoumei_name, @suffix].flatten.join
               end
             end
           end
