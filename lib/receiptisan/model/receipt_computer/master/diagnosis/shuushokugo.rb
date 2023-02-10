@@ -117,6 +117,15 @@ module Receiptisan
                   @types[code.to_s.intern]
                 end
               end
+
+              CATEGORY_部位     = find_by_code(1)
+              CATEGORY_位置     = find_by_code(2)
+              CATEGORY_病因     = find_by_code(3)
+              CATEGORY_経過表現 = find_by_code(4)
+              CATEGORY_状態表現 = find_by_code(5)
+              CATEGORY_患者帰属 = find_by_code(6)
+              CATEGORY_その他   = find_by_code(7)
+              CATEGORY_接尾語   = find_by_code(8)
             end
 
             private

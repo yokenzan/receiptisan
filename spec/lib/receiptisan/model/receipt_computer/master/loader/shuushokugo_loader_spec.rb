@@ -58,7 +58,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'1298',
           _name           = '環指末節骨',
           _name_kana      = 'カンシマッセツコツ',
-          _category       = Shuushokugo::Category.find_by_code(1)
+          _category       = Shuushokugo::Category::CATEGORY_部位
       end
 
       context '左右' do
@@ -66,7 +66,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'2060',
           _name           = '左右',
           _name_kana      = 'サユウ',
-          _category       = Shuushokugo::Category.find_by_code(2)
+          _category       = Shuushokugo::Category::CATEGORY_位置
       end
 
       context '術後' do
@@ -74,7 +74,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'3088',
           _name           = '術後',
           _name_kana      = 'ジュツゴ',
-          _category       = Shuushokugo::Category.find_by_code(3)
+          _category       = Shuushokugo::Category::CATEGORY_病因
       end
 
       context '亜急性' do
@@ -82,7 +82,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'4001',
           _name           = '亜急性',
           _name_kana      = 'アキュウセイ',
-          _category       = Shuushokugo::Category.find_by_code(4)
+          _category       = Shuushokugo::Category::CATEGORY_経過表現
       end
 
       context '間質性' do
@@ -90,7 +90,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'5029',
           _name           = '間質性',
           _name_kana      = 'カンシツセイ',
-          _category       = Shuushokugo::Category.find_by_code(5)
+          _category       = Shuushokugo::Category::CATEGORY_状態表現
       end
 
       context '加齢性' do
@@ -98,7 +98,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'6026',
           _name           = '加齢性',
           _name_kana      = 'カレイセイ',
-          _category       = Shuushokugo::Category.find_by_code(6)
+          _category       = Shuushokugo::Category::CATEGORY_患者帰属
       end
 
       context '労作性' do
@@ -106,7 +106,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'7055',
           _name           = '労作性',
           _name_kana      = 'ロウサセイ',
-          _category       = Shuushokugo::Category.find_by_code(7)
+          _category       = Shuushokugo::Category::CATEGORY_その他
       end
 
       context 'の術後' do
@@ -114,7 +114,7 @@ RSpec.describe ShuushokugoLoader do
           _code_by_symbol = :'8048',
           _name           = 'の術後',
           _name_kana      = 'ノジュツゴ',
-          _category       = Shuushokugo::Category.find_by_code(8)
+          _category       = Shuushokugo::Category::CATEGORY_接尾語
       end
     end
   end
