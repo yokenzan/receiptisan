@@ -61,14 +61,14 @@ module Receiptisan
             def build_name
               return @worpro_name if worpro?
 
-              shoubyoumei_builder = NameBuilder.new
+              builder = NameBuilder.new
 
               # @param shuushokugo [Master::Diagnosis::Shuushokugo]
-              master_shuushokugos.each_with_object(shoubyoumei_builder) do | shuushokugo, builder |
+              master_shuushokugos.each do | shuushokugo |
                 shuushokugo.prefix? ? builder.append_prefix(shuushokugo.name) : builder.append_suffix(shuushokugo.name)
               end
 
-              shoubyoumei_builder.build_with(master_shoubyoumei.name)
+              builder.build_with(master_shoubyoumei.name)
             end
 
             class << self
