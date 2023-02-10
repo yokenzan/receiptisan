@@ -24,17 +24,8 @@ module Receiptisan
               @master_shuushokugos = []
             end
 
-            def to_s
-              return @worpro_name if worpro?
-
-              shoubyoumei_builder = ShoubyoumeiNameBuilder.new
-
-              # @param shuushokugo [Master::Diagnosis::Shuushokugo]
-              master_shuushokugos.each_with_object(shoubyoumei_builder) do | shuushokugo, builder |
-                shuushokugo.prefix? ? builder.append_prefix(shuushokugo.name) : builder.append_suffix(shuushokugo.name)
-              end
-
-              shoubyoumei_builder.build_with(master_shoubyoumei.name)
+            def name
+              @name ||= build_name
             end
 
             # @param [Master::Diagnosis::Shuushokugo] shuushokugo
@@ -61,6 +52,24 @@ module Receiptisan
             attr_reader :start_date
             attr_reader :tenki
             attr_reader :comment
+
+            alias to_s name
+
+            private
+
+            # @return [String]
+            def build_name
+              return @worpro_name if worpro?
+
+              shoubyoumei_builder = NameBuilder.new
+
+              # @param shuushokugo [Master::Diagnosis::Shuushokugo]
+              master_shuushokugos.each_with_object(shoubyoumei_builder) do | shuushokugo, builder |
+                shuushokugo.prefix? ? builder.append_prefix(shuushokugo.name) : builder.append_suffix(shuushokugo.name)
+              end
+
+              shoubyoumei_builder.build_with(master_shoubyoumei.name)
+            end
 
             class << self
               # @return [self]
@@ -112,7 +121,7 @@ module Receiptisan
               attr_reader :code, :name
 
               @types = {
-                '1': new(code: 1, name: '継続'), # 治ゆ、死亡、中止以外
+                '1': new(code: 1, name: '継続'),
                 '2': new(code: 2, name: '治癒'),
                 '3': new(code: 3, name: '死亡'),
                 '4': new(code: 4, name: '中止'),
@@ -126,9 +135,14 @@ module Receiptisan
                   @types[code.to_s.intern]
                 end
               end
+
+              TENKI_継続 = find_by_code(1)
+              TENKI_治癒 = find_by_code(2)
+              TENKI_死亡 = find_by_code(3)
+              TENKI_中止 = find_by_code(4)
             end
 
-            class ShoubyoumeiNameBuilder
+            class NameBuilder
               def initialize
                 @prefix = []
                 @suffix = []
