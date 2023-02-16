@@ -1,3 +1,11 @@
+## [0.2.15](https://github.com/yokenzan/receiptisan/compare/v0.2.14...v0.2.15) (2023-02-16)
+
+
+### Bug Fixes
+
+* **format:** コメント文がフォーマットの過程で意図せず空文字列に変更されてしまう不具合を修正 ([8036822](https://github.com/yokenzan/receiptisan/commit/8036822e53d3bac86c93f129eb27f338afeb1286))
+* **parse:** 主傷病の判定が正しくおこなわれていなかった不具合を修正 ([e3023f4](https://github.com/yokenzan/receiptisan/commit/e3023f42fac0d5b844ac601725a00280eb91cb81))
+
 ## [0.2.14](https://github.com/yokenzan/receiptisan/compare/v0.2.13...v0.2.14) (2023-02-10)
 
 ## [0.2.13](https://github.com/yokenzan/receiptisan/compare/v0.2.12...v0.2.13) (2023-02-07)
