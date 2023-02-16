@@ -47,7 +47,7 @@ module Receiptisan
               end
 
               comment_text  = name.dup
-              appended_text = appended_content.to_s
+              appended_text = '%s' % appended_content
 
               comment_text.tap do | text |
                 # @param position [EmbedPosition]
@@ -132,9 +132,9 @@ module Receiptisan
                 NO_APPEND              => new(NO_APPEND, false),
                 APPEND_FREE            => new(APPEND_FREE, false),
                 APPEND_SHINRYOU_KOUI   => new(APPEND_SHINRYOU_KOUI, false),
-                APPEND_DIGITS          => new(APPEND_DIGITS,          true),
-                APPEND_NUMBER          => new(APPEND_NUMBER,          false),
-                APPEND_WAREKI          => new(APPEND_WAREKI,          false),
+                APPEND_DIGITS          => new(APPEND_DIGITS, true),
+                APPEND_NUMBER          => new(APPEND_NUMBER, false),
+                APPEND_WAREKI          => new(APPEND_WAREKI, false),
                 APPEND_HOUR_MINUTE     => new(APPEND_HOUR_MINUTE, false),
                 APPEND_MINUTE          => new(APPEND_MINUTE, false),
                 APPEND_DAY_HOUR_MINUTE => new(APPEND_DAY_HOUR_MINUTE, false),
