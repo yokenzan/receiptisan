@@ -45,7 +45,7 @@ module Receiptisan
                 master_item.format(appended_content)
               end
 
-              # @!attribute [r] item
+              # @!attribute [r] master_item
               #   @return [Master::Treatment::Comment]
               # @!attribute [r] appended_content
               #   @return [Object, nil]
