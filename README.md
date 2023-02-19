@@ -37,3 +37,9 @@ $ bundle exec ruby exe/receiptisan --preview --format=yaml path/to/RECEIPTC.UKE_
 # JSON(プレビュー出力に使う内部解析データ)
 $ bundle exec ruby exe/receiptisan --preview --format=json path/to/dir/*.UKE | jq -C
 ```
+
+## 旧版
+
+CSVなどへの変換、CUIやエディタでのプレビューには旧版が利用いただけます。
+
+https://github.com/yokenzan/receiptisan/releases/tag/v0.1.0
