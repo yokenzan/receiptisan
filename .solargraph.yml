@@ -6,7 +6,11 @@ exclude:
 - test/**/*
 - vendor/**/*
 - ".bundle/**/*"
-require: []
+require:
+  - dry-cli
+  - month
+  - json
+  - yaml
 domains: []
 reporters:
 - rubocop
