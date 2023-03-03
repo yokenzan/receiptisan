@@ -42,4 +42,5 @@ $ bundle exec ruby exe/receiptisan --preview --format=json path/to/dir/*.UKE | j
 
 CSVなどへの変換、CUIやエディタでのプレビューには旧版が利用いただけます。
 
+https://github.com/yokenzan/receiptisan/tree/v0.1.0
 https://github.com/yokenzan/receiptisan/releases/tag/v0.1.0
