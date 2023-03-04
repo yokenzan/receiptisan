@@ -14,23 +14,116 @@ style="display: block;margin-left: auto;margin-right: auto;">
     <g clip-path="url(#c0)">
     <path d="M0,0H909V1286.4H0V0Z" class="g0"/>
     </g>
+
+    <!-- 点数欄 -->
+
+    <% if nyuuin? receipt %>
+    <!-- 入院 -->
+
     <path d="M34.6,419.9H445.9v643.9H34.6V419.9Zm26,55.2V585.5M153.7,419.9v55.2M60.6,585.5v478.3M367.9,419.9v643.9M34.6,751H367.9M34.6,714.2H367.9M34.6,677.4H367.9M34.6,585.5H367.9M34.6,438.3H367.9" class="g1"/>
+    <path d="M34.6,824.6H367.9" class="g1"/>
     <path d="M367.9,438.3h78" class="g2"/>
+    <!-- 病床区分の区切り線 -->
     <path d="M34.6,787.8H367.9M34.6,640.6H367.9" class="g1"/>
     <path d="M367.9,585.5l78,1m-78,54.1h78m-78,36.8h78m-78,36.8h78m-78,36.8h78m-78,36.8h78" class="g2"/>
+    <path d="M367.9,456.7h78" class="g2"/>
+    <path d="M34.6,475.1H367.9" class="g1"/>
+    <path d="M367.9,475.1h78" class="g2"/>
+    <path d="M34.6,824.6H367.9" class="g1"/>
+    <path d="M34.6,233.8H367.9M34.6,456.7H367.9" class="g1"/>
+
+    <% else %>
+    <!-- 外来 -->
+
+    <!-- 点数欄の左枠 -->
+    <path d="M34.4 419.4V1064.1" class="g1"/>
+
+    <!-- 点数欄20～80の表記と内訳の仕切りの縦線 -->
+    <path d="M60.3 604.2V1064.1" class="g1"/>
+    <!-- 点数欄 保険と公費の仕切りの縦線 -->
+    <path d="M355.2 419.4V1064.1" class="g1"/>
+
+    <!-- 点数欄の11と12の仕切り -->
+    <path d="M34.4 463.7H355.2" class="g1"/>
+    <path d="M355.2,463.7h82.5" class="g2"/>
+    <!-- 点数欄の12と13の仕切り -->
+    <path d="M34.4,559.9H355.2" class="g1"/>
+    <path d="M355.2 559.9H437.7" class="g2"/>
+    <!-- 点数欄の13と14の仕切り -->
+    <path d="M34.4,584.4H355.2" class="g1"/>
+    <path d="M355.2 584.4H437.7" class="g2"/>
+    <!-- 点数欄の14と20の仕切り -->
+    <path d="M34.4,604.2H355.2" class="g1"/>
+    <path d="M355.2 604.2H437.7" class="g2"/>
+    <!-- 点数欄の20と30の仕切り -->
+    <path d="M34.4 807.4H355.2" class="g1"/>
+    <path d="M355.2 807.4H437.7" class="g2"/>
+    <!-- 点数欄の30と40の仕切り -->
+    <path d="M34.4,886.9H355.2" class="g1"/>
+    <path d="M355.2 886.9H437.7" class="g2"/>
+    <!-- 点数欄の40と50の仕切り -->
+    <path d="M34.4,920.5H355.2" class="g1"/>
+    <path d="M355.2 920.5H437.7" class="g2"/>
+    <!-- 点数欄の50と60の仕切り -->
+    <path d="M34.4 969.4H355.2" class="g1"/>
+    <path d="M355.2 969.4H437.7" class="g2"/>
+    <!-- 点数欄の60と70の仕切り -->
+    <path d="M34.4 1001.5H355.2" class="g1"/>
+    <path d="M355.2 1001.5H437.7" class="g2"/>
+    <!-- 点数欄の70と80の仕切り -->
+    <path d="M34.4,1032H355.2" class="g1"/>
+    <path d="M355.2 1032H437.7" class="g2"/>
+
+    <% end %><%# if %>
+
+    <!-- 療養の給付欄 -->
+
+    <% if nyuuin? receipt %>
+    <!-- 入院 -->
+
     <path d="M34.6,1063.8H874.4v130.9H34.6V1063.8Zm26,0v130.9m-13,-130.9v130.9m0,-36.8H445.9M47.6,1121.1H445.9M333.3,1063.8v130.9M246.7,1063.8v130.9M445.9,1063.8v130.9m12.9,-36.8H874.4" class="g1"/>
+    <path d="M367.9,824.6h78" class="g2"/>
+    <path d="M60.6,843H367.9m-214.2,0v220.8M60.6,861.4h93.1m0,92H367.9m78,18.4H874.4M445.9,990.2h316m-95.3,18.4H874.4M458.8,1121.1H874.4M471.8,990.2v204.5m-13,-130.9v130.9M761.9,1063.8v130.9M666.6,971.8v222.9M515.1,990.2v204.5M761.9,971.8v36.8m-95.3,38.9H874.4M77.9,843v18.4" class="g1"/>
+
+    <% else %>
+
+    <!-- 外来 -->
+
+    <!-- 療養の給付欄の外枠 -->
+    <path d="M34.4 1064.1H870.1V1194H34.4V1064.1Z" class="g1" />
+
+    <!-- 縦線 -->
+    <!-- 欄名、保険・公費名の仕切り線 -->
+    <path d="M48.1 1064.1V1195.5" class="g1" />
+    <path d="M60.3 1064.1V1195.5" class="g1" />
+    <!-- 請求点欄と決定点欄の仕切り線 -->
+    <path d="M219.2 1064.1V1195.5" class="g1" />
+    <!-- 決定点欄と一部負担金額欄の仕切り線 -->
+    <path d="M381.2 1064.1V1195.5" class="g1" />
+    <!-- 一部負担金額欄と右側の仕切り線 -->
+    <path d="M494.2 1064.1V1195.5" class="g1" />
+
+    <!-- 横線 -->
+    <!-- 医保と第一公費の仕切り線 -->
+    <path d="M48.1 1120.6H494.2" class="g1" />
+    <!-- 第一公費と第二公費の仕切り線 -->
+    <path d="M48.1 1157.3H494.2" class="g1" />
+
+    <!-- 右側 -->
+    <!-- 右側の上部と下部(※の欄)の仕切り線 -->
+    <path d="M494.2 1157.3H870.1" class="g1" />
+    <!-- ※高額と※公(左)の仕切り線 -->
+    <path d="M671.5 1157.3V1195.5" class="g1" />
+    <!-- ※公(左)と※公(右)の仕切り線 -->
+    <path d="M770.8 1157.3V1195.5" class="g1"/>
+
+    <% end %><%# if %>
+
     <path d="M480.5,419.9V971.8" class="g2"/>
     <path d="M445.9,419.9H874.4v643.9H445.9V419.9ZM34.6,103.9H445.9V207.8H34.6V103.9Zm43.3,0V207.8M251.1,103.9V207.8M294.4,103.9V207.8M34.6,138.5H445.9M34.6,173.1H445.9M426.4,132v6.5m0,28.2v6.4m0,28.2v6.5M231.6,132v6.5m0,28.2v6.4m0,28.2v6.5M168.8,132v6.5m0,28.2v6.4m0,28.2v6.5M125.5,132v6.5m0,28.2v6.4m0,28.2v6.5M679.6,77.9H874.4v26H679.6v-26Z" class="g1"/>
     <path d="M619,138.5H874.4v52H619v-52Z" class="g3"/>
     <path d="M480.5,103.9H874.4v34.6H480.5V103.9Zm290,0v34.6M806.2,77.9v26M480.5,138.5H597.4v52H480.5v-52ZM764,77.9v26m-42.2,-26v26m22.7,26v8.6M668.8,132v6.5M619,132v6.5M34.6,216.4H445.9V316H34.6V216.4Zm324.7,0V316M34.6,298.7H359.3m8.6,-64.9h78M121.2,298.7V316m-86.6,0H874.4V419.9H34.6V316Zm26,0V419.9M480.5,316V419.9M497.8,316V419.9M835.4,316V419.9M818.1,316V419.9M800.8,316V419.9M658,316V419.9M640.5,316V419.9M874.4,385.3H818.1m56.3,-34.7H818.1M60.6,216.4v82.3m487,-194.8v34.6" class="g1"/>
     <path d="M597.4,138.5H619v52H597.4v-52Z" class="g4"/>
-    <path d="M34.6,233.8H367.9M34.6,456.7H367.9" class="g1"/>
-    <path d="M367.9,456.7h78" class="g2"/>
-    <path d="M34.6,475.1H367.9" class="g1"/>
-    <path d="M367.9,475.1h78" class="g2"/>
-    <path d="M34.6,824.6H367.9" class="g1"/>
-    <path d="M367.9,824.6h78" class="g2"/>
-    <path d="M60.6,843H367.9m-214.2,0v220.8M60.6,861.4h93.1m0,92H367.9m78,18.4H874.4M445.9,990.2h316m-95.3,18.4H874.4M458.8,1121.1H874.4M471.8,990.2v204.5m-13,-130.9v130.9M761.9,1063.8v130.9M666.6,971.8v222.9M515.1,990.2v204.5M761.9,971.8v36.8m-95.3,38.9H874.4M77.9,843v18.4" class="g1"/>
 
     <g clip-path="url(#c0)">
 
@@ -72,10 +165,6 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <% receipt.tokki_jikous.each_with_index do | tokki_jikou, index | %>
           <text x="360" y="<%= 246 + index * 16 %>" class="s3 output-content"><%= to_zenkaku tokki_jikou.code %><%= tokki_jikou.name %></text>
         <% end %>
-
-        <!-- 病床区分 -->
-        <text x="34.6" y="229.4" class="s3">区分 </text>
-        <text x="65.8" y="229.4" class="s3 output-content"><% receipt.byoushou_types.each { | type | %><%= to_zenkaku type.code %><%= type.short_name %>　<% } %></text>
     </g>
 
 
@@ -123,8 +212,17 @@ style="display: block;margin-left: auto;margin-right: auto;">
     <!-- 患者 -->
     <% patient = receipt.patient %>
     <g clip-path="url(#c0)">
-        <text x="41.1" y="256.5" class="s3">氏 </text>
-        <text x="41.1" y="282.5" class="s3">名 </text>
+        <!-- 病床区分欄が消えた影響でY座標を▲10 -->
+        <% if nyuuin? receipt %>
+            <!-- 病床区分 -->
+            <text x="34.6" y="229.4" class="s3">区分 </text>
+            <text x="65.8" y="229.4" class="s3 output-content"><% receipt.byoushou_types.each { | type | %><%= to_zenkaku type.code %><%= type.short_name %>　<% } %></text>
+            <text x="41.1" y="256.5" class="s3">氏 </text>
+            <text x="41.1" y="282.5" class="s3">名 </text>
+        <% else %>
+            <text x="41.1" y="246.5" class="s3">氏 </text>
+            <text x="41.1" y="272.5" class="s3">名 </text>
+        <% end %>
         <text x="75.8" y="263" class="<% if patient.name.length > 16 %>sh<% else %>s2<% end %> output-content"><%= patient.name %></text>
 
         <% if (name_kana = patient.name_kana) %>
@@ -308,6 +406,115 @@ style="display: block;margin-left: auto;margin-right: auto;">
 
     </g>
 
+    <!-- ↓↓↓外来よりコピペ -->
+    <!-- <g clip-path="url(#c0_1)"> -->
+    <!--     <text x="65" y="602.2" class="item-title-small">在 </text> -->
+    <!--     <text x="104.7" y="602.2" class="item-title-small">宅 </text> -->
+    <!--     <text x="65.1" y="913.7" class="item-title-small">処 </text> -->
+    <!--     <text x="104.8" y="913.7" class="item-title-small">置 </text> -->
+    <!--     <text x="65.1" y="940.6" dx="0,.2" class="item-title-small">手術 </text> -->
+    <!--     <text x="65.1" y="963.1" dx="0,.2" class="item-title-small">麻酔 </text> -->
+    <!--     <text x="65.1" y="999.5" dx="0,.2,.2,.2,.2" class="item-title-small">検査・病理 </text> -->
+    <!--     <text x="65.1" y="1029" dx="0,.2,.2,.2" class="item-title-small">画像診断 </text> -->
+    <!--     <text x="79.2" y="825.2" dx="0,.2,.2,.2,.2" class="item-title-small">皮下筋肉内 </text> -->
+    <!--     <text x="77.9" y="623" dx="0,.2,.2,.2" class="item-title-small">内服薬剤 </text> -->
+    <!--     <text x="62.8" y="672.1" dx="0,.1" class="item-title-small">22 </text> -->
+    <!--     <text x="77.9" y="698.4" dx="0,.2,.2,.2" class="item-title-small">外用薬剤 </text> -->
+    <!--     <text x="62.8" y="749.2" dx="0,.1" class="item-title-small">25 </text> -->
+    <!--     <text x="77.9" y="723.6" dx="0,.2,.2,.2" class="item-title-small">外用調剤 </text> -->
+    <!--     <text x="79.2" y="854.7" dx="0,.2,.2" class="item-title-small">静脈内 </text> -->
+    <!--     <text x="79.2" y="883.2" dx="0,.2,.2" class="item-title-small">その他 </text> -->
+    <!--     <text x="77.9" y="648.1" dx="0,.2,.2,.2" class="item-title-small">内服調剤 </text> -->
+    <!--     <text x="78.3" y="777" class="item-title-small">麻 </text> -->
+    <!--     <text x="118" y="777" class="item-title-small">毒 </text> -->
+    <!--     <text x="78.3" y="803.7" class="item-title-small">調 </text> -->
+    <!--     <text x="118" y="803.7" class="item-title-small">基 </text> -->
+    <!--     <text x="61.4" y="460.4" class="item-title-small">初 </text> -->
+    <!--     <text x="87.8" y="460.4" class="item-title-small">診 </text> -->
+    <!--     <text x="66.8" y="555" class="item-title-small">深 </text> -->
+    <!--     <text x="106.4" y="555" class="item-title-small">夜 </text> -->
+    <!--     <text x="66.8" y="499.8" dx="0,.2,.2,.2,.2,.2" class="item-title-small">外来管理加算 </text> -->
+    <!--     <text x="66.8" y="518.2" class="item-title-small">時 </text> -->
+    <!--     <text x="93.2" y="518.2" class="item-title-small">間 </text> -->
+    <!--     <text x="119.7" y="518.2" class="item-title-small">外 </text> -->
+    <!--     <text x="66.8" y="536.6" class="item-title-small">休 </text> -->
+    <!--     <text x="106.4" y="536.6" class="item-title-small">日 </text> -->
+    <!--     <text x="66.8" y="481.5" class="item-title-small">再 </text> -->
+    <!--     <text x="106.4" y="481.5" class="item-title-small">診 </text> -->
+    <!--     <text x="270.5" y="724.2" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="750.9" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="777.6" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="648.2" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="621.5" class="item-title-small">単 </text> -->
+    <!--     <text x="270.5" y="677" class="item-title-small">単 </text> -->
+    <!--     <text x="270.5" y="701.6" class="item-title-small">単 </text> -->
+    <!--     <text x="270.5" y="825.2" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="854.7" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="883.2" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="913.7" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="940.6" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="997.5" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="1029" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="1059.6" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="434" dx="0,.2" class="item-title-small">回数 </text> -->
+    <!--     <text x="270.5" y="481.5" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="499.8" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="518.2" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="536.6" class="item-title-small">回 </text> -->
+    <!--     <text x="270.5" y="555" class="item-title-small">回 </text> -->
+    <!--     <text x="224.2" y="1076.8" class="item-title-tiny">※ </text> -->
+    <!--     <text x="256.7" y="1076.8" class="item-title-tiny">決 </text> -->
+    <!--     <text x="289.2" y="1076.8" class="item-title-tiny">定 </text> -->
+    <!--     <text x="321.6" y="1076.8" class="item-title-tiny">点 </text> -->
+    <!--     <text x="116.9" y="1075.7" class="item-title-tiny">請 </text> -->
+    <!--     <text x="160.2" y="1075.7" class="item-title-tiny">求 </text> -->
+    <!--     <text x="203.4" y="1075.7" class="item-title-tiny">点 </text> -->
+    <!--     <text x="478.3" y="1075.7" class="item-title-tiny">円 </text> -->
+    <!--     <text x="62.8" y="621.9" dx="0,.1" class="item-title-small">21 </text> -->
+    <!--     <text x="77.9" y="673.3" dx="0,.2,.2,.2" class="item-title-small">頓服薬剤 </text> -->
+    <!--     <text x="62.8" y="696.7" dx="0,.1" class="item-title-small">23 </text> -->
+    <!--     <text x="78.3" y="750.3" class="item-title-small">処 </text> -->
+    <!--     <text x="118" y="750.3" class="item-title-small">方 </text> -->
+    <!--     <text x="62.8" y="775.9" dx="0,.1" class="item-title-small">26 </text> -->
+    <!--     <text x="62.8" y="802.6" dx="0,.1" class="item-title-small">27 </text> -->
+    <!--     <text x="40" y="478.3" dx="0,.1" class="item-title-small">12 </text> -->
+    <!--     <text x="40" y="601.1" dx="0,.1" class="item-title-small">14 </text> -->
+    <!--     <text x="40.4" y="673.8" dx="0,.1" class="item-title-small">20 </text> -->
+    <!--     <text x="40.6" y="829.3" dx="0,.1" class="item-title-small">30 </text> -->
+    <!--     <text x="40.6" y="905.9" dx="0,.1" class="item-title-small">40 </text> -->
+    <!--     <text x="40.6" y="939.5" dx="0,.1" class="item-title-small">50 </text> -->
+    <!--     <text x="40" y="987.6" dx="0,.1" class="item-title-small">60 </text> -->
+    <!--     <text x="40" y="1019.1" dx="0,.1" class="item-title-small">70 </text> -->
+    <!--     <text x="40" y="1046.4" dx="0,.1" class="item-title-small">80 </text> -->
+    <!--     <text x="39.8" y="579.3" dx="0,.1" class="item-title-small">13 </text> -->
+    <!--     <text x="40" y="460.8" dx="0,.1" class="item-title-small">11 </text> -->
+    <!--     <text x="41.1" y="543.2" class="item-title-small">診 </text> -->
+    <!--     <text x="40.1" y="708.6" class="item-title-small">投 </text> -->
+    <!--     <text x="40.2" y="866.8" class="item-title-small">射 </text> -->
+    <!--     <text x="62.8" y="825.2" dx="0,.1" class="item-title-small">31 </text> -->
+    <!--     <text x="62.8" y="854.7" dx="0,.1" class="item-title-small">32 </text> -->
+    <!--     <text x="62.8" y="883.2" dx="0,.1" class="item-title-small">33 </text> -->
+    <!--     <text x="41.3" y="916.9" class="item-title-tiny">処 </text> -->
+    <!--     <text x="36.8" y="950.3" class="item-title-tiny">手 </text> -->
+    <!--     <text x="36.8" y="961.2" class="item-title-tiny">術 </text> -->
+    <!--     <text x="40.1" y="1059.4" class="item-title-small">他 </text> -->
+    <!--     <text x="36.8" y="1029.9" class="item-title-tiny">画像 </text> -->
+    <!--     <text x="40.8" y="998.4" class="item-title-tiny">検 </text> -->
+    <!--     <text x="41.1" y="506.4" class="item-title-small">再 </text> -->
+    <!--     <text x="40.2" y="848.4" class="item-title-small">注 </text> -->
+    <!--     <text x="40.1" y="770.6" class="item-title-small">薬 </text> -->
+    <!--     <text x="47.6" y="126.6" class="item-title-small">－ </text> -->
+    <!--     <text x="258.6" y="126.6" class="item-title-small">－ </text> -->
+    <!--     <text x="384.2" y="1075.7" class="item-title-tiny">一部負担金額 </text> -->
+    <!--     <text x="64.9" y="580.4" dx="0,.2,.2,.2" class="item-title-small">医学管理 </text> -->
+    <!--     <text x="47.6" y="950.3" class="item-title-tiny">麻 </text> -->
+    <!--     <text x="47.6" y="961.2" class="item-title-tiny">酔 </text> -->
+    <!--     <text x="270.6" y="963.1" class="item-title-small">回 </text> -->
+    <!--     <text x="65.1" y="1059.6" dx="0,.2,.2" class="item-title-small">その他 </text> -->
+    <!--     <text x="270.6" y="460" class="item-title-small">回 </text> -->
+    <!--     <text x="319.3" y="433.8" dx="0,.2" class="item-title-small">点数 </text> -->
+    <!-- </g> -->
+    <!-- ↑↑↑外来よりコピペ -->
 
     <!-- 点数欄 -->
     <g clip-path="url(#c0)">
