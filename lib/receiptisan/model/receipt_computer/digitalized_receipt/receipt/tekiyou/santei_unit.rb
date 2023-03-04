@@ -19,6 +19,7 @@ module Receiptisan
                 @kaisuu        = nil
                 # @type tekiyou_items [Array<Cost, Comment>]
                 @tekiyou_items = []
+                @daily_kaisuus = []
               end
 
               # @param tekiyou_item [Cost, Comment]
@@ -32,8 +33,9 @@ module Receiptisan
                 bottom_cost = tekiyou_items.reverse.find(&:tensuu?)
                 return unless bottom_cost
 
-                @tensuu = bottom_cost.tensuu
-                @kaisuu = bottom_cost.kaisuu
+                @tensuu        = bottom_cost.tensuu
+                @kaisuu        = bottom_cost.kaisuu
+                @daily_kaisuus = bottom_cost.daily_kaisuus
               end
 
               # @return [Symbol, nil] returns nil when only costists of comments.
@@ -45,6 +47,11 @@ module Receiptisan
                 enum = tekiyou_items.reject(&:comment?).enum_for(:each)
 
                 block_given? ? enum.each(&block) : enum
+              end
+
+              # @return [Enumnerator]
+              def each_date
+                Enumerator.new { | y | @daily_kaisuus.each { | it | y << it } }
               end
 
               # @return [Integer, nil]
