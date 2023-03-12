@@ -80,6 +80,25 @@ module Receiptisan
             @type.nyuuin?
           end
 
+          def dates
+            @tekiyou.map do | _, ichirens |
+              ichirens.map do | ichiren |
+                ichiren.map do | santei |
+                  santei.each_date.map(&:date)
+                end
+              end
+            end.flatten.uniq.sort
+          end
+
+          def each_date
+            dates.each do | date |
+              @tekiyou.each_value do | ichirens |
+                ichirens = ichirens.select { | ichiren | ichiren.on_date(date) }.group_by(&:shinryou_shikibetsu)
+                yield date, ichirens
+              end
+            end
+          end
+
           # @return [void]
           def fix!
             @tekiyou = @tekiyou.sort_by { | shinryou_shikibetsu, _ | shinryou_shikibetsu.to_s.to_i }.to_h

@@ -54,6 +54,15 @@ module Receiptisan
                 Enumerator.new { | y | @daily_kaisuus.each { | it | y << it } }
               end
 
+              def on_date?(date)
+                @daily_kaisuus.any? { | daily_kaisuu | daily_kaisuu.date == date }
+              end
+
+              # @return [self, nil]
+              def on_date(date)
+                on_date?(date) ? self : nil
+              end
+
               # @return [Integer, nil]
               def calculate
                 tensuu && kaisuu ? tensuu * kaisuu : nil
@@ -65,7 +74,7 @@ module Receiptisan
               #   @return [Integer, nil]
               attr_reader :tensuu, :kaisuu
 
-              def_delegators :@tekiyou_items, :each, :map
+              def_delegators :@tekiyou_items, :each, :map, :reduce
               def_delegators :first_item, :futan_kubun, :uses?
 
               private
