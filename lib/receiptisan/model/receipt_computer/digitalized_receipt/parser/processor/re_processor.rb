@@ -69,7 +69,7 @@ module Receiptisan
                     sex:        Sex.find_by_code(values[RE::C_男女区分]),
                     birth_date: Date.parse(values[RE::C_生年月日])
                   ),
-                  audit_payer:  audit_payer
+                  audit_payer: audit_payer
                 )
               end
 
