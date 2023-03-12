@@ -99,6 +99,10 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Parser::
         expect(target.patient.birth_date).to eq Date.new(1991, 11, 21)
       end
 
+      specify '審査支払機関が国保連合会であること' do
+        expect(target.audit_payer).to eq audit_payer
+      end
+
       specify 'processorは読み込んだ低所得区分としてnilを返すこと' do
         expect(processor.teishotoku_type).to be_nil
       end
