@@ -1,3 +1,11 @@
+## [0.2.16](https://github.com/yokenzan/receiptisan/compare/v0.2.15...v0.2.16) (2023-03-12)
+
+
+### Bug Fixes
+
+* **bug:** make parse and retrieve audit_payer ([7f7460b](https://github.com/yokenzan/receiptisan/commit/7f7460b981491a1d2ebc95e911abb4a4e517eae3))
+* **refactor:** fix bug in iterating cost logic about shinryou shikibetsu ([75a955f](https://github.com/yokenzan/receiptisan/commit/75a955fa07c5bc26efd4bfaeec9c55acb70f3434))
+
 ## [0.2.15](https://github.com/yokenzan/receiptisan/compare/v0.2.14...v0.2.15) (2023-02-16)
 
 
