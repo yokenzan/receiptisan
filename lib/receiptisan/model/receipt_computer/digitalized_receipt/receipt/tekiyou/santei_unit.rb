@@ -55,12 +55,38 @@ module Receiptisan
               end
 
               def on_date?(date)
-                @daily_kaisuus.any? { | daily_kaisuu | daily_kaisuu.date == date }
+                @daily_kaisuus.any? { | daily_kaisuu | daily_kaisuu.on?(date) }
               end
 
               # @return [self, nil]
               def on_date(date)
-                on_date?(date) ? self : nil
+                daily_kaisuu = @daily_kaisuus.find { | dk | dk.on?(date) }
+
+                return nil unless daily_kaisuu
+
+                new_unit = self.class.new
+
+                tekiyou_items.each do | cost_or_comment |
+                  if cost_or_comment.comment?
+                    new_unit.add_tekiyou(cost_or_comment)
+                  else
+                    cost = cost_or_comment
+                    new_cost = Cost.new(
+                      resource:            cost.resource,
+                      shinryou_shikibetsu: cost.shinryou_shikibetsu,
+                      futan_kubun:         cost.futan_kubun,
+                      tensuu:              cost.tensuu,
+                      kaisuu:              daily_kaisuu.kaisuu,
+                      daily_kaisuus:       [daily_kaisuu]
+                    )
+                    cost.each_comment { | c | new_cost.add_comment(c) }
+
+                    new_unit.add_tekiyou(new_cost)
+                  end
+                end
+
+                new_unit.fix!
+                new_unit
               end
 
               # @return [Integer, nil]

@@ -89,12 +89,17 @@ module Receiptisan
               attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu, :daily_kaisuus
 
               def_delegators :futan_kubun, :uses?
+              def_delegators :resource, :name, :code
             end
 
             class DailyKaisuu
               def initialize(date:, kaisuu:)
                 @date   = date
                 @kaisuu = kaisuu
+              end
+
+              def on?(date)
+                @date == date
               end
 
               attr_reader :date, :kaisuu

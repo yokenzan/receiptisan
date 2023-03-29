@@ -92,10 +92,11 @@ module Receiptisan
 
           def each_date
             dates.each do | date |
-              @tekiyou.each_value do | ichirens |
-                ichirens = ichirens.select { | ichiren | ichiren.on_date(date) }.group_by(&:shinryou_shikibetsu)
-                yield date, ichirens
-              end
+              tekiyou_on_date = @tekiyou.map do | _, ichirens |
+                [ichirens.first.shinryou_shikibetsu, ichirens.select { | ichiren | ichiren.on_date(date) }]
+              end.to_h
+
+              yield date, tekiyou_on_date
             end
           end
 
