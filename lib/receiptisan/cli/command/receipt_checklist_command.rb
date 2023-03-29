@@ -23,13 +23,18 @@ module Receiptisan
         option :hospitals, type: :json, desc: 'parameters for hospitals(each hospital has location, code, bed_count)'
 
         # check rules
-        option :check_naifuku_tazai, type: :boolean, desc: '内服他剤投与に該当する可能性があるが他剤投与逓減が適用されていないレセプトを抽出します'
-        option :check_cholesterol, type: :boolean, desc: 'Tcho, LDL-コレステロール, HDL-コレステロールを併算定しているレセプトを抽出します'
-        option :check_influenza, type: :boolean, desc: 'インフルエンザウイルス抗原訂正, Sars-Cov-2抗原検出, 抗原同時検出を併算定しているレセプトを抽出します'
-        option :check_sm, type: :boolean, desc: 'Ｓ−Ｍ, Ｓ−蛍光Ｍ、位相差Ｍ、暗視野Ｍを併算定しているレセプトを抽出します'
-        option :check_es_xylocaine, type: :boolean, desc: '内視鏡検査でキシロカインゼリーを使用しているレセプトを抽出します'
-        option :check_yakujou, type: :boolean, desc: '薬剤情報提供料を月に2回以上算定しているレセプトを抽出します'
-        option :check_dimethicone, type: :boolean, desc: 'ジメチコンを使用しているが胃カメラを実施していないレセプトを抽出します'
+        option :check_naifuku_tazai,   type: :boolean, desc: '内服他剤投与に該当する可能性があるが他剤投与逓減が適用されていないレセプトを抽出します'
+        option :check_cholesterol,     type: :boolean, desc: 'Tcho, LDL-コレステロール, HDL-コレステロールを併算定しているレセプトを抽出します'
+        option :check_influenza,       type: :boolean, desc: 'インフルエンザウイルス抗原訂正, Sars-Cov-2抗原検出, 抗原同時検出を併算定しているレセプトを抽出します'
+        option :check_sm,              type: :boolean, desc: 'Ｓ−Ｍ, Ｓ−蛍光Ｍ、位相差Ｍ、暗視野Ｍを併算定しているレセプトを抽出します'
+        option :check_es_xylocaine,    type: :boolean, desc: '内視鏡検査でキシロカインゼリーを使用しているレセプトを抽出します'
+        option :check_yakujou,         type: :boolean, desc: '薬剤情報提供料を月に2回以上算定しているレセプトを抽出します'
+        option :check_dimethicone,     type: :boolean, desc: 'ジメチコンを使用しているが胃カメラを実施していないレセプトを抽出します'
+        option :check_tanki_taizai3,   type: :boolean, desc: '短期滞在手術等基本料算定時に包括される診療行為を算定しているレセプトを抽出します'
+        option :check_metgluco,        type: :boolean, desc: 'メトグルコ錠500mgを1日あたり6錠以上処方しているレセプトを抽出します'
+        option :check_tokubetsushoku,  type: :boolean, desc: '特別食加算と食事療養数量の不一致しているレセプトを抽出します'
+        option :check_shubyou_tokutei, type: :boolean, desc: '主病がない状態で特定疾患療養管理料・特定疾患処方管理加算を算定しているレセプトを抽出します'
+        option :check_tokusho2_nissuu, type: :boolean, desc: '特定疾患処方管理加算2を算定しているレセプトを抽出します'
 
         # @param [Array<String>] uke_file_paths
         # @param [Hash] options
@@ -55,13 +60,18 @@ module Receiptisan
         def initialize_check_rules(options)
           @check_executor = Reporting::ReceiptCheckExecutor.new
 
-          options[:check_cholesterol]   && @check_executor.add_rule(Reporting::Rule::CholesterolRule.new)
-          options[:check_dimethicone]   && @check_executor.add_rule(Reporting::Rule::DimethiconeRule.new)
-          options[:check_es_xylocaine]  && @check_executor.add_rule(Reporting::Rule::ESWithXylocaineRule.new)
-          options[:check_influenza]     && @check_executor.add_rule(Reporting::Rule::InfluenzaRule.new)
-          options[:check_naifuku_tazai] && @check_executor.add_rule(Reporting::Rule::NaifukuTazaiRule.new)
-          options[:check_sm]            && @check_executor.add_rule(Reporting::Rule::SMRule.new)
-          options[:check_yakujou]       && @check_executor.add_rule(Reporting::Rule::YakujouRule.new)
+          options[:check_cholesterol]     && @check_executor.add_rule(Reporting::Rule::CholesterolRule.new)
+          options[:check_dimethicone]     && @check_executor.add_rule(Reporting::Rule::DimethiconeRule.new)
+          options[:check_es_xylocaine]    && @check_executor.add_rule(Reporting::Rule::ESWithXylocaineRule.new)
+          options[:check_influenza]       && @check_executor.add_rule(Reporting::Rule::InfluenzaRule.new)
+          options[:check_naifuku_tazai]   && @check_executor.add_rule(Reporting::Rule::NaifukuTazaiRule.new)
+          options[:check_sm]              && @check_executor.add_rule(Reporting::Rule::SMRule.new)
+          options[:check_yakujou]         && @check_executor.add_rule(Reporting::Rule::YakujouRule.new)
+          options[:check_tanki_taizai3]   && @check_executor.add_rule(Reporting::Rule::TankiTaizai3Rule.new)
+          options[:check_metgluco]        && @check_executor.add_rule(Reporting::Rule::MetglucoRule.new)
+          options[:check_tokubetsushoku]  && @check_executor.add_rule(Reporting::Rule::TokubetsushokuRule.new)
+          options[:check_shubyou_tokutei] && @check_executor.add_rule(Reporting::Rule::TokuteiShikkanShubyouRule.new)
+          options[:check_tokusho2_nissuu] && @check_executor.add_rule(Reporting::Rule::Tokusho2NissuuRule.new)
 
           raise unless @check_executor.any_rules?
         end

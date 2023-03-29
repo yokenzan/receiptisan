@@ -11,7 +11,7 @@ module Receiptisan
             Master = Receiptisan::Model::ReceiptComputer::Master
 
             def check(digitalized_receipt)
-              digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?)
+              append_header(digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?))
             end
 
             def check_receipt(receipt)
@@ -29,6 +29,14 @@ module Receiptisan
               yakujou_count > 1 ?
                 [receipt.audit_payer.short_name, receipt.patient.id, receipt.patient.name, yakujou_count].join("\t") :
                 []
+            end
+
+            private
+
+            def append_header(reports)
+              header = %w[請求先 患者番号 患者氏名 薬情算定回数].join("\t")
+
+              reports.empty? ? reports : ['薬情月内複数回算定', header, *reports]
             end
           end
         end

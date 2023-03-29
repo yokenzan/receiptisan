@@ -5,8 +5,8 @@ module Receiptisan
     module ReceiptComputer
       module Reporting
         module Rule
-          # 160057710 Ｓ−Ｍ 160057510 Ｓ−蛍光Ｍ、位相差Ｍ、暗視野Ｍ の同日算定
-          class SMRule
+          # 特別食加算と食事療養数量の不一致を検出するルール
+          class TokubetsushokuRule
             Util               = Receiptisan::Model::ReceiptComputer::Util
             Master             = Receiptisan::Model::ReceiptComputer::Master
             ShinryouShikibetsu = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt::ShinryouShikibetsu
@@ -16,41 +16,38 @@ module Receiptisan
             end
 
             def check_receipt(receipt)
-              code_sm     = Master::Treatment::ShinryouKoui::Code.of('160057710')
-              code_keikou = Master::Treatment::ShinryouKoui::Code.of('160057510')
-
               reports = []
 
               receipt.each_date do | date, ichirens |
-                has_sm     = false
-                has_keikou = false
 
-                kensa_ichirens = ichirens[ShinryouShikibetsu.find_by_code(60)]
-                kensa_ichirens&.each do | ichiren |
+                ichirens = ichirens[ShinryouShikibetsu.find_by_code(97)]
+                ichirens&.each do | ichiren |
                   ichiren.each do | santei |
                     next unless santei.resource_type == :shinryou_koui
 
                     santei.each_cost do | cost |
-                      has_sm     = true if cost.resource.master_item.code == code_sm
-                      has_keikou = true if cost.resource.master_item.code == code_keikou
+                      reports << [
+                        receipt.audit_payer.short_name,
+                        receipt.patient.id,
+                        receipt.patient.name,
+                        date,
+                        cost.resource.code.value,
+                        cost.resource.name,
+                        '%d食' % cost.resource.shiyouryou,
+                      ].join("\t")
                     end
                   end
                 end
-
-                if has_sm && has_keikou
-                  reports << [receipt.audit_payer.short_name, receipt.patient.id, receipt.patient.name, date].join("\t")
-                end
               end
-
               reports
             end
 
             private
 
             def append_header(reports)
-              header = %w[請求先 患者番号 患者氏名 診療日].join("\t")
+              header = %w[請求先 患者番号 患者氏名 診療日 診療行為コード 名称 食数].join("\t")
 
-              reports.empty? ? reports : ['S-M同日併算定', header, *reports]
+              reports.empty? ? reports : ['特別食加算と食事療養数量の不一致を検出するルール', header, *reports]
             end
           end
         end

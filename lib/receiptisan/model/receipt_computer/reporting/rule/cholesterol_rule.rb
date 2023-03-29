@@ -12,7 +12,7 @@ module Receiptisan
             ShinryouShikibetsu = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt::ShinryouShikibetsu
 
             def check(digitalized_receipt)
-              digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?)
+              append_header(digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?))
             end
 
             def check_receipt(receipt)
@@ -46,6 +46,14 @@ module Receiptisan
               end
 
               reports
+            end
+
+            private
+
+            def append_header(reports)
+              header = %w[請求先 患者番号 患者氏名 診療日].join("\t")
+
+              reports.empty? ? reports : ['コレステロール検査同日併算定', header, *reports]
             end
           end
         end

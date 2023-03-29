@@ -11,19 +11,19 @@ module Receiptisan
             Master = Receiptisan::Model::ReceiptComputer::Master
 
             def check(digitalized_receipt)
-              digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?)
+              append_header(digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?))
             end
 
             def check_receipt(receipt)
               # | 620422003 | ジメチコン錠４０ｍｇ「ＹＤ」   |
               # | 620423501 | ジメチコン内用液２％「ＦＳＫ」 |
-              code_fs             = Master::Treatment::ShinryouKoui::Code.of('160093810')
+              code_fs              = Master::Treatment::ShinryouKoui::Code.of('160093810')
               code_of_dimechicones = [
                 Master::Treatment::Iyakuhin::Code.of('620422003'),
                 Master::Treatment::Iyakuhin::Code.of('620423501'),
               ]
 
-              has_fs          = false
+              has_fs           = false
               used_dimechicone = nil
 
               Util::ReceiptEnumeratorGenerator.each_cost_for(
@@ -48,6 +48,14 @@ module Receiptisan
                 used_dimechicone.name,
                 '%s%s' % [used_dimechicone.shiyouryou, used_dimechicone.unit.name],
               ].join("\t")
+            end
+
+            private
+
+            def append_header(reports)
+              header = %w[請求先 患者番号 患者氏名 診療日].join("\t")
+
+              reports.empty? ? reports : ['胃カメラ未実施でジメチコン使用', header, *reports]
             end
           end
         end

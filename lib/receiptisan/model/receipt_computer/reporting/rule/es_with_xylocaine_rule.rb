@@ -12,7 +12,7 @@ module Receiptisan
             ShinryouShikibetsu = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt::ShinryouShikibetsu
 
             def check(digitalized_receipt)
-              digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?)
+              append_header(digitalized_receipt.map { | receipt | check_receipt(receipt) }.reject(&:empty?))
             end
 
             def check_receipt(receipt)
@@ -65,7 +65,7 @@ module Receiptisan
 
                 reports << [
                   receipt.audit_payer.short_name,
-                  receipt.nyuuin?,
+                  receipt.nyuuin? ? '入院' : '入院外',
                   receipt.patient.id,
                   receipt.patient.name,
                   date,
@@ -80,6 +80,27 @@ module Receiptisan
               end
 
               reports
+            end
+
+            private
+
+            def append_header(reports)
+              header = %w[
+                請求先
+                入外
+                患者番号
+                患者氏名
+                診療日
+                胃カメラ実施
+                ポリペク2cm未満実施
+                ポリペク2cm以上実施
+                大腸カメラ(Ｓ状結腸)実施
+                大腸カメラ(下行・横行結腸)実施
+                大腸カメラ(上行結腸)実施
+                キシロカイン使用量
+              ].join("\t")
+
+              reports.empty? ? reports : ['内視鏡のキシロカインゼリー使用量要確認リスト', header, *reports]
             end
           end
         end
