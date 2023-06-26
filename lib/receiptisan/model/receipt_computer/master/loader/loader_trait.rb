@@ -17,7 +17,7 @@ module Receiptisan
 
             # simple copy of `CSV.foreach()`
             #
-            # @param csv_paths [Array<String>]
+            # @param csv_paths [Array<Pathname>]
             # @return [void]
             # @yieldparam [Array<String, NilClass>] values
             # @yieldreturn [void]

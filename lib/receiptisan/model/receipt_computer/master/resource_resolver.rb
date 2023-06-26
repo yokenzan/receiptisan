@@ -12,7 +12,7 @@ module Receiptisan
 
           # @param version [Version]
           # @param root_dir [String]
-          # @return [Hash<Symbol, String>]
+          # @return [Hash<Symbol, Pathname>]
           def detect_csv_files(version, root_dir = MASTER_CSV_DIR)
             pathname       = resolve_csv_dir_of(version, root_dir)
             csv_files      = pathname.children
