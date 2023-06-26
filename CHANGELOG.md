@@ -1,3 +1,11 @@
+## [0.2.19](https://github.com/yokenzan/receiptisan/compare/v0.2.18...v0.2.19) (2023-06-26)
+
+
+### Bug Fixes
+
+* **bug:** fix bug that master loader only load a CSV ([83fb86b](https://github.com/yokenzan/receiptisan/commit/83fb86b428f1c080429c37ba93ba266ca00fcf19))
+* **bug:** fix tests ([4c2df2b](https://github.com/yokenzan/receiptisan/commit/4c2df2b1810717c0ae580f7e285161f26940175a))
+
 ## [0.2.18](https://github.com/yokenzan/receiptisan/compare/v0.2.17...v0.2.18) (2023-06-26)
 
 ## [0.2.16](https://github.com/yokenzan/receiptisan/compare/v0.2.15...v0.2.16) (2023-03-12)
