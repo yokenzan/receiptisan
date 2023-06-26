@@ -1,3 +1,5 @@
+## [0.2.18](https://github.com/yokenzan/receiptisan/compare/v0.2.17...v0.2.18) (2023-06-26)
+
 ## [0.2.16](https://github.com/yokenzan/receiptisan/compare/v0.2.15...v0.2.16) (2023-03-12)
 
 
