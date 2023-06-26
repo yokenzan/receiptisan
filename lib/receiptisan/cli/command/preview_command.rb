@@ -41,9 +41,16 @@ module Receiptisan
         private
 
         def initialize_parser
+          logger = Logger.new($stderr)
+
           @parser = DigitalizedReceipt::Parser.new(
-            DigitalizedReceipt::Parser::MasterHandler.new(Master::Loader.new(Master::ResourceResolver.new)),
-            Logger.new($stderr)
+            DigitalizedReceipt::Parser::MasterHandler.new(
+              Master::Loader.new(
+                Master::ResourceResolver.new,
+                logger
+              )
+            ),
+            logger
           )
         end
 
