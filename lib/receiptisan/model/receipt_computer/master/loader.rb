@@ -32,7 +32,7 @@ module Receiptisan
 
             csv_paths = @resource_resolver.detect_csv_files(version)
 
-            load_from_version_and_csv(version, **csv_paths).tap do | loaded |
+            load_from_version_and_csv(version, **csv_paths).tap do
               logger.info("loading master version #{version.year} completed")
             end
           end
