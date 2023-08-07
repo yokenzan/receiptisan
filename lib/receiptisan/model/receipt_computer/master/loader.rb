@@ -14,21 +14,27 @@ module Receiptisan
       class Master
         class Loader
           # @param resource_resolver [ResourceResolver]
-          def initialize(resource_resolver)
+          def initialize(resource_resolver, logger)
             @resource_resolver    = resource_resolver
-            @shinryou_koui_loader = ShinryouKouiLoader.new
-            @iyakuhin_loader      = IyakuhinLoader.new
-            @tokutei_kizai_loader = TokuteiKizaiLoader.new
-            @comment_loader       = CommentLoader.new
-            @shoubyoumei_loader   = ShoubyoumeiLoader.new
-            @shuushokugo_loader   = ShuushokugoLoader.new
+            @shinryou_koui_loader = ShinryouKouiLoader.new(logger)
+            @iyakuhin_loader      = IyakuhinLoader.new(logger)
+            @tokutei_kizai_loader = TokuteiKizaiLoader.new(logger)
+            @comment_loader       = CommentLoader.new(logger)
+            @shoubyoumei_loader   = ShoubyoumeiLoader.new(logger)
+            @shuushokugo_loader   = ShuushokugoLoader.new(logger)
+            @logger               = logger
           end
 
           # @param version [Version]
           # @return [Master]
           def load(version)
+            logger.info("preparing to load master version #{version.year}")
+
             csv_paths = @resource_resolver.detect_csv_files(version)
-            load_from_version_and_csv(version, **csv_paths)
+
+            load_from_version_and_csv(version, **csv_paths).tap do
+              logger.info("loading master version #{version.year} completed")
+            end
           end
 
           # @param version [Version]
@@ -57,6 +63,10 @@ module Receiptisan
               shuushokugo:   @shuushokugo_loader.load(shuushokugo_csv_path)
             )
           end
+
+          private
+
+          attr_reader :logger
         end
       end
     end
