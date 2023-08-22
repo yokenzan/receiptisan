@@ -8,6 +8,10 @@ module Receiptisan
           class ShinryouKouiLoader
             include LoaderTrait
 
+            def initialize(logger)
+              @logger = logger
+            end
+
             # @param version [Version]
             # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Treatment::ShinryouKoui>]
@@ -35,6 +39,10 @@ module Receiptisan
                 end
               end
             end
+
+            private
+
+            attr_reader :logger
           end
 
           class ShinryouKouiSchemaNotFoundError < StandardError; end

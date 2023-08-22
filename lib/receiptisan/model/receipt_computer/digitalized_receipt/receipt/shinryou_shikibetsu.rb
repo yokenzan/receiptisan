@@ -55,6 +55,11 @@ module Receiptisan
               def find_by_code(code)
                 @list[('%02d' % code.to_i).intern]
               end
+
+              # @return [Array<self>]
+              def all
+                @list.values
+              end
             end
           end
         end

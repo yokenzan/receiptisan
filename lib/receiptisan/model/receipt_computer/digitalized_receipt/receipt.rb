@@ -30,13 +30,13 @@ module Receiptisan
           # @param patient [Patient]
           # @param type [Type]
           # @param hospital [Hospital]
-          def initialize(id:, shinryou_ym:, patient:, type:, nyuuin_date:)
+          def initialize(id:, shinryou_ym:, patient:, type:, nyuuin_date:, audit_payer:)
             @id                 = id
             @shinryou_ym        = shinryou_ym
             @patient            = patient
             @type               = type
             @hospital           = nil
-            @audit_payer        = nil
+            @audit_payer        = audit_payer
             @tokki_jikous       = {}
             @tekiyou            = Hash.new { | hash, key | hash[key] = [] }
             @hoken_list         = AppliedHokenList.new

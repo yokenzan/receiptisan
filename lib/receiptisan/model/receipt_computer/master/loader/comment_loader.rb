@@ -8,6 +8,10 @@ module Receiptisan
           class CommentLoader
             include LoaderTrait
 
+            def initialize(logger)
+              @logger = logger
+            end
+
             # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Treatment::Comment>]
             def load(csv_paths)
@@ -47,6 +51,10 @@ module Receiptisan
                 end
               end
             end
+
+            private
+
+            attr_reader :logger
           end
         end
       end

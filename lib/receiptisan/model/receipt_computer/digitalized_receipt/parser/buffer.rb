@@ -44,7 +44,7 @@ module Receiptisan
               @current_hoken_list.iryou_hoken
             end
 
-            # @return [AuditPayer nil]
+            # @return [AuditPayer, nil]
             def current_audit_payer
               @current_digitalized_receipt.audit_payer
             end

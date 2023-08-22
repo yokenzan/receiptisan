@@ -113,6 +113,9 @@ Naming/MethodParameterName:
 Style/MultilineBlockChain:
   Enabled: false
 
+Style/RedundantLineContinuation:
+  Enabled: false
+
 # RSpec cops
 
 RSpec/ContextWording:

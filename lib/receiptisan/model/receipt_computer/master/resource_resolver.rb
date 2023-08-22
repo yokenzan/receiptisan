@@ -12,7 +12,7 @@ module Receiptisan
 
           # @param version [Version]
           # @param root_dir [String]
-          # @return [Hash<Symbol, String>]
+          # @return [Hash<Symbol, Pathname>]
           def detect_csv_files(version, root_dir = MASTER_CSV_DIR)
             pathname       = resolve_csv_dir_of(version, root_dir)
             csv_files      = pathname.children
@@ -27,13 +27,14 @@ module Receiptisan
             }
 
             csv_prefixes.each do | key, prefixes |
-              detected_paths["#{key}_csv_path".intern] = []
+              detected_paths["#{key}_csv_path".intern] ||= []
+
               prefixes.each do | prefix |
                 # @param csv [Pathname]
-                found_index = csv_files.find_index { | csv | csv.basename.to_path.start_with?(prefix) }
-                next if found_index.nil?
+                matched_files = csv_files.select { | csv | csv.basename.to_path.start_with?(prefix) }
+                next if matched_files.empty?
 
-                detected_paths["#{key}_csv_path".intern] << csv_files.delete_at(found_index)
+                detected_paths["#{key}_csv_path".intern].concat(matched_files)
               end
             end
 

@@ -8,6 +8,10 @@ module Receiptisan
           class ShuushokugoLoader
             include LoaderTrait
 
+            def initialize(logger)
+              @logger = logger
+            end
+
             # @param csv_paths [Array<String>]
             # @return [Hash<Symbol, Diagnosis::Shuushokugo>]
             def load(csv_paths)
@@ -32,6 +36,8 @@ module Receiptisan
             def kubun2category_code(kubun)
               kubun[1].intern
             end
+
+            attr_reader :logger
           end
         end
       end

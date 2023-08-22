@@ -2,6 +2,7 @@
 
 require 'pathname'
 require 'receiptisan'
+require 'logger'
 
 RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::ShoubyoumeiLoader do
   Version     = Receiptisan::Model::ReceiptComputer::Master::Version
@@ -11,7 +12,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::ShoubyoumeiL
   let(:csv_dir) { '../../../../../../resource/csv/master/2022' }
 
   describe '#load' do
-    let(:loader) { described_class.new }
+    let(:loader) { described_class.new(Logger.new(nil)) }
     let(:result) { loader.load([Pathname(csv_dir).join('b_ALL00000000.csv').expand_path(__dir__)]) }
 
     specify '読込結果はHashで返す' do
