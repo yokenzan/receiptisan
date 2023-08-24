@@ -34,6 +34,8 @@ module Receiptisan
 
           # @param receipt [Parameter::Common::Receipt]
           def build_receipt_preview(receipt)
+            @tekiyou_line_builder.retrieve_attr_from_receipt(receipt)
+
             # 傷病欄行
 
             shoubyou_result = build_shoubyou_lines(receipt)
