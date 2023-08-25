@@ -1177,6 +1177,10 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="353"   y="1059.6" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="1059.6" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
 
+
+        <% if should_print_teishotoku_type?(receipt) %>
+            <text x="500" y="1080" class="s3 output-content"><%= receipt.hokens.iryou_hoken.teishotoku_type.short_name %></text>
+        <% end %>
     </g>
     <% end %>
 
