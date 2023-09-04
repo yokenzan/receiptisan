@@ -979,7 +979,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="41.1" y="516.8" class="s3">診</text>
 
         <%
-          section     = receipt.tensuu_shuukei.sections[:'12']
+          section     = receipt.tensuu_shuukei.sections[:'12_saishin']
           shuhoken    = section.hokens[receipt.hokens.main.code]
           iryou_hoken = section.hokens[iryou_hoken_order.code]
           kouhi_1st   = section.hokens[kouhi_1st_order.code]
@@ -989,21 +989,45 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="353"   y="452.4" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="452.4" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="452.4" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'12_gairai-kanri']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="66.8" y="470.8" class="s3">外来管理加算</text>
         <text x="270.0" y="470.8" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="470.8" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="470.8" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="470.8" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'12_jikangai']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="66.8" y="489.2" class="s3">時 間 外</text>
         <text x="270.0" y="489.2" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="489.2" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="489.2" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="489.2" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'12_kyuujitsu']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="66.8" y="507.6" class="s3">休　　日</text>
         <text x="270.0" y="507.6" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="507.6" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="507.6" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="507.6" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'12_shinya']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="66.8" y="526.0" class="s3">深　　夜</text>
         <text x="270.0" y="526.0" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="526.0" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
@@ -1027,7 +1051,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="41.1" y="645.6" class="s3">宅</text>
 
         <%
-          section     = receipt.tensuu_shuukei.sections[:'14']
+          # section     = receipt.tensuu_shuukei.sections[:'14']
           shuhoken    = section.hokens[receipt.hokens.main.code]
           iryou_hoken = section.hokens[iryou_hoken_order.code]
           kouhi_1st   = section.hokens[kouhi_1st_order.code]
@@ -1064,7 +1088,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="40.1" y="770.6" class="s3">薬</text>
 
         <%
-          section     = receipt.tensuu_shuukei.sections[:'21']
+          section     = receipt.tensuu_shuukei.sections[:'21_yakuzai']
           shuhoken    = section.hokens[receipt.hokens.main.code]
           iryou_hoken = section.hokens[iryou_hoken_order.code]
           kouhi_1st   = section.hokens[kouhi_1st_order.code]
@@ -1075,6 +1099,12 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="353"   y="673.2" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="673.2" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="673.2" class="s3">単</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'21_chouzai']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="77.9" y="691.6" class="s3">内服調剤 </text>
         <text x="270.0" y="691.6" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="691.6" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
@@ -1095,7 +1125,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="270.5" y="710.0" class="s3">単</text>
 
         <%
-          section     = receipt.tensuu_shuukei.sections[:'23']
+          section     = receipt.tensuu_shuukei.sections[:'23_yakuzai']
           shuhoken    = section.hokens[receipt.hokens.main.code]
           iryou_hoken = section.hokens[iryou_hoken_order.code]
           kouhi_1st   = section.hokens[kouhi_1st_order.code]
@@ -1106,24 +1136,48 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="353"   y="728.4" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="728.4" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="728.4" class="s3">単</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'23_chouzai']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="77.9" y="746.8" class="s3">外用調剤</text>
         <text x="270.0" y="746.8" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="746.8" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="746.8" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="746.8" class="s3">回</text>
 
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'25']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="62.8" y="765.2" class="s3">25</text>
         <text x="78.3" y="765.2" class="s3">処　　方</text>
         <text x="270.0" y="765.2" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="765.2" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="765.2" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="765.2" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'26']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="62.8" y="783.6" class="s3">26</text>
         <text x="78.3" y="783.6" class="s3">麻　　毒</text>
         <text x="270.0" y="783.6" class="sd output-content" text-anchor="end"><%= to_currency shuhoken.total_kaisuu %></text><!-- 回 -->
         <text x="353"   y="783.6" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
         <text x="443.7" y="783.6" class="sd output-content" text-anchor="end"><%= to_currency kouhi_1st&.total_tensuu %></text><!-- 公費分点数 -->
         <text x="270.5" y="783.6" class="s3">回</text>
+        <%
+          section     = receipt.tensuu_shuukei.sections[:'27']
+          shuhoken    = section.hokens[receipt.hokens.main.code]
+          iryou_hoken = section.hokens[iryou_hoken_order.code]
+          kouhi_1st   = section.hokens[kouhi_1st_order.code]
+        %>
         <text x="62.8" y="802.0" class="s3">27</text>
         <text x="78.3" y="802.0" class="s3">調　　基</text>
         <text x="353"   y="802.0" class="sd output-content" text-anchor="end"><%= to_currency iryou_hoken&.total_tensuu %></text><!-- 点数 -->
@@ -1283,7 +1337,7 @@ style="display: block;margin-left: auto;margin-right: auto;">
         <text x="40.1" y="1059.6" class="s3">他</text>
 
         <%
-          section     = receipt.tensuu_shuukei.sections[:'80_shugi']
+          section     = receipt.tensuu_shuukei.sections[:'80_shohousen']
           shuhoken    = section.hokens[receipt.hokens.main.code]
           iryou_hoken = section.hokens[iryou_hoken_order.code]
           kouhi_1st   = section.hokens[kouhi_1st_order.code]
