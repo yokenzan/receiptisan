@@ -97,9 +97,11 @@ module Receiptisan
             end
           end
 
+          # テンプレートエンジンによるプレビューレンダリング中に呼び出すヘルパ
+
           # 低所得区分をレセプトに出力するか？
           #
-          # @param digitalized_receipt [Parameter::Common::Receipt]
+          # @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt]
           def should_print_teishotoku_type?(receipt)
             return false unless receipt.hokens.iryou_hoken&.teishotoku_type
 
