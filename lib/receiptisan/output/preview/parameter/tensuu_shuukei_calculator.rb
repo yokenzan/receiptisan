@@ -12,8 +12,8 @@ module Receiptisan
           DigitalizedReceipt  = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
           Parameter           = Struct.new(:shinryou_shikibetsu, :target, :grouping, keyword_init: true)
 
-          # 入院 TODO
-          @@section_parameter_attributes = {
+          # 入院
+          @@section_parameter_nyuuin_attributes = {
             '11':                            { shinryou_shikibetsu: %w[11],    target: {} },
             '13':                            { shinryou_shikibetsu: %w[13],    target: {} },
             '14':                            { shinryou_shikibetsu: %w[14],    target: {} },
@@ -26,7 +26,6 @@ module Receiptisan
             '31':                            { shinryou_shikibetsu: %w[31],    target: {} },
             '32':                            { shinryou_shikibetsu: %w[32],    target: {} },
             '33':                            { shinryou_shikibetsu: %w[33],    target: {} },
-            '40':                            { shinryou_shikibetsu: %w[40],    target: {} },
             '40_shugi':                      {
               shinryou_shikibetsu: %w[40],
               target:              { resource: %i[shinryou_koui] },
@@ -35,7 +34,6 @@ module Receiptisan
               shinryou_shikibetsu: %w[40],
               target:              { resource: %i[iyakuhin tokutei_kizai] },
             },
-            '5x':                            { shinryou_shikibetsu: %w[50 54], target: {} },
             '5x_shugi':                      {
               shinryou_shikibetsu: %w[50 54],
               target:              { resource: %i[shinryou_koui] },
@@ -44,10 +42,6 @@ module Receiptisan
               shinryou_shikibetsu: %w[50 54],
               target:              { resource: %i[iyakuhin tokutei_kizai] },
             },
-            '60':                            {
-              shinryou_shikibetsu: %w[60],
-              target:              {},
-            },
             '60_shugi':                      {
               shinryou_shikibetsu: %w[60],
               target:              { resource: %i[shinryou_koui] },
@@ -55,10 +49,6 @@ module Receiptisan
             '60_yakuzai':                    {
               shinryou_shikibetsu: %w[60],
               target:              { resource: %i[iyakuhin tokutei_kizai] },
-            },
-            '70':                            {
-              shinryou_shikibetsu: %w[70],
-              target:              {},
             },
             '70_shugi':                      {
               shinryou_shikibetsu: %w[70],
@@ -86,18 +76,102 @@ module Receiptisan
             '97_seikatsu-ryouyou-tokubetsu': { target: { tag: :'seikatsu-ryouyou-tokubetsu' } },
           }
 
+          # 外来
+          @@section_parameter_gairai_attributes = {
+            '11':              { shinryou_shikibetsu: %w[11], target: {} },
+            '12_saishin':      { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-saishin' } },
+            '12_gairai-kanri': { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-gairai-kanri' } },
+            '12_jikangai':     { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-jikangai' } },
+            '12_kyuujitsu':    { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-kyuujitsu' } },
+            '12_shinya':       { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-shinya' } },
+            '13':              { shinryou_shikibetsu: %w[13], target: {} },
+            '14_oushin':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-oushin' } },
+            '14_yakan':        { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-yakan' } },
+            '14_shinya':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-shinya' } },
+            '14_zaitaku':      { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-zaitaku' } },
+            '14_sonota':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-sonota' } },
+            '14_yakuzai':      { shinryou_shikibetsu: %w[14], target: { resource: %i[iyakuhin] } },
+            '21_yakuzai':      {
+              shinryou_shikibetsu: %w[21],
+              target:              { resource: %i[iyakuhin] },
+            },
+            '21_chouzai':      {
+              shinryou_shikibetsu: %w[21],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '22':              { shinryou_shikibetsu: %w[22], target: {} },
+            '23_yakuzai':      {
+              shinryou_shikibetsu: %w[23],
+              target:              { resource: %i[iyakuhin] },
+            },
+            '23_chouzai':      {
+              shinryou_shikibetsu: %w[23],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '25':              { shinryou_shikibetsu: %w[24],    target: {} },
+            '26':              { shinryou_shikibetsu: %w[26],    target: {} },
+            '27':              { shinryou_shikibetsu: %w[27],    target: {} },
+            '31':              { shinryou_shikibetsu: %w[31],    target: {} },
+            '32':              { shinryou_shikibetsu: %w[32],    target: {} },
+            '33':              { shinryou_shikibetsu: %w[33],    target: {} },
+            '40_shugi':        {
+              shinryou_shikibetsu: %w[40],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '40_yakuzai':      {
+              shinryou_shikibetsu: %w[40],
+              target:              { resource: %i[iyakuhin tokutei_kizai] },
+            },
+            '5x_shugi':        {
+              shinryou_shikibetsu: %w[50 54],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '5x_yakuzai':      {
+              shinryou_shikibetsu: %w[50 54],
+              target:              { resource: %i[iyakuhin tokutei_kizai] },
+            },
+            '60_shugi':        {
+              shinryou_shikibetsu: %w[60],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '60_yakuzai':      {
+              shinryou_shikibetsu: %w[60],
+              target:              { resource: %i[iyakuhin tokutei_kizai] },
+            },
+            '70_shugi':        {
+              shinryou_shikibetsu: %w[70],
+              target:              { resource: %i[shinryou_koui] },
+            },
+            '70_yakuzai':      {
+              shinryou_shikibetsu: %w[70],
+              target:              { resource: %i[iyakuhin tokutei_kizai] },
+            },
+            '80_shohousen':    {
+              shinryou_shikibetsu: %w[80],
+              target:              { target: { tag: :'tensuu-shuukei-80-shohousen' } },
+            },
+            '80_yakuzai':      {
+              shinryou_shikibetsu: %w[80],
+              target:              { resource: %i[iyakuhin tokutei_kizai] },
+            },
+          }
+
           # @param handler [Receiptisan::Model::ReceiptComputer::Tag::Handler]
           def initialize(handler)
             @tag_handler = handler
           end
 
-          # @param receipt [DigitalizedReceipt::Receipt]
+          # @param receipt [Receiptisan::Model::ReceiptComputer::DigitalizedReceipt::Receipt]
           # @return [TensuuShuukei]
           def calculate(receipt)
             tag_handler.prepare(receipt.shinryou_ym)
 
+            section_parameter_attributes = receipt.nyuuin? ?
+              @@section_parameter_nyuuin_attributes :
+              @@section_parameter_gairai_attributes
+
             TensuuShuukei.new(
-              sections: @@section_parameter_attributes.to_h do | key, _ |
+              sections: section_parameter_attributes.to_h do | key, _ |
                 [
                   key,
                   TensuuShuukeiSection.new(
@@ -105,7 +179,7 @@ module Receiptisan
                     hokens:  receipt.hoken_list.each_order.to_h do | order |
                       [
                         order.code,
-                        calculate_section(build_parameter(key, order), receipt),
+                        calculate_section(build_parameter(key, order, section_parameter_attributes), receipt),
                       ]
                     end
                   ),
@@ -116,8 +190,8 @@ module Receiptisan
 
           private
 
-          def build_parameter(key, order)
-            attributes = @@section_parameter_attributes[key]
+          def build_parameter(key, order, section_parameter_attributes)
+            attributes = section_parameter_attributes[key]
 
             parameter = Parameter.new(
               shinryou_shikibetsu: attributes[:shinryou_shikibetsu],

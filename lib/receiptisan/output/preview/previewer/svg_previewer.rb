@@ -12,7 +12,7 @@ module Receiptisan
           LineBuilder              = Receiptisan::Output::Preview::LineBuilder
           HokenOrder               = Model::ReceiptComputer::DigitalizedReceipt::Receipt::FutanKubun::HokenOrder
           TEMPLATE_OUTLINE_PATH    = __dir__ + '/../../../../../views/receipt/outline.html.erb'
-          TEMPLATE_NYUUIN_TOP_PATH = __dir__ + '/../../../../../views/receipt/format-nyuuin-top.svg.erb'
+          TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
@@ -32,8 +32,10 @@ module Receiptisan
 
           private
 
-          # @param digitalized_receipt [Parameter::Common::Receipt]
+          # @param receipt [Parameter::Common::Receipt]
           def build_receipt_preview(receipt)
+            @tekiyou_line_builder.retrieve_attr_from_receipt(receipt)
+
             # 傷病欄行
 
             shoubyou_result = build_shoubyou_lines(receipt)
@@ -46,9 +48,10 @@ module Receiptisan
             # レンダリング
 
             @svg_of_receipts << []
+
             # 表紙
             tekiyou_page = @tekiyou_line_builder.next_page
-            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NYUUIN_TOP_PATH), trim_mode: '%>').result(binding)
+            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_FRONT_PATH), trim_mode: '%>').result(binding)
 
             # 続紙
             while @tekiyou_line_builder.page_length.positive?
@@ -94,9 +97,11 @@ module Receiptisan
             end
           end
 
+          # テンプレートエンジンによるプレビューレンダリング中に呼び出すヘルパ
+
           # 低所得区分をレセプトに出力するか？
           #
-          # @param digitalized_receipt [Parameter::Common::Receipt]
+          # @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt]
           def should_print_teishotoku_type?(receipt)
             return false unless receipt.hokens.iryou_hoken&.teishotoku_type
 
@@ -118,6 +123,10 @@ module Receiptisan
             Receiptisan::Util::Formatter
               .to_zenkaku(value)
               .gsub(LineBuilder::TekiyouLineBuilder::ZENKAKU_SPACE, '&emsp;')
+          end
+
+          def nyuuin?(receipt)
+            receipt.nyuugai == :nyuuin
           end
         end
       end
