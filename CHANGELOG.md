@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/yokenzan/receiptisan/compare/v0.2.20...v0.3.0) (2023-09-05)
+
+
+### Features
+
+* **preview:** update tags for 点数集計 12再診 ([ab99608](https://github.com/yokenzan/receiptisan/commit/ab996085ddd5de87031f9e904d049923d320fd74))
+* **preview:** update tags for 点数集計 14在宅 ([42cfe46](https://github.com/yokenzan/receiptisan/commit/42cfe469a268cda1f22e3f7b15da617df988087a))
+* **preview:** 外来レセプトのフォーマットテンプレートを整備 ([e4d1847](https://github.com/yokenzan/receiptisan/commit/e4d18475239343628365ec0cf3c2b41c9634b411))
+* **preview:** 摘要欄の行数をレセプトの入外によって決めるよう実装 ([89d5681](https://github.com/yokenzan/receiptisan/commit/89d56817981364f10f2d024a08eb3780ba5b64f6))
+
 ## [0.2.20](https://github.com/yokenzan/receiptisan/compare/v0.2.19...v0.2.20) (2023-08-24)
 
 ## [0.2.19](https://github.com/yokenzan/receiptisan/compare/v0.2.18...v0.2.19) (2023-06-26)
