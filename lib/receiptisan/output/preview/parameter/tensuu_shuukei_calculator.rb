@@ -85,12 +85,12 @@ module Receiptisan
             '12_kyuujitsu':    { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-kyuujitsu' } },
             '12_shinya':       { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-shinya' } },
             '13':              { shinryou_shikibetsu: %w[13], target: {} },
-            # '14_oushin':  { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-' } },
-            # '14_yakan':   { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-' } },
-            # '14_shinya':  { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-' } },
-            # '14_zaitaku': { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-' } },
-            # '14_sonota':  { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-' } },
-            # '14_yakuzai': { shinryou_shikibetsu: %w[14], target: { resource: %i[iyakuhin] } },
+            '14_oushin':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-oushin' } },
+            '14_yakan':        { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-yakan' } },
+            '14_shinya':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-shinya' } },
+            '14_zaitaku':      { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-zaitaku' } },
+            '14_sonota':       { shinryou_shikibetsu: %w[14], target: { tag: :'tensuu-shuukei-14-sonota' } },
+            '14_yakuzai':      { shinryou_shikibetsu: %w[14], target: { resource: %i[iyakuhin] } },
             '21_yakuzai':      {
               shinryou_shikibetsu: %w[21],
               target:              { resource: %i[iyakuhin] },
@@ -146,7 +146,7 @@ module Receiptisan
               shinryou_shikibetsu: %w[70],
               target:              { resource: %i[iyakuhin tokutei_kizai] },
             },
-            '80_shohousen':   {
+            '80_shohousen':    {
               shinryou_shikibetsu: %w[80],
               target:              { target: { tag: :'tensuu-shuukei-80-shohousen' } },
             },
