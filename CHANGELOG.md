@@ -1,3 +1,11 @@
+## [0.3.1](https://github.com/yokenzan/receiptisan/compare/v0.3.0...v0.3.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* **bug:** 点数集計欄に除外コードを定義 ([df72ed3](https://github.com/yokenzan/receiptisan/commit/df72ed30f368fc48201f33d1235f9484bbdbd9e1))
+* **tensuu-shuukei:** 外来レセプトの14在宅往診まわりの点数集計ロジックを修正 ([8020e29](https://github.com/yokenzan/receiptisan/commit/8020e29cea46e74522b4ddd66d03c1ccae9aa4a0))
+
 # [0.3.0](https://github.com/yokenzan/receiptisan/compare/v0.2.20...v0.3.0) (2023-09-05)
 
 
