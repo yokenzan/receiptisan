@@ -23,7 +23,7 @@ module Receiptisan
                 label:               definition['label'],
                 shinryou_shikibetsu: definition['shinryou_shikibetsu'],
                 code:                definition['code'].map { | code | code.to_s.intern },
-                not_include_code:    definition['not_include_code']&.map { | code | code.to_s.intern || [] }
+                not_include_code:    definition['not_include_code']&.map { | code | code.to_s.intern } || []
               )
             end
           end
