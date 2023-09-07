@@ -12,7 +12,9 @@ module Receiptisan
         #   @return [Array<String>]
         # @!attribute [r] code 診療行為・医薬品・特定器材のレセ電コードの配列
         #   @return [Array<Symbol>]
-        Tag = Struct.new(:key, :label, :shinryou_shikibetsu, :code, keyword_init: true) do
+        # @!attribute [r] forbidden_code 含んでいてはならない診療行為・医薬品・特定器材のレセ電コードの配列
+        #   @return [Array<Symbol>]
+        Tag = Struct.new(:key, :label, :shinryou_shikibetsu, :code, :forbidden_code, keyword_init: true) do
           class << self
             # @return [self]
             def from(definition)
@@ -20,7 +22,8 @@ module Receiptisan
                 key:                 definition['key'].intern,
                 label:               definition['label'],
                 shinryou_shikibetsu: definition['shinryou_shikibetsu'],
-                code:                definition['code'].map { | code | code.to_s.intern }
+                code:                definition['code'].map { | code | code.to_s.intern },
+                forbidden_code:      definition['forbidden_code']&.map { | code | code.to_s.intern } || []
               )
             end
           end
