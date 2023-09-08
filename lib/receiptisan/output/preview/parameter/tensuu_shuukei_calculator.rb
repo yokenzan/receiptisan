@@ -309,17 +309,23 @@ module Receiptisan
 
               # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
               def target?(santei_unit)
-                includes_required_codes = santei_unit
-                  .each_cost
-                  .any? { | cost | @tag.code.include?(cost.resource.code.value) }
+                required_code?(santei_unit) && !forbidden_code?(santei_unit)
+              end
 
-                return false unless includes_required_codes
+              private
 
-                return true if @tag.forbidden_code.empty?
-
+              # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
+              def required_code?(santei_unit)
                 santei_unit
                   .each_cost
-                  .all? { | cost | !@tag.forbidden_code.include?(cost.resource.code.value) }
+                  .any? { | cost | @tag.code.include?(cost.resource.code.value) }
+              end
+
+              # @param santei_unit [DigitalizedReceipt::Receipt::Tekiyou::SanteiUnit]
+              def forbidden_code?(santei_unit)
+                forbidden_code.empty? ? false : santei_unit
+                  .each_cost
+                  .any? { | cost | @tag.forbidden_code.include?(cost.resource.code.value) }
               end
             end
           end
