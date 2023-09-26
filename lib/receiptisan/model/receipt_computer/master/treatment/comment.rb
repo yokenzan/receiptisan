@@ -37,8 +37,6 @@ module Receiptisan
               unless pattern.requires_embdding?
                 return \
                   case pattern.code
-                  when Pattern::APPEND_FREE
-                    appended_content
                   when Pattern::NO_APPEND
                     name
                   else
