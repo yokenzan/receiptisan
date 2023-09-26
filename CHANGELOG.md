@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/yokenzan/receiptisan/compare/v0.3.1...v0.3.2) (2023-09-26)
+
+
+### Bug Fixes
+
+* **comment:** コメントパターン30のとき、コメント文が出力されない不具合を修正 ([f734921](https://github.com/yokenzan/receiptisan/commit/f734921b9a7e62961e9fc831b5826ad9cb9879cb))
+
 ## [0.3.1](https://github.com/yokenzan/receiptisan/compare/v0.3.0...v0.3.1) (2023-09-07)
 
 
