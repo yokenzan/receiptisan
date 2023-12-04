@@ -83,6 +83,9 @@ Style/UnlessElse:
 Lint/AmbiguousOperatorPrecedence:
   Enabled: false
 
+Lint/SymbolConversion:
+  Enabled: false
+
 Style/FormatStringToken:
   Enabled: false
 
