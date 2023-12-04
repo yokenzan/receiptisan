@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/yokenzan/receiptisan/compare/v0.3.3...v0.3.4) (2023-12-04)
+
+
+### Bug Fixes
+
+* **comment:** 必須の追加入力コメントがない場合を許容するよう修正 ([1d1bfd3](https://github.com/yokenzan/receiptisan/commit/1d1bfd3316fd9164925ad132596187cdde8ba2c4))
+
 ## [0.3.3](https://github.com/yokenzan/receiptisan/compare/v0.3.2...v0.3.3) (2023-12-04)
 
 ## [0.3.2](https://github.com/yokenzan/receiptisan/compare/v0.3.1...v0.3.2) (2023-09-26)
