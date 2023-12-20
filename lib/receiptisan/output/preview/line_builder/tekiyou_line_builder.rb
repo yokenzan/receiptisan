@@ -71,11 +71,11 @@ module Receiptisan
             new_current_line_with(format % ['合計点数', to_currency(kyuufu.goukei_tensuu), '点'])
             stack_to_temp
 
-            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '点'])
+            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '円'])
             stack_to_temp
 
             if kyuufu.kyuufu_taishou_ichibu_futankin
-              new_current_line_with(format % ['給付対象一部負担金', to_currency(kyuufu.kyuufu_taishou_ichibu_futankin), '点'])
+              new_current_line_with(format % ['給付対象一部負担金', to_currency(kyuufu.kyuufu_taishou_ichibu_futankin), '円'])
               stack_to_temp
             end
 
