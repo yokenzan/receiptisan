@@ -1,3 +1,10 @@
+## [0.3.5](https://github.com/yokenzan/receiptisan/compare/v0.3.4...v0.3.5) (2023-12-20)
+
+
+### Bug Fixes
+
+* **bug:** 負担金の単位が「点」になっていたため、「円」に修正 ([ac9ce78](https://github.com/yokenzan/receiptisan/commit/ac9ce783d4b82ffff715b7e7cf5d401d4b147635))
+
 ## [0.3.4](https://github.com/yokenzan/receiptisan/compare/v0.3.3...v0.3.4) (2023-12-04)
 
 
