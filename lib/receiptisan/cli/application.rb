@@ -8,8 +8,9 @@ module Receiptisan
     class Application
       def initialize
         @commandset = Commandset
-        @commandset.register('--preview', Command::PreviewCommand, aliases: ['-p'])
-        @commandset.register('--version', Command::VersionCommand, aliases: ['-v'])
+        @commandset.register('--preview',   Command::PreviewCommand, aliases: ['-p'])
+        @commandset.register('--version',   Command::VersionCommand, aliases: ['-v'])
+        @commandset.register('--checklist', Command::ReceiptChecklistCommand, aliases: ['-c'])
       end
 
       def run
