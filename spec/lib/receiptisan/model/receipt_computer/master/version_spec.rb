@@ -113,7 +113,7 @@ RSpec.describe Version do
 
     context '2023年度点数表期間の終点よりも未来の暦月の場合' do
       specify 'nilを返す' do
-        expect(described_class.resolve_by_ym(Month.new(2024, 4))).to be_nil
+        expect(described_class.resolve_by_ym(Month.new(2024, 6))).to be_nil
       end
     end
   end
