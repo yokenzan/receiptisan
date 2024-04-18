@@ -396,6 +396,7 @@ module Receiptisan
                 Master::Version::V2020_R02 => Columns2020,
                 Master::Version::V2022_R04 => Columns2022,
                 Master::Version::V2023_R05 => Columns2022,
+                Master::Version::V2024_R06 => Columns2022,
               }
 
               class << self

@@ -45,6 +45,7 @@ module Receiptisan
           V2020_R02 = new(2020, Month.new(2020, 4), Month.new(2022, 3))
           V2022_R04 = new(2022, Month.new(2022, 4), Month.new(2023, 3))
           V2023_R05 = new(2023, Month.new(2023, 4), Month.new(2024, 5))
+          V2024_R06 = new(2024, Month.new(2024, 6), Month.new(2026, 5))
         end
       end
     end
