@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/yokenzan/receiptisan/compare/v0.3.6...v0.4.0) (2024-04-18)
+
+
+### Features
+
+* **master:** 令和4年度診療報酬改定対応 ([ebd86d7](https://github.com/yokenzan/receiptisan/commit/ebd86d768477d8999e2ca033872125a9a1d2d72e))
+
 ## [0.3.6](https://github.com/yokenzan/receiptisan/compare/v0.3.5...v0.3.6) (2024-04-02)
 
 ## [0.3.5](https://github.com/yokenzan/receiptisan/compare/v0.3.4...v0.3.5) (2023-12-20)
