@@ -34,11 +34,26 @@ module Receiptisan
                 @santei_units.first.futan_kubun
               end
 
+              # @return [self, nil]
+              def on_date(date)
+                return nil unless @santei_units.any? { | santei | santei.on_date?(date) }
+
+                copied = self.class.new(shinryou_shikibetsu: shinryou_shikibetsu)
+
+                @santei_units.each do | santei |
+                  if new_santei = santei.on_date(date)
+                    copied.add_santei_unit(new_santei)
+                  end
+                end
+
+                copied.empty? ? nil : copied
+              end
+
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu]
               attr_reader :shinryou_shikibetsu
 
-              def_delegators :@santei_units, :each, :map
+              def_delegators :@santei_units, :each, :map, :empty?
             end
           end
         end
