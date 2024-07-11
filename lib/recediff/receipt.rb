@@ -277,9 +277,9 @@ module Recediff
             cost.amount,
             cost.count,
             cost.done_at.join(';'),
-            cost.code_table_upper_category,
-            cost.code_table_lower_category,
-            cost.code_table_number,
+            # cost.code_table_upper_category,
+            # cost.code_table_lower_category,
+            # cost.code_table_number,
           ]).join(sep)].concat(
             cost.comments.map do | comment |
               (header + [
@@ -292,9 +292,9 @@ module Recediff
                 comment.code,
                 comment.name,
                 comment.count,
-                comment.code_table_upper_category,
-                comment.code_table_lower_category,
-                comment.code_table_number,
+                # comment.code_table_upper_category,
+                # comment.code_table_lower_category,
+                # comment.code_table_number,
               ]).join(sep)
             end
           ).flatten(1)
