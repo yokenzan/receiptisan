@@ -131,6 +131,9 @@ module Recediff
     def add_cost(buffer, category, row)
       return unless buffer.in_seq?
 
+      # 返戻レセプトの履歴部分はパースに失敗するのでskipする
+      return if category =~ /\d+/
+
       column_headers = Recediff::Model::Uke::Enum.const_get(category)
 
       if (shinku = row.at(column_headers::C_診療識別))
