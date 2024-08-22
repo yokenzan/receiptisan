@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="receiptisan-version" content="<%= lib_version %>">
     <% if digitalized_receipts.length == 1 %>
         <% digitalized_receipt = digitalized_receipts.first%>
         <% seikyuu_ym          = digitalized_receipt.seikyuu_ym.wareki %>

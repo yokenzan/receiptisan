@@ -15,10 +15,11 @@ module Receiptisan
           TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
+          # @param lib_version [String]
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @param output_content_styles [Hash<Symbol, String>] stylings for output receipts' contents
           # @return [String]
-          def preview(*digitalized_receipts, output_content_styles: {})
+          def preview(lib_version, *digitalized_receipts, output_content_styles: {})
             @shoubyou_line_builder = LineBuilder::ShoubyouLineBuilder.new
             @tekiyou_line_builder  = LineBuilder::TekiyouLineBuilder.new
             @svg_of_receipts       = []
