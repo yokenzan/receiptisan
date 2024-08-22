@@ -92,7 +92,7 @@ module Receiptisan
 
         # @param digitalized_receipt_parameters [Array<Output::Preview::Parameter::Common::DigitalizedReceipt>]
         def show_preview(digitalized_receipt_parameters)
-          puts @previewer.preview(*digitalized_receipt_parameters)
+          puts @previewer.preview(Receiptisan::VERSION, *digitalized_receipt_parameters)
         end
       end
     end
