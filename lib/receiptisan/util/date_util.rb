@@ -95,6 +95,12 @@ module Receiptisan
 
           jisx0301 = date.jisx0301
           gengou   = Gengou.find_by_alphabet(jisx0301[0])
+
+          unless gengou
+            text = "西暦#{date.year}年#{date.month}月#{date.day}日"
+            return (zenkaku ? Formatter.to_zenkaku(text) : text).tap { | ret | ret[-3..] = '' if is_month }
+          end
+
           text     = '%s%s年%s月%s日' % [
             gengou.name,
             jisx0301[1, 2],
