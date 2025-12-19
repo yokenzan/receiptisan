@@ -82,6 +82,17 @@ module Receiptisan
           .gsub('ｃｍ', '㎝')
           .gsub('ｎｍ', '㎚')
       end
+
+      # 先頭から始める全角ゼロを取り除く
+      #
+      # @param string [String]
+      # @return [String]
+      def trim_leading_zero(string)
+        trimmed = string.sub(/^０+/, '')
+        return '０' if trimmed.empty?
+
+        trimmed.start_with?('.') ? "０#{trimmed}" : trimmed
+      end
     end
   end
 end
