@@ -12,7 +12,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Treatment::Comment::
 
   let(:wareki_to_date)     { Date.new(2022, 12, 13) }
   let(:wareki_date_format) { AppendedContent::WarekiDateFormat.new(_wareki = '５０４１２１３', _date = wareki_to_date) }
-  let(:number_format) { AppendedContent::NumberFormat.new('００００００.７') }
+  let(:number_format) { AppendedContent::NumberFormat.new('００００００．７') }
   let(:target) { described_class.new(wareki_date_format, wareki_to_date, number_format) }
 
   describe 'behave as appended content' do
@@ -21,7 +21,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Treatment::Comment::
 
   describe '#to_s' do
     specify '和暦年月日と数値をまとめた文字列を返す' do
-      expect(target.to_s).to eq '令和　４年１２月１３日　検査値：０.７'
+      expect(target.to_s).to eq '令和　４年１２月１３日　検査値：０．７'
     end
 
     context '検査値' do
@@ -33,10 +33,10 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Treatment::Comment::
       end
 
       specify '０が除かれた小数値が返ること' do
-        number_format = AppendedContent::NumberFormat.new('０００１２３.４５')
+        number_format = AppendedContent::NumberFormat.new('０００１２３．４５')
         target = described_class.new(wareki_date_format, wareki_to_date, number_format)
 
-        expect(target.to_s).to eq '令和　４年１２月１３日　検査値：１２３.４５'
+        expect(target.to_s).to eq '令和　４年１２月１３日　検査値：１２３．４５'
       end
 
       specify '０が返ること' do
