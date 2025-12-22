@@ -91,7 +91,7 @@ module Receiptisan
         trimmed = string.sub(/^０+/, '')
         return '０' if trimmed.empty?
 
-        trimmed.start_with?('.') ? "０#{trimmed}" : trimmed
+        trimmed.start_with?('．') ? "０#{trimmed}" : trimmed
       end
     end
   end
