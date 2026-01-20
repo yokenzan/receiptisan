@@ -1,3 +1,14 @@
+## [0.4.5](https://github.com/yokenzan/receiptisan/compare/v0.4.4...v0.4.5) (2026-01-20)
+
+
+### Bug Fixes
+
+* Add nkf and logger gem as dependency to suppress warnings ([39f3b76](https://github.com/yokenzan/receiptisan/commit/39f3b760561a87c87fc99f8b0017d68bdd244903))
+* コメント８０パターンで期待する形式の値がレセプトプレビューに表示されない ([26f8f0c](https://github.com/yokenzan/receiptisan/commit/26f8f0c973bd6377af1b2fe60bcdcb863b29bdbc))
+* 半角ピリオドに対して判定をとっている ([b576014](https://github.com/yokenzan/receiptisan/commit/b5760145dd5e59e066af74cba122bb86c3480fbd))
+* 和暦に変換できない日付が入力されるとエラーになる問題を修正 ([b10144f](https://github.com/yokenzan/receiptisan/commit/b10144f654fe5f3c975f56d0518febab70d721fe))
+* 明治より前の日付が指定された場合もエラーにならないようにする ([84d9180](https://github.com/yokenzan/receiptisan/commit/84d918058b5e704ccf4ab95a487f6ce17c766116))
+
 ## [0.4.4](https://github.com/yokenzan/receiptisan/compare/v0.4.3...v0.4.4) (2024-08-22)
 
 ## [0.4.3](https://github.com/yokenzan/receiptisan/compare/v0.4.2...v0.4.3) (2024-08-22)
