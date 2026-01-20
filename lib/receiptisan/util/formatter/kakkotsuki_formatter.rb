@@ -7,7 +7,7 @@ module Receiptisan
         Formatter = ::Receiptisan::Util::Formatter
 
         KAKKO_ICHI_CODEPOINT = 0x2474 # ⑴のコードポイント
-        TARGET_RANGE         = (1..20).freeze
+        TARGET_RANGE         = (1..20)
 
         # カッコ付数字の文字が含まれていたら置換する
         # @return [String]

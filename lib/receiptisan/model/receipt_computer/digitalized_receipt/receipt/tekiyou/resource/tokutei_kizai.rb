@@ -11,6 +11,7 @@ module Receiptisan
             class Resource
               class TokuteiKizai
                 extend Forwardable
+
                 Formatter = Receiptisan::Util::Formatter
 
                 def initialize(

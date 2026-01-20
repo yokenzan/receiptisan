@@ -11,6 +11,7 @@ module Receiptisan
             class Resource
               class Iyakuhin
                 extend Forwardable
+
                 Formatter = Receiptisan::Util::Formatter
 
                 def initialize(master_item:, shiyouryou:)

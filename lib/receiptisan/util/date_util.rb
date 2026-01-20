@@ -101,7 +101,7 @@ module Receiptisan
             return (zenkaku ? Formatter.to_zenkaku(text) : text).tap { | ret | ret[-3..] = '' if is_month }
           end
 
-          text     = '%s%s年%s月%s日' % [
+          text = '%s%s年%s月%s日' % [
             gengou.name,
             jisx0301[1, 2],
             jisx0301[4, 2],

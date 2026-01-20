@@ -4,11 +4,11 @@ module Receiptisan
   module Util
     module IOWithEncoding
       refine IO do
-        def with_encoding(*enc, **options)
+        def with_encoding(*enc, **)
           original_external_encoding = external_encoding
           original_internal_encoding = internal_encoding
 
-          set_encoding(*enc, **options)
+          set_encoding(*enc, **)
 
           yield self
         ensure

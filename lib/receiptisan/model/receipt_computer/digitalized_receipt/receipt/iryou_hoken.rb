@@ -11,7 +11,6 @@ module Receiptisan
           class IryouHoken
             extend Forwardable
 
-            # rubocop:disable Metrics/ParameterLists
             def initialize(
               hokenja_bangou:,
               kigou:,
@@ -21,7 +20,7 @@ module Receiptisan
               gemmen_kubun:,
               nissuu_kyuufu:
             )
-              @hokenja_bangou   = hokenja_bangou
+              @hokenja_bangou = hokenja_bangou
               @kigou            = kigou
               @bangou           = bangou
               @nissuu_kyuufu    = nissuu_kyuufu
@@ -30,7 +29,6 @@ module Receiptisan
               @kyuufu_wariai    = kyuufu_wariai
               @edaban           = nil
             end
-            # rubocop:enable Metrics/ParameterLists
 
             # @param edaban [String]
             # @return [void]

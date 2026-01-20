@@ -7,6 +7,7 @@ module Receiptisan
         class Generator
           class ShoubyoumeiGroupConvertor
             include Receiptisan::Util::Formatter
+
             Common             = Receiptisan::Output::Preview::Parameter::Common
             DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
 
