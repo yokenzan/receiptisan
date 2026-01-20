@@ -10,6 +10,7 @@ module Receiptisan
           class Shoubyoumei
             include Receiptisan::Model::ReceiptComputer
             extend Forwardable
+
             Formatter = Receiptisan::Util::Formatter
 
             WORPRO_SHOUBYOUMEI_CODE = ReceiptComputer::Master::Diagnosis::Shoubyoumei::Code.of('0000999')
@@ -163,7 +164,7 @@ module Receiptisan
               # @param shoubyoumei_name [String]
               # @return [String]
               def build_with(shoubyoumei_name)
-                [@prefix, shoubyoumei_name, @suffix].flatten.join
+                [@prefix, shoubyoumei_name, @suffix].join
               end
             end
           end

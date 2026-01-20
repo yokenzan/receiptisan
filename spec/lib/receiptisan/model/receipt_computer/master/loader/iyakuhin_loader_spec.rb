@@ -28,7 +28,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader::IyakuhinLoad
     end
 
     describe '各医薬品オブジェクトの各属性が正しく読込まれている' do
-      shared_examples '#load_iyakuhin_master_examples' do | code_by_symbol, name, name_kana, unit, chuusha_youryou, dosage_form, full_name | # rubocop:disable Metrics/ParameterLists
+      shared_examples '#load_iyakuhin_master_examples' do | code_by_symbol, name, name_kana, unit, chuusha_youryou, dosage_form, full_name |
         specify '医薬品コードは、Iyakuhin::Codeオブジェクトとして読込まれる' do
           expect(result[code_by_symbol].code).to be_instance_of Iyakuhin::Code
         end

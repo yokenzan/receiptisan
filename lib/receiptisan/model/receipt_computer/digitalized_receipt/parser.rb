@@ -15,6 +15,7 @@ module Receiptisan
       class DigitalizedReceipt
         class Parser # rubocop:disable Metrics/ClassLength
           include Parser::Context::ErrorContextReportable
+
           using Receiptisan::Util::IOWithEncoding
           using Receiptisan::Util::MonthExtention
 

@@ -47,7 +47,7 @@ RSpec.shared_examples Receiptisan::Model::ReceiptComputer::Master::MasterItemCod
   describe '#<=>' do
     context 'described_classと比較する場合' do
       specify 'コードが同じであれば、比較して真を返すこと' do
-        expect(described_class.of(full_digits) == (described_class.of(full_digits))).to be true
+        expect(described_class.of(full_digits) == described_class.of(full_digits)).to be true
       end
 
       specify 'コードが異なれば、比較して偽を返すこと' do

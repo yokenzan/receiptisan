@@ -55,23 +55,18 @@ module Receiptisan
           def build_kouhi_futan_iryou(kouhi, kyuufu, index)
             number = '三四五六七八九'[index]
             new_current_line_with('＜第%s公費＞' % number) # TODO
-            stack_to_temp
 
             format = '%-9s　%s%s'
 
-            new_current_line_with(format % ['負担者番号', kouhi.futansha_bangou, ''])
-            stack_to_temp
+            new_current_line_with(format % ['負担者番号', kouhi.futansha_bangou, ''], stack_in_advance: true)
 
-            new_current_line_with(format % ['受給者番号', kouhi.jukyuusha_bangou, ''])
-            stack_to_temp
+            new_current_line_with(format % ['受給者番号', kouhi.jukyuusha_bangou, ''], stack_in_advance: true)
 
-            new_current_line_with(format % ['実日数', kyuufu.shinryou_jitsunissuu, '日'])
-            stack_to_temp
+            new_current_line_with(format % ['実日数', kyuufu.shinryou_jitsunissuu, '日'], stack_in_advance: true)
 
-            new_current_line_with(format % ['合計点数', to_currency(kyuufu.goukei_tensuu), '点'])
-            stack_to_temp
+            new_current_line_with(format % ['合計点数', to_currency(kyuufu.goukei_tensuu), '点'], stack_in_advance: true)
 
-            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '円'])
+            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '円'], stack_in_advance: true)
             stack_to_temp
 
             if kyuufu.kyuufu_taishou_ichibu_futankin
@@ -242,7 +237,9 @@ module Receiptisan
             )
           end
 
-          def new_current_line_with(text)
+          def new_current_line_with(text, stack_in_advance: false)
+            stack_to_temp if stack_in_advance
+
             @current_line = TekiyouLine.new(shinryou_shikibetsu: nil, futan_kubun: nil, text: text)
           end
 
