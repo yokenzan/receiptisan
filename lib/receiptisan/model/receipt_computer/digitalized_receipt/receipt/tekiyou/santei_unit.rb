@@ -41,10 +41,10 @@ module Receiptisan
                 tekiyou_items.find { | tekiyou_item | !tekiyou_item.comment? }&.resource_type
               end
 
-              def each_cost(&block)
+              def each_cost(&)
                 enum = tekiyou_items.reject(&:comment?).enum_for(:each)
 
-                block_given? ? enum.each(&block) : enum
+                block_given? ? enum.each(&) : enum
               end
 
               # @return [Integer, nil]

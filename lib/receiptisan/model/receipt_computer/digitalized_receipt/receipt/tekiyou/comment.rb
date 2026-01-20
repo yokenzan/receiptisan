@@ -11,6 +11,7 @@ module Receiptisan
             # コメント
             class Comment
               extend Forwardable
+
               Formatter = Receiptisan::Util::Formatter
 
               # @param item [Master::Treatment::Comment]

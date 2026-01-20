@@ -77,9 +77,9 @@ module Receiptisan
                 # 元号が見つからない場合、西暦に fallback する
                 new(
                   code:       gengou&.code,
-                  name:       gengou&.name || "西暦",
-                  short_name: gengou&.short_name || "",
-                  alphabet:   gengou&.alphabet || "",
+                  name:       gengou&.name || '西暦',
+                  short_name: gengou&.short_name || '',
+                  alphabet:   gengou&.alphabet || '',
                   base_year:  gengou&.base_year || 0
                 )
               end
