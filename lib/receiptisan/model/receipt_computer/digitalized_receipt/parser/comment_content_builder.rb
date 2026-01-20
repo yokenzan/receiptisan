@@ -11,6 +11,7 @@ module Receiptisan
           # コメントの文字データを適切なオブジェクトにするビルダー
           class CommentContentBuilder
             include Master::Treatment::Comment::AppendedContent
+
             using Receiptisan::Util::WarekiExtension
 
             Formatter = Receiptisan::Util::Formatter
@@ -47,8 +48,12 @@ module Receiptisan
                 )
               end,
               Pattern::APPEND_WAREKI_NUMBER => proc do | wareki_and_number |
+                wareki_date = @@patterns[Pattern::APPEND_DIGITS].call(wareki_and_number[0, 7])
+                parsed_wareki_date = DateUtil.parse_date(Formatter.to_hankaku(wareki_and_number[0, 7]))
+
                 WarekiDateAndNumberFormat.new(
-                  @@patterns[Pattern::APPEND_DIGITS].call(wareki_and_number[0, 7]),
+                  wareki_date,
+                  parsed_wareki_date,
                   @@patterns[Pattern::APPEND_NUMBER].call(wareki_and_number[-8..])
                 )
               end,
@@ -64,8 +69,9 @@ module Receiptisan
             end
 
             # @param pattern [Master::Treatment::Comment::Pattern]
+            # @param appended_value [String, nil]
             def build(pattern, appended_value)
-              @@patterns[pattern&.code || Pattern::FREE].call(appended_value, @handler, @sy_processor)
+              @@patterns[pattern&.code || Pattern::FREE].call(appended_value.to_s, @handler, @sy_processor)
             end
           end
         end

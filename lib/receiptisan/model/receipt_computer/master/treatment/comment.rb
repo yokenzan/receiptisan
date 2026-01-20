@@ -37,8 +37,6 @@ module Receiptisan
               unless pattern.requires_embdding?
                 return \
                   case pattern.code
-                  when Pattern::APPEND_FREE
-                    appended_content
                   when Pattern::NO_APPEND
                     name
                   else
@@ -261,13 +259,19 @@ module Receiptisan
               #
               # パターン80
               class WarekiDateAndNumberFormat
-                def initialize(wareki_date_format, number_format)
-                  @wareki = wareki_date_format
-                  @number = number_format
+                using Receiptisan::Util::WarekiExtension
+
+                def initialize(wareki_date_format, wareki_date, number_format)
+                  @wareki_date_format = wareki_date_format
+                  @wareki_date = wareki_date
+                  @number_format = number_format
                 end
 
                 def to_s
-                  '%s%s' % [@wareki, @number]
+                  wareki = @wareki_date.to_wareki(zenkaku: true)
+                  number = Receiptisan::Util::Formatter.trim_leading_zero(@number_format.to_s)
+
+                  "#{wareki}　検査値：#{number}"
                 end
               end
 

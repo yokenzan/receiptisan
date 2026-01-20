@@ -7,6 +7,9 @@ module Receiptisan
     module Preview
       module LineBuilder
         # 摘要欄行の生成
+        #
+        # TODO: 状態をもっているのでステートレスにしたい
+        #
         # rubocop:disable Metrics/ClassLength
         class TekiyouLineBuilder
           include Receiptisan::Util::Formatter
@@ -16,14 +19,20 @@ module Receiptisan
           COMMA         = '，'
           SEPARATOR     = '―'
 
-          def initialize(max_line_length: 27, max_line_count: 36, max_line_count_next: 71)
-            @max_line_length     = max_line_length
-            @max_line_count      = max_line_count
-            @max_line_count_next = max_line_count_next
-            @indent_width        = 1
-            @buffer_per_pages    = []
-            @temp_lines          = []
-            @current_line        = nil
+          def initialize(
+            max_line_length:       27,
+            max_line_count_nyuuin: 36,
+            max_line_count_gairai: 42,
+            max_line_count_next:   71
+          )
+            @max_line_length       = max_line_length
+            @max_line_count_nyuuin = max_line_count_nyuuin
+            @max_line_count_gairai = max_line_count_gairai
+            @max_line_count_next   = max_line_count_next
+            @indent_width          = 1
+            @buffer_per_pages      = []
+            @temp_lines            = []
+            @current_line          = nil
             clear_state
           end
 
@@ -62,11 +71,11 @@ module Receiptisan
             new_current_line_with(format % ['合計点数', to_currency(kyuufu.goukei_tensuu), '点'])
             stack_to_temp
 
-            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '点'])
+            new_current_line_with(format % ['一部負担金', to_currency(kyuufu.ichibu_futankin), '円'])
             stack_to_temp
 
             if kyuufu.kyuufu_taishou_ichibu_futankin
-              new_current_line_with(format % ['給付対象一部負担金', to_currency(kyuufu.kyuufu_taishou_ichibu_futankin), '点'])
+              new_current_line_with(format % ['給付対象一部負担金', to_currency(kyuufu.kyuufu_taishou_ichibu_futankin), '円'])
               stack_to_temp
             end
 
@@ -100,9 +109,10 @@ module Receiptisan
 
           # @return [void]
           def clear_state
-            @buffer_per_pages = []
-            @temp_lines       = []
-            @current_line     = nil
+            @buffer_per_pages     = []
+            @temp_lines           = []
+            @current_line         = nil
+            @current_receipt_attr = nil
           end
 
           # @return [Integer]
@@ -110,9 +120,15 @@ module Receiptisan
             @buffer_per_pages.length
           end
 
+          # @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt]
+          # @return [void]
+          def retrieve_attr_from_receipt(receipt)
+            @current_receipt_attr = ReceiptAttr.from_receipt(receipt)
+          end
+
           private
 
-          attr_reader :current_line, :temp_lines
+          attr_reader :current_line, :temp_lines, :current_receipt_attr
 
           # @return [void]
           def build_shoubyoumei_group(shoubyoumei_group, group_index)
@@ -262,13 +278,20 @@ module Receiptisan
 
             stack_to_temp
 
-            # フラッシュ先が表紙か続紙かを pages.length で判定している
-            max_line_count = @buffer_per_pages.length == 1 ? @max_line_count : @max_line_count_next
-            new_page if (current_page + @temp_lines).length > max_line_count
+            new_page if (current_page + @temp_lines).length > detect_max_line_count
 
             current_page.concat(@temp_lines)
 
             @temp_lines.clear
+          end
+
+          # 現在のページ最大行数の判定
+          # @return [Integer]
+          def detect_max_line_count
+            # フラッシュ先が表紙か続紙かを pages.length で判定している
+            return @max_line_count_next if page_length > 1
+
+            @current_receipt_attr.nyuuin? ? @max_line_count_nyuuin : @max_line_count_gairai
           end
 
           # @return [void]
@@ -346,6 +369,28 @@ module Receiptisan
             # @!attribute [rw] text
             #   @return [String, nil]
             attr_accessor :shinryou_shikibetsu, :futan_kubun, :text
+          end
+
+          class ReceiptAttr
+            class << self
+              # @param receipt [Receiptisan::Output::Preview::Parameter::Common::Receipt]
+              # @return [ReceiptAttr]
+              def from_receipt(receipt)
+                new(nyuugai: receipt.nyuugai)
+              end
+            end
+
+            def initialize(nyuugai:)
+              @nyuugai = nyuugai
+            end
+
+            def nyuuin?
+              @nyuugai == :nyuuin
+            end
+
+            # @!attribute [r] nyuugai
+            #   @return [Symbol]
+            attr_reader :nyuugai
           end
         end
         # rubocop:enable Metrics/ClassLength

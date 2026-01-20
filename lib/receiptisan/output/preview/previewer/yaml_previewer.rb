@@ -9,9 +9,10 @@ module Receiptisan
         class YAMLPreviewer
           using Receiptisan::Util::RecursivelyHashConvertable
 
+          # @param lib_version [String]
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @return [String]
-          def preview(*digitalized_receipts)
+          def preview(_lib_version, *digitalized_receipts)
             YAML.dump(digitalized_receipts.to_hash_recursively)
           end
         end

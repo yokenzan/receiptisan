@@ -74,12 +74,13 @@ module Receiptisan
               # @param month [::Date]
               def from(date)
                 gengou = Util::DateUtil::Gengou.find_by_alphabet(date.jisx0301[0])
+                # 元号が見つからない場合、西暦に fallback する
                 new(
-                  code:       gengou.code,
-                  name:       gengou.name,
-                  short_name: gengou.short_name,
-                  alphabet:   gengou.alphabet,
-                  base_year:  gengou.base_year
+                  code:       gengou&.code,
+                  name:       gengou&.name || "西暦",
+                  short_name: gengou&.short_name || "",
+                  alphabet:   gengou&.alphabet || "",
+                  base_year:  gengou&.base_year || 0
                 )
               end
             end

@@ -23,7 +23,7 @@ module Receiptisan
                   nissuu_kyuufu:    DigitalizedReceipt::Receipt::NissuuKyuufu.new(
                     goukei_tensuu:                           values[KO::C_合計点数].to_i,
                     shinryou_jitsunissuu:                    values[KO::C_診療実日数].to_i,
-                    ichibu_futankin:                         values[KO::C_負担金額_公費].to_i,
+                    ichibu_futankin:                         values[KO::C_負担金額_公費]&.to_i,
                     kyuufu_taishou_ichibu_futankin:          (is_nyuuin ?
                       values[KO::C_公費給付対象入院一部負担金] :
                       values[KO::C_公費給付対象外来一部負担金])&.to_i,
