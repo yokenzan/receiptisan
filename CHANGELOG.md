@@ -1,3 +1,10 @@
+## [0.4.6](https://github.com/yokenzan/receiptisan/compare/v0.4.5...v0.4.6) (2026-01-21)
+
+
+### Bug Fixes
+
+* use relative paths for config symlinks in 2018-2020 directories ([12e0ae3](https://github.com/yokenzan/receiptisan/commit/12e0ae3475d07022699d62571773818d70728f4f))
+
 ## [0.4.5](https://github.com/yokenzan/receiptisan/compare/v0.4.4...v0.4.5) (2026-01-20)
 
 
