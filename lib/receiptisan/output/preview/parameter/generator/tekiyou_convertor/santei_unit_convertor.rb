@@ -18,9 +18,12 @@ module Receiptisan
               # @return [Common::SanteiUnit]
               def convert(santei_unit)
                 parameterized_santei_unit = Common::SanteiUnit.new(
-                  tensuu: santei_unit.tensuu,
-                  kaisuu: santei_unit.kaisuu,
-                  items:  []
+                  tensuu:        santei_unit.tensuu,
+                  kaisuu:        santei_unit.kaisuu,
+                  items:         [],
+                  daily_kaisuus: santei_unit
+                    .each_date
+                    .map { | it | Common::DailyKaisuu.new(date: it.date, kaisuu: it.kaisuu) }
                 )
 
                 santei_unit.each do | tekiyou_item |

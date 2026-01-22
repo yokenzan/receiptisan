@@ -21,13 +21,15 @@ module Receiptisan
                 shinryou_shikibetsu:,
                 futan_kubun:,
                 tensuu:,
-                kaisuu:
+                kaisuu:,
+                daily_kaisuus:
               )
                 @resource            = resource
                 @shinryou_shikibetsu = shinryou_shikibetsu
                 @futan_kubun         = futan_kubun
                 @tensuu              = tensuu&.to_i
                 @kaisuu              = kaisuu&.to_i
+                @daily_kaisuus       = daily_kaisuus
                 @comments            = []
               end
 
@@ -49,6 +51,14 @@ module Receiptisan
               # 算定回数の記載があるか？
               def kaisuu?
                 !kaisuu.nil?
+              end
+
+              def kaisuu_on?(date)
+                !@daily_kaisuus.find { | it | it.date == date }.nil?
+              end
+
+              def kaisuu_on(date)
+                @daily_kaisuus.find { | it | it.date == date }&.kaisuu
               end
 
               def comment?
@@ -76,9 +86,23 @@ module Receiptisan
               #   @return [Integer, nil] 算定回数
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu] 診療識別
-              attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
+              attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu, :daily_kaisuus
 
               def_delegators :futan_kubun, :uses?
+              def_delegators :resource, :name, :code
+            end
+
+            class DailyKaisuu
+              def initialize(date:, kaisuu:)
+                @date   = date
+                @kaisuu = kaisuu
+              end
+
+              def on?(date)
+                @date == date
+              end
+
+              attr_reader :date, :kaisuu
             end
           end
         end

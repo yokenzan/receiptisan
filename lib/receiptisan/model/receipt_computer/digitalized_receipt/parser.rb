@@ -17,6 +17,7 @@ module Receiptisan
           include Parser::Context::ErrorContextReportable
 
           using Receiptisan::Util::IOWithEncoding
+          using Receiptisan::Util::MonthExtention
 
           ReceiptType       = DigitalizedReceipt::Receipt::Type
           Comment           = Receipt::Tekiyou::Comment
@@ -203,12 +204,21 @@ module Receiptisan
           end
 
           def wrap_as_cost(resource, column_definition, values)
+            daily_kaisuu_range = column_definition::C_算定日_1日..column_definition::C_算定日_31日
+            daily_kaisuus = values[daily_kaisuu_range].map.with_index do | daily_kaisuu, index |
+              daily_kaisuu.nil? ?  nil : Receipt::Tekiyou::DailyKaisuu.new(
+                date:   buffer.current_shinryou_ym.of_date(index + 1),
+                kaisuu: daily_kaisuu.to_i
+              )
+            end.reject(&:nil?)
+
             cost = Receipt::Tekiyou::Cost.new(
               resource:            resource,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
               futan_kubun:         Receipt::FutanKubun.find_by_code(values[column_definition::C_負担区分]),
               tensuu:              values[column_definition::C_点数]&.to_i,
-              kaisuu:              values[column_definition::C_回数]&.to_i
+              kaisuu:              values[column_definition::C_回数]&.to_i,
+              daily_kaisuus:       daily_kaisuus
             )
 
             comment_range = column_definition::C_コメント_1_コメントコード..column_definition::C_コメント_3_文字データ
