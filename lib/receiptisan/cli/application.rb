@@ -11,6 +11,7 @@ module Receiptisan
         @commandset.register('--preview', Command::PreviewCommand, aliases: ['-p'])
         @commandset.register('--version', Command::VersionCommand, aliases: ['-v'])
         @commandset.register('search', Command::SearchCommand)
+        @commandset.register('s', Command::SearchCommand)
       end
 
       def run

@@ -20,37 +20,61 @@ module Receiptisan
           'comment' => :comment,
         }.freeze
 
-        argument :type, required: true, values: TYPE_MAP.keys,
-          desc: '検索対象マスター種別'
+        CODE_PREFIX_MAP = {
+          '1' => :shinryou_koui,
+          '6' => :iyakuhin,
+          '7' => :tokutei_kizai,
+          '8' => :comment,
+        }.freeze
+
+        argument :type, required: false, values: TYPE_MAP.keys,
+          desc: '検索対象マスター種別 (--code指定時は先頭桁から自動判定)'
 
         option :code,       desc: 'レセ電コード (完全一致)'
         option :name,       desc: '名称検索 (部分一致)'
         option :name_exact, desc: '名称検索 (完全一致)'
-        option :month,      desc: '基準月 (YYYY-MM形式, 省略時は今月)'
+        option :month,      desc: '基準月 (YYYYMM形式, 省略時は今月)'
         option :point_min,  type: :integer, desc: '点数/価格 下限'
         option :point_max,  type: :integer, desc: '点数/価格 上限'
         option :point,      type: :integer, desc: '点数/価格 (完全一致)'
         option :format,     default: 'json', values: %w[json yaml], desc: '出力形式'
         option :limit,      type: :integer, default: 100, desc: '最大結果件数'
+        option :no_limit,   type: :boolean, default: false, desc: '件数上限なしで全結果を返す'
 
-        def call(type:, **options)
-          master_type = TYPE_MAP.fetch(type)
+        def call(type: nil, **options)
+          master_type = resolve_master_type(type, options[:code])
           version     = resolve_version(options[:month])
           master      = load_master(version)
           condition   = build_condition(options)
           results     = Search::Searcher.new(master).search(master_type, condition)
-          results     = results.first(options.fetch(:limit, 100).to_i)
+          results     = results.first(options.fetch(:limit, 100).to_i) unless options[:no_limit]
 
           output(results, master_type, options.fetch(:format, 'json'))
         end
 
         private
 
+        # @param type [String, nil]
+        # @param code [String, nil]
+        # @return [Symbol]
+        def resolve_master_type(type, code)
+          if type
+            TYPE_MAP.fetch(type)
+          elsif code
+            CODE_PREFIX_MAP.fetch(code[0]) do
+              raise ArgumentError, "コード '#{code}' から種別を判定できません"
+            end
+          else
+            raise ArgumentError, '種別またはコードを指定してください'
+          end
+        end
+
         # @param month_str [String, nil]
         # @return [Master::Version]
         def resolve_version(month_str)
           ym = if month_str
-                 year, month = month_str.split('-').map(&:to_i)
+                 year  = month_str[0, 4].to_i
+                 month = month_str[4, 2].to_i
                  Month.new(year, month)
                else
                  Month.new(Date.today.year, Date.today.month)
