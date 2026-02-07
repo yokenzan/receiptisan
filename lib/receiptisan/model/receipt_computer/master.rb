@@ -6,6 +6,7 @@ require_relative 'master/treatment'
 require_relative 'master/diagnosis'
 require_relative 'master/resource_resolver'
 require_relative 'master/loader'
+require_relative 'master/search'
 
 module Receiptisan
   module Model
