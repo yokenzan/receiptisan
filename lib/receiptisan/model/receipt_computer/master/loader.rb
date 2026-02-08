@@ -64,6 +64,32 @@ module Receiptisan
             )
           end
 
+          # 指定された1種別のCSVだけをロードし、その種別のHashを返す
+          #
+          # @param version [Version]
+          # @param type [Symbol] :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment, :shoubyoumei, :shuushokugo
+          # @return [Hash]
+          def load_type(version, type)
+            csv_paths = @resource_resolver.detect_csv_files(version)
+
+            case type
+            when :shinryou_koui
+              @shinryou_koui_loader.load(version, csv_paths[:shinryou_koui_csv_path])
+            when :iyakuhin
+              @iyakuhin_loader.load(csv_paths[:iyakuhin_csv_path])
+            when :tokutei_kizai
+              @tokutei_kizai_loader.load(csv_paths[:tokutei_kizai_csv_path])
+            when :comment
+              @comment_loader.load(csv_paths[:comment_csv_path])
+            when :shoubyoumei
+              @shoubyoumei_loader.load(csv_paths[:shoubyoumei_csv_path])
+            when :shuushokugo
+              @shuushokugo_loader.load(csv_paths[:shuushokugo_csv_path])
+            else
+              raise ArgumentError, "unknown master type: #{type}"
+            end
+          end
+
           private
 
           attr_reader :logger
