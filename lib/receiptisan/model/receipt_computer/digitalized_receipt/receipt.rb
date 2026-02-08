@@ -85,6 +85,34 @@ module Receiptisan
             @tekiyou = @tekiyou.sort_by { | shinryou_shikibetsu, _ | shinryou_shikibetsu.to_s.to_i }.to_h
           end
 
+          # @return [Array<Date>] 全算定日をソートした配列
+          def dates
+            @tekiyou.each_value.flat_map do | ichiren_units |
+              ichiren_units.flat_map do | ichiren_unit |
+                ichiren_unit.map do | santei_unit |
+                  santei_unit.each_date.map(&:date)
+                end
+              end
+            end.flatten.uniq.sort
+          end
+
+          # @yieldparam date [Date] 算定日
+          # @yieldparam tekiyou [Hash] 診療識別コード => Array<IchirenUnit>
+          def each_date(&)
+            enum = Enumerator.new do | y |
+              dates.each do | date |
+                filtered_tekiyou = {}
+                @tekiyou.each do | code, ichiren_units |
+                  filtered = ichiren_units.filter_map { | iu | iu.on_date(date) }
+                  filtered_tekiyou[code] = filtered unless filtered.empty?
+                end
+                y.yield(date, filtered_tekiyou) unless filtered_tekiyou.empty?
+              end
+            end
+
+            block_given? ? enum.each(&) : enum
+          end
+
           # @!attribute [r] id
           #   @return [Integer]
           attr_reader :id

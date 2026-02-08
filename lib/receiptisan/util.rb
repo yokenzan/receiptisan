@@ -5,6 +5,7 @@ require_relative 'util/date_util'
 require_relative 'util/wareki_extension'
 require_relative 'util/recursively_hash_convertable'
 require_relative 'util/io_with_encoding'
+require_relative 'util/month_extention'
 
 module Receiptisan
   module Util
