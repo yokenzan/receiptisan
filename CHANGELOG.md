@@ -1,3 +1,16 @@
+# [0.7.0](https://github.com/yokenzan/receiptisan/compare/v0.6.1...v0.7.0) (2026-02-08)
+
+
+### Bug Fixes
+
+* normalize daily kaisuu dates and add tests ([6356764](https://github.com/yokenzan/receiptisan/commit/6356764e236f0c493e34062c98a63ed160fc2518))
+* rename MonthExtention to MonthExtension and add missing YARD docs ([bc4a5f8](https://github.com/yokenzan/receiptisan/commit/bc4a5f8bfd4b3297bffcd30dd2c6db94b32f5f4e)), closes [#66](https://github.com/yokenzan/receiptisan/issues/66)
+
+
+### Features
+
+* add daily kaisuu (日別回数) support for SI/IY/TO records ([ef344a9](https://github.com/yokenzan/receiptisan/commit/ef344a97f3ff40a6e14a2a9aa12443cd9a789f5a))
+
 ## [0.6.1](https://github.com/yokenzan/receiptisan/compare/v0.6.0...v0.6.1) (2026-02-08)
 
 # [0.6.0](https://github.com/yokenzan/receiptisan/compare/v0.5.0...v0.6.0) (2026-02-08)
