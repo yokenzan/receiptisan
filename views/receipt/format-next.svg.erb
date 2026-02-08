@@ -1,63 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
-<svg x="0" y="0" width="909" height="1286" viewBox="0 0 909 1286" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-style="display: block;margin-left: auto;margin-right: auto;">
+<%# HTML5 に埋め込むため XML 宣言・DOCTYPE は不要。 %>
+<%# CSS クラス定義は outline.html.erb に外部化済み（HTML5 埋め込み SVG には外部 CSS が適用される）。 %>
+<svg width="909" height="1286" viewBox="0 0 909 1286" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<clipPath id="c_2"><path d="M0,0H909V1286H0Z"/></clipPath>
 <clipPath id="c0"><path d="M0,1284.9V0H909V1284.9Z"/></clipPath>
-
-<style type="text/css"><![CDATA[
-.s1_2{
-font-size: 17.31px;
-font-family: Mincho, serif;
-fill: #000;
-}
-.s2_2{
-font-size: 12.99px;
-font-family: Mincho, serif;
-fill: #000;
-}
-.s4_2{
-font-size: 13.20px;
-font-family: Mincho, serif;
-fill: #000;
-}
-.s5_2{
-font-size: 17.60px;
-font-family: Mincho, serif;
-fill: #000;
-}
-.s7_2{
-font-size: 16.13px;
-font-family: Mincho, serif;
-fill: #000;
-}
-.s8_2{
-font-size: 13.93px;
-font-family: Mincho, serif;
-fill: #000;
-}
-
-.g0_2{
-fill: #F0EDEB;
-}
-.g1_2{
-fill: #FFFFFF;
-}
-
-]]></style>
-
 </defs>
 <path d="M0,0
 L0,1286
 L909,1286
 L909,0 Z " 
 fill="#FFFFFF" stroke="none"/>
-<g clip-path="url(#c_2)">
+<g clip-path="url(#c0)">
     <path d="M909,0H2803.5V2679.7H909ZM0,1286.4H909V3966.1H0Z" class="g0_2"/>
-    <path clip-path="url(#c0)" d="M0,0H909V1286.4H0V0Z" class="g1_2"/>
+    <path d="M0,0H909V1286.4H0V0Z" class="g1_2"/>
     <path d="M34.4,81.7H454.5V152H34.4V81.7Zm47.3,0v52m174.2,-52v52m47.4,-52v52M34.4,100.1H454.5M34.4,116.9H454.5M434.7,92.4v7.7m0,10.7v6.1m0,10.7v6.1M236,92.4v7.7m0,10.7v6.1m0,10.7v6.1M173.4,92.4v7.7m0,10.7v6.1m0,10.7v6.1M130.6,92.4v7.7m0,10.7v6.1m0,10.7v6.1M679.1,64.9H874.7V81.7H679.1V64.9Z" class="g1"/>
     <path d="M619,99.6H826.8v34.6H619V99.6Z" class="g3"/>
     <path d="M497.3,81.7H874.7v18.4H497.3V81.7Zm273.5,0v18.4M805.9,64.9V81.7M497.3,100.1H598.1v33.6H497.3V100.1ZM764.7,64.9V81.7M721.9,64.9V81.7m22.9,9.2v9.2M668.4,92.4v7.7M619.5,92.4v7.7M547.7,81.7v18.4" class="g1"/>
@@ -69,11 +23,11 @@ fill="#FFFFFF" stroke="none"/>
     <path d="M69.5,133.7V152" class="g1"/>
     <path d="M26.7,159.7H880.8M61.9,168.8V1255.1M480.5,168.8V1255.1" class="g2"/>
 
-    <g clip-path="url(#c0)">
-        <!-- 注意書き -->
-        <text x="870"  y="40" class="s2 weight-bold" text-anchor="end" fill="red">※レセプト提出に使用しないでください</text>
+    <g>
+        <%# 注意書き %>
+        <text x="870"  y="40" class="s2 weight-bold te" fill="red">※レセプト提出に使用しないでください</text>
 
-        <!-- 綴紐を通す穴を明ける目印のマル -->
+        <%# 綴紐を通す穴を明ける目印のマル %>
         <path fill-rule="evenodd" d="M56.2,54.1c0,10.2,-14.6,10.2,-14.6,0c0,-10.2,14.6,-10.2,14.6,0" class="g5"/>
 
         <text x="50"  y="79" class="s1_2">診療報酬明細書</text>
@@ -92,29 +46,29 @@ fill="#FFFFFF" stroke="none"/>
         <text x="458.2" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.prefecture.code %></text>
         <text x="490"   y="79" class="s2_2">医コ</text>
         <text x="520.5" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.hospital.code %></text>
-        <text x="870"   y="60"   class="s4_2 output-content" text-anchor="end"><%= receipt.id %></text>
+        <text x="870"   y="60"   class="s4_2 output-content te"><%= receipt.id %></text>
 
-        <!-- レセプト種別 -->
+        <%# レセプト種別 %>
         <text x="680.7" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
         <text x="722.1" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
         <text x="763"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
         <text x="812"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
     </g>
 
-    <!-- 患者氏名・患者番号 -->
-    <g clip-path="url(#c0)">
+    <%# 患者氏名・患者番号 %>
+    <g>
         <% patient = receipt.patient %>
         <text x="39" y="147.2" dx="0,.2" class="s2_2">氏名</text>
         <text x="66" y="60" class="s4_2 output-content"><%= receipt.patient.id %></text>
         <text x="73.3" y="148.1" class="s4_2 output-content"><%= patient.name %></text>
     </g>
 
-    <!-- 保険 -->
-    <g clip-path="url(#c0)">
+    <%# 保険 %>
+    <g>
         <text x="502.1" y="95.8"  class="s2_2">保　険</text>
         <text x="515.1" y="113.6" class="s2_2">記号・番号</text>
         <text x="785"   y="113.7" class="s4">（枝番）</text>
-        <!-- 保険 -->
+        <%# 保険 %>
         <% if iryou_hoken = receipt.hokens.iryou_hoken %>
             <%
                 hokenja_bangou_start_x = 550
@@ -129,8 +83,8 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
-    <!-- 公費 -->
-    <g clip-path="url(#c0)">
+    <%# 公費 %>
+    <g>
         <% kouhi_futan_iryous = receipt.hokens.kouhi_futan_iryous %>
         <%
             futansha_start_x  = 81
@@ -163,28 +117,28 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
-    <!-- 左側ページ -->
-    <g clip-path="url(#c0)">
+    <%# 左側ページ %>
+    <g>
         <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
-            <!-- 診療識別 -->
+            <%# 診療識別 %>
             <text x="40" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
-            <!-- 負担区分 -->
+            <%# 負担区分 %>
             <text x="67" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
-            <!-- 項目、点数、回数 -->
+            <%# 項目、点数、回数 %>
             <text x="78" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>
 
-    <!-- 右側ページ -->
-    <g clip-path="url(#c0)">
+    <%# 右側ページ %>
+    <g>
         <% tekiyou_page_right&.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
-            <!-- 診療識別 -->
+            <%# 診療識別 %>
             <text x="460" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
-            <!-- 負担区分 -->
+            <%# 負担区分 %>
             <text x="487" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
-            <!-- 項目、点数、回数 -->
+            <%# 項目、点数、回数 %>
             <text x="497" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>

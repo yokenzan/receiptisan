@@ -15,6 +15,14 @@ module Receiptisan
           TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
+          # minify 用の正規表現パターン
+
+          # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
+          # テンプレートから <text ...></text> のような空要素が大量に生成される。これを除去する。
+          EMPTY_TEXT_ELEMENT_PATTERN = %r{<text[^>]*></text>}
+          # 罫線 path 統合対象: <path d="..." class="g1"/> 等の単純な形式のみマッチ
+          SIMPLE_PATH_PATTERN = %r{\A<path d="([^"]*)" class="(g\d+)"\s*/>\z}
+
           # @param lib_version [String]
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @param output_content_styles [Hash<Symbol, String>] stylings for output receipts' contents
@@ -28,7 +36,10 @@ module Receiptisan
               digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
             end
 
-            ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            # ERBテンプレートから生成されるHTMLはテンプレートの可読性を優先した構造のため
+            # 冗長な空白・コメント・空要素を含む。minify で出力サイズを削減する。
+            result = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            minify(result)
           end
 
           private
@@ -96,6 +107,71 @@ module Receiptisan
                 section.ichiren_units
               )
             end
+          end
+
+          # ERBテンプレート出力に対する後処理で出力サイズを削減する
+          #
+          # 以下の処理を適用する:
+          #   1. 空の <text> 要素を除去
+          #   2. 行頭インデント空白を除去
+          #   3. 連続する空行を1行に圧縮
+          #   4. 同一クラスの連続する <path> 要素の d 属性を結合
+          #
+          # コメントはテンプレート側で ERB コメント（<%# %>）を使用しているため
+          # ERB 処理時に除去され、ここでの除去は不要。
+          #
+          # @param html [String] ERBテンプレートから生成されたHTML文字列
+          # @return [String] 軽量化されたHTML文字列
+          def minify(html)
+            cleaned = html
+              .gsub(EMPTY_TEXT_ELEMENT_PATTERN, '')
+              .gsub(/^ +/, '')
+              .squeeze("\n")
+
+            merge_consecutive_paths(cleaned)
+          end
+
+          # 同一 CSS クラスの連続する <path> 要素を1つの要素に統合する
+          #
+          # レセプト用紙の罫線は多数の個別 <path> で表現されているが、
+          # SVG の path d 属性は複数の M(moveto) コマンドを連結できるため、
+          # 同一クラス（= 同一線種）の連続する path を1要素にまとめてタグのオーバーヘッドを削減する。
+          #
+          # 対象は `<path d="..." class="gN"/>` の単純な形式のみ。
+          # fill や stroke 等の追加属性を持つ path は統合しない。
+          #
+          # @param html [String]
+          # @return [String]
+          def merge_consecutive_paths(html)
+            lines  = html.lines
+            result = []
+            i      = 0
+
+            while i < lines.length
+              line = lines[i].chomp
+
+              if (m = line.match(SIMPLE_PATH_PATTERN))
+                # 統合対象の path を検出。同一クラスが続く限り d 属性値を収集する
+                d_parts = [m[1]]
+                klass   = m[2]
+
+                while i + 1 < lines.length &&
+                      (m2 = lines[i + 1].chomp.match(SIMPLE_PATH_PATTERN)) &&
+                      m2[2] == klass
+                  d_parts << m2[1]
+                  i += 1
+                end
+
+                # 収集した d 値をスペース区切りで連結し、1つの path 要素として出力
+                result << %(<path d="#{d_parts.join(' ')}" class="#{klass}"/>\n)
+              else
+                result << lines[i]
+              end
+
+              i += 1
+            end
+
+            result.join
           end
 
           # テンプレートエンジンによるプレビューレンダリング中に呼び出すヘルパ
