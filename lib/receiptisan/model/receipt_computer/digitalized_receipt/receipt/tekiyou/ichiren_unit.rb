@@ -34,6 +34,7 @@ module Receiptisan
                 @santei_units.first.futan_kubun
               end
 
+              # 指定日に算定のある算定単位のみに絞り込んだ一連単位を返す
               # @param date [Date]
               # @return [IchirenUnit, nil]
               def on_date(date)

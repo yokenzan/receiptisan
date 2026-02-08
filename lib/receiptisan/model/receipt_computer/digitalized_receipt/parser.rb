@@ -17,7 +17,7 @@ module Receiptisan
           include Parser::Context::ErrorContextReportable
 
           using Receiptisan::Util::IOWithEncoding
-          using Receiptisan::Util::MonthExtention
+          using Receiptisan::Util::MonthExtension
 
           ReceiptType       = DigitalizedReceipt::Receipt::Type
           Comment           = Receipt::Tekiyou::Comment

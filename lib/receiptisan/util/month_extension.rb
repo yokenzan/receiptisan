@@ -4,7 +4,7 @@ require 'month'
 
 module Receiptisan
   module Util
-    module MonthExtention
+    module MonthExtension
       refine Month do
         # @param day [Integer] 日番号(1-31)
         # @return [Date]

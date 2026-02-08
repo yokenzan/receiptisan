@@ -85,6 +85,7 @@ module Receiptisan
             @tekiyou = @tekiyou.sort_by { | shinryou_shikibetsu, _ | shinryou_shikibetsu.to_s.to_i }.to_h
           end
 
+          # レセプト内の全算定日を重複なくソートして返す
           # @return [Array<Date>] 全算定日をソートした配列
           def dates
             @tekiyou.each_value.flat_map do | ichiren_units |
@@ -96,6 +97,7 @@ module Receiptisan
             end.flatten.uniq.sort
           end
 
+          # 算定日ごとに、その日に該当する摘要を絞り込んで列挙する
           # @yieldparam date [Date] 算定日
           # @yieldparam tekiyou [Hash] 診療識別コード => Array<IchirenUnit>
           def each_date(&)

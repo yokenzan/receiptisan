@@ -55,6 +55,7 @@ module Receiptisan
                 tensuu && kaisuu ? tensuu * kaisuu : nil
               end
 
+              # 日別回数を列挙する
               # @return [Enumerator<DailyKaisuu>]
               def each_date(&)
                 enum = @daily_kaisuus.enum_for(:each)
@@ -62,12 +63,14 @@ module Receiptisan
                 block_given? ? enum.each(&) : enum
               end
 
+              # 指定日に算定があるかを返す
               # @param date [Date]
               # @return [Boolean]
               def on_date?(date)
                 @daily_kaisuus.any? { | dk | dk.on?(date) }
               end
 
+              # 指定日に該当する日別回数のみに絞り込んだ算定単位を返す
               # @param date [Date]
               # @return [SanteiUnit, nil]
               def on_date(date)
