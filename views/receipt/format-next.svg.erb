@@ -24,10 +24,10 @@ fill="#FFFFFF" stroke="none"/>
     <path d="M26.7,159.7H880.8M61.9,168.8V1255.1M480.5,168.8V1255.1" class="g2"/>
 
     <g>
-        <!-- 注意書き -->
+        <%# 注意書き %>
         <text x="870"  y="40" class="s2 weight-bold te" fill="red">※レセプト提出に使用しないでください</text>
 
-        <!-- 綴紐を通す穴を明ける目印のマル -->
+        <%# 綴紐を通す穴を明ける目印のマル %>
         <path fill-rule="evenodd" d="M56.2,54.1c0,10.2,-14.6,10.2,-14.6,0c0,-10.2,14.6,-10.2,14.6,0" class="g5"/>
 
         <text x="50"  y="79" class="s1_2">診療報酬明細書</text>
@@ -48,14 +48,14 @@ fill="#FFFFFF" stroke="none"/>
         <text x="520.5" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.hospital.code %></text>
         <text x="870"   y="60"   class="s4_2 output-content te"><%= receipt.id %></text>
 
-        <!-- レセプト種別 -->
+        <%# レセプト種別 %>
         <text x="680.7" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.tensuu_hyou_type.code %><%= receipt.type.tensuu_hyou_type.name %></text>
         <text x="722.1" y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.main_hoken_type.code %><%= receipt.type.main_hoken_type.name %></text>
         <text x="763"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.hoken_multiple_type.code %><%= receipt.type.hoken_multiple_type.name %></text>
         <text x="812"   y="78.5" class="s4_2 output-content"><%= to_zenkaku receipt.type.patient_age_type.code %><%= receipt.type.patient_age_type.name %></text>
     </g>
 
-    <!-- 患者氏名・患者番号 -->
+    <%# 患者氏名・患者番号 %>
     <g>
         <% patient = receipt.patient %>
         <text x="39" y="147.2" dx="0,.2" class="s2_2">氏名</text>
@@ -63,12 +63,12 @@ fill="#FFFFFF" stroke="none"/>
         <text x="73.3" y="148.1" class="s4_2 output-content"><%= patient.name %></text>
     </g>
 
-    <!-- 保険 -->
+    <%# 保険 %>
     <g>
         <text x="502.1" y="95.8"  class="s2_2">保　険</text>
         <text x="515.1" y="113.6" class="s2_2">記号・番号</text>
         <text x="785"   y="113.7" class="s4">（枝番）</text>
-        <!-- 保険 -->
+        <%# 保険 %>
         <% if iryou_hoken = receipt.hokens.iryou_hoken %>
             <%
                 hokenja_bangou_start_x = 550
@@ -83,7 +83,7 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
-    <!-- 公費 -->
+    <%# 公費 %>
     <g>
         <% kouhi_futan_iryous = receipt.hokens.kouhi_futan_iryous %>
         <%
@@ -117,28 +117,28 @@ fill="#FFFFFF" stroke="none"/>
         <% end %>
     </g>
 
-    <!-- 左側ページ -->
+    <%# 左側ページ %>
     <g>
         <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
-            <!-- 診療識別 -->
+            <%# 診療識別 %>
             <text x="40" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
-            <!-- 負担区分 -->
+            <%# 負担区分 %>
             <text x="67" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
-            <!-- 項目、点数、回数 -->
+            <%# 項目、点数、回数 %>
             <text x="78" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>
 
-    <!-- 右側ページ -->
+    <%# 右側ページ %>
     <g>
         <% tekiyou_page_right&.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
-            <!-- 診療識別 -->
+            <%# 診療識別 %>
             <text x="460" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.shinryou_shikibetsu %></text>
-            <!-- 負担区分 -->
+            <%# 負担区分 %>
             <text x="487" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= tekiyou_line.futan_kubun %></text>
-            <!-- 項目、点数、回数 -->
+            <%# 項目、点数、回数 %>
             <text x="497" y="<%= tekiyou_y %>" class="s8_2 output-content"><%= to_zenkaku tekiyou_line.text %></text>
         <% end %>
     </g>

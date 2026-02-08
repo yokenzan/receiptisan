@@ -20,10 +20,8 @@ module Receiptisan
           # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
           # テンプレートから <text ...></text> のような空要素が大量に生成される。これを除去する。
           EMPTY_TEXT_ELEMENT_PATTERN = %r{<text[^>]*></text>}
-          # テンプレートの可読性のために記述されているHTMLコメント。出力には不要。
-          HTML_COMMENT_PATTERN      = /<!--.*?-->/
           # 罫線 path 統合対象: <path d="..." class="g1"/> 等の単純な形式のみマッチ
-          SIMPLE_PATH_PATTERN       = %r{\A<path d="([^"]*)" class="(g\d+)"\s*/>\z}
+          SIMPLE_PATH_PATTERN = %r{\A<path d="([^"]*)" class="(g\d+)"\s*/>\z}
 
           # @param lib_version [String]
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
@@ -115,17 +113,18 @@ module Receiptisan
           #
           # 以下の処理を適用する:
           #   1. 空の <text> 要素を除去
-          #   2. HTMLコメントを除去
-          #   3. 行頭インデント空白を除去
-          #   4. 連続する空行を1行に圧縮
-          #   5. 同一クラスの連続する <path> 要素の d 属性を結合
+          #   2. 行頭インデント空白を除去
+          #   3. 連続する空行を1行に圧縮
+          #   4. 同一クラスの連続する <path> 要素の d 属性を結合
+          #
+          # コメントはテンプレート側で ERB コメント（<%# %>）を使用しているため
+          # ERB 処理時に除去され、ここでの除去は不要。
           #
           # @param html [String] ERBテンプレートから生成されたHTML文字列
           # @return [String] 軽量化されたHTML文字列
           def minify(html)
             cleaned = html
               .gsub(EMPTY_TEXT_ELEMENT_PATTERN, '')
-              .gsub(HTML_COMMENT_PATTERN, '')
               .gsub(/^ +/, '')
               .squeeze("\n")
 
