@@ -15,6 +15,16 @@ module Receiptisan
           TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
+          # minify 用の正規表現パターン
+
+          # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
+          # テンプレートから <text ...></text> のような空要素が大量に生成される。これを除去する。
+          EMPTY_TEXT_ELEMENT_PATTERN = %r{<text[^>]*></text>}
+          # テンプレートの可読性のために記述されているHTMLコメント。出力には不要。
+          HTML_COMMENT_PATTERN      = /<!--.*?-->/
+          # 罫線 path 統合対象: <path d="..." class="g1"/> 等の単純な形式のみマッチ
+          SIMPLE_PATH_PATTERN       = %r{\A<path d="([^"]*)" class="(g\d+)"\s*/>\z}
+
           # @param lib_version [String]
           # @param digitalized_receipts [Array<Parameter::Common::DigitalizedReceipt>]
           # @param output_content_styles [Hash<Symbol, String>] stylings for output receipts' contents
@@ -100,14 +110,6 @@ module Receiptisan
               )
             end
           end
-
-          # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
-          # テンプレートから <text ...></text> のような空要素が大量に生成される。これを除去する。
-          EMPTY_TEXT_ELEMENT_PATTERN = /<text[^>]*><\/text>/
-          # テンプレートの可読性のために記述されているHTMLコメント。出力には不要。
-          HTML_COMMENT_PATTERN      = /<!--.*?-->/
-          # 罫線 path 統合対象: <path d="..." class="g1"/> 等の単純な形式のみマッチ
-          SIMPLE_PATH_PATTERN       = /\A<path d="([^"]*)" class="(g\d+)"\s*\/>\z/
 
           # ERBテンプレート出力に対する後処理で出力サイズを削減する
           #
