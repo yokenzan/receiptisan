@@ -28,7 +28,8 @@ module Receiptisan
               digitalized_receipt.receipts.each { | receipt | build_receipt_preview(receipt) }
             end
 
-            ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            result = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            minify(result)
           end
 
           private
@@ -96,6 +97,21 @@ module Receiptisan
                 section.ichiren_units
               )
             end
+          end
+
+          EMPTY_TEXT_ELEMENT_PATTERN = /<text[^>]*><\/text>/
+          HTML_COMMENT_PATTERN      = /<!--.*?-->/
+
+          # 出力HTMLを軽量化する
+          #
+          # @param html [String]
+          # @return [String]
+          def minify(html)
+            html
+              .gsub(EMPTY_TEXT_ELEMENT_PATTERN, '')
+              .gsub(HTML_COMMENT_PATTERN, '')
+              .gsub(/^ +/, '')
+              .squeeze("\n")
           end
 
           # テンプレートエンジンによるプレビューレンダリング中に呼び出すヘルパ
