@@ -1,3 +1,15 @@
+# [0.6.0](https://github.com/yokenzan/receiptisan/compare/v0.5.0...v0.6.0) (2026-02-08)
+
+
+### Features
+
+* add load_type method to Loader for single master type loading ([75d046e](https://github.com/yokenzan/receiptisan/commit/75d046e9f805b64636dc5b74e7de5d6703679d72))
+
+
+### Performance Improvements
+
+* use selective master loading and hash lookup in search command ([a5b1e83](https://github.com/yokenzan/receiptisan/commit/a5b1e836964a3ee414879912a3c92bb08b9234ab))
+
 # [0.5.0](https://github.com/yokenzan/receiptisan/compare/v0.4.6...v0.5.0) (2026-02-08)
 
 
