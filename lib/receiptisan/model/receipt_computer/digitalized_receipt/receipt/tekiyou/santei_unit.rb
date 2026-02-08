@@ -78,8 +78,8 @@ module Receiptisan
                 return nil if matched.empty?
 
                 # NOTE: dup はshallow copyで、 @tekiyou_items は元と共有される。
-                # on_date() による日付フィルタは daly_kausuus のみを対象とし、
-                # 摘要項目 tekiyou_items は参照用途としてフィルタされずに保持される。
+                # on_date() による日付フィルタは @daily_kaisuus のみを対象とし、
+                # 摘要項目 @tekiyou_items は参照用途としてフィルタされずに保持される。
                 dup.tap { | unit | unit.instance_variable_set(:@daily_kaisuus, matched) }
               end
 
