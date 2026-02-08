@@ -17,9 +17,11 @@ module Receiptisan
           include Parser::Context::ErrorContextReportable
 
           using Receiptisan::Util::IOWithEncoding
+          using Receiptisan::Util::MonthExtension
 
           ReceiptType       = DigitalizedReceipt::Receipt::Type
           Comment           = Receipt::Tekiyou::Comment
+          DailyKaisuu       = Receipt::Tekiyou::DailyKaisuu
           FILE_ENCODING     = 'Windows-31J'
           INTERNAL_ENCODING = 'UTF-8'
 
@@ -203,12 +205,15 @@ module Receiptisan
           end
 
           def wrap_as_cost(resource, column_definition, values)
+            daily_kaisuus = extract_daily_kaisuus(column_definition, values)
+
             cost = Receipt::Tekiyou::Cost.new(
               resource:            resource,
               shinryou_shikibetsu: Receipt::ShinryouShikibetsu.find_by_code(values[column_definition::C_診療識別]),
               futan_kubun:         Receipt::FutanKubun.find_by_code(values[column_definition::C_負担区分]),
               tensuu:              values[column_definition::C_点数]&.to_i,
-              kaisuu:              values[column_definition::C_回数]&.to_i
+              kaisuu:              values[column_definition::C_回数]&.to_i,
+              daily_kaisuus:       daily_kaisuus
             )
 
             comment_range = column_definition::C_コメント_1_コメントコード..column_definition::C_コメント_3_文字データ
@@ -249,6 +254,19 @@ module Receiptisan
               shinryou_shikibetsu: shinryou_shikibetsu,
               futan_kubun:         futan_kubun
             )
+          end
+
+          def extract_daily_kaisuus(column_definition, values)
+            shinryou_ym = buffer.current_shinryou_ym
+            daily_kaisuu_range = column_definition::C_算定日_1日..column_definition::C_算定日_31日
+
+            values[daily_kaisuu_range].each_with_index.filter_map do | value, index |
+              day = index + 1
+              next if value.nil?
+              next if day > shinryou_ym.length
+
+              DailyKaisuu.new(date: shinryou_ym.of_date(day), kaisuu: value.to_i)
+            end
           end
 
           # @return [void]

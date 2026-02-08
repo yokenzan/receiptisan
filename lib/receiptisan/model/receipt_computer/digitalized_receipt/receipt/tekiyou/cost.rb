@@ -8,6 +8,28 @@ module Receiptisan
       class DigitalizedReceipt
         class Receipt
           module Tekiyou
+            # 算定日ごとの回数
+            class DailyKaisuu
+              # @param date [Date] 算定日
+              # @param kaisuu [Integer] 回数
+              def initialize(date:, kaisuu:)
+                @date   = date
+                @kaisuu = kaisuu
+              end
+
+              # @param date [Date]
+              # @return [Boolean]
+              def on?(date)
+                @date == date
+              end
+
+              # @!attribute [r] date
+              #   @return [Date] 算定日
+              # @!attribute [r] kaisuu
+              #   @return [Integer] 回数
+              attr_reader :date, :kaisuu
+            end
+
             class Cost
               extend Forwardable
 
@@ -16,18 +38,21 @@ module Receiptisan
               # @param futan_kubun [FutanKubun] 負担区分
               # @param tensuu [Integer, nil] 算定点数
               # @param kaisuu [Integer, nil] 算定回数
+              # @param daily_kaisuus [Array<DailyKaisuu>] 日別回数
               def initialize(
                 resource:,
                 shinryou_shikibetsu:,
                 futan_kubun:,
                 tensuu:,
-                kaisuu:
+                kaisuu:,
+                daily_kaisuus: []
               )
                 @resource            = resource
                 @shinryou_shikibetsu = shinryou_shikibetsu
                 @futan_kubun         = futan_kubun
                 @tensuu              = tensuu&.to_i
                 @kaisuu              = kaisuu&.to_i
+                @daily_kaisuus       = daily_kaisuus
                 @comments            = []
               end
 
@@ -76,9 +101,12 @@ module Receiptisan
               #   @return [Integer, nil] 算定回数
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu] 診療識別
-              attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu
+              # @!attribute [r] daily_kaisuus
+              #   @return [Array<DailyKaisuu>] 日別回数
+              attr_reader :resource, :futan_kubun, :tensuu, :kaisuu, :shinryou_shikibetsu, :daily_kaisuus
 
               def_delegators :futan_kubun, :uses?
+              def_delegators :resource, :name, :code
             end
           end
         end

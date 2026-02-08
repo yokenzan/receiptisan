@@ -409,7 +409,8 @@ module Receiptisan
             extend CodedItemFactory
           end
           IchirenUnit    = Struct.new(:futan_kubun, :santei_units, keyword_init: true)
-          SanteiUnit     = Struct.new(:tensuu, :kaisuu, :items, keyword_init: true)
+          SanteiUnit     = Struct.new(:tensuu, :kaisuu, :items, :daily_kaisuus, keyword_init: true)
+          DailyKaisuu    = Struct.new(:date, :kaisuu, keyword_init: true)
 
           Cost = Struct.new(
             :type,

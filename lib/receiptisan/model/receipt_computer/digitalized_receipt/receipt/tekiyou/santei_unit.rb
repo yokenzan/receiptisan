@@ -14,11 +14,13 @@ module Receiptisan
 
               def initialize
                 # @type tensuu [Integer, nil]
-                @tensuu        = nil
+                @tensuu         = nil
                 # @type kaisuu [Integer, nil]
-                @kaisuu        = nil
+                @kaisuu         = nil
                 # @type tekiyou_items [Array<Cost, Comment>]
-                @tekiyou_items = []
+                @tekiyou_items  = []
+                # @type daily_kaisuus [Array<DailyKaisuu>]
+                @daily_kaisuus  = []
               end
 
               # @param tekiyou_item [Cost, Comment]
@@ -32,8 +34,9 @@ module Receiptisan
                 bottom_cost = tekiyou_items.reverse.find(&:tensuu?)
                 return unless bottom_cost
 
-                @tensuu = bottom_cost.tensuu
-                @kaisuu = bottom_cost.kaisuu
+                @tensuu        = bottom_cost.tensuu
+                @kaisuu        = bottom_cost.kaisuu
+                @daily_kaisuus = bottom_cost.daily_kaisuus
               end
 
               # @return [Symbol, nil] returns nil when only costists of comments.
@@ -52,13 +55,43 @@ module Receiptisan
                 tensuu && kaisuu ? tensuu * kaisuu : nil
               end
 
+              # 日別回数を列挙する
+              # @return [Enumerator<DailyKaisuu>]
+              def each_date(&)
+                enum = @daily_kaisuus.enum_for(:each)
+
+                block_given? ? enum.each(&) : enum
+              end
+
+              # 指定日に算定があるかを返す
+              # @param date [Date]
+              # @return [Boolean]
+              def on_date?(date)
+                @daily_kaisuus.any? { | dk | dk.on?(date) }
+              end
+
+              # 指定日に該当する日別回数のみに絞り込んだ算定単位を返す
+              # @param date [Date]
+              # @return [SanteiUnit, nil]
+              def on_date(date)
+                matched = @daily_kaisuus.select { | dk | dk.on?(date) }
+                return nil if matched.empty?
+
+                # NOTE: dup はshallow copyで、 @tekiyou_items は元と共有される。
+                # on_date() による日付フィルタは @daily_kaisuus のみを対象とし、
+                # 摘要項目 @tekiyou_items は参照用途としてフィルタされずに保持される。
+                dup.tap { | unit | unit.instance_variable_set(:@daily_kaisuus, matched) }
+              end
+
               # @!attribute [r] tensuu
               #   @return [Integer, nil]
               # @!attribute [r] kaisuu
               #   @return [Integer, nil]
-              attr_reader :tensuu, :kaisuu
+              # @!attribute [r] daily_kaisuus
+              #   @return [Array<DailyKaisuu>]
+              attr_reader :tensuu, :kaisuu, :daily_kaisuus
 
-              def_delegators :@tekiyou_items, :each, :map
+              def_delegators :@tekiyou_items, :each, :map, :reduce
               def_delegators :first_item, :futan_kubun, :uses?
 
               private

@@ -34,11 +34,23 @@ module Receiptisan
                 @santei_units.first.futan_kubun
               end
 
+              # 指定日に算定のある算定単位のみに絞り込んだ一連単位を返す
+              # @param date [Date]
+              # @return [IchirenUnit, nil]
+              def on_date(date)
+                filtered = @santei_units.filter_map { | su | su.on_date(date) }
+                return nil if filtered.empty?
+
+                self.class.new(shinryou_shikibetsu: shinryou_shikibetsu).tap do | unit |
+                  filtered.each { | su | unit.add_santei_unit(su) }
+                end
+              end
+
               # @!attribute [r] shinryou_shikibetsu
               #   @return [ShinryouShikibetsu]
               attr_reader :shinryou_shikibetsu
 
-              def_delegators :@santei_units, :each, :map
+              def_delegators :@santei_units, :each, :map, :empty?
             end
           end
         end
