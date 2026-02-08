@@ -22,7 +22,7 @@ module Receiptisan
                   kaisuu:        santei_unit.kaisuu,
                   items:         [],
                   daily_kaisuus: santei_unit.each_date.map do | dk |
-                    Common::DailyKaisuu.new(date: dk.date, kaisuu: dk.kaisuu)
+                    Common::DailyKaisuu.new(date: Common::Date.from(dk.date), kaisuu: dk.kaisuu)
                   end
                 )
 

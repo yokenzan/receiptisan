@@ -261,9 +261,11 @@ module Receiptisan
             daily_kaisuu_range = column_definition::C_算定日_1日..column_definition::C_算定日_31日
 
             values[daily_kaisuu_range].each_with_index.filter_map do | value, index |
+              day = index + 1
               next if value.nil?
+              next if day > shinryou_ym.length
 
-              DailyKaisuu.new(date: shinryou_ym.of_date(index + 1), kaisuu: value.to_i)
+              DailyKaisuu.new(date: shinryou_ym.of_date(day), kaisuu: value.to_i)
             end
           end
 
