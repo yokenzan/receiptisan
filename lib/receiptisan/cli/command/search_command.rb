@@ -18,17 +18,12 @@ module Receiptisan
           'iyakuhin' => :iyakuhin,
           'tokutei-kizai' => :tokutei_kizai,
           'comment' => :comment,
-        }.freeze
-
-        CODE_PREFIX_MAP = {
-          '1' => :shinryou_koui,
-          '6' => :iyakuhin,
-          '7' => :tokutei_kizai,
-          '8' => :comment,
+          'shoubyoumei' => :shoubyoumei,
+          'shuushokugo' => :shuushokugo,
         }.freeze
 
         argument :type, required: false, values: TYPE_MAP.keys,
-          desc: '検索対象マスター種別 (--code指定時は先頭桁から自動判定)'
+          desc: '検索対象マスター種別 (--code指定時はコードから自動判定)'
 
         option :code,       desc: 'レセ電コード(完全一致)'
         option :name,       desc: '名称検索(部分一致)'
@@ -60,9 +55,7 @@ module Receiptisan
           if type
             TYPE_MAP.fetch(type)
           elsif code
-            CODE_PREFIX_MAP.fetch(code[0]) do
-              raise ArgumentError, "コード '#{code}' から種別を判定できません"
-            end
+            Master::CodeTypeResolver.resolve(code)
           else
             raise ArgumentError, '種別またはコードを指定してください'
           end
@@ -144,7 +137,7 @@ module Receiptisan
           end
         end
 
-        # @param item [Master::Treatment::ShinryouKoui, Master::Treatment::Iyakuhin, Master::Treatment::TokuteiKizai, Master::Treatment::Comment]
+        # @param item [Object] マスターアイテム
         # @param type [Symbol]
         # @return [Hash]
         def item_to_hash(item, type)

@@ -9,6 +9,8 @@ Condition = Receiptisan::Model::ReceiptComputer::Master::Search::Condition unles
 RSpec.describe Searcher do
   let(:shinryou_koui_code_class) { Receiptisan::Model::ReceiptComputer::Master::Treatment::ShinryouKoui::Code }
   let(:iyakuhin_code_class)      { Receiptisan::Model::ReceiptComputer::Master::Treatment::Iyakuhin::Code }
+  let(:shoubyoumei_code_class)   { Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei::Code }
+  let(:shuushokugo_code_class)   { Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo::Code }
 
   let(:shoshinryou) do
     instance_double(
@@ -50,6 +52,38 @@ RSpec.describe Searcher do
     )
   end
 
+  let(:tounyoubyou) do
+    instance_double(
+      Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei,
+      code: shoubyoumei_code_class.of('8830900'), name: '糖尿病',
+      name_kana: 'トウニョウビョウ', full_name: '糖尿病'
+    )
+  end
+
+  let(:kouketsuatsu) do
+    instance_double(
+      Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shoubyoumei,
+      code: shoubyoumei_code_class.of('8845600'), name: '高血圧症',
+      name_kana: 'コウケツアツショウ', full_name: '高血圧症'
+    )
+  end
+
+  let(:hidari) do
+    instance_double(
+      Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo,
+      code: shuushokugo_code_class.of('2056'), name: '左',
+      name_kana: 'ヒダリ'
+    )
+  end
+
+  let(:migi) do
+    instance_double(
+      Receiptisan::Model::ReceiptComputer::Master::Diagnosis::Shuushokugo,
+      code: shuushokugo_code_class.of('2048'), name: '右',
+      name_kana: 'ミギ'
+    )
+  end
+
   let(:master) do
     instance_double(
       Receiptisan::Model::ReceiptComputer::Master,
@@ -61,6 +95,14 @@ RSpec.describe Searcher do
       iyakuhin:      {
         loxoprofen.code.value => loxoprofen,
         acetaminophen.code.value => acetaminophen,
+      },
+      shoubyoumei:   {
+        tounyoubyou.code.value => tounyoubyou,
+        kouketsuatsu.code.value => kouketsuatsu,
+      },
+      shuushokugo:   {
+        hidari.code.value => hidari,
+        migi.code.value => migi,
       }
     )
   end
@@ -161,6 +203,45 @@ RSpec.describe Searcher do
       specify '医薬品マスターで診療行為コードを検索すると空配列を返すこと' do
         results = searcher.search(:iyakuhin, Condition.new(code: '111000110'))
         expect(results).to be_empty
+      end
+    end
+
+    context '傷病名検索の場合' do
+      specify '名前で傷病名を検索できること' do
+        results = searcher.search(:shoubyoumei, Condition.new(name: '糖尿'))
+        expect(results).to eq [tounyoubyou]
+      end
+
+      specify 'コードで傷病名を検索できること' do
+        results = searcher.search(:shoubyoumei, Condition.new(code: '8830900'))
+        expect(results).to eq [tounyoubyou]
+      end
+
+      specify '条件なしで全件返すこと' do
+        results = searcher.search(:shoubyoumei, Condition.new)
+        expect(results).to contain_exactly(tounyoubyou, kouketsuatsu)
+      end
+
+      specify '点数条件を指定しても全件返すこと' do
+        results = searcher.search(:shoubyoumei, Condition.new(point_min: 100))
+        expect(results).to contain_exactly(tounyoubyou, kouketsuatsu)
+      end
+    end
+
+    context '修飾語検索の場合' do
+      specify '名前で修飾語を検索できること' do
+        results = searcher.search(:shuushokugo, Condition.new(name: '左'))
+        expect(results).to eq [hidari]
+      end
+
+      specify 'カナ名で修飾語を検索できること' do
+        results = searcher.search(:shuushokugo, Condition.new(name: 'ミギ'))
+        expect(results).to eq [migi]
+      end
+
+      specify '条件なしで全件返すこと' do
+        results = searcher.search(:shuushokugo, Condition.new)
+        expect(results).to contain_exactly(hidari, migi)
       end
     end
   end

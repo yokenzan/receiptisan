@@ -11,28 +11,29 @@ RSpec.describe Receiptisan::Cli::Command::SearchCommand do
         result = command.send(:resolve_master_type, 'shinryou-koui', nil)
         expect(result).to eq :shinryou_koui
       end
+
+      specify 'shoubyoumeiに対応すること' do
+        result = command.send(:resolve_master_type, 'shoubyoumei', nil)
+        expect(result).to eq :shoubyoumei
+      end
+
+      specify 'shuushokugoに対応すること' do
+        result = command.send(:resolve_master_type, 'shuushokugo', nil)
+        expect(result).to eq :shuushokugo
+      end
     end
 
     context 'typeが未指定でcodeが指定されている場合' do
-      specify '先頭桁1で診療行為を返すこと' do
+      specify 'CodeTypeResolverに委譲すること' do
         expect(command.send(:resolve_master_type, nil, '111000110')).to eq :shinryou_koui
       end
 
-      specify '先頭桁6で医薬品を返すこと' do
-        expect(command.send(:resolve_master_type, nil, '610463016')).to eq :iyakuhin
+      specify '7桁コードで傷病名を返すこと' do
+        expect(command.send(:resolve_master_type, nil, '8830900')).to eq :shoubyoumei
       end
 
-      specify '先頭桁7で特定器材を返すこと' do
-        expect(command.send(:resolve_master_type, nil, '700010000')).to eq :tokutei_kizai
-      end
-
-      specify '先頭桁8でコメントを返すこと' do
-        expect(command.send(:resolve_master_type, nil, '810000001')).to eq :comment
-      end
-
-      specify '判定できない先頭桁でArgumentErrorを発生すること' do
-        expect { command.send(:resolve_master_type, nil, '999999999') }
-          .to raise_error(ArgumentError, /種別を判定できません/)
+      specify '4桁コードで修飾語を返すこと' do
+        expect(command.send(:resolve_master_type, nil, '2056')).to eq :shuushokugo
       end
     end
 
