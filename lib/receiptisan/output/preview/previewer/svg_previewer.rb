@@ -101,17 +101,54 @@ module Receiptisan
 
           EMPTY_TEXT_ELEMENT_PATTERN = /<text[^>]*><\/text>/
           HTML_COMMENT_PATTERN      = /<!--.*?-->/
+          SIMPLE_PATH_PATTERN       = /\A<path d="([^"]*)" class="(g\d+)"\s*\/>\z/
 
           # 出力HTMLを軽量化する
           #
           # @param html [String]
           # @return [String]
           def minify(html)
-            html
+            cleaned = html
               .gsub(EMPTY_TEXT_ELEMENT_PATTERN, '')
               .gsub(HTML_COMMENT_PATTERN, '')
               .gsub(/^ +/, '')
               .squeeze("\n")
+
+            merge_consecutive_paths(cleaned)
+          end
+
+          # 同一classの連続するpath要素のd属性を結合して1要素にまとめる
+          #
+          # @param html [String]
+          # @return [String]
+          def merge_consecutive_paths(html)
+            lines  = html.lines
+            result = []
+            i      = 0
+
+            while i < lines.length
+              line = lines[i].chomp
+
+              if (m = line.match(SIMPLE_PATH_PATTERN))
+                d_parts = [m[1]]
+                klass   = m[2]
+
+                while i + 1 < lines.length &&
+                      (m2 = lines[i + 1].chomp.match(SIMPLE_PATH_PATTERN)) &&
+                      m2[2] == klass
+                  d_parts << m2[1]
+                  i += 1
+                end
+
+                result << %(<path d="#{d_parts.join(' ')}" class="#{klass}"/>\n)
+              else
+                result << lines[i]
+              end
+
+              i += 1
+            end
+
+            result.join
           end
 
           # テンプレートエンジンによるプレビューレンダリング中に呼び出すヘルパ
