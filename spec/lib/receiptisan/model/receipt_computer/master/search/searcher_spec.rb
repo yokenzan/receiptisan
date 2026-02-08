@@ -156,6 +156,13 @@ RSpec.describe Searcher do
         expect(results).to contain_exactly(shoshinryou, saishinryou, gairaikannrikasan)
       end
     end
+
+    context '種別と一致しないコードで検索した場合' do
+      specify '医薬品マスターで診療行為コードを検索すると空配列を返すこと' do
+        results = searcher.search(:iyakuhin, Condition.new(code: '111000110'))
+        expect(results).to be_empty
+      end
+    end
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers

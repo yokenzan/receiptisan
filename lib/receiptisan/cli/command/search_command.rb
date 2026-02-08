@@ -95,6 +95,9 @@ module Receiptisan
         # @param options [Hash]
         # @return [Search::Condition]
         def build_condition(options)
+          validate_name_options(options)
+          validate_point_options(options)
+
           name = options[:name_exact] || options[:name]
           name_match_type = options[:name_exact] ? :exact : :partial
 
@@ -106,6 +109,20 @@ module Receiptisan
             point_max:       to_integer(options[:point_max]),
             point_exact:     to_integer(options[:point])
           )
+        end
+
+        def validate_name_options(options)
+          return unless options[:name] && options[:name_exact]
+
+          raise ArgumentError, '--name と --name-exact は同時に指定できません'
+        end
+
+        def validate_point_options(options)
+          return unless options[:point] && (options[:point_min] || options[:point_max])
+
+          warn '--point と --point-min/--point-max が同時に指定されました。--point を優先します'
+          options.delete(:point_min)
+          options.delete(:point_max)
         end
 
         # @param value [String, Integer, nil]
