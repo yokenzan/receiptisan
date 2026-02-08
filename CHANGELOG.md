@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/yokenzan/receiptisan/compare/v0.7.0...v0.7.1) (2026-02-08)
+
+
+### Bug Fixes
+
+* resolve RuboCop offenses in SVGPreviewer ([9e83f21](https://github.com/yokenzan/receiptisan/commit/9e83f211b90bc16b0db3e1c08a888870c036b4e0))
+
 # [0.7.0](https://github.com/yokenzan/receiptisan/compare/v0.6.1...v0.7.0) (2026-02-08)
 
 
