@@ -30,16 +30,15 @@ module Receiptisan
         argument :type, required: false, values: TYPE_MAP.keys,
           desc: '検索対象マスター種別 (--code指定時は先頭桁から自動判定)'
 
-        option :code,       desc: 'レセ電コード (完全一致)'
-        option :name,       desc: '名称検索 (部分一致)'
-        option :name_exact, desc: '名称検索 (完全一致)'
-        option :month,      desc: '基準月 (YYYYMM形式, 省略時は今月)'
-        option :point_min,  type: :integer, desc: '点数/価格 下限'
-        option :point_max,  type: :integer, desc: '点数/価格 上限'
-        option :point,      type: :integer, desc: '点数/価格 (完全一致)'
+        option :code,       desc: 'レセ電コード(完全一致)'
+        option :name,       desc: '名称検索(部分一致)'
+        option :name_exact, desc: '名称検索(完全一致)'
+        option :month,      desc: '検索基準月(YYYYMM形式。省略時は今月)'
+        option :point_min,  type: :integer, desc: '点数・価格 下限'
+        option :point_max,  type: :integer, desc: '点数・価格 上限'
+        option :point,      type: :integer, desc: '点数・価格(完全一致)'
         option :format,     default: 'json', values: %w[json yaml], desc: '出力形式'
-        option :limit,      type: :integer, default: 100, desc: '最大結果件数'
-        option :no_limit,   type: :boolean, default: false, desc: '件数上限なしで全結果を返す'
+        option :limit,      type: :integer, desc: '最大結果件数 (省略時は上限なし)'
 
         def call(type: nil, **options)
           master_type = resolve_master_type(type, options[:code])
@@ -47,7 +46,7 @@ module Receiptisan
           master      = load_master(version)
           condition   = build_condition(options)
           results     = Search::Searcher.new(master).search(master_type, condition)
-          results     = results.first(options.fetch(:limit, 100).to_i) unless options[:no_limit]
+          results     = results.first(options[:limit].to_i) if options[:limit]
 
           output(results, master_type, options.fetch(:format, 'json'))
         end

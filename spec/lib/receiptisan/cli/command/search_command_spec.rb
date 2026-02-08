@@ -92,4 +92,31 @@ RSpec.describe Receiptisan::Cli::Command::SearchCommand do
       end
     end
   end
+
+  describe '#call の --limit' do
+    let(:master) { instance_double(Receiptisan::Model::ReceiptComputer::Master) }
+    let(:items)  { Array.new(5) { | i | double("item_#{i}") } } # rubocop:disable RSpec/VerifiedDoubles
+
+    before do
+      allow(command).to receive(:load_master).and_return(master)
+      searcher = instance_double(Receiptisan::Model::ReceiptComputer::Master::Search::Searcher)
+      allow(Receiptisan::Model::ReceiptComputer::Master::Search::Searcher).to receive(:new).and_return(searcher)
+      allow(searcher).to receive(:search).and_return(items)
+      allow(command).to receive(:output)
+    end
+
+    context '--limit未指定の場合' do
+      specify '全件を出力すること' do
+        command.call(type: 'shinryou-koui')
+        expect(command).to have_received(:output).with(items, :shinryou_koui, 'json')
+      end
+    end
+
+    context '--limit 2 指定の場合' do
+      specify '先頭2件のみ出力すること' do
+        command.call(type: 'shinryou-koui', limit: 2)
+        expect(command).to have_received(:output).with(items.first(2), :shinryou_koui, 'json')
+      end
+    end
+  end
 end
