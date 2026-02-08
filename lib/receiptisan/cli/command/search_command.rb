@@ -38,7 +38,7 @@ module Receiptisan
         def call(**options)
           master_type = resolve_master_type(options[:type], options[:code])
           version     = resolve_version(options[:month])
-          master      = load_master(version)
+          master      = load_master(version, master_type)
           condition   = build_condition(options)
           results     = Search::Searcher.new(master).search(master_type, condition)
           results     = results.first(options[:limit].to_i) if options[:limit]
@@ -76,12 +76,19 @@ module Receiptisan
             raise ArgumentError, "指定月 #{ym} に対応するマスターバージョンが見つかりません"
         end
 
+        # 指定種別のみロードした部分的な Master を返す。
+        # 他の種別は空Hashのため、返却された Master は指定種別の検索にのみ使用すること。
+        #
         # @param version [Master::Version]
+        # @param type [Symbol]
         # @return [Master]
-        def load_master(version)
+        def load_master(version, type)
           logger = Logger.new($stderr, level: Logger::WARN)
           loader = Master::Loader.new(Master::ResourceResolver.new, logger)
-          loader.load(version)
+          loaded = loader.load_type(version, type)
+          args = %i[shinryou_koui iyakuhin tokutei_kizai comment shoubyoumei shuushokugo]
+            .to_h { | t | [t, t == type ? loaded : {}] }
+          Master.new(**args)
         end
 
         # @param options [Hash]
