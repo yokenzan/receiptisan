@@ -1,17 +1,15 @@
 <svg width="909" height="1286" viewBox="0 0 909 1286" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<clipPath id="c_2"><path d="M0,0H909V1286H0Z"/></clipPath>
 <clipPath id="c0"><path d="M0,1284.9V0H909V1284.9Z"/></clipPath>
-
 </defs>
 <path d="M0,0
 L0,1286
 L909,1286
 L909,0 Z " 
 fill="#FFFFFF" stroke="none"/>
-<g clip-path="url(#c_2)">
+<g clip-path="url(#c0)">
     <path d="M909,0H2803.5V2679.7H909ZM0,1286.4H909V3966.1H0Z" class="g0_2"/>
-    <path clip-path="url(#c0)" d="M0,0H909V1286.4H0V0Z" class="g1_2"/>
+    <path d="M0,0H909V1286.4H0V0Z" class="g1_2"/>
     <path d="M34.4,81.7H454.5V152H34.4V81.7Zm47.3,0v52m174.2,-52v52m47.4,-52v52M34.4,100.1H454.5M34.4,116.9H454.5M434.7,92.4v7.7m0,10.7v6.1m0,10.7v6.1M236,92.4v7.7m0,10.7v6.1m0,10.7v6.1M173.4,92.4v7.7m0,10.7v6.1m0,10.7v6.1M130.6,92.4v7.7m0,10.7v6.1m0,10.7v6.1M679.1,64.9H874.7V81.7H679.1V64.9Z" class="g1"/>
     <path d="M619,99.6H826.8v34.6H619V99.6Z" class="g3"/>
     <path d="M497.3,81.7H874.7v18.4H497.3V81.7Zm273.5,0v18.4M805.9,64.9V81.7M497.3,100.1H598.1v33.6H497.3V100.1ZM764.7,64.9V81.7M721.9,64.9V81.7m22.9,9.2v9.2M668.4,92.4v7.7M619.5,92.4v7.7M547.7,81.7v18.4" class="g1"/>
@@ -23,7 +21,7 @@ fill="#FFFFFF" stroke="none"/>
     <path d="M69.5,133.7V152" class="g1"/>
     <path d="M26.7,159.7H880.8M61.9,168.8V1255.1M480.5,168.8V1255.1" class="g2"/>
 
-    <g clip-path="url(#c0)">
+    <g>
         <!-- 注意書き -->
         <text x="870"  y="40" class="s2 weight-bold te" fill="red">※レセプト提出に使用しないでください</text>
 
@@ -56,7 +54,7 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <!-- 患者氏名・患者番号 -->
-    <g clip-path="url(#c0)">
+    <g>
         <% patient = receipt.patient %>
         <text x="39" y="147.2" dx="0,.2" class="s2_2">氏名</text>
         <text x="66" y="60" class="s4_2 output-content"><%= receipt.patient.id %></text>
@@ -64,7 +62,7 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <!-- 保険 -->
-    <g clip-path="url(#c0)">
+    <g>
         <text x="502.1" y="95.8"  class="s2_2">保　険</text>
         <text x="515.1" y="113.6" class="s2_2">記号・番号</text>
         <text x="785"   y="113.7" class="s4">（枝番）</text>
@@ -84,7 +82,7 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <!-- 公費 -->
-    <g clip-path="url(#c0)">
+    <g>
         <% kouhi_futan_iryous = receipt.hokens.kouhi_futan_iryous %>
         <%
             futansha_start_x  = 81
@@ -118,7 +116,7 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <!-- 左側ページ -->
-    <g clip-path="url(#c0)">
+    <g>
         <% tekiyou_page_left.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
             <!-- 診療識別 -->
@@ -131,7 +129,7 @@ fill="#FFFFFF" stroke="none"/>
     </g>
 
     <!-- 右側ページ -->
-    <g clip-path="url(#c0)">
+    <g>
         <% tekiyou_page_right&.each_with_index do | tekiyou_line, tekiyou_index | %>
             <% tekiyou_y = 183 + 15 * tekiyou_index %>
             <!-- 診療識別 -->

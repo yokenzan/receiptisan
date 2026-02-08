@@ -1,11 +1,10 @@
 <svg width="909" height="1286" viewBox="0 0 909 1286" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<clipPath id="c_1"><path d="M0,0H909V1286H0Z"/></clipPath>
 <clipPath id="c0"><path d="M0,1284.9V0H909V1284.9Z"/></clipPath>
 </defs>
 <path d="M0,0 L0,1286 L909,1286 L909,0 Z" fill="#FFFFFF" stroke="none"/>
-<g clip-path="url(#c_1)">
-    <g clip-path="url(#c0)">
+<g clip-path="url(#c0)">
+    <g>
     <path d="M0,0H909V1286.4H0V0Z" class="g0"/>
     </g>
 
@@ -181,7 +180,7 @@
 
     <path d="M597.4,138.5H619v52H597.4v-52Z" class="g4"/>
 
-    <g clip-path="url(#c0)">
+    <g>
 
         <!-- 注意書き -->
         <text x="870"  y="40" class="s2 weight-bold te" fill="red">※レセプト提出に使用しないでください</text>
@@ -226,7 +225,7 @@
 
     <!-- 保険 -->
     <% iryou_hoken = receipt.hokens.iryou_hoken %>
-    <g clip-path="url(#c0)">
+    <g>
         <text x="493.5" y="126.6" class="s3">保</text>
         <text x="519.4" y="126.6" class="s3">険</text>
         <text x="506.5" y="159.6" class="s3">記号・番号</text>
@@ -246,7 +245,7 @@
 
     <!-- 公費 -->
     <% kouhi_futan_iryous = receipt.hokens.kouhi_futan_iryous %>
-    <g clip-path="url(#c0)">
+    <g>
         <text x="51.9" y="126.6" class="s3">−</text>
         <text x="268.4" y="126.6" class="s3">−</text>
         <text x="36.8" y="160.2" class="s3">公負①</text>
@@ -267,7 +266,7 @@
 
     <!-- 患者 -->
     <% patient = receipt.patient %>
-    <g clip-path="url(#c0)">
+    <g>
         <!-- 病床区分欄が消えた影響でY座標を▲10 -->
         <% if nyuuin? receipt %>
             <!-- 病床区分 -->
@@ -295,7 +294,7 @@
     </g>
 
     <!-- 医療機関 -->
-    <g clip-path="url(#c0)">
+    <g>
         <% hospital = receipt.hospital %>
         <text x="458.8" y="242.4" class="s3">保険医</text>
         <text x="458.8" y="255.4" class="s3">療機関</text>
@@ -325,7 +324,7 @@
     </g>
 
     <!-- 傷病名 -->
-    <g clip-path="url(#c0)">
+    <g>
         <text x="41.1" y="335.5" class="s3">傷</text>
         <text x="41.1" y="374.4" class="s3">病</text>
         <text x="41.1" y="413.4" class="s3">名</text>
@@ -360,7 +359,7 @@
 
 
     <!-- 実日数 -->
-    <g clip-path="url(#c0)">
+    <g>
         <text x="804.1" y="329" class="s6">診 </text>
         <text x="804.1" y="350.6" class="s6">療 </text>
         <text x="804.1" y="372.3" class="s6">実 </text>
@@ -392,7 +391,7 @@
     <!-- 療養の給付 -->
 
     <% if nyuuin? receipt %>
-    <g clip-path="url(#c0)">
+    <g>
         <text x="36.2" y="1095.2" class="s4">療 </text>
         <text x="36.2" y="1115.1" class="s4">養 </text>
         <text x="36.2" y="1135" class="s4">の </text>
@@ -467,7 +466,7 @@
     <% else %>
     <%# 外来 %>
 
-    <g clip-path="url(#c0)">
+    <g>
         <text x="36.2" y="1095.2" class="s4">療 </text>
         <text x="36.2" y="1115.1" class="s4">養 </text>
         <text x="36.2" y="1135" class="s4">の </text>
@@ -500,7 +499,7 @@
           <text x="492" y="1104" class="sf output-content te"><% if kouhi_2nd.kyuufu_taishou_ichibu_futankin %>(<%= to_currency kouhi_2nd.kyuufu_taishou_ichibu_futankin %>)<% end %></text>
         <% end %>
 
-        <g clip-path="url(#c0_1)">
+        <g>
             <text x="495.6" y="1170.9" class="s3">※高額</text>
             <text x="655.8" y="1170.9" class="s3">円</text>
             <text x="672.8" y="1170.9" class="s3">※公</text>
@@ -517,7 +516,7 @@
 
     <% if nyuuin? receipt %>
 
-    <g clip-path="url(#c0)">
+    <g>
         <text x="40" y="432.9" class="s7">11</text>
         <text x="77.9" y="434" class="s3">初　　診</text>
 
@@ -948,7 +947,7 @@
     <% else %>
     <%# 外来 %>
 
-    <g clip-path="url(#c0_1)">
+    <g>
         <!-- <text x="319.3" y="433.8" class="s3">点数</text> -->
         <!-- <text x="270.5" y="434" class="s3">回数</text> -->
 
@@ -1390,7 +1389,7 @@
     <% end %>
 
 
-    <g clip-path="url(#c0)">
+    <g>
         <%
             # 摘要欄
             #
