@@ -22,7 +22,7 @@ module Receiptisan
           'shuushokugo' => :shuushokugo,
         }.freeze
 
-        argument :type, required: false, values: TYPE_MAP.keys,
+        option :type, values: TYPE_MAP.keys,
           desc: '検索対象マスター種別 (--code指定時はコードから自動判定)'
 
         option :code,       desc: 'レセ電コード(完全一致)'
@@ -35,8 +35,8 @@ module Receiptisan
         option :format,     default: 'json', values: %w[json yaml], desc: '出力形式'
         option :limit,      type: :integer, desc: '最大結果件数 (省略時は上限なし)'
 
-        def call(type: nil, **options)
-          master_type = resolve_master_type(type, options[:code])
+        def call(**options)
+          master_type = resolve_master_type(options[:type], options[:code])
           version     = resolve_version(options[:month])
           master      = load_master(version)
           condition   = build_condition(options)
