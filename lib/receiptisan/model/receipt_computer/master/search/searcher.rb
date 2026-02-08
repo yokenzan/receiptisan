@@ -17,10 +17,23 @@ module Receiptisan
             # @return [Array<Treatment::ShinryouKoui, Treatment::Iyakuhin, Treatment::TokuteiKizai, Treatment::Comment>]
             def search(type, condition)
               collection = @master.public_send(type)
+
+              if code_only_condition?(condition)
+                item = collection[condition.code.to_sym]
+                return item ? [item] : []
+              end
+
               collection.each_value.select { | item | matches?(item, condition) }
             end
 
             private
+
+            # @param condition [Condition]
+            # @return [Boolean]
+            def code_only_condition?(condition)
+              condition.code && condition.name.nil? && condition.point_exact.nil? &&
+                condition.point_min.nil? && condition.point_max.nil?
+            end
 
             def matches?(item, condition)
               matches_code?(item, condition) &&
