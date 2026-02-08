@@ -1,3 +1,17 @@
+# [0.5.0](https://github.com/yokenzan/receiptisan/compare/v0.4.6...v0.5.0) (2026-02-08)
+
+
+### Bug Fixes
+
+* change type from positional argument to option for flexible CLI usage ([d128f1a](https://github.com/yokenzan/receiptisan/commit/d128f1af2573480e58743d557682da44aa782801))
+
+
+### Features
+
+* add master data search functionality with CLI subcommand ([d6bb823](https://github.com/yokenzan/receiptisan/commit/d6bb823e9f1c311595de006d78160042c8cec37d))
+* add validation for conflicting search options and edge case tests ([4aa91f7](https://github.com/yokenzan/receiptisan/commit/4aa91f7c9a7a102704ad81b56e88264cb361621f))
+* improve search command with auto type detection, YYYYMM format, and no-limit option ([00de62e](https://github.com/yokenzan/receiptisan/commit/00de62ec1459270a4647c21791382ed775dc461e))
+
 ## [0.4.6](https://github.com/yokenzan/receiptisan/compare/v0.4.5...v0.4.6) (2026-01-21)
 
 
