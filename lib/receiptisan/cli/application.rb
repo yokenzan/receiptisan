@@ -12,6 +12,7 @@ module Receiptisan
         @commandset.register('--version', Command::VersionCommand, aliases: ['-v'])
         @commandset.register('search', Command::SearchCommand)
         @commandset.register('s', Command::SearchCommand)
+        @commandset.register('view', Command::ViewCommand)
       end
 
       def run
