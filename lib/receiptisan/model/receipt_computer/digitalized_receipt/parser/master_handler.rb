@@ -26,6 +26,8 @@ module Receiptisan
             # @return [void]
             def prepare(shinryou_ym)
               version = Master::Version.resolve_by_ym(shinryou_ym)
+              raise "対応するマスターバージョンが見つかりません: 診療年月=#{shinryou_ym}" unless version
+
               @loaded_masters[version] ||= @master_loader.load(version)
               @current_master = @loaded_masters[version]
             end
