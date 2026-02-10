@@ -10,13 +10,13 @@ module Receiptisan
           class HokenOrderProvider
             HokenOrder = ReceiptComputer::DigitalizedReceipt::Receipt::FutanKubun::HokenOrder
 
-            @@iryou_hoken        = [HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_IRYOU_HOKEN)]
-            @@kouhi_futan_iryous = [
+            IRYOU_HOKEN        = [HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_IRYOU_HOKEN)].freeze
+            KOUHI_FUTAN_IRYOUS = [
               HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_KOUHI_1),
               HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_KOUHI_2),
               HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_KOUHI_3),
               HokenOrder.find_by_code(HokenOrder::HOKEN_ORDER_KOUHI_4),
-            ]
+            ].freeze
 
             def initialize
               clear
@@ -24,8 +24,8 @@ module Receiptisan
 
             # @return [void]
             def clear
-              @iryou_hoken        = @@iryou_hoken.dup
-              @kouhi_futan_iryous = @@kouhi_futan_iryous.dup
+              @iryou_hoken        = IRYOU_HOKEN.dup
+              @kouhi_futan_iryous = KOUHI_FUTAN_IRYOUS.dup
             end
 
             # @return [HokenOrder, nil]
