@@ -1,3 +1,10 @@
+## [0.7.4](https://github.com/yokenzan/receiptisan/compare/v0.7.3...v0.7.4) (2026-02-10)
+
+
+### Bug Fixes
+
+* **ci:** specify Node.js 22 for release workflow ([0f9176b](https://github.com/yokenzan/receiptisan/commit/0f9176bcf8a50e787e45261914e5d36f7ddd29e5))
+
 ## [0.7.3](https://github.com/yokenzan/receiptisan/compare/v0.7.2...v0.7.3) (2026-02-09)
 
 ## [0.7.2](https://github.com/yokenzan/receiptisan/compare/v0.7.1...v0.7.2) (2026-02-09)
