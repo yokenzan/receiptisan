@@ -72,7 +72,7 @@ module Receiptisan
 
               # @return [Master::Diagnosis::Shuushokugo, Shoubyoumei::DummyMasterShuushokugo]
               def process_shuushokugo(value_of_code)
-                handler.find_by_code(MasterShuushokugo::Code.of(value_of_code))
+                handler.find_by_code(code = MasterShuushokugo::Code.of(value_of_code))
               rescue Master::MasterItemNotFoundError => e
                 report_error(e)
 
