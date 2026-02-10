@@ -1,3 +1,10 @@
+## [0.7.7](https://github.com/yokenzan/receiptisan/compare/v0.7.6...v0.7.7) (2026-02-10)
+
+
+### Performance Improvements
+
+* SVGPreviewer の ERB テンプレートをインスタンス生成時にキャッシュ ([dd7b09d](https://github.com/yokenzan/receiptisan/commit/dd7b09dc89ef5bf017a1718808f0df7ee71a6199))
+
 ## [0.7.6](https://github.com/yokenzan/receiptisan/compare/v0.7.5...v0.7.6) (2026-02-10)
 
 
