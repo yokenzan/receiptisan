@@ -15,6 +15,12 @@ module Receiptisan
           TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
+          def initialize
+            @erb_outline = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>')
+            @erb_front   = ERB.new(File.read(TEMPLATE_FRONT_PATH), trim_mode: '%>')
+            @erb_next    = ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>')
+          end
+
           # minify 用の正規表現パターン
 
           # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
@@ -38,7 +44,7 @@ module Receiptisan
 
             # ERBテンプレートから生成されるHTMLはテンプレートの可読性を優先した構造のため
             # 冗長な空白・コメント・空要素を含む。minify で出力サイズを削減する。
-            result = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            result = @erb_outline.result(binding)
             minify(result)
           end
 
@@ -63,7 +69,7 @@ module Receiptisan
 
             # 表紙
             tekiyou_page = @tekiyou_line_builder.next_page
-            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_FRONT_PATH), trim_mode: '%>').result(binding)
+            @svg_of_receipts.last << @erb_front.result(binding)
 
             # 続紙
             while @tekiyou_line_builder.page_length.positive?
@@ -72,7 +78,7 @@ module Receiptisan
               # 空のページがつくられていることがあるので、空か判定している
               break if tekiyou_page_left.empty?
 
-              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
+              @svg_of_receipts.last << @erb_next.result(binding)
             end
           end
 
