@@ -1,3 +1,10 @@
+## [0.7.6](https://github.com/yokenzan/receiptisan/compare/v0.7.5...v0.7.6) (2026-02-10)
+
+
+### Bug Fixes
+
+* Comment::Pattern のタイポを修正 (embdding → embedding, paaram → param) ([467d08e](https://github.com/yokenzan/receiptisan/commit/467d08e15a0ac34c56cb291c14c87763c13fc6af))
+
 ## [0.7.5](https://github.com/yokenzan/receiptisan/compare/v0.7.4...v0.7.5) (2026-02-10)
 
 
