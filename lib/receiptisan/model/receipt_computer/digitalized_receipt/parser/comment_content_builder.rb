@@ -61,7 +61,7 @@ module Receiptisan
                 shuushokugos = sy_processor.process_shuushokugos(Formatter.to_hankaku(code_of_shuushokugos))
                 ShuushokugoFormat.new(*shuushokugos)
               end,
-            }
+            }.freeze
 
             def initialize(handler, sy_processor)
               @handler      = handler
