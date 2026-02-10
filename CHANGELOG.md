@@ -1,3 +1,10 @@
+## [0.7.8](https://github.com/yokenzan/receiptisan/compare/v0.7.7...v0.7.8) (2026-02-10)
+
+
+### Bug Fixes
+
+* MasterHandler#prepare で Version.resolve_by_ym が nil を返した場合のエラーハンドリング追加 ([00b45db](https://github.com/yokenzan/receiptisan/commit/00b45dbe36d75bbc9565556a16461c4fc8821eb7)), closes [MasterHandler#prepare](https://github.com/MasterHandler/issues/prepare)
+
 ## [0.7.7](https://github.com/yokenzan/receiptisan/compare/v0.7.6...v0.7.7) (2026-02-10)
 
 
