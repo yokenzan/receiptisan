@@ -31,7 +31,7 @@ module Receiptisan
 
               prefixes.each do | prefix |
                 # @param csv [Pathname]
-                matched_files = csv_files.select { | csv | csv.basename.to_path.start_with?(prefix) }
+                matched_files = csv_files.select { | csv | csv.basename.to_path.match?(/\A#{prefix}[_.]/) }
                 next if matched_files.empty?
 
                 detected_paths["#{key}_csv_path".intern].concat(matched_files)
