@@ -1,3 +1,10 @@
+## [0.7.5](https://github.com/yokenzan/receiptisan/compare/v0.7.4...v0.7.5) (2026-02-10)
+
+
+### Performance Improvements
+
+* Version.values をメモ化 ([2e2463b](https://github.com/yokenzan/receiptisan/commit/2e2463bcffa8765a5b039206298a75d86bc1ba33))
+
 ## [0.7.4](https://github.com/yokenzan/receiptisan/compare/v0.7.3...v0.7.4) (2026-02-10)
 
 
