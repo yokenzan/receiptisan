@@ -34,7 +34,7 @@ module Receiptisan
             # ]
             # @return [String]
             def format(appended_content)
-              unless pattern.requires_embdding?
+              unless pattern.requires_embedding?
                 return \
                   case pattern.code
                   when Pattern::NO_APPEND
@@ -110,14 +110,14 @@ module Receiptisan
               APPEND_SHUUSHOKUGOS    = :'90'
 
               # @param code [Symbol]
-              # @paaram requires_embdding [Boolean]
-              def initialize(code, requires_embdding)
-                @code              = code
-                @requires_embdding = requires_embdding
+              # @param requires_embedding [Boolean]
+              def initialize(code, requires_embedding)
+                @code               = code
+                @requires_embedding = requires_embedding
               end
 
-              def requires_embdding?
-                @requires_embdding
+              def requires_embedding?
+                @requires_embedding
               end
 
               # @!attribute [r] code
