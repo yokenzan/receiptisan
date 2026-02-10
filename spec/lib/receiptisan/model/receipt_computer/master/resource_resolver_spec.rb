@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require 'tmpdir'
+require 'fileutils'
 require 'receiptisan'
 
 ResourceResolver = Receiptisan::Model::ReceiptComputer::Master::ResourceResolver
@@ -88,6 +90,77 @@ RSpec.describe ResourceResolver do
       context '2018年度版の点数表の場合' do
         specify '診療行為マスターCSVの親ディレクトリ名に点数表の版年度が含まれる' do
           expect(resolver.detect_csv_files(Version::V2018_H30).values.flat_map { | paths | paths.map { | path | path.parent.basename.to_path } }).to all(eq '2018')
+        end
+      end
+    end
+
+    describe 'プレフィックスマッチの厳密性' do
+      let(:tmpdir) { Dir.mktmpdir }
+      let(:version_dir) { File.join(tmpdir, '2024') }
+
+      before do
+        FileUtils.mkdir_p(version_dir)
+      end
+
+      after do
+        FileUtils.remove_entry(tmpdir)
+      end
+
+      context 'プレフィックス直後に区切り文字がないファイルが存在する場合' do
+        before do
+          # 正規のファイル
+          FileUtils.touch(File.join(version_dir, 's_ALL20240412.csv'))
+          # プレフィックスで始まるが区切り文字がない無関係ファイル
+          FileUtils.touch(File.join(version_dir, 'sample.csv'))
+        end
+
+        let(:result) { resolver.detect_csv_files(Version::V2024_R06, tmpdir) }
+        let(:filenames) { result[:shinryou_koui_csv_path].map { | path | path.basename.to_path } }
+
+        specify '正規のファイルは検出されること' do
+          expect(filenames).to include('s_ALL20240412.csv')
+        end
+
+        specify '区切り文字がないファイルは検出されないこと' do
+          expect(filenames).not_to include('sample.csv')
+        end
+      end
+
+      context '正規のプレフィックスパターンのファイルのみ存在する場合' do
+        before do
+          FileUtils.touch(File.join(version_dir, 's_ALL20240412.csv'))
+          FileUtils.touch(File.join(version_dir, 'k.csv'))
+          FileUtils.touch(File.join(version_dir, 'y_ALL20240417.csv'))
+          FileUtils.touch(File.join(version_dir, 't_ALL20240315.csv'))
+          FileUtils.touch(File.join(version_dir, 'c_ALL20240412.csv'))
+          FileUtils.touch(File.join(version_dir, 'b_20240101.txt'))
+          FileUtils.touch(File.join(version_dir, 'z_20240101.txt'))
+        end
+
+        let(:result) { resolver.detect_csv_files(Version::V2024_R06, tmpdir) }
+
+        specify '診療行為マスターファイルが検出されること' do
+          expect(result[:shinryou_koui_csv_path]).not_to be_empty
+        end
+
+        specify '医薬品マスターファイルが検出されること' do
+          expect(result[:iyakuhin_csv_path]).not_to be_empty
+        end
+
+        specify '特定器材マスターファイルが検出されること' do
+          expect(result[:tokutei_kizai_csv_path]).not_to be_empty
+        end
+
+        specify 'コメントマスターファイルが検出されること' do
+          expect(result[:comment_csv_path]).not_to be_empty
+        end
+
+        specify '傷病名マスターファイルが検出されること' do
+          expect(result[:shoubyoumei_csv_path]).not_to be_empty
+        end
+
+        specify '修飾語マスターファイルが検出されること' do
+          expect(result[:shuushokugo_csv_path]).not_to be_empty
         end
       end
     end
