@@ -150,8 +150,23 @@ RSpec.describe Searcher do
         expect(results).to eq [shoshinryou]
       end
 
+      specify 'name_kanaで完全一致検索できること' do
+        results = searcher.search(:shinryou_koui, Condition.new(name: 'ショシンリョウ', name_match_type: :exact))
+        expect(results).to eq [shoshinryou]
+      end
+
+      specify 'full_nameで完全一致検索できること' do
+        results = searcher.search(:shinryou_koui, Condition.new(name: '再診料（診療所）', name_match_type: :exact))
+        expect(results).to eq [saishinryou]
+      end
+
       specify '部分一致だが完全一致しない場合は空配列を返すこと' do
         results = searcher.search(:shinryou_koui, Condition.new(name: '初診', name_match_type: :exact))
+        expect(results).to be_empty
+      end
+
+      specify '完全一致と点数条件を併用して絞り込めること' do
+        results = searcher.search(:shinryou_koui, Condition.new(name: '初診料', name_match_type: :exact, point_min: 300))
         expect(results).to be_empty
       end
     end
@@ -181,6 +196,14 @@ RSpec.describe Searcher do
     context '医薬品のprice検索の場合' do
       specify 'priceが一致するアイテムのみ返すこと' do
         results = searcher.search(:iyakuhin, Condition.new(point_exact: 7.80))
+        expect(results).to eq [loxoprofen]
+      end
+
+      specify 'point_exactとname_exactを併用して絞り込めること' do
+        results = searcher.search(
+          :iyakuhin,
+          Condition.new(point_exact: 7.80, name: 'ロキソプロフェン', name_match_type: :exact)
+        )
         expect(results).to eq [loxoprofen]
       end
     end
@@ -224,6 +247,11 @@ RSpec.describe Searcher do
 
       specify '点数条件を指定しても全件返すこと' do
         results = searcher.search(:shoubyoumei, Condition.new(point_min: 100))
+        expect(results).to contain_exactly(tounyoubyou, kouketsuatsu)
+      end
+
+      specify 'point_exactを指定しても全件返すこと' do
+        results = searcher.search(:shoubyoumei, Condition.new(point_exact: 100))
         expect(results).to contain_exactly(tounyoubyou, kouketsuatsu)
       end
     end

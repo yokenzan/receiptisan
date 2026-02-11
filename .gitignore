@@ -9,3 +9,10 @@
 /vendor/
 Gemfile.lock
 /node_modules
+/sorbet/
+/bin/tapioca
+/.serena/
+/.vscode/
+/csv/master/*/utf8/
+/csv/master/*/.cache/
+

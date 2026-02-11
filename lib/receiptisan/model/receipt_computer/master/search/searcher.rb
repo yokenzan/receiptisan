@@ -10,6 +10,8 @@ module Receiptisan
             # @param master [Master]
             def initialize(master)
               @master = master
+              @name_exact_indexes = {}
+              @point_exact_indexes = {}
             end
 
             # @param type [Symbol] :shinryou_koui, :iyakuhin, :tokutei_kizai, :comment
@@ -23,10 +25,127 @@ module Receiptisan
                 return item ? [item] : []
               end
 
-              collection.each_value.select { | item | matches?(item, condition) }
+              candidates = search_candidates(type, collection, condition)
+              candidates.select { | item | matches?(item, condition) }
             end
 
             private
+
+            # @param type [Symbol]
+            # @param collection [Hash]
+            # @param condition [Condition]
+            # @return [Array, Enumerable]
+            def search_candidates(type, collection, condition)
+              return collection.each_value unless indexed_candidate_condition?(condition)
+
+              name_candidates = name_exact_candidates(type, collection, condition)
+              point_candidates = point_exact_candidates(type, collection, condition)
+
+              merge_candidates(name_candidates, point_candidates, collection)
+            end
+
+            # @param condition [Condition]
+            # @return [Boolean]
+            def indexed_candidate_condition?(condition)
+              name_exact_condition?(condition) || point_exact_condition?(condition)
+            end
+
+            # @param condition [Condition]
+            # @return [Boolean]
+            def name_exact_condition?(condition)
+              condition.name && condition.name_match_type == :exact
+            end
+
+            # @param condition [Condition]
+            # @return [Boolean]
+            def point_exact_condition?(condition)
+              !condition.point_exact.nil?
+            end
+
+            # @param collection [Hash]
+            # @param condition [Condition]
+            # @return [Boolean]
+            def point_exact_index_available?(collection, condition)
+              point_exact_condition?(condition) && point_searchable_collection?(collection)
+            end
+
+            # @param type [Symbol]
+            # @param collection [Hash]
+            # @param condition [Condition]
+            # @return [Array, nil]
+            def name_exact_candidates(type, collection, condition)
+              return nil unless name_exact_condition?(condition)
+
+              name_exact_index(type, collection).fetch(condition.name, [])
+            end
+
+            # @param type [Symbol]
+            # @param collection [Hash]
+            # @param condition [Condition]
+            # @return [Array, nil]
+            def point_exact_candidates(type, collection, condition)
+              return nil unless point_exact_index_available?(collection, condition)
+
+              point_exact_index(type, collection).fetch(condition.point_exact, [])
+            end
+
+            # @param name_candidates [Array, nil]
+            # @param point_candidates [Array, nil]
+            # @param collection [Hash]
+            # @return [Array, Enumerable]
+            def merge_candidates(name_candidates, point_candidates, collection)
+              return name_candidates & point_candidates if name_candidates && point_candidates
+
+              name_candidates || point_candidates || collection.each_value
+            end
+
+            # @param type [Symbol]
+            # @param collection [Hash]
+            # @return [Hash<String, Array>]
+            def name_exact_index(type, collection)
+              @name_exact_indexes[type] ||= build_name_exact_index(collection)
+            end
+
+            # @param collection [Hash]
+            # @return [Hash<String, Array>]
+            def build_name_exact_index(collection)
+              Hash.new { | hash, key | hash[key] = [] }.tap do | index |
+                collection.each_value do | item |
+                  name_targets(item).each do | target |
+                    index[target] << item unless index[target].include?(item)
+                  end
+                end
+              end
+            end
+
+            # @param type [Symbol]
+            # @param collection [Hash]
+            # @return [Hash<Numeric, Array>]
+            def point_exact_index(type, collection)
+              @point_exact_indexes[type] ||= build_point_exact_index(collection)
+            end
+
+            # @param collection [Hash]
+            # @return [Hash<Numeric, Array>]
+            def build_point_exact_index(collection)
+              Hash.new { | hash, key | hash[key] = [] }.tap do | index |
+                collection.each_value do | item |
+                  value = resolve_point_value(item)
+                  next if value.nil?
+
+                  index[value] << item
+                end
+              end
+            end
+
+            # @param collection [Hash]
+            # @return [Boolean]
+            def point_searchable_collection?(collection)
+              first = collection.each_value.first
+              return false unless first
+
+              first.respond_to?(:point) || first.respond_to?(:price)
+            end
 
             # @param condition [Condition]
             # @return [Boolean]
