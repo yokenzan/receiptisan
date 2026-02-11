@@ -8,9 +8,8 @@ require 'receiptisan'
 require 'logger'
 
 RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
-  Version = Struct.new(:year)
-
   let(:logger) { Logger.new(nil) }
+  let(:version) { instance_double(Receiptisan::Model::ReceiptComputer::Master::Version, year: 2024) }
 
   describe '#load' do
     it 'キャッシュがなければマスターをロードしてキャッシュを作成する' do
@@ -36,7 +35,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
         loader = described_class.new(resolver, logger)
         allow(loader).to receive(:load_from_version_and_csv).and_return({ loaded: :master })
 
-        result = loader.load(Version.new(2024))
+        result = loader.load(version)
 
         expect(result).to eq({ loaded: :master })
         expect(cache_path).to exist
@@ -68,7 +67,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
         loader = described_class.new(resolver, logger)
         allow(loader).to receive(:load_from_version_and_csv)
 
-        result = loader.load(Version.new(2024))
+        result = loader.load(version)
 
         expect(result).to eq({ cached: true })
         expect(loader).not_to have_received(:load_from_version_and_csv)
@@ -102,7 +101,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
         loader = described_class.new(resolver, logger)
         allow(loader).to receive(:load_from_version_and_csv).and_return({ reloaded: true })
 
-        result = loader.load(Version.new(2024))
+        result = loader.load(version)
 
         expect(result).to eq({ reloaded: true })
         expect(loader).to have_received(:load_from_version_and_csv)
@@ -136,7 +135,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
         loader = described_class.new(resolver, logger)
         allow(loader).to receive(:load_type_from_csv_paths)
 
-        result = loader.load_type(Version.new(2024), :iyakuhin)
+        result = loader.load_type(version, :iyakuhin)
 
         expect(result).to eq({ cached: :iyakuhin })
         expect(loader).not_to have_received(:load_type_from_csv_paths)
@@ -166,7 +165,7 @@ RSpec.describe Receiptisan::Model::ReceiptComputer::Master::Loader do
         loader = described_class.new(resolver, logger)
         allow(loader).to receive(:load_type_from_csv_paths).and_return({ loaded: :iyakuhin })
 
-        result = loader.load_type(Version.new(2024), :iyakuhin)
+        result = loader.load_type(version, :iyakuhin)
 
         expect(result).to eq({ loaded: :iyakuhin })
         expect(cache_path).to exist
