@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'pathname'
+
 require_relative 'loader/loader_trait'
 require_relative 'loader/shinryou_koui_loader'
 require_relative 'loader/iyakuhin_loader'
@@ -31,8 +34,12 @@ module Receiptisan
             logger.info("preparing to load master version #{version.year}")
 
             csv_paths = @resource_resolver.detect_csv_files(version)
+            cache_path = detect_cache_path(csv_paths)
+            cache = load_from_cache(cache_path, csv_paths)
+            return cache if cache
 
-            load_from_version_and_csv(version, **csv_paths).tap do
+            load_from_version_and_csv(version, **csv_paths).tap do | master |
+              write_cache(cache_path, master)
               logger.info("loading master version #{version.year} completed")
             end
           end
@@ -71,7 +78,20 @@ module Receiptisan
           # @return [Hash]
           def load_type(version, type)
             csv_paths = @resource_resolver.detect_csv_files(version)
+            cache_path = detect_type_cache_path(csv_paths, type)
+            cache = load_from_cache(cache_path, csv_paths)
+            return cache if cache
 
+            load_type_from_csv_paths(version, type, csv_paths).tap do | loaded |
+              write_cache(cache_path, loaded)
+            end
+          end
+
+          # @param version [Version]
+          # @param type [Symbol]
+          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
+          # @return [Hash]
+          def load_type_from_csv_paths(version, type, csv_paths)
             case type
             when :shinryou_koui
               @shinryou_koui_loader.load(version, csv_paths[:shinryou_koui_csv_path])
@@ -91,6 +111,67 @@ module Receiptisan
           end
 
           private
+
+          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
+          # @return [Pathname]
+          def detect_cache_path(csv_paths)
+            sample_path = csv_paths.values.flatten.first
+            sample_path.parent.join('.cache', 'master.marshal')
+          end
+
+          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
+          # @param type [Symbol]
+          # @return [Pathname]
+          def detect_type_cache_path(csv_paths, type)
+            sample_path = csv_paths.values.flatten.first
+            sample_path.parent.join('.cache', "#{type}.marshal")
+          end
+
+          # @param cache_path [Pathname]
+          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
+          # @return [Master, nil]
+          def load_from_cache(cache_path, csv_paths)
+            return nil unless cache_available?(cache_path, csv_paths)
+
+            logger.info("loading master cache: #{cache_path}")
+            # rubocop:disable Security/MarshalLoad
+            Marshal.load(cache_path.binread)
+            # rubocop:enable Security/MarshalLoad
+          rescue StandardError => e
+            logger.warn("failed to load cache(#{cache_path}): #{e.class}: #{e.message}")
+            nil
+          end
+
+          # @param cache_path [Pathname]
+          # @param master [Master]
+          # @return [void]
+          def write_cache(cache_path, master)
+            FileUtils.mkdir_p(cache_path.dirname)
+            cache_path.binwrite(Marshal.dump(master))
+          rescue StandardError => e
+            logger.warn("failed to write cache(#{cache_path}): #{e.class}: #{e.message}")
+          end
+
+          # @param cache_path [Pathname]
+          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
+          # @return [Boolean]
+          def cache_available?(cache_path, csv_paths)
+            return false unless cache_path.exist?
+
+            cache_mtime = cache_path.mtime
+            target_dir = csv_paths.values.flatten.first.parent
+            latest_mtime = target_source_paths(target_dir).map(&:mtime).max
+            return true unless latest_mtime
+
+            cache_mtime >= latest_mtime
+          end
+
+          # @param target_dir [Pathname]
+          # @return [Array<Pathname>]
+          def target_source_paths(target_dir)
+            pattern = target_dir.join('**', '*.{csv,txt,CSV,TXT}').to_path
+            Dir.glob(pattern).map { | path | Pathname(path) }
+          end
 
           attr_reader :logger
         end

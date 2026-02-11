@@ -2,6 +2,7 @@
 
 require 'forwardable'
 require 'nkf'
+require 'pathname'
 
 module Receiptisan
   module Model
@@ -26,12 +27,29 @@ module Receiptisan
               logger.info csv_paths.map(&:to_path)
 
               csv_paths.each do | csv_path |
-                File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
-                  f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }
+                load_path, read_encoding = resolve_load_path(csv_path)
+                lines = File.read(load_path, mode: "r:#{read_encoding}:UTF-8").split("\n")
 
-                  logger.info "#{csv_path}(#{f.lineno} lines) was loaded."
+                lines.each do | line |
+                  yield line.delete_suffix("\r").tr('"', '').split(',')
                 end
+
+                logger.info "#{load_path}(#{lines.length} lines) was loaded."
               end
+            end
+
+            private
+
+            # UTF-8 変換済みファイルがあれば優先して読み込む
+            #
+            # @param csv_path [Pathname, String]
+            # @return [Array<Pathname, String>]
+            def resolve_load_path(csv_path)
+              path      = Pathname(csv_path)
+              utf8_path = path.dirname.join('utf8', path.basename.to_path)
+              return [utf8_path, 'UTF-8'] if utf8_path.exist?
+
+              [path, MASTER_CSV_ENCODING]
             end
 
             def logger
