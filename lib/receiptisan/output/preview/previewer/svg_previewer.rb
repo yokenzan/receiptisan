@@ -15,6 +15,12 @@ module Receiptisan
           TEMPLATE_FRONT_PATH      = __dir__ + '/../../../../../views/receipt/format-front.svg.erb'
           TEMPLATE_NEXT_PATH       = __dir__ + '/../../../../../views/receipt/format-next.svg.erb'
 
+          def initialize
+            @erb_outline = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>')
+            @erb_front   = ERB.new(File.read(TEMPLATE_FRONT_PATH), trim_mode: '%>')
+            @erb_next    = ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>')
+          end
+
           # minify 用の正規表現パターン
 
           # 値が nil のセル（データ未設定の点数欄等）は to_zenkaku / to_currency が空文字を返すため
@@ -38,7 +44,7 @@ module Receiptisan
 
             # ERBテンプレートから生成されるHTMLはテンプレートの可読性を優先した構造のため
             # 冗長な空白・コメント・空要素を含む。minify で出力サイズを削減する。
-            result = ERB.new(File.read(TEMPLATE_OUTLINE_PATH), trim_mode: '%>').result(binding)
+            result = @erb_outline.result(binding)
             minify(result)
           end
 
@@ -63,7 +69,7 @@ module Receiptisan
 
             # 表紙
             tekiyou_page = @tekiyou_line_builder.next_page
-            @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_FRONT_PATH), trim_mode: '%>').result(binding)
+            @svg_of_receipts.last << @erb_front.result(binding)
 
             # 続紙
             while @tekiyou_line_builder.page_length.positive?
@@ -72,7 +78,7 @@ module Receiptisan
               # 空のページがつくられていることがあるので、空か判定している
               break if tekiyou_page_left.empty?
 
-              @svg_of_receipts.last << ERB.new(File.read(TEMPLATE_NEXT_PATH), trim_mode: '%>').result(binding)
+              @svg_of_receipts.last << @erb_next.result(binding)
             end
           end
 
@@ -131,11 +137,14 @@ module Receiptisan
             merge_consecutive_paths(cleaned)
           end
 
-          # 同一 CSS クラスの連続する <path> 要素を1つの要素に統合する
+          # 連続する simple path のうち、同一 CSS クラスのものを1つの要素に統合する
           #
           # レセプト用紙の罫線は多数の個別 <path> で表現されているが、
           # SVG の path d 属性は複数の M(moveto) コマンドを連結できるため、
-          # 同一クラス（= 同一線種）の連続する path を1要素にまとめてタグのオーバーヘッドを削減する。
+          # 同一クラス（= 同一線種）の path を1要素にまとめてタグのオーバーヘッドを削減する。
+          #
+          # テンプレートでは g1（実線）と g2（破線）が交互に出力されることが多いが、
+          # 連続する path ブロック内でクラスごとに集約して統合する。
           #
           # 対象は `<path d="..." class="gN"/>` の単純な形式のみ。
           # fill や stroke 等の追加属性を持つ path は統合しない。
@@ -150,25 +159,31 @@ module Receiptisan
             while i < lines.length
               line = lines[i].chomp
 
-              if (m = line.match(SIMPLE_PATH_PATTERN))
-                # 統合対象の path を検出。同一クラスが続く限り d 属性値を収集する
-                d_parts = [m[1]]
-                klass   = m[2]
+              if line.match(SIMPLE_PATH_PATTERN)
+                # 連続する simple path を全て収集し、クラスごとに統合する
+                paths_by_class = {}
+                class_order    = []
 
-                while i + 1 < lines.length &&
-                      (m2 = lines[i + 1].chomp.match(SIMPLE_PATH_PATTERN)) &&
-                      m2[2] == klass
-                  d_parts << m2[1]
+                while i < lines.length && (m = lines[i].chomp.match(SIMPLE_PATH_PATTERN))
+                  d     = m[1]
+                  klass = m[2]
+                  paths_by_class[klass] ||= begin
+                    class_order << klass
+                    []
+                  end
+                  paths_by_class[klass] << d
                   i += 1
                 end
 
-                # 収集した d 値をスペース区切りで連結し、1つの path 要素として出力
-                result << %(<path d="#{d_parts.join(' ')}" class="#{klass}"/>\n)
+                # クラスごとに統合した path を、出現順で出力
+                class_order.each do | klass |
+                  d_parts = paths_by_class[klass]
+                  result << %(<path d="#{d_parts.join(' ')}" class="#{klass}"/>\n)
+                end
               else
                 result << lines[i]
+                i += 1
               end
-
-              i += 1
             end
 
             result.join

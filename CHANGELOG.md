@@ -1,3 +1,51 @@
+## [0.7.10](https://github.com/yokenzan/receiptisan/compare/v0.7.9...v0.7.10) (2026-02-11)
+
+## [0.7.9](https://github.com/yokenzan/receiptisan/compare/v0.7.8...v0.7.9) (2026-02-11)
+
+
+### Bug Fixes
+
+* SYProcessor#process_shuushokugo の rescue ブロックで未定義変数 code を参照するバグを修正 ([46dc661](https://github.com/yokenzan/receiptisan/commit/46dc6617c744c4dd5e49267fe5fba1b271f90dd6)), closes [SYProcessor#process_shuushokugo](https://github.com/SYProcessor/issues/process_shuushokugo)
+
+## [0.7.8](https://github.com/yokenzan/receiptisan/compare/v0.7.7...v0.7.8) (2026-02-10)
+
+
+### Bug Fixes
+
+* MasterHandler#prepare で Version.resolve_by_ym が nil を返した場合のエラーハンドリング追加 ([00b45db](https://github.com/yokenzan/receiptisan/commit/00b45dbe36d75bbc9565556a16461c4fc8821eb7)), closes [MasterHandler#prepare](https://github.com/MasterHandler/issues/prepare)
+
+## [0.7.7](https://github.com/yokenzan/receiptisan/compare/v0.7.6...v0.7.7) (2026-02-10)
+
+
+### Performance Improvements
+
+* SVGPreviewer の ERB テンプレートをインスタンス生成時にキャッシュ ([dd7b09d](https://github.com/yokenzan/receiptisan/commit/dd7b09dc89ef5bf017a1718808f0df7ee71a6199))
+
+## [0.7.6](https://github.com/yokenzan/receiptisan/compare/v0.7.5...v0.7.6) (2026-02-10)
+
+
+### Bug Fixes
+
+* Comment::Pattern のタイポを修正 (embdding → embedding, paaram → param) ([467d08e](https://github.com/yokenzan/receiptisan/commit/467d08e15a0ac34c56cb291c14c87763c13fc6af))
+
+## [0.7.5](https://github.com/yokenzan/receiptisan/compare/v0.7.4...v0.7.5) (2026-02-10)
+
+
+### Performance Improvements
+
+* Version.values をメモ化 ([2e2463b](https://github.com/yokenzan/receiptisan/commit/2e2463bcffa8765a5b039206298a75d86bc1ba33))
+
+## [0.7.4](https://github.com/yokenzan/receiptisan/compare/v0.7.3...v0.7.4) (2026-02-10)
+
+
+### Bug Fixes
+
+* **ci:** specify Node.js 22 for release workflow ([0f9176b](https://github.com/yokenzan/receiptisan/commit/0f9176bcf8a50e787e45261914e5d36f7ddd29e5))
+
+## [0.7.3](https://github.com/yokenzan/receiptisan/compare/v0.7.2...v0.7.3) (2026-02-09)
+
+## [0.7.2](https://github.com/yokenzan/receiptisan/compare/v0.7.1...v0.7.2) (2026-02-09)
+
 ## [0.7.1](https://github.com/yokenzan/receiptisan/compare/v0.7.0...v0.7.1) (2026-02-08)
 
 

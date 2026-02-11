@@ -18,7 +18,7 @@ module Receiptisan
 
             # @return [Array<Version>]
             def values
-              constants.map { | name | const_get(name) }
+              @values ||= constants.map { | name | const_get(name) }.freeze
             end
           end
 

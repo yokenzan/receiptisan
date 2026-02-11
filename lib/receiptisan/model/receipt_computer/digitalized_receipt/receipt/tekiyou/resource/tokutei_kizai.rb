@@ -69,7 +69,7 @@ module Receiptisan
                   end
                 end
 
-                # マスタに医薬品コードが見つからなかった医薬品
+                # マスタに特定器材コードが見つからなかった特定器材
                 DummyMasterTokuteiKizai = Struct.new(:code) do
                   # @return [String]
                   def name
