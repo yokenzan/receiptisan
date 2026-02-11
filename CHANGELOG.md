@@ -1,3 +1,10 @@
+## [0.7.9](https://github.com/yokenzan/receiptisan/compare/v0.7.8...v0.7.9) (2026-02-11)
+
+
+### Bug Fixes
+
+* SYProcessor#process_shuushokugo の rescue ブロックで未定義変数 code を参照するバグを修正 ([46dc661](https://github.com/yokenzan/receiptisan/commit/46dc6617c744c4dd5e49267fe5fba1b271f90dd6)), closes [SYProcessor#process_shuushokugo](https://github.com/SYProcessor/issues/process_shuushokugo)
+
 ## [0.7.8](https://github.com/yokenzan/receiptisan/compare/v0.7.7...v0.7.8) (2026-02-10)
 
 
