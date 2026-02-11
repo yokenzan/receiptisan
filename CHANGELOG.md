@@ -1,3 +1,16 @@
+## [0.7.11](https://github.com/yokenzan/receiptisan/compare/v0.7.10...v0.7.11) (2026-02-11)
+
+
+### Bug Fixes
+
+* **test:** avoid version constant collision in loader spec ([8f48db9](https://github.com/yokenzan/receiptisan/commit/8f48db91c2e26f50ebbb0aa922be99327937a218))
+
+
+### Performance Improvements
+
+* **master:** speed up CSV loading with utf8 and marshal cache ([13b9581](https://github.com/yokenzan/receiptisan/commit/13b9581817b586561aa5101d98e5f4ff21a0410a))
+* **search:** add exact-match candidate indexes ([69194d2](https://github.com/yokenzan/receiptisan/commit/69194d2beb4bd0cebfb9a3f3dc50cfcc7447f987))
+
 ## [0.7.10](https://github.com/yokenzan/receiptisan/compare/v0.7.9...v0.7.10) (2026-02-11)
 
 ## [0.7.9](https://github.com/yokenzan/receiptisan/compare/v0.7.8...v0.7.9) (2026-02-11)
