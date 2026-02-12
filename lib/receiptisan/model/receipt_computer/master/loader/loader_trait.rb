@@ -26,13 +26,17 @@ module Receiptisan
               logger.info csv_paths.map(&:to_path)
 
               csv_paths.each do | csv_path |
-                File.open(csv_path, "r:#{MASTER_CSV_ENCODING}:UTF-8") do | f |
-                  f.each_line(chomp: true) { | line | yield line.tr('"', '').split(',') }
+                lines = File.read(csv_path, mode: "r:#{MASTER_CSV_ENCODING}:UTF-8").split("\n")
 
-                  logger.info "#{csv_path}(#{f.lineno} lines) was loaded."
+                lines.each do | line |
+                  yield line.delete_suffix("\r").tr('"', '').split(',')
                 end
+
+                logger.info "#{csv_path}(#{lines.length} lines) was loaded."
               end
             end
+
+            private
 
             def logger
               raise NotImplementedError, 'should override #logger'
