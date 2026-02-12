@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'fileutils'
-require 'pathname'
-
+require_relative 'cache_policy'
+require_relative 'cache_store'
 require_relative 'loader/loader_trait'
 require_relative 'loader/shinryou_koui_loader'
 require_relative 'loader/iyakuhin_loader'
@@ -16,8 +15,20 @@ module Receiptisan
     module ReceiptComputer
       class Master
         class Loader
+          MASTER_TYPES = %i[
+            shinryou_koui
+            iyakuhin
+            tokutei_kizai
+            comment
+            shoubyoumei
+            shuushokugo
+          ].freeze
+
           # @param resource_resolver [ResourceResolver]
-          def initialize(resource_resolver, logger)
+          # @param logger [Logger]
+          # @param cache_store [CacheStore, nil]
+          # @param cache_policy [CachePolicy, nil]
+          def initialize(resource_resolver, logger, cache_store: nil, cache_policy: nil)
             @resource_resolver    = resource_resolver
             @shinryou_koui_loader = ShinryouKouiLoader.new(logger)
             @iyakuhin_loader      = IyakuhinLoader.new(logger)
@@ -25,6 +36,8 @@ module Receiptisan
             @comment_loader       = CommentLoader.new(logger)
             @shoubyoumei_loader   = ShoubyoumeiLoader.new(logger)
             @shuushokugo_loader   = ShuushokugoLoader.new(logger)
+            @cache_store          = cache_store || CacheStore.new(logger)
+            @cache_policy         = cache_policy || CachePolicy.new
             @logger               = logger
           end
 
@@ -34,12 +47,13 @@ module Receiptisan
             logger.info("preparing to load master version #{version.year}")
 
             csv_paths = @resource_resolver.detect_csv_files(version)
-            cache_path = detect_cache_path(csv_paths)
-            cache = load_from_cache(cache_path, csv_paths)
+            cache_path = @cache_store.detect_cache_path(csv_paths)
+            cache = @cache_store.read(cache_path, csv_paths)
             return cache if cache
 
-            load_from_version_and_csv(version, **csv_paths).tap do | master |
-              write_cache(cache_path, master)
+            warn_cache_not_found(cache_path)
+            load_from_version_and_csv(version, **csv_paths).tap do | loaded |
+              @cache_store.write(cache_path, loaded) if @cache_policy.write_on_cache_miss?
               logger.info("loading master version #{version.year} completed")
             end
           end
@@ -78,12 +92,32 @@ module Receiptisan
           # @return [Hash]
           def load_type(version, type)
             csv_paths = @resource_resolver.detect_csv_files(version)
-            cache_path = detect_type_cache_path(csv_paths, type)
-            cache = load_from_cache(cache_path, csv_paths)
+            cache_path = @cache_store.detect_type_cache_path(csv_paths, type)
+            cache = @cache_store.read(cache_path, csv_paths)
             return cache if cache
 
+            warn_cache_not_found(cache_path)
             load_type_from_csv_paths(version, type, csv_paths).tap do | loaded |
-              write_cache(cache_path, loaded)
+              @cache_store.write(cache_path, loaded) if @cache_policy.write_on_cache_miss?
+            end
+          end
+
+          # キャッシュを事前生成する
+          #
+          # @param version [Version]
+          # @return [void]
+          def generate_cache(version)
+            logger.info("generating master cache version #{version.year}")
+
+            csv_paths = @resource_resolver.detect_csv_files(version)
+            master = load_from_version_and_csv(version, **csv_paths)
+            @cache_store.write(@cache_store.detect_cache_path(csv_paths), master)
+
+            MASTER_TYPES.each do | type |
+              @cache_store.write(
+                @cache_store.detect_type_cache_path(csv_paths, type),
+                load_type_from_csv_paths(version, type, csv_paths)
+              )
             end
           end
 
@@ -112,65 +146,14 @@ module Receiptisan
 
           private
 
-          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
-          # @return [Pathname]
-          def detect_cache_path(csv_paths)
-            sample_path = csv_paths.values.flatten.first
-            sample_path.parent.join('.cache', 'master.marshal')
-          end
-
-          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
-          # @param type [Symbol]
-          # @return [Pathname]
-          def detect_type_cache_path(csv_paths, type)
-            sample_path = csv_paths.values.flatten.first
-            sample_path.parent.join('.cache', "#{type}.marshal")
-          end
-
           # @param cache_path [Pathname]
-          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
-          # @return [Master, nil]
-          def load_from_cache(cache_path, csv_paths)
-            return nil unless cache_available?(cache_path, csv_paths)
-
-            logger.info("loading master cache: #{cache_path}")
-            # rubocop:disable Security/MarshalLoad
-            Marshal.load(cache_path.binread)
-            # rubocop:enable Security/MarshalLoad
-          rescue StandardError => e
-            logger.warn("failed to load cache(#{cache_path}): #{e.class}: #{e.message}")
-            nil
-          end
-
-          # @param cache_path [Pathname]
-          # @param master [Master]
           # @return [void]
-          def write_cache(cache_path, master)
-            FileUtils.mkdir_p(cache_path.dirname)
-            cache_path.binwrite(Marshal.dump(master))
-          rescue StandardError => e
-            logger.warn("failed to write cache(#{cache_path}): #{e.class}: #{e.message}")
-          end
+          def warn_cache_not_found(cache_path)
+            return unless @cache_policy.warn_on_cache_miss?
+            return unless @cache_store.cache_missing?(cache_path)
 
-          # @param cache_path [Pathname]
-          # @param csv_paths [Hash<Symbol, Array<Pathname>>]
-          # @return [Boolean]
-          def cache_available?(cache_path, csv_paths)
-            return false unless cache_path.exist?
-
-            cache_mtime = cache_path.mtime
-            target_dir = csv_paths.values.flatten.first.parent
-            latest_mtime = target_source_paths(target_dir).map(&:mtime).max
-            return true unless latest_mtime
-
-            cache_mtime >= latest_mtime
-          end
-
-          # @param target_dir [Pathname]
-          # @return [Array<Pathname>]
-          def target_source_paths(target_dir)
-            pattern = target_dir.join('**', '*.{csv,txt,CSV,TXT}').to_path
-            Dir.glob(pattern).map { | path | Pathname(path) }
+            logger.warn("master cache not found: #{cache_path}")
+            logger.warn("to generate cache, run: #{@cache_policy.generate_cache_command}")
           end
 
           attr_reader :logger
