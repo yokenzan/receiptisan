@@ -13,6 +13,6 @@ Gemfile.lock
 /bin/tapioca
 /.serena/
 /.vscode/
-/csv/master/*/utf8/
+/benchmark/
 /csv/master/*/.cache/
 
