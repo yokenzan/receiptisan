@@ -15,4 +15,6 @@ Gemfile.lock
 /.vscode/
 /benchmark/
 /csv/master/*/.cache/
+/_refs/
+/_trashbox/
 
