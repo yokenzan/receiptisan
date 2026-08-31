@@ -13,7 +13,7 @@ module Receiptisan
           Parameter           = Struct.new(:shinryou_shikibetsu, :target, :grouping, keyword_init: true)
 
           # 入院
-          @@section_parameter_nyuuin_attributes = {
+          SECTION_PARAMETER_NYUUIN_ATTRIBUTES = {
             '11':                            { shinryou_shikibetsu: %w[11],    target: {} },
             '13':                            { shinryou_shikibetsu: %w[13],    target: {} },
             '14':                            { shinryou_shikibetsu: %w[14],    target: {} },
@@ -74,10 +74,10 @@ module Receiptisan
             '97_seikatsu-ryouyou-kankyou':   { target: { tag: :'seikatsu-ryouyou-kankyou' } },
             '97_seikatsu-ryouyou-kijun':     { target: { tag: :'seikatsu-ryouyou-kijun' } },
             '97_seikatsu-ryouyou-tokubetsu': { target: { tag: :'seikatsu-ryouyou-tokubetsu' } },
-          }
+          }.freeze
 
           # 外来
-          @@section_parameter_gairai_attributes = {
+          SECTION_PARAMETER_GAIRAI_ATTRIBUTES = {
             '11':              { shinryou_shikibetsu: %w[11], target: {} },
             '12_saishin':      { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-saishin' } },
             '12_gairai-kanri': { shinryou_shikibetsu: %w[12], target: { tag: :'tensuu-shuukei-12-gairai-kanri' } },
@@ -154,7 +154,7 @@ module Receiptisan
               shinryou_shikibetsu: %w[80],
               target:              { resource: %i[iyakuhin tokutei_kizai] },
             },
-          }
+          }.freeze
 
           # @param handler [Receiptisan::Model::ReceiptComputer::Tag::Handler]
           def initialize(handler)
@@ -167,8 +167,8 @@ module Receiptisan
             tag_handler.prepare(receipt.shinryou_ym)
 
             section_parameter_attributes = receipt.nyuuin? ?
-              @@section_parameter_nyuuin_attributes :
-              @@section_parameter_gairai_attributes
+              SECTION_PARAMETER_NYUUIN_ATTRIBUTES :
+              SECTION_PARAMETER_GAIRAI_ATTRIBUTES
 
             TensuuShuukei.new(
               sections: section_parameter_attributes.to_h do | key, _ |

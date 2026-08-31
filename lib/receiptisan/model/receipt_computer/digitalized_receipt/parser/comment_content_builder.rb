@@ -18,7 +18,7 @@ module Receiptisan
             Pattern   = Master::Treatment::Comment::Pattern
             DateUtil  = Receiptisan::Util::DateUtil
 
-            @@patterns = {
+            PATTERNS = {
               Pattern::FREE => proc { | appended_value | FreeFormat.new(appended_value) },
               Pattern::NO_APPEND => proc {},
               Pattern::APPEND_FREE => proc { | appended_value | FreeFormat.new(appended_value) },
@@ -48,20 +48,20 @@ module Receiptisan
                 )
               end,
               Pattern::APPEND_WAREKI_NUMBER => proc do | wareki_and_number |
-                wareki_date = @@patterns[Pattern::APPEND_DIGITS].call(wareki_and_number[0, 7])
+                wareki_date = PATTERNS[Pattern::APPEND_DIGITS].call(wareki_and_number[0, 7])
                 parsed_wareki_date = DateUtil.parse_date(Formatter.to_hankaku(wareki_and_number[0, 7]))
 
                 WarekiDateAndNumberFormat.new(
                   wareki_date,
                   parsed_wareki_date,
-                  @@patterns[Pattern::APPEND_NUMBER].call(wareki_and_number[-8..])
+                  PATTERNS[Pattern::APPEND_NUMBER].call(wareki_and_number[-8..])
                 )
               end,
               Pattern::APPEND_SHUUSHOKUGOS => proc do | code_of_shuushokugos, _handler, sy_processor |
                 shuushokugos = sy_processor.process_shuushokugos(Formatter.to_hankaku(code_of_shuushokugos))
                 ShuushokugoFormat.new(*shuushokugos)
               end,
-            }
+            }.freeze
 
             def initialize(handler, sy_processor)
               @handler      = handler
@@ -71,7 +71,7 @@ module Receiptisan
             # @param pattern [Master::Treatment::Comment::Pattern]
             # @param appended_value [String, nil]
             def build(pattern, appended_value)
-              @@patterns[pattern&.code || Pattern::FREE].call(appended_value.to_s, @handler, @sy_processor)
+              PATTERNS[pattern&.code || Pattern::FREE].call(appended_value.to_s, @handler, @sy_processor)
             end
           end
         end

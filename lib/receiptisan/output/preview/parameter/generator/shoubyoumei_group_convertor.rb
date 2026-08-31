@@ -11,7 +11,7 @@ module Receiptisan
             Common             = Receiptisan::Output::Preview::Parameter::Common
             DigitalizedReceipt = Receiptisan::Model::ReceiptComputer::DigitalizedReceipt
 
-            @@sorter = proc do | grouped_list, _ |
+            SORTER = proc do | grouped_list, _ |
               [
                 grouped_list.is_main ? 0 : 1,
                 grouped_list.start_date.year,
@@ -34,7 +34,7 @@ module Receiptisan
                 )
                 # @param grouped_list [Common::GroupedShoubyoumeiList]
                 # @param shoubyoumeis [<DigitalizedReceipt::Receipt::Shoubyoumei>]
-              end.sort_by(&@@sorter).each do | grouped_list, shoubyoumei_list |
+              end.sort_by(&SORTER).each do | grouped_list, shoubyoumei_list |
                 grouped_list.shoubyoumeis = shoubyoumei_list
                   .sort_by(&:code)
                   .map { | shoubyoumei | Common::Shoubyoumei.from(shoubyoumei) }
