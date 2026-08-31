@@ -33,7 +33,7 @@ module Receiptisan
                   unit_price:   values[TO::C_単価]&.to_f
                 )
               rescue Master::MasterItemNotFoundError => e
-                report_error(e, context)
+                report_error(e)
 
                 TokuteiKizai.dummy(
                   code:         code,
